@@ -4207,7 +4207,128 @@ function pickBestTwoTrs(list) {
     return list.slice(0, 2);
 }
 
-// 자동 2개 선택 (부제 조합 우선순위 1+2 > 1+3 > 2+3, 1부 8시/2부 11시/3부 빠른타임, 조인인원 우선, 20분 내 최저가 우선, 미등록 구장 제외)
+// ========================================================
+// 2개 자동선택 시 플랫폼 우선순위 ('none', 'golftop', 'golfrock')
+// ========================================================
+let autoSelectPriority = 'none';
+
+function initAutoSelectPriority() {
+    try {
+        const saved = localStorage.getItem('v2_autoSelectPriority');
+        if (saved && (saved === 'none' || saved === 'golftop' || saved === 'golfrock')) {
+            autoSelectPriority = saved;
+        }
+    } catch(e) {}
+    updateAutoSelectPriorityUI();
+}
+
+function setAutoSelectPriority(priority, triggerReselect = true) {
+    if (priority !== 'none' && priority !== 'golftop' && priority !== 'golfrock') {
+        priority = 'none';
+    }
+    autoSelectPriority = priority;
+    try {
+        localStorage.setItem('v2_autoSelectPriority', priority);
+    } catch(e) {}
+    try {
+        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.set({ v2_autoSelectPriority: priority });
+        }
+    } catch(e) {}
+
+    updateAutoSelectPriorityUI();
+
+    if (triggerReselect) {
+        const trs = document.querySelectorAll('#dataTable tbody tr');
+        if (trs.length > 0) {
+            autoSelectTwo();
+            let msg = '⚖️ 기본 (시간/조건순) 자동선택이 적용되었습니다.';
+            if (priority === 'golftop') msg = '🎯 골프탑 타임 우선으로 자동선택되었습니다.';
+            else if (priority === 'golfrock') msg = '🪨 골프락 타임 우선으로 자동선택되었습니다.';
+            showToast(msg);
+        }
+    }
+}
+
+function updateAutoSelectPriorityUI() {
+    const selMain = document.getElementById('selAutoSelectPriority');
+    const selSettings = document.getElementById('selAutoSelectPrioritySettings');
+
+    if (selMain) {
+        selMain.value = autoSelectPriority;
+        selMain.classList.remove('priority-top', 'priority-rock');
+        if (autoSelectPriority === 'golftop') selMain.classList.add('priority-top');
+        else if (autoSelectPriority === 'golfrock') selMain.classList.add('priority-rock');
+    }
+
+    if (selSettings) {
+        selSettings.value = autoSelectPriority;
+    }
+}
+
+// 플랫폼 우선순위(골프탑 우선 / 골프락 우선 / 기본)를 고려한 2개 타임 선별
+function pickBestTwoWithPriority(list, priority = 'none') {
+    if (!list || list.length === 0) return [];
+    if (list.length <= 2) return list;
+
+    if (priority === 'golftop' || priority === 'golfrock') {
+        const preferred = list.filter(tr => (tr.dataset.source || 'golfrock') === priority);
+        const fallback = list.filter(tr => (tr.dataset.source || 'golfrock') !== priority);
+
+        // 1. 선호 플랫폼 타임이 2개 이상 있는 경우 -> 선호 플랫폼 타임 중에서 최적 2개 선별!
+        if (preferred.length >= 2) {
+            return pickBestTwoTrs(preferred);
+        }
+
+        // 2. 선호 플랫폼 타임이 딱 1개 있는 경우 -> 선호 플랫폼 1개 확보 + 대체 플랫폼에서 1개 보충
+        if (preferred.length === 1) {
+            const first = preferred[0];
+            if (fallback.length === 0) return [first];
+
+            const firstPart = getTrPart(first);
+            const firstMins = getTrMinutes(first);
+
+            // 대체 플랫폼에서 first와 다른 부제의 최적 타임 우선 탐색 (1부+2부 > 1부+3부 > 2부+3부)
+            let second = null;
+            if (firstPart === 1) {
+                const p2 = fallback.filter(tr => getTrPart(tr) === 2);
+                const p3 = fallback.filter(tr => getTrPart(tr) === 3);
+                if (p2.length > 0) second = pickBestOneFromPart(p2, 2);
+                else if (p3.length > 0) second = pickBestOneFromPart(p3, 3);
+            } else if (firstPart === 2) {
+                const p1 = fallback.filter(tr => getTrPart(tr) === 1);
+                const p3 = fallback.filter(tr => getTrPart(tr) === 3);
+                if (p1.length > 0) second = pickBestOneFromPart(p1, 1);
+                else if (p3.length > 0) second = pickBestOneFromPart(p3, 3);
+            } else {
+                const p1 = fallback.filter(tr => getTrPart(tr) === 1);
+                const p2 = fallback.filter(tr => getTrPart(tr) === 2);
+                if (p1.length > 0) second = pickBestOneFromPart(p1, 1);
+                else if (p2.length > 0) second = pickBestOneFromPart(p2, 2);
+            }
+
+            // 만약 다른 부제가 없으면 동일 부제에서 15분 이상 떨어진 타임 우선 선택
+            if (!second) {
+                const samePartPool = fallback.filter(tr => getTrPart(tr) === firstPart);
+                const spacedPool = samePartPool.filter(tr => Math.abs(getTrMinutes(tr) - firstMins) >= 15);
+                const poolToUse = spacedPool.length > 0 ? spacedPool : (samePartPool.length > 0 ? samePartPool : fallback);
+                second = pickBestOneFromPart(poolToUse, firstPart);
+            }
+
+            return second ? [first, second] : [first];
+        }
+
+        // 3. 선호 플랫폼 타임이 0개인 경우 -> 대체 플랫폼에서 최적 2개 선별
+        if (fallback.length > 0) {
+            return pickBestTwoTrs(fallback);
+        }
+    }
+
+    // 기본 (우선순위 없음): 기존 2개 선별 로직
+    return pickBestTwoTrs(list);
+}
+
+// 자동 2개 선택 (플랫폼 우선순위 지원: 골프탑 우선 / 골프락 우선 / 기본, 부제 조합 우선순위 1+2 > 1+3 > 2+3, 1부 8시/2부 11시/3부 빠른타임, 조인인원 우선, 20분 내 최저가 우선, 미등록 구장 제외)
 function autoSelectTwo() {
     const trs = Array.from(document.querySelectorAll('#dataTable tbody tr'));
     trs.forEach(tr => tr.classList.remove('selected'));
@@ -4227,7 +4348,7 @@ function autoSelectTwo() {
     let count = 0;
     for (const key in groups) {
         const list = groups[key];
-        const picked = pickBestTwoTrs(list);
+        const picked = pickBestTwoWithPriority(list, autoSelectPriority);
 
         picked.forEach(tr => {
             tr.classList.add('selected');
@@ -4239,7 +4360,10 @@ function autoSelectTwo() {
     updateSelectedBadge();
     saveCurrentTableState();
     if (count > 0) {
-        showToast(`구장별 최대 2개씩 총 ${count}건 자동 선택됨`);
+        let pLabel = '';
+        if (autoSelectPriority === 'golftop') pLabel = ' (골프탑 우선)';
+        else if (autoSelectPriority === 'golfrock') pLabel = ' (골프락 우선)';
+        showToast(`구장별 최대 2개씩 총 ${count}건 자동 선택됨${pLabel}`);
     }
 }
 
@@ -5887,6 +6011,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnMacroJoin').addEventListener('click', () => runMacro('join'));
     document.getElementById('btnMacroTransfer').addEventListener('click', () => runMacro('transfer'));
 
+    const selPriorityMain = document.getElementById('selAutoSelectPriority');
+    if (selPriorityMain) {
+        selPriorityMain.addEventListener('change', (e) => {
+            setAutoSelectPriority(e.target.value, true);
+        });
+    }
+
+    const selPrioritySettings = document.getElementById('selAutoSelectPrioritySettings');
+    if (selPrioritySettings) {
+        selPrioritySettings.addEventListener('change', (e) => {
+            setAutoSelectPriority(e.target.value, true);
+        });
+    }
+
     // 공지 적용 모달 이벤트 연결
     const noticeModal = document.getElementById('noticeModal');
     const btnOpenNoticeModal = document.getElementById('btnOpenNoticeModal');
@@ -7242,6 +7380,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (labPanel) labPanel.style.display = newLab ? 'block' : 'none';
                 try { localStorage.setItem('v2_labModeActive', newLab ? 'true' : 'false'); } catch(e) {}
             }
+            if (area === 'local' && typeof changes.v2_autoSelectPriority !== 'undefined') {
+                const newPri = changes.v2_autoSelectPriority.newValue;
+                if (typeof newPri === 'string' && newPri !== autoSelectPriority) {
+                    setAutoSelectPriority(newPri, false);
+                }
+            }
             if (area === 'local' && typeof changes.v2_unlockSpeedActive !== 'undefined') {
                 const newUnlock = !!changes.v2_unlockSpeedActive.newValue;
                 const chkUnlock = document.getElementById('chkUnlockSpeed');
@@ -7281,11 +7425,15 @@ document.addEventListener('DOMContentLoaded', () => {
     loadActiveNoticeRules();
     renderActiveNoticeChips();
     loadCoursePriceAdjustments();
+    initAutoSelectPriority();
 
     // chrome.storage.local 비동기 동기화 복원 (창 분리/재실행 시 영구 유지)
     try {
         if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-            chrome.storage.local.get(['v2_activeNoticeRules', 'v2_coursePriceAdjustments', 'v2_isNoticeRulesActive', 'v2_isCoursePriceRulesActive', 'v2_labModeActive', 'v2_unlockSpeedActive'], (res) => {
+            chrome.storage.local.get(['v2_activeNoticeRules', 'v2_coursePriceAdjustments', 'v2_isNoticeRulesActive', 'v2_isCoursePriceRulesActive', 'v2_labModeActive', 'v2_unlockSpeedActive', 'v2_autoSelectPriority'], (res) => {
+                if (typeof res?.v2_autoSelectPriority === 'string') {
+                    setAutoSelectPriority(res.v2_autoSelectPriority, false);
+                }
                 if (typeof res?.v2_isNoticeRulesActive === 'boolean' && res.v2_isNoticeRulesActive !== isNoticeRulesActive) {
                     setNoticeRulesActive(res.v2_isNoticeRulesActive, false);
                 }

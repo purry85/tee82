@@ -1346,30 +1346,7 @@ function findConfirmButton() {
         }
     }
 
-    // 4. 화면 전체에서 독립된 '확인' 버튼 탐색 (절대 '수정하기', '등록하기' 버튼 배제)
-    const allBtns = Array.from(document.querySelectorAll('button, .q-btn, [role="button"]'))
-        .filter(b => b.offsetHeight > 0);
-    for (const b of allBtns) {
-        const txt = (b.innerText || b.textContent || '').trim().replace(/\s+/g, '');
-        if (txt === '확인' && !/수정|등록|조인|양도|취소|삭제/.test(txt)) {
-            return b;
-        }
-    }
-
-    // 5. 화면 전체에서 텍스트가 정확히 '확인'인 독립 span/div 탐색
-    const allSpans = Array.from(document.querySelectorAll('span, div, b'))
-        .filter(s => s.offsetHeight > 0 && s.children.length === 0);
-    for (const s of allSpans) {
-        const txt = (s.innerText || s.textContent || '').trim().replace(/\s+/g, '');
-        if (txt === '확인') {
-            const parentBtn = s.closest('button, .q-btn, [role="button"]') || s;
-            const parentTxt = (parentBtn.innerText || parentBtn.textContent || '').trim().replace(/\s+/g, '');
-            if (!/수정|등록|조인|양도|취소|삭제/.test(parentTxt)) {
-                return parentBtn;
-            }
-        }
-    }
-
+    // 4. 안전장치: .q-dialog, .q-notification, .q-banner 등 팝업/모달 컨테이너 외부의 일반 페이지 요소는 절대 클릭하지 않음 (오클릭/뒤로가기 유발 방지)
     return null;
 }
 
@@ -1423,11 +1400,11 @@ async function clickConfirmButtonReliably(targetEl) {
         }
     } catch(e) {}
 
-    console.log(`[가격수정] 팝업/하단 알림 '확인' 버튼 정밀 클릭 완료 (${realBtn.tagName}, class=${realBtn.className})`);
+    console.log(`[매크로] 팝업/하단 알림 '확인' 버튼 정밀 클릭 완료 (${realBtn.tagName}, class=${realBtn.className})`);
     return true;
 }
 
-// 14. 팝업 / 하단 알림바 '확인' 버튼 대기 및 클릭 시도 (Quasar Notification, 바텀 배너, 다이얼로그 전방위 탐색)
+// 14. 팝업 / 하단 알림바 '확인' 버튼 대기 및 클릭 시도 (Quasar Notification, 바텀 배너, 다이얼로그 전방위 탐색 - 단 1회만 정확히 실행)
 async function clickConfirmPopup(maxWaitAttempts = 25) {
     console.log("[매크로] 팝업/하단 알림 '확인' 버튼 대기 및 클릭 시도...");
 
@@ -1439,15 +1416,7 @@ async function clickConfirmPopup(maxWaitAttempts = 25) {
             console.log(`[매크로] '확인' 버튼 감지 (시도 ${attempt + 1}/${maxWaitAttempts}) -> 정밀 클릭 실행`);
             await clickConfirmButtonReliably(confirmBtn);
             await sleep(300);
-
-            // 혹시 이전 잔여 알림이 남아있다면 추가 1회 정리
-            const secondBtn = findConfirmButton();
-            if (secondBtn) {
-                console.log("[매크로] 잔여 알림 '확인' 버튼 감지 -> 추가 정리");
-                await clickConfirmButtonReliably(secondBtn);
-                await sleep(200);
-            }
-            return true;
+            return true; // 2번째 잔여 알림 추가 클릭 삭제 (오클릭/뒤로가기 유발 원천 차단)
         }
 
         await sleep(200);
