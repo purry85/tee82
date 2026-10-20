@@ -6,26 +6,8 @@
 let isRegistrationRunning = false;
 let shouldStopRegistration = false;
 
-// 1. 브라우저 Alert/Confirm 자동 통과 인터셉터 (메인 월드 스크립트 주입)
-try {
-    const script = document.createElement('script');
-    script.textContent = `
-        window._origAlert = window.alert;
-        window.alert = function(msg) {
-            console.log("[Tee82 Golmarket Alert Intercepted]:", msg);
-            window.postMessage({ type: 'TEE82_GOLMARKET_ALERT', text: String(msg) }, '*');
-            return true;
-        };
-        window.confirm = function(msg) {
-            console.log("[Tee82 Golmarket Confirm Intercepted]:", msg);
-            return true;
-        };
-    `;
-    (document.head || document.documentElement).appendChild(script);
-    script.remove();
-} catch (e) {
-    console.error("Alert override failed:", e);
-}
+// 1. 브라우저 Alert/Confirm 자동 통과는 manifest.json의 MAIN 월드 인터셉터(golmarket_interceptor.js)가 담당합니다.
+// (과거의 인라인 script 태그 주입 방식은 CSP 보안 에러를 발생시키므로 전면 제거됨)
 
 // 1-1. 인터셉트된 Alert 감지 및 등록 완료/에러 처리
 window.addEventListener('message', async (e) => {

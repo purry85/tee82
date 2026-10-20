@@ -6245,8 +6245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetBaseVer = manifestVer || INITIAL_APP_VERSION;
         let saved = localStorage.getItem('v2_app_version');
 
-        // 매니페스트 버전(2.0.4 등)이 항상 기준이 되며, 구버전(1.0.1 등)의 오래된 캐시는 강제 갱신
-        if (!saved || compareAppVersion(targetBaseVer, saved) > 0) {
+        // 매니페스트 버전(3.0.0 등) 기준으로 리셋 (이전 3.2.x, 3.3.x 등 비정상 캐시 강제 리셋)
+        if (!saved || saved.startsWith('3.2.') || saved.startsWith('3.3.') || compareAppVersion(targetBaseVer, saved) > 0) {
             saved = targetBaseVer;
             localStorage.setItem('v2_app_version', saved);
             try {
@@ -6294,7 +6294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof chrome !== 'undefined' && chrome.storage?.local) {
             chrome.storage.local.get(['v2_app_version'], (res) => {
                 const targetBaseVer = chrome.runtime?.getManifest?.()?.version || INITIAL_APP_VERSION;
-                if (res?.v2_app_version && /^\d+\.\d+\.\d+$/.test(res.v2_app_version)) {
+                if (res?.v2_app_version && /^\d+\.\d+\.\d+$/.test(res.v2_app_version) && !res.v2_app_version.startsWith('3.2.') && !res.v2_app_version.startsWith('3.3.')) {
                     // 저장된 버전이 최신 매니페스트 버전 이상일 때만 수용
                     if (compareAppVersion(res.v2_app_version, targetBaseVer) >= 0) {
                         localStorage.setItem('v2_app_version', res.v2_app_version);
@@ -6302,7 +6302,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                 }
-                // 구버전(1.0.1 등) 캐시가 남아있다면 최신 버전으로 즉시 갱신
+                // 구버전 캐시가 남아있다면 최신 버전으로 즉시 갱신
                 localStorage.setItem('v2_app_version', targetBaseVer);
                 chrome.storage.local.set({ v2_app_version: targetBaseVer });
                 updateAppVersionUI(targetBaseVer);
