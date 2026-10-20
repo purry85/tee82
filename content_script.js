@@ -632,41 +632,50 @@ async function inputTime(selectedTime) {
         const tx = rect.left + (rect.width / 2);
         const ty = rect.top + 75; // 날짜 칸 아래 75px
 
+        let input = null;
         const target = document.elementFromPoint(tx, ty);
         if (target) {
-            const opts = { bubbles: true, cancelable: true, view: window, clientX: tx, clientY: ty };
+            const opts = { bubbles: false, cancelable: true, view: window, clientX: tx, clientY: ty };
             target.dispatchEvent(new MouseEvent('mouseenter', opts));
             target.dispatchEvent(new MouseEvent('mouseover', opts));
-            target.dispatchEvent(new MouseEvent('mousemove', opts));
-            await sleep(150); 
+            await sleep(100); 
 
             const elements = document.elementsFromPoint(tx, ty);
-            const input = elements.find(el => el.tagName === 'INPUT') || 
-                          elements.find(el => el.querySelector('input'))?.querySelector('input');
+            input = elements.find(el => el.tagName === 'INPUT') || 
+                    elements.find(el => el.querySelector('input'))?.querySelector('input');
+        }
 
-            if (input) {
-                input.focus();
-                input.dispatchEvent(new MouseEvent('mousedown', opts));
-                input.click();
-                
-                input.select();
-                document.execCommand('selectAll', false, null);
-                document.execCommand('delete', false, null);
-                document.execCommand('insertText', false, selectedTime);
+        // fallback: 좌표 탐색 실패 시 시간 관련 placeholder/selector로 2차 탐색
+        if (!input) {
+            const allInputs = Array.from(document.querySelectorAll('input')).filter(el => el.offsetHeight > 0);
+            input = allInputs.find(el => {
+                const ph = el.placeholder || '';
+                return ph.includes('1600') || ph.includes('0710') || ph.includes('시간');
+            }) || (fields[1] ? fields[1].querySelector('input') : null);
+        }
 
-                if (input.value !== selectedTime) {
-                    input.value = selectedTime;
-                }
-                
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true }));
-                input.blur();
-                input.dispatchEvent(new Event('blur', { bubbles: true }));
-                
-                console.log(`[매크로] 시간(${selectedTime}) 입력 성공`);
-                return true;
+        if (input) {
+            input.focus();
+            input.dispatchEvent(new MouseEvent('mousedown', { bubbles: false, cancelable: true }));
+            // 주의: input.click()은 상위 요소의 인라인 이벤트(CSP 위반 에러)를 트리거하므로 
+            // 호출하지 않고 focus + select + execCommand + v-model 이벤트 트리거로 안전하게 입력
+            input.select();
+            document.execCommand('selectAll', false, null);
+            document.execCommand('delete', false, null);
+            document.execCommand('insertText', false, selectedTime);
+
+            if (input.value !== selectedTime) {
+                input.value = selectedTime;
             }
+            
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true }));
+            input.blur();
+            input.dispatchEvent(new Event('blur', { bubbles: true }));
+            
+            console.log(`[매크로] 시간(${selectedTime}) 입력 성공`);
+            return true;
         }
     }
     console.error(`[매크로] 시간 입력칸 탐색 실패`);
@@ -712,14 +721,14 @@ async function inputFee(feeValue, isPrepaidParam = false) {
         const rect = feeInput.getBoundingClientRect();
         const tx = rect.left + rect.width / 2;
         const ty = rect.top + rect.height / 2;
-        const opts = { bubbles: true, cancelable: true, view: window, clientX: tx, clientY: ty };
+        const opts = { bubbles: false, cancelable: true, view: window, clientX: tx, clientY: ty };
         feeInput.dispatchEvent(new MouseEvent('mouseenter', opts));
         feeInput.dispatchEvent(new MouseEvent('mouseover', opts));
         feeInput.dispatchEvent(new MouseEvent('mousedown', opts));
         feeInput.focus();
         feeInput.dispatchEvent(new MouseEvent('mouseup', opts));
-        feeInput.click();
-        await sleep(150);
+        // feeInput.click()은 상위 인라인 핸들러 CSP 에러 방지를 위해 제외
+        await sleep(100);
 
         // 2) 기존 텍스트 전체 선택 후 삭제
         feeInput.select();
