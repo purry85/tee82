@@ -952,6 +952,46 @@
             white-space: nowrap;
         }
 
+        .card-source-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9.5px;
+            font-weight: 800;
+            line-height: 1;
+            padding: 1px 4.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            margin-right: 2px;
+        }
+
+        .card-source-badge.source-rock {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+
+        .card-source-badge.source-rock:hover {
+            background: #FDE68A;
+            border-color: #F59E0B;
+            transform: scale(1.06);
+        }
+
+        .card-source-badge.source-top {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+
+        .card-source-badge.source-top:hover {
+            background: #DBEAFE;
+            border-color: #3B82F6;
+            transform: scale(1.06);
+        }
+
         .card-time {
             font-size: 12px;
             font-weight: 800;
@@ -2404,11 +2444,39 @@
             </div>
         </div>
 
-        <!-- 문구 설정 드로어 (토글형) -->
-        <div class="drawer-box" id="memoDrawer">
-            <div style="font-size: 10px; font-weight: bold; margin-bottom: 2px; color: #3730A3;">📝 골프몬 상세 내용 문구:</div>
-            <textarea id="golfmonMemo">골프락 지원 혜택가&#10;가장 빠르고 신속하게 모십니다&#10;타구장상담까지 한번에&#10;현재실장입니다!!</textarea>
-            <div style="font-size: 9px; color: #6366F1;">* 수정 시 이번 등록부터 즉시 반영됩니다.</div>
+        <!-- 문구 설정 드로어 (토글형: 골프락 / 골프탑 2분할) -->
+        <div class="drawer-box" id="memoDrawer" style="display: none; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 11px; font-weight: 800; color: #1E1B4B;">📝 플랫폼별 등록문구 설정</span>
+                <span style="font-size: 9px; color: #6366F1;">* 수정 시 즉시 자동 저장됩니다.</span>
+            </div>
+
+            <!-- 1. 골프락 문구 -->
+            <div style="margin-bottom: 7px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px;">
+                    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: #9A3412;">
+                        <span class="card-source-badge source-rock" style="cursor: default;">락</span>
+                        <span>골프락 등록문구</span>
+                    </span>
+                    <span style="font-size: 9px; color: #94A3B8;">[락] 타임에 자동 적용</span>
+                </div>
+                <textarea id="golfrockMemo" rows="3" style="width: 100%; box-sizing: border-box; font-size: 10.5px; padding: 5px; border: 1px solid #FCD34D; border-radius: 4px; resize: vertical; line-height: 1.35; background: #FFFDF7; font-family: inherit;">골프락 지원 혜택가&#10;가장 빠르고 신속하게 모십니다&#10;타구장상담까지 한번에&#10;현재실장입니다!!</textarea>
+            </div>
+
+            <!-- 2. 골프탑 문구 -->
+            <div style="margin-bottom: 4px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px;">
+                    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: #1E40AF;">
+                        <span class="card-source-badge source-top" style="cursor: default;">탑</span>
+                        <span>골프탑 등록문구</span>
+                    </span>
+                    <span style="font-size: 9px; color: #94A3B8;">[탑] 타임에 자동 적용</span>
+                </div>
+                <textarea id="golftopMemo" rows="3" style="width: 100%; box-sizing: border-box; font-size: 10.5px; padding: 5px; border: 1px solid #93C5FD; border-radius: 4px; resize: vertical; line-height: 1.35; background: #F0F7FF; font-family: inherit;">골프탑 지원 혜택가&#10;가장 빠르고 신속하게 모십니다&#10;타구장상담까지 한번에&#10;현재실장입니다!!</textarea>
+            </div>
+
+            <!-- 기존 하위 호환 숨겨진 필드 -->
+            <textarea id="golfmonMemo" style="display: none;"></textarea>
         </div>
 
         <!-- 5. 퀵 액션 메뉴 리스트 (컴팩트 접기/펼치기) -->
@@ -2433,9 +2501,14 @@
                     <span class="action-label">선택 항목 선티방 강제 지정 / 해제</span>
                     <span class="action-arrow">›</span>
                 </button>
-                <button class="action-item" id="btnToggleMemo">
-                    <span class="action-icon">📝</span>
-                    <span class="action-label">등록문구 설정</span>
+                <button class="action-item" id="btnToggleMemoRock">
+                    <span class="action-icon">🪨</span>
+                    <span class="action-label">골프락 등록문구수정</span>
+                    <span class="action-arrow">›</span>
+                </button>
+                <button class="action-item" id="btnToggleMemoTop">
+                    <span class="action-icon">⛳</span>
+                    <span class="action-label">골프탑 등록문구수정</span>
                     <span class="action-arrow">›</span>
                 </button>
                 <button class="action-item" id="btnOpenGolfmon">
@@ -2797,7 +2870,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 3.0.0 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 3.1.0 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>

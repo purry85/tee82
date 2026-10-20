@@ -1262,13 +1262,14 @@ async function fillAndSubmitGolmarketForm(item, customMemo, stepPreset = 'human'
     if (shouldStopRegistration) return false;
     await sleep(getStepDelay('click', stepPreset));
 
-    // 6) 추가 정보 사항 (상세 메모)
+    // 6) 추가 정보 사항 (상세 메모: 락/탑 전용 문구 우선 반영)
     const memoEl = findMemoTextarea();
-    if (memoEl && customMemo) {
-        memoEl.value = customMemo;
+    const targetMemo = item.memo || customMemo;
+    if (memoEl && targetMemo) {
+        memoEl.value = targetMemo;
         memoEl.dispatchEvent(new Event('input', { bubbles: true }));
         memoEl.dispatchEvent(new Event('change', { bubbles: true }));
-        console.log("[골마켓] 상세 메모 입력 완료");
+        console.log(`[골마켓] 상세 메모 입력 완료 (출처: ${item.source || '기본'})`);
     }
     if (shouldStopRegistration) return false;
 

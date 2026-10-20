@@ -285,6 +285,7 @@ function saveCurrentTableState() {
             noticeTagDesc: tr.dataset.noticeTagDesc || '',
             noticeType: tr.dataset.noticeType || '',
             coursePriceAdj: tr.dataset.coursePriceAdj || '',
+            source: tr.dataset.source || 'golfrock',
             selected: tr.classList.contains('selected')
         };
     });
@@ -330,6 +331,7 @@ function restoreSavedTableState() {
             if (item.noticeTagDesc) tr.dataset.noticeTagDesc = item.noticeTagDesc;
             if (item.noticeType) tr.dataset.noticeType = item.noticeType;
             if (item.coursePriceAdj) tr.dataset.coursePriceAdj = item.coursePriceAdj;
+            tr.dataset.source = item.source || 'golfrock';
             if (item.selected) tr.classList.add('selected');
             const stdRegion = getRegion(item.region, (item.rawGolf || '') + ' ' + (item.golf || ''));
             item.region = stdRegion;
@@ -2876,6 +2878,52 @@ function revertNoticeRules() {
     }
 }
 
+// ========================================================
+// [골프탑 vs 골프락 판별 기준]
+// 사용자 지정 규칙:
+// 형식 1: 카카오톡 메시지 형식 (시간 앞에 10/20(화) 17:18 날짜/요일 접두사 필수)
+// 형식 2: 잔여타임 표 형식 ([2026-10-20] 잔여타임 / 골프장명\t시간\t현장/선 결제...)
+// ★ 이 두 가지 형식만 '골프탑(탑)'으로 인식하고, 나머지는 모두 '골프락(락)'으로 인식!
+// ========================================================
+function isGolftopFormat(txt) {
+    if (!txt) return false;
+
+    // [골프탑 형식 2] 잔여타임 표/웹 형식
+    const isFormat2Table = (
+        txt.includes('잔여타임') ||
+        txt.includes('현장/선 결제') ||
+        txt.includes('현장/선결제') ||
+        (txt.includes('골프장명') && txt.includes('시간') && txt.includes('\t'))
+    );
+    if (isFormat2Table) return true;
+
+    // [골프탑 형식 1] 카카오톡 메시지 형식
+    // 시간 앞에 '10/20(화) 17:18' 날짜/요일이 붙어있는 형식 (골프락은 시간 앞에 날짜/요일이 붙지 않음!)
+    const isFormat1Kakao = /\d{1,2}\/\d{1,2}\([가-힣]\)\s+\d{1,2}:\d{2}/.test(txt);
+    if (isFormat1Kakao) return true;
+
+    // [골프탑 형식 3 (구장명 '-' 없고 대기중:3[ 또는 (남남) 등 괄호 표기)]
+    // 단, 구장명이 '-'로 시작하는 골프락 서식이 아닐 때만 적용
+    if (!/^-\s*[가-힣\w]+/m.test(txt)) {
+        if (/대기(?:중)?\s*:\s*\d+\s*\[/.test(txt) || /\([남여]{1,2}\)/.test(txt) || /\[현장\s*\d+(?:\.\d+)?\]/.test(txt)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function detectDocumentSource(txt) {
+    if (!txt) return 'golfrock';
+    // 구장명이 '-'로 시작하는 골프락 구장이 존재하고, 텍스트 전체에 골프탑 형식 1이나 2가 없다면 100% 골프락
+    if (/^-\s*[가-힣\w]+/m.test(txt)) {
+        if (!isGolftopFormat(txt)) {
+            return 'golfrock';
+        }
+    }
+    return isGolftopFormat(txt) ? 'golftop' : 'golfrock';
+}
+
 // 메인 데이터 파싱 함수 (순수 파싱 & 미등록 구장 감지)
 function parseInputData(type) {
     const text = document.getElementById('inputText')?.value || '';
@@ -2897,6 +2945,9 @@ function parseInputData(type) {
     let currentGolmarket = '';
     let currentGolfrock = '';
     let currentMapped = true;
+    const docDefaultSource = detectDocumentSource(text);
+    let currentSource = docDefaultSource;
+    let currentCourseStartsWithDash = false;
 
     const rowDataList = [];
     const lines = text.split('\n');
@@ -2906,7 +2957,10 @@ function parseInputData(type) {
         if (!line) continue;
 
         // 테이블 컬럼 헤더 라인 스킵
-        if (line.includes('골프장명') && (line.includes('시간') || line.includes('현장결제'))) continue;
+        if (line.includes('골프장명') && (line.includes('시간') || line.includes('현장결제') || line.includes('현장/선 결제') || line.includes('현장/선결제'))) {
+            currentSource = 'golftop';
+            continue;
+        }
 
         // 비-골프 라인(공지/이벤트/식음/인사말 등) 스킵
         if (isNonGolfLine(line)) continue;
@@ -2917,13 +2971,29 @@ function parseInputData(type) {
             continue;
         }
 
-        // [Format 2] [YYYY-MM-DD] 또는 [MM-DD] 헤더 스킵 및 날짜 추출
+        // [Format 2 & 3] [YYYY-MM-DD] 또는 [MM-DD] 헤더 스킵 및 날짜 추출
         let dateBracketMatch = line.match(/^\[(\d{4})[-./](\d{1,2})[-./](\d{1,2})\]/) || line.match(/^\[(\d{1,2})[-./](\d{1,2})\]/);
         if (dateBracketMatch) {
             if (dateBracketMatch[3]) {
                 currentDate = `${parseInt(dateBracketMatch[2], 10)}.${parseInt(dateBracketMatch[3], 10)}`;
             } else {
                 currentDate = `${parseInt(dateBracketMatch[1], 10)}.${parseInt(dateBracketMatch[2], 10)}`;
+            }
+            if (line.includes('잔여타임')) {
+                currentSource = 'golftop';
+                const courseAfterBracket = line.replace(/^\[.*?\]/, '').replace(/잔여타임.*/, '').trim();
+                if (courseAfterBracket && !isNonGolfLine(courseAfterBracket)) {
+                    currentGolfRaw = courseAfterBracket;
+                    const mapObj = getMappedName(currentGolfRaw);
+                    currentGolf = mapObj.name;
+                    currentGolfmon = mapObj.golfmon;
+                    currentGolfpang = mapObj.golfpang;
+                    currentGolmarket = mapObj.golmarket;
+                    currentGolfrock = mapObj.golfrock;
+                    currentMapped = mapObj.mapped;
+                    const dictRegion = (mapObj.mapped && mapObj.region) ? mapObj.region : (mapObj.region || '');
+                    currentRegion = getRegion(dictRegion, currentGolfRaw + ' ' + currentGolf);
+                }
             }
             continue;
         }
@@ -2949,6 +3019,15 @@ function parseInputData(type) {
         let rowDate = currentDate;
 
         if (!timeMatch) {
+            if (line.trim().startsWith('-')) {
+                currentSource = 'golfrock';
+                currentCourseStartsWithDash = true;
+            } else {
+                currentCourseStartsWithDash = false;
+                if (docDefaultSource === 'golftop') {
+                    currentSource = 'golftop';
+                }
+            }
             const cleanLine = line.replace(/^[-*•·■□▲▼▶▷★●◆#※~_=\s]+/, '').trim();
             if (isNonGolfLine(cleanLine)) continue;
             if (/^(?:노캐디|마샬|운전캐디|드라이빙캐디|특수캐디|신입캐디|교육생캐디|캐디|카포|카트포함)$/i.test(cleanLine) || /^\d+인(?:\(.*\))?$/.test(cleanLine)) continue;
@@ -3345,8 +3424,39 @@ function parseInputData(type) {
             feeDisplay = Number.isInteger(adjNum) ? adjNum.toString() : adjNum.toFixed(1);
         }
 
+        // 출처 판별 (골프탑 2가지 형식만 'golftop', 그 외에는 'golfrock')
+        let rowSource = currentSource || docDefaultSource;
+        const fullCheck = line + ' ' + subLinesText;
+
+        // 1. 구장명이 '-'로 시작하면 무조건 골프락! (+선입이 있어도 무조건 골프락)
+        if (currentCourseStartsWithDash || currentGolfRaw.startsWith('-')) {
+            rowSource = 'golfrock';
+        } 
+        // 2. 골프탑 2가지 형식(카톡 10/20(화) 17:18 날짜 접두사 또는 잔여타임 표 형식) 검사
+        else if (
+            /\d{1,2}\/\d{1,2}\([가-힣]\)\s+\d{1,2}:\d{2}/.test(fullCheck) ||
+            hasSlashFee || 
+            fullCheck.includes('잔여타임') ||
+            fullCheck.includes('현장/선 결제') ||
+            fullCheck.includes('현장/선결제') ||
+            /Bella|Monti|Challenger|Champion/i.test(fullCheck)
+        ) {
+            rowSource = 'golftop';
+        } 
+        // 3. 골프탑 형식 3 (구장명 '-' 없고 대기중:숫자[ 또는 (남남) 등)
+        else if (
+            /대기(?:중)?\s*:\s*\d+\s*\[/.test(fullCheck) || 
+            /\([남여]{1,2}\)/.test(fullCheck) || 
+            /\[현장\s*\d+(?:\.\d+)?\]/.test(fullCheck)
+        ) {
+            rowSource = 'golftop';
+        } else {
+            rowSource = currentSource || docDefaultSource || 'golfrock';
+        }
+
         // 테이블 행(TR) 생성
         const tr = document.createElement('tr');
+        tr.dataset.source = rowSource;
         tr.dataset.roomType = roomType;
         tr.dataset.origRoomType = roomType;
         tr.dataset.isPrepaid = isPrepaid ? 'true' : 'false';
@@ -3406,6 +3516,7 @@ function parseInputData(type) {
             origRoomType: roomType,
             isSeontiOrDaegi: isSeontiOrDaegi,
             coursePriceAdj: initialCourseAdj !== 0 ? initialCourseAdj.toString() : '',
+            source: rowSource,
             tr: tr
         });
     }
@@ -3692,6 +3803,7 @@ function renderCardList() {
             /^[123]인$/.test(sizenum)
         );
         const isMeal = tr.dataset.isMeal === 'true';
+        const source = tr.dataset.source || 'golfrock';
 
         card.innerHTML = `
             <div class="card-check">
@@ -3706,6 +3818,7 @@ function renderCardList() {
                     </div>
                     <div class="card-meta-group">
                         ${region ? `<span class="card-region" style="background:${regionBg}; color:${regionColor};">${region}</span>` : ''}
+                        <span class="card-source-badge ${source === 'golftop' ? 'source-top' : 'source-rock'}" data-index="${idx}" title="${source === 'golftop' ? '골프탑 데이터 (클릭 시 락/탑 변경)' : '골프락 데이터 (클릭 시 락/탑 변경)'}">${source === 'golftop' ? '탑' : '락'}</span>
                         <span class="card-time ${isSeonti ? 'is-seonti' : ''}" title="${isSeonti ? '선티 (확정금액)' : ''}">${time}</span>
                     </div>
                 </div>
@@ -3737,7 +3850,7 @@ function renderCardList() {
 
         // 드래그 시작 (mousedown: 클릭 즉시 토글 및 드래그 모드 활성화)
         card.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('card-del-btn') || e.target.closest('.notice-tag') || e.target.closest('.card-seonti-pill') || e.target.closest('.card-tag.meal')) return;
+            if (e.target.classList.contains('card-del-btn') || e.target.closest('.notice-tag') || e.target.closest('.card-seonti-pill') || e.target.closest('.card-tag.meal') || e.target.closest('.card-source-badge')) return;
             e.preventDefault();
 
             isCardDragging = true;
@@ -3757,8 +3870,20 @@ function renderCardList() {
             }
         });
 
-        // 카드 클릭 핸들러 (삭제 버튼 및 공지 태그 전문 보기, 식사포함 토글)
+        // 카드 클릭 핸들러 (출처 토글, 삭제 버튼 및 공지 태그 전문 보기, 식사포함 토글)
         card.addEventListener('click', (e) => {
+            const sourceBadge = e.target.closest('.card-source-badge');
+            if (sourceBadge) {
+                e.stopPropagation();
+                e.preventDefault();
+                const cur = tr.dataset.source || 'golfrock';
+                const nextSource = (cur === 'golftop') ? 'golfrock' : 'golftop';
+                tr.dataset.source = nextSource;
+                renderCardList();
+                saveCurrentTableState();
+                showToast(`출처가 [${nextSource === 'golftop' ? '골프탑(탑)' : '골프락(락)'}]으로 변경되었습니다.`);
+                return;
+            }
             const mealTag = e.target.closest('.card-tag.meal');
             if (mealTag) {
                 e.stopPropagation();
@@ -4668,11 +4793,16 @@ function startGolfmonRegistration() {
         tr.dataset.regId = `reg_${Date.now()}_${idx}`;
     });
 
+    const golfrockMemo = document.getElementById('golfrockMemo')?.value || document.getElementById('golfmonMemo')?.value || '';
+    const golftopMemo = document.getElementById('golftopMemo')?.value || '';
+
     const items = selectedTrs.map(tr => {
         const cells = tr.querySelectorAll('td');
         const origGolf = cells[2].textContent.trim();
         const rawGolf = tr.dataset.rawGolf || origGolf;
         const golfmonGolf = tr.dataset.golfmonGolf || getMappedName(rawGolf, 'golfmon').name || origGolf;
+        const source = tr.dataset.source || 'golfrock';
+        const itemMemo = (source === 'golftop') ? golftopMemo : golfrockMemo;
         return {
             regId: tr.dataset.regId,
             date: cells[0].textContent.trim(),
@@ -4685,7 +4815,9 @@ function startGolfmonRegistration() {
             condition: cells[6].textContent.trim(),
             sizenum: cells[7].textContent.trim(),
             isPrepaid: tr.dataset.isPrepaid === 'true',
-            isMeal: tr.dataset.isMeal === 'true'
+            isMeal: tr.dataset.isMeal === 'true',
+            source: source,
+            memo: itemMemo
         };
     });
 
@@ -4693,7 +4825,7 @@ function startGolfmonRegistration() {
         chrome.storage.local.set({ completedItems: [], isRegistrationRunning: true });
     } catch(e) {}
 
-    const memo = document.getElementById('golfmonMemo').value;
+    const memo = golfrockMemo;
     const mode = lastUsedMacroType || 'join';
     const delayPreset = document.getElementById('selRandomDelay')?.value || 'safe';
     const stepPreset = document.getElementById('selStepDelay')?.value || 'human';
@@ -4776,11 +4908,16 @@ function startGolfmarketRegistration() {
         tr.dataset.regId = `reg_gm_${Date.now()}_${idx}`;
     });
 
+    const golfrockMemo = document.getElementById('golfrockMemo')?.value || document.getElementById('golfmonMemo')?.value || '';
+    const golftopMemo = document.getElementById('golftopMemo')?.value || '';
+
     const items = selectedTrs.map(tr => {
         const cells = tr.querySelectorAll('td');
         const origGolf = cells[2].textContent.trim();
         const rawGolf = tr.dataset.rawGolf || origGolf;
         const golmarketGolf = tr.dataset.golmarketGolf || getMappedName(rawGolf, 'golmarket').name || getGolmarketGolfName(origGolf) || origGolf;
+        const source = tr.dataset.source || 'golfrock';
+        const itemMemo = (source === 'golftop') ? golftopMemo : golfrockMemo;
         return {
             regId: tr.dataset.regId,
             date: cells[0].textContent.trim(),
@@ -4794,11 +4931,13 @@ function startGolfmarketRegistration() {
             sizenum: cells[7].textContent.trim(),
             roomType: tr.dataset.roomType || '',
             isPrepaid: tr.dataset.isPrepaid === 'true',
-            isMeal: tr.dataset.isMeal === 'true'
+            isMeal: tr.dataset.isMeal === 'true',
+            source: source,
+            memo: itemMemo
         };
     });
 
-    const memo = document.getElementById('golfmonMemo')?.value || '';
+    const memo = golfrockMemo;
     const delayPreset = document.getElementById('selRandomDelay')?.value || 'safe';
     const stepPreset = document.getElementById('selStepDelay')?.value || 'human';
 
@@ -4922,11 +5061,16 @@ function startGolfrockRegistration() {
         tr.dataset.regId = `reg_grk_${Date.now()}_${idx}`;
     });
 
+    const golfrockMemo = document.getElementById('golfrockMemo')?.value || document.getElementById('golfmonMemo')?.value || '';
+    const golftopMemo = document.getElementById('golftopMemo')?.value || '';
+
     const items = selectedTrs.map(tr => {
         const cells = tr.querySelectorAll('td');
         const origGolf = cells[2].textContent.trim();
         const rawGolf = tr.dataset.rawGolf || origGolf;
         const golfrockGolf = tr.dataset.golfrockGolf || getMappedName(rawGolf, 'golfrock').name || origGolf;
+        const source = tr.dataset.source || 'golfrock';
+        const itemMemo = (source === 'golftop') ? golftopMemo : golfrockMemo;
         return {
             regId: tr.dataset.regId,
             date: cells[0].textContent.trim(),
@@ -4940,11 +5084,13 @@ function startGolfrockRegistration() {
             sizenum: cells[7].textContent.trim(),
             roomType: tr.dataset.roomType || '',
             isPrepaid: tr.dataset.isPrepaid === 'true',
-            isMeal: tr.dataset.isMeal === 'true'
+            isMeal: tr.dataset.isMeal === 'true',
+            source: source,
+            memo: itemMemo
         };
     });
 
-    const memo = document.getElementById('golfmonMemo')?.value || '';
+    const memo = golfrockMemo;
     const delayPreset = document.getElementById('selRandomDelay')?.value || 'safe';
     const stepPreset = document.getElementById('selStepDelay')?.value || 'human';
     const mode = lastUsedMacroType || 'join';
@@ -5343,42 +5489,88 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 등록문구 복원 및 실시간 영구 저장
-    const memoEl = document.getElementById('golfmonMemo');
-    if (memoEl) {
-        // 1. localStorage 즉각 복원
-        const savedMemo = localStorage.getItem('v2_savedGolfmonMemo');
-        if (savedMemo !== null && savedMemo !== undefined) {
-            memoEl.value = savedMemo;
-        }
+    // 등록문구 복원 및 실시간 영구 저장 (골프락 / 골프탑 2분할)
+    const rockMemoEl = document.getElementById('golfrockMemo');
+    const topMemoEl = document.getElementById('golftopMemo');
+    const legacyMemoEl = document.getElementById('golfmonMemo');
 
-        function saveMemo(showNotice = false) {
-            const val = memoEl.value;
-            try { localStorage.setItem('v2_savedGolfmonMemo', val); } catch(e) {}
+    const DEFAULT_ROCK_MEMO = "골프락 지원 혜택가\n가장 빠르고 신속하게 모십니다\n타구장상담까지 한번에\n현재실장입니다!!";
+    const DEFAULT_TOP_MEMO = "골프탑 지원 혜택가\n가장 빠르고 신속하게 모십니다\n타구장상담까지 한번에\n현재실장입니다!!";
+
+    if (rockMemoEl) {
+        const savedRock = localStorage.getItem('v2_savedGolfrockMemo') ?? localStorage.getItem('v2_savedGolfmonMemo');
+        if (savedRock !== null && savedRock !== undefined) {
+            rockMemoEl.value = savedRock;
+        } else {
+            rockMemoEl.value = DEFAULT_ROCK_MEMO;
+        }
+        if (legacyMemoEl) legacyMemoEl.value = rockMemoEl.value;
+
+        function saveRockMemo(showNotice = false) {
+            const val = rockMemoEl.value;
+            try {
+                localStorage.setItem('v2_savedGolfrockMemo', val);
+                localStorage.setItem('v2_savedGolfmonMemo', val);
+            } catch(e) {}
             try {
                 if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-                    chrome.storage.local.set({ v2_savedGolfmonMemo: val });
+                    chrome.storage.local.set({ v2_savedGolfrockMemo: val, v2_savedGolfmonMemo: val });
                 }
             } catch(e) {}
-            if (showNotice) showToast('등록문구가 안전하게 저장되었습니다.');
+            if (legacyMemoEl) legacyMemoEl.value = val;
+            if (showNotice) showToast('골프락 등록문구가 저장되었습니다.');
         }
 
-        memoEl.addEventListener('input', () => saveMemo(false));
-        memoEl.addEventListener('change', () => saveMemo(true));
-        memoEl.addEventListener('blur', () => saveMemo(false));
-
-        // 2. chrome.storage.local 비동기 동기화 복원
-        try {
-            if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-                chrome.storage.local.get(['v2_savedGolfmonMemo'], (res) => {
-                    if (res && res.v2_savedGolfmonMemo !== undefined && res.v2_savedGolfmonMemo !== null) {
-                        memoEl.value = res.v2_savedGolfmonMemo;
-                        try { localStorage.setItem('v2_savedGolfmonMemo', res.v2_savedGolfmonMemo); } catch(e) {}
-                    }
-                });
-            }
-        } catch(e) {}
+        rockMemoEl.addEventListener('input', () => saveRockMemo(false));
+        rockMemoEl.addEventListener('change', () => saveRockMemo(true));
+        rockMemoEl.addEventListener('blur', () => saveRockMemo(false));
     }
+
+    if (topMemoEl) {
+        const savedTop = localStorage.getItem('v2_savedGolftopMemo');
+        if (savedTop !== null && savedTop !== undefined) {
+            topMemoEl.value = savedTop;
+        } else {
+            topMemoEl.value = DEFAULT_TOP_MEMO;
+        }
+
+        function saveTopMemo(showNotice = false) {
+            const val = topMemoEl.value;
+            try {
+                localStorage.setItem('v2_savedGolftopMemo', val);
+            } catch(e) {}
+            try {
+                if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+                    chrome.storage.local.set({ v2_savedGolftopMemo: val });
+                }
+            } catch(e) {}
+            if (showNotice) showToast('골프탑 등록문구가 저장되었습니다.');
+        }
+
+        topMemoEl.addEventListener('input', () => saveTopMemo(false));
+        topMemoEl.addEventListener('change', () => saveTopMemo(true));
+        topMemoEl.addEventListener('blur', () => saveTopMemo(false));
+    }
+
+    // chrome.storage.local 비동기 동기화 복원
+    try {
+        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.get(['v2_savedGolfrockMemo', 'v2_savedGolftopMemo', 'v2_savedGolfmonMemo'], (res) => {
+                if (res) {
+                    if (rockMemoEl && res.v2_savedGolfrockMemo !== undefined && res.v2_savedGolfrockMemo !== null) {
+                        rockMemoEl.value = res.v2_savedGolfrockMemo;
+                        if (legacyMemoEl) legacyMemoEl.value = res.v2_savedGolfrockMemo;
+                    } else if (rockMemoEl && res.v2_savedGolfmonMemo !== undefined && res.v2_savedGolfmonMemo !== null) {
+                        rockMemoEl.value = res.v2_savedGolfmonMemo;
+                        if (legacyMemoEl) legacyMemoEl.value = res.v2_savedGolfmonMemo;
+                    }
+                    if (topMemoEl && res.v2_savedGolftopMemo !== undefined && res.v2_savedGolftopMemo !== null) {
+                        topMemoEl.value = res.v2_savedGolftopMemo;
+                    }
+                }
+            });
+        }
+    } catch(e) {}
 
     // 옵션 필드(시간 앞당김, 특정구장, 제외구장) 복원 및 자동 저장
     const timeAdjustEl = document.getElementById('timeAdjust');
@@ -5945,6 +6137,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnToggleMemo')?.addEventListener('click', () => {
         const drawer = document.getElementById('memoDrawer');
         if (drawer) drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('btnToggleMemoRock')?.addEventListener('click', () => {
+        const drawer = document.getElementById('memoDrawer');
+        if (drawer) {
+            drawer.style.display = 'block';
+            const rockEl = document.getElementById('golfrockMemo');
+            if (rockEl) {
+                rockEl.focus();
+                rockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    document.getElementById('btnToggleMemoTop')?.addEventListener('click', () => {
+        const drawer = document.getElementById('memoDrawer');
+        if (drawer) {
+            drawer.style.display = 'block';
+            const topEl = document.getElementById('golftopMemo');
+            if (topEl) {
+                topEl.focus();
+                topEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
     });
 
     // 퀵 액션 메뉴 토글 (접기 / 펼치기)

@@ -1462,8 +1462,8 @@ async function executeBatchRegistration(items, customMemo, mode = 'join', delayP
                 }
             }
 
-            // 12) 상세 내용 입력
-            await inputMemo(customMemo);
+            // 12) 상세 내용 입력 (항목별 락/탑 전용 문구 우선 반영)
+            await inputMemo(item.memo || customMemo);
             if (shouldStopRegistration) break;
             await sleep(getStepDelay('typing', stepPreset));
             if (shouldStopRegistration) break;
