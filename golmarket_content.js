@@ -1260,19 +1260,7 @@ async function fillAndSubmitGolmarketForm(item, customMemo, stepPreset = 'human'
     await sleep(getStepDelay('before_submit', stepPreset));
     if (shouldStopRegistration) return false;
 
-    // 8) 등록하기 버튼 클릭 직전 confirm/alert 자동 통과 2차 보장 스크립트 실행
-    try {
-        const sc = document.createElement('script');
-        sc.textContent = `
-            window.confirm = function() { return true; };
-            window.alert = function(msg) {
-                try { window.postMessage({ type: 'TEE82_GOLMARKET_ALERT', text: String(msg) }, '*'); } catch(e){}
-                return undefined;
-            };
-        `;
-        (document.head || document.documentElement).appendChild(sc);
-        sc.remove();
-    } catch(e) {}
+    // 8) 등록하기 버튼 클릭 직전 확인 (golmarket_interceptor.js가 alert/confirm 자동 통과 처리함)
 
     const submitBtn = findSubmitButton();
     if (submitBtn) {

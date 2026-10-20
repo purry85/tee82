@@ -773,23 +773,6 @@ async function inputFee(feeValue, isPrepaidParam = false) {
         feeInput.blur();
         feeInput.dispatchEvent(new Event('blur', { bubbles: true, composed: true }));
 
-        // 7) 메인 월드(Main World) 컨텍스트 주입 시도 (CSP 허용 환경 대비 안전망)
-        try {
-            const script = document.createElement('script');
-            script.textContent = `
-                (() => {
-                    const el = document.querySelector('.q-dialog input[placeholder*="그린피"]') || document.querySelector('input[placeholder*="그린피"]');
-                    if (el) {
-                        el.value = ${JSON.stringify(actualFee)};
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                    }
-                })();
-            `;
-            (document.head || document.documentElement).appendChild(script);
-            script.remove();
-        } catch (e) {}
-
         console.log(`[매크로] 그린피 숫자(${actualFee}) 최종 입력 및 v-model 커밋 완료`);
     } else {
         console.warn(`[매크로] 그린피 입력칸을 찾지 못함`);
