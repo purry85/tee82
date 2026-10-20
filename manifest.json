@@ -1,0 +1,92 @@
+{
+  "manifest_version": 3,
+  "name": "GolfTee82",
+  "version": "3.0.0",
+  "description": "GolfTee82 - 골프몬 내글 가격수정 & 조인 자동등록 변환기 (Ver 3.0.0)",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage",
+    "sidePanel",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://*.golfmon.net/*",
+    "http://*.golfmon.net/*",
+    "https://golfmon.net/*",
+    "http://golfmon.net/*",
+    "https://*.golmarket.co.kr/*",
+    "http://*.golmarket.co.kr/*",
+    "https://golmarket.co.kr/*",
+    "http://golmarket.co.kr/*",
+    "https://*.golfrock.co.kr/*",
+    "http://*.golfrock.co.kr/*",
+    "https://golfrock.co.kr/*",
+    "http://golfrock.co.kr/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "https://github.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tee82",
+    "default_icon": {
+      "16": "icon.svg",
+      "48": "icon.svg",
+      "128": "icon.svg"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.golfmon.net/*",
+        "http://*.golfmon.net/*",
+        "https://golfmon.net/*",
+        "http://golfmon.net/*"
+      ],
+      "js": [
+        "content_script.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
