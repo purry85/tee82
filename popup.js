@@ -6220,19 +6220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------
     // Tee82 최신 업데이트 모달 및 자동 업데이트 연동 로직
     // ----------------------------------------------------
-    const INITIAL_APP_VERSION = "3.0.0";
-
-    function compareAppVersion(v1, v2) {
-        const p1 = (v1 || '').split('.').map(n => parseInt(n, 10) || 0);
-        const p2 = (v2 || '').split('.').map(n => parseInt(n, 10) || 0);
-        for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
-            const num1 = p1[i] || 0;
-            const num2 = p2[i] || 0;
-            if (num1 > num2) return 1;
-            if (num1 < num2) return -1;
-        }
-        return 0;
-    }
+    const INITIAL_APP_VERSION = "2.0.0";
 
     function getCurrentAppVersion() {
         let manifestVer = null;
@@ -6241,42 +6229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 manifestVer = chrome.runtime.getManifest().version;
             }
         } catch (e) {}
-
-        const targetBaseVer = manifestVer || INITIAL_APP_VERSION;
-        let saved = localStorage.getItem('v2_app_version');
-
-        // 매니페스트 버전(3.0.0 등) 기준으로 리셋 (이전 3.2.x, 3.3.x 등 비정상 캐시 강제 리셋)
-        if (!saved || saved.startsWith('3.2.') || saved.startsWith('3.3.') || compareAppVersion(targetBaseVer, saved) > 0) {
-            saved = targetBaseVer;
-            localStorage.setItem('v2_app_version', saved);
-            try {
-                if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-                    chrome.storage.local.set({ v2_app_version: saved });
-                }
-            } catch (e) {}
-        }
-
-        return saved;
-    }
-
-    function setAppVersion(newVer) {
-        localStorage.setItem('v2_app_version', newVer);
-        try {
-            if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-                chrome.storage.local.set({ v2_app_version: newVer });
-            }
-        } catch (e) {}
-        updateAppVersionUI(newVer);
-    }
-
-    function incrementAppVersion() {
-        const cur = getCurrentAppVersion();
-        const parts = cur.split('.').map(n => parseInt(n, 10) || 0);
-        while (parts.length < 3) parts.push(0);
-        parts[2] += 1;
-        const nextVer = parts.join('.');
-        setAppVersion(nextVer);
-        return nextVer;
+        return manifestVer || INITIAL_APP_VERSION;
     }
 
     function updateAppVersionUI(ver) {
@@ -6289,24 +6242,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 비동기 chrome.storage.local과도 버전 동기화 (구버전 캐시 덮어쓰기 보장)
+    // 예전 로컬스토리지 임의 캐시 영구 정리 (버전은 오직 manifest.json 기준으로만 통일 표시)
     try {
+        localStorage.removeItem('v2_app_version');
         if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-            chrome.storage.local.get(['v2_app_version'], (res) => {
-                const targetBaseVer = chrome.runtime?.getManifest?.()?.version || INITIAL_APP_VERSION;
-                if (res?.v2_app_version && /^\d+\.\d+\.\d+$/.test(res.v2_app_version) && !res.v2_app_version.startsWith('3.2.') && !res.v2_app_version.startsWith('3.3.')) {
-                    // 저장된 버전이 최신 매니페스트 버전 이상일 때만 수용
-                    if (compareAppVersion(res.v2_app_version, targetBaseVer) >= 0) {
-                        localStorage.setItem('v2_app_version', res.v2_app_version);
-                        updateAppVersionUI(res.v2_app_version);
-                        return;
-                    }
-                }
-                // 구버전 캐시가 남아있다면 최신 버전으로 즉시 갱신
-                localStorage.setItem('v2_app_version', targetBaseVer);
-                chrome.storage.local.set({ v2_app_version: targetBaseVer });
-                updateAppVersionUI(targetBaseVer);
-            });
+            chrome.storage.local.remove(['v2_app_version']);
         }
     } catch (e) {}
 
@@ -6373,12 +6313,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. 원클릭 프로그램 전체 업데이트 실행 (tee82://update 프로토콜 호출)
     if (btnRunFullUpdate) {
         btnRunFullUpdate.addEventListener('click', () => {
-            const nextVer = incrementAppVersion();
+            const curVer = getCurrentAppVersion();
             launchUpdateProtocol();
 
             if (fullUpdateStatusHint) {
                 fullUpdateStatusHint.innerHTML = `
-                    <span style="color:#2563EB; font-weight:700;">🚀 업데이트 다운로더를 호출했습니다! (Ver ${nextVer})</span><br>
+                    <span style="color:#2563EB; font-weight:700;">🚀 업데이트 다운로더를 호출했습니다! (현재 Ver ${curVer})</span><br>
                     검은색 명령창에서 다운로드 완료 후, <a href="#" id="linkReloadExt" style="color:#059669; font-weight:bold; text-decoration:underline; cursor:pointer;">[여기를 클릭하여 확장 프로그램 새로고침]</a>을 해주세요.<br>
                     <span style="color:#94A3B8;">(※ 창이 안 뜬다면 <strong>'원클릭_등록.bat'</strong>을 최초 1회 실행했는지 확인해 주세요)</span>
                 `;
@@ -6391,7 +6331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-            showToast(`업데이트 다운로더 호출! (Ver ${nextVer})`);
+            showToast(`업데이트 다운로더 호출!`);
         });
     }
 
@@ -6471,15 +6411,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateDictStats();
                 updateLivePrepaidFees();
 
-                const nextVer = incrementAppVersion();
+                const curVer = getCurrentAppVersion();
 
                 if (syncDictStatusHint) {
                     syncDictStatusHint.innerHTML = `
-                        <span style="color:#059669; font-weight:700;">✅ 동기화 완료! (Ver ${nextVer})</span><br>
+                        <span style="color:#059669; font-weight:700;">✅ 동기화 완료!</span><br>
                         GitHub 최신 사전이 성공적으로 적용되었습니다. (총 ${Object.keys(dictionary).length}개 구장, 신규 ${addedCount}개 / 갱신 ${updatedCount}개)
                     `;
                 }
-                showToast(`최신 매핑사전 동기화 완료! (Ver ${nextVer}, 총 ${Object.keys(dictionary).length}개)`);
+                showToast(`최신 매핑사전 동기화 완료! (총 ${Object.keys(dictionary).length}개)`);
             } catch(err) {
                 if (syncDictStatusHint) {
                     syncDictStatusHint.innerHTML = `<span style="color:#EF4444; font-weight:700;">❌ 동기화 실패: ${err.message} (인터넷 또는 GitHub 연결을 확인하세요)</span>`;

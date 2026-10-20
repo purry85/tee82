@@ -58,18 +58,17 @@ if ($gitCmd) {
     }
 
     # ---------------------------------------------------------
-    # [Version Auto-Increment] 0.1씩 버전 자동 증가 로직
+    # [Version Auto-Increment] 깃허브 올리기 실행 시 0.0.1씩 버전 자동 증가 로직
     # ---------------------------------------------------------
     $manifestPath = Join-Path $targetDir "manifest.json"
     $popupHtmlPath = Join-Path $targetDir "popup.html"
     $sidepanelHtmlPath = Join-Path $targetDir "sidepanel.html"
-    $targetVersionShort = "3.0"
-    $targetVersionFull = "3.0.0"
+    $targetVersionFull = "2.0.0"
 
     if (Test-Path $manifestPath) {
         try {
             $manifestRaw = Get-Content $manifestPath -Raw -Encoding UTF8
-            $currentVerStr = "3.0.0"
+            $currentVerStr = "2.0.0"
             if ($manifestRaw -match '"version":\s*"([^"]+)"') {
                 $currentVerStr = $matches[1]
             }
@@ -84,50 +83,45 @@ if ($gitCmd) {
             } catch {}
 
             $shouldBump = $true
-            # 직전 커밋 버전(HEAD)과 현재 파일의 버전이 다르면 (예: 2.2에서 1.0으로 리셋된 첫 커밋인 경우)
-            # 현재 지정된 버전(1.0)을 그대로 최초 커밋하고, 그 다음 업로드부터 0.1씩 증가
+            # 직전 커밋 버전(HEAD)과 현재 파일의 버전이 다르면 (예: 이전 버전에서 2.0.0으로 리셋된 첫 커밋인 경우)
+            # 현재 지정된 버전(2.0.0)을 그대로 최초 커밋하고, 그 다음 업로드부터 0.0.1씩 증가
             if (-not $headVerStr -or ($headVerStr -ne $currentVerStr)) {
                 $shouldBump = $false
                 $targetVersionFull = $currentVerStr
-                $targetVersionShort = ($currentVerStr -replace '\.\d+$', '')
-                Write-Host ">> [VERSION] Version change detected (HEAD: $headVerStr -> Current: $targetVersionShort)." -ForegroundColor Yellow
-                Write-Host ">> [VERSION] Uploading initial version Ver $targetVersionShort ($targetVersionFull)..." -ForegroundColor Green
+                Write-Host ">> [VERSION] Version change detected (HEAD: $headVerStr -> Current: $targetVersionFull)." -ForegroundColor Yellow
+                Write-Host ">> [VERSION] Uploading baseline version Ver $targetVersionFull..." -ForegroundColor Green
             }
 
             if ($shouldBump) {
-                # 0.1 단위 올림 계산 (1.0 -> 1.1 -> 1.2 ... 1.9 -> 2.0)
+                # 0.0.1 단위 올림 계산 (2.0.0 -> 2.0.1 -> 2.0.2 -> 2.0.3 ...)
                 $vParts = $currentVerStr.Split('.')
-                $major = [int]$vParts[0]
+                $major = if ($vParts.Length -gt 0) { [int]$vParts[0] } else { 2 }
                 $minor = if ($vParts.Length -gt 1) { [int]$vParts[1] } else { 0 }
-                
-                $minor++
-                if ($minor -ge 10) {
-                    $major += [Math]::Floor($minor / 10)
-                    $minor = $minor % 10
-                }
+                $patch = if ($vParts.Length -gt 2) { [int]$vParts[2] } else { 0 }
 
-                $targetVersionShort = "$major.$minor"
-                $targetVersionFull = "$major.$minor.0"
+                $patch++
+                $targetVersionFull = "$major.$minor.$patch"
 
-                Write-Host ">> [VERSION] Auto-incrementing version (+0.1): $currentVerStr -> $targetVersionFull (Ver $targetVersionShort)" -ForegroundColor Green
+                Write-Host ">> [VERSION] Auto-incrementing version (+0.0.1): $currentVerStr -> $targetVersionFull (Ver $targetVersionFull)" -ForegroundColor Green
 
-                # 1. manifest.json 갱신 (정규식 치환으로 UTF8 인코딩 및 한글 완벽 보존)
+                # 1. manifest.json 갱신 (version 및 description 동시 갱신)
                 $manifestRaw = $manifestRaw -replace '(?<="version":\s*")[^"]+', $targetVersionFull
+                $manifestRaw = $manifestRaw -replace '\(Ver\s+[^)]+\)', "(Ver $targetVersionFull)"
                 [System.IO.File]::WriteAllText($manifestPath, $manifestRaw, (New-Object System.Text.UTF8Encoding($false)))
 
                 # 2. popup.html 갱신
                 if (Test-Path $popupHtmlPath) {
                     $pHtml = Get-Content $popupHtmlPath -Raw -Encoding UTF8
-                    $pHtml = $pHtml -replace '(?<=Automation\s+Ver\s+)\d+\.\d+', $targetVersionShort
-                    $pHtml = $pHtml -replace '(?<=id="badgeCurrentVer">Ver\s+)\d+\.\d+', $targetVersionShort
+                    $pHtml = $pHtml -replace '(?<=id="footerAppVersion">Ver\s+)[^<]+', $targetVersionFull
+                    $pHtml = $pHtml -replace '(?<=id="badgeCurrentVer">Ver\s+)[^ <]+', $targetVersionFull
                     [System.IO.File]::WriteAllText($popupHtmlPath, $pHtml, (New-Object System.Text.UTF8Encoding($false)))
                 }
 
                 # 3. sidepanel.html 갱신
                 if (Test-Path $sidepanelHtmlPath) {
                     $sHtml = Get-Content $sidepanelHtmlPath -Raw -Encoding UTF8
-                    $sHtml = $sHtml -replace '(?<=Automation\s+Ver\s+)\d+\.\d+', $targetVersionShort
-                    $sHtml = $sHtml -replace '(?<=id="badgeCurrentVer">Ver\s+)\d+\.\d+', $targetVersionShort
+                    $sHtml = $sHtml -replace '(?<=id="footerAppVersion">Ver\s+)[^<]+', $targetVersionFull
+                    $sHtml = $sHtml -replace '(?<=id="badgeCurrentVer">Ver\s+)[^ <]+', $targetVersionFull
                     [System.IO.File]::WriteAllText($sidepanelHtmlPath, $sHtml, (New-Object System.Text.UTF8Encoding($false)))
                 }
             }
@@ -140,8 +134,8 @@ if ($gitCmd) {
     git add -A
     
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Write-Host ">> [3/4] Committing changes (Ver $targetVersionShort)..." -ForegroundColor Cyan
-    git commit -m "Tee82 Ver $targetVersionShort ($timestamp)"
+    Write-Host ">> [3/4] Committing changes (Ver $targetVersionFull)..." -ForegroundColor Cyan
+    git commit -m "Tee82 Ver $targetVersionFull ($timestamp)"
     
     # Ensure current branch is named main
     git branch -M main
