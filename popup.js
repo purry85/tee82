@@ -6134,34 +6134,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnOpenNewTab = document.getElementById('btnOpenNewTab');
     if (btnOpenNewTab) btnOpenNewTab.addEventListener('click', () => chrome.tabs.create({ url: chrome.runtime.getURL('popup.html') }));
     
-    document.getElementById('btnToggleMemo')?.addEventListener('click', () => {
+    // 등록문구 설정 토글 (열기 ↔ 닫기)
+    const toggleMemoDrawer = () => {
         const drawer = document.getElementById('memoDrawer');
-        if (drawer) drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block';
-    });
-
-    document.getElementById('btnToggleMemoRock')?.addEventListener('click', () => {
-        const drawer = document.getElementById('memoDrawer');
-        if (drawer) {
+        if (!drawer) return;
+        const isOpen = drawer.style.display === 'block';
+        if (isOpen) {
+            drawer.style.display = 'none';
+        } else {
             drawer.style.display = 'block';
-            const rockEl = document.getElementById('golfrockMemo');
-            if (rockEl) {
-                rockEl.focus();
-                rockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-    });
+    };
 
-    document.getElementById('btnToggleMemoTop')?.addEventListener('click', () => {
-        const drawer = document.getElementById('memoDrawer');
-        if (drawer) {
-            drawer.style.display = 'block';
-            const topEl = document.getElementById('golftopMemo');
-            if (topEl) {
-                topEl.focus();
-                topEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-    });
+    document.getElementById('btnToggleMemo')?.addEventListener('click', toggleMemoDrawer);
+    document.getElementById('btnToggleMemoRock')?.addEventListener('click', toggleMemoDrawer);
+    document.getElementById('btnToggleMemoTop')?.addEventListener('click', toggleMemoDrawer);
 
     // 퀵 액션 메뉴 토글 (접기 / 펼치기)
     const btnToggleActionList = document.getElementById('btnToggleActionList');
