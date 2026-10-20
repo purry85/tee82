@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "GolfTee82",
-  "version": "2.0.1",
-  "description": "GolfTee82 - 골프몬 내글 가격수정 & 조인 자동등록 변환기 (Ver 2.0.1)",
+  "version": "2.0.2",
+  "description": "GolfTee82 - 골프몬 내글 가격수정 & 조인 자동등록 변환기 (Ver 2.0.2)",
   "icons": {
     "16": "icon.svg",
     "48": "icon.svg",
