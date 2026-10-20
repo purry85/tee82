@@ -110,6 +110,128 @@ async function humanClick(el, customX = null, customY = null) {
     el.dispatchEvent(new MouseEvent('click', opts));
 }
 
+// 메인 부킹프라자 화면의 플로팅 '등록 · 내글보기' 버튼 탐색 헬퍼
+function findRegisterMenuButton() {
+    const targets = Array.from(document.querySelectorAll('button, .q-btn, [role="button"], div, span, a'))
+        .filter(el => {
+            if (el.offsetHeight <= 0 || el.offsetWidth <= 0) return false;
+            const text = (el.innerText || el.textContent || '').trim().replace(/\s/g, '');
+            const rect = el.getBoundingClientRect();
+            return (text.includes('등록') && text.includes('내글보기')) && rect.height < 120 && rect.height > 10;
+        });
+    if (targets.length === 0) return null;
+    targets.sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length);
+    return targets[0].closest('button, .q-btn, [role="button"], .cursor-pointer') || targets[0];
+}
+
+// 하단 네비게이션 바의 '부킹' 탭 탐색 및 클릭 헬퍼 (홈 화면 이탈 시 부킹프라자로 자동 복귀)
+async function clickBottomBookingTab(maxAttempts = 10) {
+    console.log("[매크로] 하단 '부킹' 탭 탐색 및 클릭 시도...");
+    const winHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        if (shouldStopRegistration) return false;
+
+        // 1. Quasar q-tab 및 footer 내부에서 '부킹' 탐색
+        const tabCandidates = Array.from(document.querySelectorAll('.q-footer .q-tab, footer .q-tab, .q-tabs .q-tab, [role="tab"], .q-tab, .q-footer button, footer button, .q-footer a, footer a, .q-footer div, footer div, nav div, nav button, nav a'))
+            .filter(el => {
+                if (el.offsetHeight <= 0 || el.offsetWidth <= 0) return false;
+                const r = el.getBoundingClientRect();
+                if (r.top < winHeight - 140) return false; // 화면 하단부
+                const txt = (el.innerText || el.textContent || '').trim().replace(/\s+/g, '');
+                return txt === '부킹' || (txt.includes('부킹') && !txt.includes('검색') && !txt.includes('프라자') && !txt.includes('내글보기') && txt.length <= 4);
+            });
+
+        // 2. 화면 전체 하단 140px 이내의 모든 요소 중 '부킹' 탐색 (범용 fallback)
+        let matched = tabCandidates;
+        if (matched.length === 0) {
+            matched = Array.from(document.querySelectorAll('*'))
+                .filter(el => {
+                    if (el.offsetHeight <= 0 || el.offsetWidth <= 0) return false;
+                    const r = el.getBoundingClientRect();
+                    if (r.top < winHeight - 140) return false;
+                    const txt = (el.innerText || el.textContent || '').trim().replace(/\s+/g, '');
+                    return txt === '부킹';
+                });
+        }
+
+        if (matched.length > 0) {
+            // 가장 면적이 작은 요소(텍스트 리프) 우선
+            matched.sort((a, b) => (a.offsetWidth * a.offsetHeight) - (b.offsetWidth * b.offsetHeight));
+            const leaf = matched[0];
+            const clickTarget = leaf.closest('.q-tab, [role="tab"], button, .q-btn, a, .cursor-pointer') || leaf;
+
+            console.log(`[매크로] 하단 '부킹' 탭 발견 (${clickTarget.tagName}, class=${clickTarget.className}) -> 클릭 실행`);
+            clickTarget.style.setProperty('outline', '4px solid #00e676', 'important');
+            await sleep(80);
+
+            const rect = clickTarget.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const opts = { clientX: cx, clientY: cy, bubbles: true, cancelable: true, view: window };
+
+            const topEl = document.elementFromPoint(cx, cy) || clickTarget;
+            try {
+                topEl.dispatchEvent(new PointerEvent('pointerdown', opts));
+                topEl.dispatchEvent(new MouseEvent('mousedown', opts));
+            } catch(e) {}
+            await sleep(60);
+            try {
+                topEl.dispatchEvent(new PointerEvent('pointerup', opts));
+                topEl.dispatchEvent(new MouseEvent('mouseup', opts));
+                topEl.dispatchEvent(new MouseEvent('click', opts));
+            } catch(e) {}
+            try { clickTarget.click(); } catch(e) {}
+            try { topEl.click(); } catch(e) {}
+            await humanClick(clickTarget);
+
+            // 클릭 후 '등록 · 내글보기' 버튼 또는 부킹 화면이 뜰 때까지 대기
+            for (let w = 0; w < 30; w++) {
+                await sleep(150);
+                if (shouldStopRegistration) return true;
+                const regBtn = findRegisterMenuButton();
+                if (regBtn && regBtn.offsetHeight > 0) {
+                    console.log("[매크로] 하단 '부킹' 클릭 후 부킹프라자('등록 · 내글보기') 화면 복귀 확인 완료!");
+                    await sleep(250);
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        await sleep(250);
+    }
+
+    console.warn("[매크로] 하단 '부킹' 탭을 찾지 못함");
+    return false;
+}
+
+// 홈 화면 또는 부킹프라자 이탈 여부 판별 헬퍼
+function isHomeScreenOrNeedsBooking() {
+    // 1. 이미 등록 폼이나 팝업 다이얼로그가 열려있다면 복귀 불필요
+    if (document.querySelector('.q-dialog:not(.hidden), [role="dialog"]')) {
+        return false;
+    }
+    // 2. 이미 화면에 '등록 · 내글보기' 버튼이 있다면 부킹프라자 화면이므로 복귀 불필요
+    const regBtn = findRegisterMenuButton();
+    if (regBtn && regBtn.offsetHeight > 0) {
+        return false;
+    }
+    // 3. '등록상품내역' 화면이면 제외
+    if (typeof isRegisteredListPage === 'function' && isRegisteredListPage()) {
+        return false;
+    }
+
+    // 4. 홈 화면 특징: '골프몬 부킹 검색', '국내투어', '해외투어' 등이 있고 '등록 · 내글보기'가 없음
+    const bodyTxt = (document.body ? document.body.innerText || '' : '').replace(/\s+/g, '');
+    if (bodyTxt.includes('골프몬부킹검색') || bodyTxt.includes('국내투어') || bodyTxt.includes('해외투어') || bodyTxt.includes('개인정보유출')) {
+        return true;
+    }
+
+    // 5. '등록 · 내글보기' 버튼이 없고 등록 다이얼로그도 없다면 부킹 탭 복귀 필요
+    return true;
+}
+
 /// 1. 등록/내글보기 버튼 클릭 (재시도 및 대기 포함)
 async function clickRegisterMenu(maxAttempts = 15) {
     console.log("[매크로] '등록 · 내글보기' 버튼 탐색 중...");
@@ -151,6 +273,13 @@ async function clickRegisterMenu(maxAttempts = 15) {
             console.log("[매크로] '등록 · 내글보기' 클릭 완료");
             return true;
         }
+
+        // 3회 시도 후에도 '등록 · 내글보기'를 못 찾았고, 홈 화면 등으로 이탈한 경우 하단 '부킹' 탭 클릭 시도
+        if (attempt === 3 && isHomeScreenOrNeedsBooking()) {
+            console.log("[매크로] '등록 · 내글보기' 미발견 -> 홈 화면 감지됨. 하단 '부킹' 탭 클릭 시도...");
+            await clickBottomBookingTab(5);
+        }
+
         await sleep(250);
     }
     console.warn("[매크로] '등록 · 내글보기' 버튼을 찾지 못함 (이미 등록 폼일 수 있음)");
@@ -1375,6 +1504,13 @@ async function executeBatchRegistration(items, customMemo, mode = 'join', delayP
             await sleep(getStepDelay('normal', stepPreset));
             if (shouldStopRegistration) break;
 
+            // ★ 사용자 요청: 게시물 등록 후 홈 화면으로 이탈된 경우, 하단 '부킹' 탭을 클릭하여 부킹프라자로 복귀 후 다음 등록 시작
+            if (isHomeScreenOrNeedsBooking()) {
+                console.log(`[매크로] [${i + 1}/${items.length}] 홈 화면 또는 비-부킹 화면 감지 -> 하단 '부킹' 탭 클릭하여 부킹프라자 복귀 진행...`);
+                await clickBottomBookingTab();
+                await sleep(getStepDelay('normal', stepPreset));
+            }
+
             // 1) 등록/내글보기
             await clickRegisterMenu();
             if (shouldStopRegistration) break;
@@ -1599,19 +1735,6 @@ async function clickMyPostsMenu(maxAttempts = 15) {
     return false;
 }
 
-// 메인 부킹프라자 화면의 플로팅 '등록 · 내글보기' 버튼 탐색 헬퍼
-function findRegisterMenuButton() {
-    const targets = Array.from(document.querySelectorAll('button, .q-btn, [role="button"], div, span, a'))
-        .filter(el => {
-            if (el.offsetHeight <= 0 || el.offsetWidth <= 0) return false;
-            const text = (el.innerText || el.textContent || '').trim().replace(/\s/g, '');
-            const rect = el.getBoundingClientRect();
-            return (text.includes('등록') && text.includes('내글보기')) && rect.height < 120 && rect.height > 10;
-        });
-    if (targets.length === 0) return null;
-    targets.sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length);
-    return targets[0].closest('button, .q-btn, [role="button"], .cursor-pointer') || targets[0];
-}
 
 // 마이페이지 내 '내가 등록한 상품 내역' 버튼 탐색 헬퍼
 function findMyRegisteredPostsButton() {
