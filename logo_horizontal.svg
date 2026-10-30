@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 75" width="280" height="75">
+  <!-- 레퍼런스 GOLFTOP과 100% 동일한 구조의 가로형 브랜드 로고 -->
+  <g fill="#5C479C">
+    <!-- 좌측 엠블럼: 상단 T 바 + 원형 + 하단 골프 티 팁 (▼) -->
+    <!-- 1. T 바 -->
+    <path d="M 8 8 L 68 8 L 68 17 L 61 20 L 56 16 L 20 16 L 15 20 L 8 17 Z"/>
+
+    <!-- 2. 원형 바디 + 하단 삼각 티 팁 -->
+    <path fill-rule="evenodd" d="
+      M 38 19 
+      C 52 19 63 30 63 43 
+      C 63 50 59 56 53 60 
+      L 45 62 
+      L 38 74 
+      L 31 62 
+      L 23 60 
+      C 17 56 13 50 13 43 
+      C 13 30 24 19 38 19 Z 
+      M 38 27 
+      C 28 27 21 34 21 43 
+      C 21 52 28 59 38 59 
+      C 48 59 55 52 55 43 
+      C 55 34 48 27 38 27 Z
+    "/>
+
+    <!-- 엠블럼 중앙 T 모티브 (골프 티 기둥) -->
+    <path d="M 34 27 H 42 V 34 H 40 V 55 H 36 V 34 H 34 Z"/>
+
+    <!-- 우측 브랜드 텍스트: "EE82" (합쳐서 Tee82 완성) 또는 "82" -->
+    <text x="76" y="55" font-family="'Montserrat', 'Arial Black', -apple-system, BlinkMacSystemFont, sans-serif" font-size="44" font-weight="900" letter-spacing="-1">ee82</text>
+  </g>
+</svg>

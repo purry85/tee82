@@ -1,0 +1,180 @@
+{
+  "manifest_version": 3,
+  "name": "GolfTee82",
+  "version": "2.0.23",
+  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.23)",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage",
+    "sidePanel",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://*.golfmon.net/*",
+    "http://*.golfmon.net/*",
+    "https://golfmon.net/*",
+    "http://golfmon.net/*",
+    "https://*.golmarket.co.kr/*",
+    "http://*.golmarket.co.kr/*",
+    "https://golmarket.co.kr/*",
+    "http://golmarket.co.kr/*",
+    "https://*.golfrock.co.kr/*",
+    "http://*.golfrock.co.kr/*",
+    "https://golfrock.co.kr/*",
+    "http://golfrock.co.kr/*",
+    "https://*.golfland.co.kr/*",
+    "http://*.golfland.co.kr/*",
+    "https://golfland.co.kr/*",
+    "http://golfland.co.kr/*",
+    "https://*.golftop.kr/*",
+    "http://*.golftop.kr/*",
+    "https://intra.golftop.kr/*",
+    "http://intra.golftop.kr/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "https://github.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tee82",
+    "default_icon": {
+      "16": "icon.svg",
+      "48": "icon.svg",
+      "128": "icon.svg"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.golfmon.net/*",
+        "http://*.golfmon.net/*",
+        "https://golfmon.net/*",
+        "http://golfmon.net/*"
+      ],
+      "js": [
+        "content_script.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golfrock.co.kr/*",
+        "http://*.golfrock.co.kr/*",
+        "https://golfrock.co.kr/*",
+        "http://golfrock.co.kr/*"
+      ],
+      "js": [
+        "golfrock_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golfrock.co.kr/*",
+        "http://*.golfrock.co.kr/*",
+        "https://golfrock.co.kr/*",
+        "http://golfrock.co.kr/*"
+      ],
+      "js": [
+        "golfrock_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golfland.co.kr/*",
+        "http://*.golfland.co.kr/*",
+        "https://golfland.co.kr/*",
+        "http://golfland.co.kr/*"
+      ],
+      "js": [
+        "golfland_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golfland.co.kr/*",
+        "http://*.golfland.co.kr/*",
+        "https://golfland.co.kr/*",
+        "http://golfland.co.kr/*"
+      ],
+      "js": [
+        "golfland_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golftop.kr/*",
+        "http://*.golftop.kr/*",
+        "https://intra.golftop.kr/*",
+        "http://intra.golftop.kr/*"
+      ],
+      "js": [
+        "golftop_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golftop.kr/*",
+        "http://*.golftop.kr/*",
+        "https://intra.golftop.kr/*",
+        "http://intra.golftop.kr/*"
+      ],
+      "js": [
+        "golftop_content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
