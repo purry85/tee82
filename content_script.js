@@ -2445,6 +2445,15 @@ return normTab&&(normTab===normTarget||normTab.includes(normTarget)||normTarget.
 }
 const isRegionTabActive=(el)=>{
 if(!el)return false;
+try{
+const urlTab=new URLSearchParams(window.location.search).get('\x71\x54\x61\x62');
+if(urlTab){
+const normUrlTab=urlTab.trim().replace(/[\s/]/g,'');
+if(normUrlTab&&normUrlTab!==normTarget&&!normUrlTab.includes(normTarget)&&!normTarget.includes(normUrlTab)){
+return false;
+}
+}
+}catch(e){}
 const root=el.closest('\x2e\x71-\x74\x61\x62, [\x72\x6f\x6c\x65="\x74\x61\x62"]')||el;
 if(root.classList.contains('\x71-\x74\x61\x62--\x61\x63\x74\x69\x76\x65')||
 root.classList.contains('\x71-\x72\x6f\x75\x74\x65\x72-\x6c\x69\x6e\x6b--\x61\x63\x74\x69\x76\x65')||
@@ -2495,49 +2504,72 @@ console.warn(`[\uac00\uaca9\uc218\uc815] \uc9c0\uc5ed \ud0ed (${cleanReg})\uc744
 return true;
 }
 function _0x103e(){
-const allBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x64\x69\x76'))
+const regionBarTop=_0x1031();
+const minFilterTop=Math.max(120,regionBarTop+15);
+const maxFilterBottom=regionBarTop+125;
+const allBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x64\x69\x76, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 if(el.closest('\x2e\x71-\x63\x61\x72\x64, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"], \x2e\x71-\x69\x74\x65\x6d'))return false;
 if(el.closest('\x2e\x71-\x74\x61\x62\x73, \x2e\x71-\x74\x61\x62, [\x72\x6f\x6c\x65="\x74\x61\x62"], [\x72\x6f\x6c\x65="\x74\x61\x62\x6c\x69\x73\x74"]'))return false;
-if(el.closest('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72'))return false;
+if(el.closest('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, \x2e\x71-\x64\x69\x61\x6c\x6f\x67, \x2e\x71-\x6d\x65\x6e\x75, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]'))return false;
 if(el.tagName==='\x41'||el.closest('\x61'))return false;
 const r=el.getBoundingClientRect();
-if(r.top<80||r.top>350)return false;
+if(r.top<minFilterTop||r.bottom>maxFilterBottom)return false;
+if(r.width<35||r.width>140||r.height<18||r.height>58)return false;
 return true;
 });
-const golfBtn=allBtns.find(el=>{
-const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return txt.includes('\uace8\ud504\uc7a5');
+const resolvePillRoot=(el)=>{
+if(!el)return null;
+let curr=el;
+let best=el;
+for(let d=0;d<4&&curr&&curr!==document.body;d++){
+const r=curr.getBoundingClientRect();
+if(r.width>=40&&r.width<=140&&r.height>=22&&r.height<=58&&
+r.top>=minFilterTop&&r.bottom<=maxFilterBottom){
+best=curr;
+if(curr.tagName==='\x42\x55\x54\x54\x4f\x4e'||curr.classList.contains('\x71-\x62\x74\x6e')||curr.getAttribute('\x72\x6f\x6c\x65')==='\x62\x75\x74\x74\x6f\x6e'){
+break;
+}
+}else if(r.width>140||r.height>58){
+break;
+}
+curr=curr.parentElement;
+}
+return best;
+};
+const golfCandidates=allBtns.filter(el=>{
+const txt=(el.innerText||el.textContent||'').trim().replace(/[\s⌄∨▼▾vV]/g,'');
+return txt==='\uace8\ud504\uc7a5';
 });
-if(golfBtn){
-const gClick=golfBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||golfBtn;
+if(golfCandidates.length>0){
+golfCandidates.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
+const gClick=resolvePillRoot(golfCandidates[0]);
+if(gClick){
 const gRect=gClick.getBoundingClientRect();
 const leftPills=allBtns.filter(el=>{
 if(el===gClick||el.contains(gClick)||gClick.contains(el))return false;
-if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-if(Math.abs(r.top-gRect.top)>25)return false;
-if(r.right>gRect.left+5)return false;
-if(r.width>140||r.height>65)return false;
-return true;
+if(Math.abs(r.top-gRect.top)>22)return false;
+if(r.left>=gRect.left-5)return false;
+const txt=(el.innerText||el.textContent||'').trim().replace(/[\s⌄∨▼▾vV]/g,'');
+return txt==='\uc804\uccb4'||txt==='\uc591\ub3c4'||txt==='\uc870\uc778';
 });
 if(leftPills.length>0){
-leftPills.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
-return leftPills[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||leftPills[0];
+leftPills.sort((a,b)=>a.getBoundingClientRect().left-b.getBoundingClientRect().left);
+return resolvePillRoot(leftPills[0]);
+}
 }
 }
 const categoryPills=allBtns.filter(el=>{
 const r=el.getBoundingClientRect();
-if(r.left>window.innerWidth*0.45)return false;
-if(r.width>140||r.height>65)return false;
-const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return txt==='\uc804\uccb4'||txt==='\uc591\ub3c4'||txt==='\uc870\uc778'||
-txt.startsWith('\uc804\uccb4')||txt.startsWith('\uc591\ub3c4')||txt.startsWith('\uc870\uc778');
+if(r.left>window.innerWidth*0.55)return false;
+const txt=(el.innerText||el.textContent||'').trim().replace(/[\s⌄∨▼▾vV]/g,'');
+return txt==='\uc804\uccb4'||txt==='\uc591\ub3c4'||txt==='\uc870\uc778';
 });
 if(categoryPills.length>0){
 categoryPills.sort((a,b)=>a.getBoundingClientRect().left-b.getBoundingClientRect().left);
-return categoryPills[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||categoryPills[0];
+return resolvePillRoot(categoryPills[0]);
 }
 return null;
 }
@@ -2554,55 +2586,82 @@ if(!categoryBtn){
 console.warn("[\ud544\ud130] \uad6c\ubd84 \ud544\ud130 \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\ud1b5\uacfc)");
 return false;
 }
-const curTxt=(categoryBtn.innerText||categoryBtn.textContent||'').trim().replace(/\s+/g,'');
-console.log(`[\ud544\ud130] \ud604\uc7ac \uad6c\ubd84 \ud544\ud130 \uc0c1\ud0dc: [${curTxt}] (\ubaa9\ud45c: [${targetType}])`);
-const isTargetAll=targetType==='\uc804\uccb4';
-const curIsAll=curTxt==='\uc804\uccb4'||curTxt.startsWith('\uc804\uccb4');
-if(isTargetAll&&curIsAll){
-console.log(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130\uac00 \uc774\ubbf8 [\uc804\uccb4]\ub85c \uc124\uc815\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4. (\uc720\uc9c0)`);
-return true;
-}
-if(!isTargetAll&&curTxt.includes(targetType)&&!curIsAll){
-console.log(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130\uac00 \uc774\ubbf8 [${targetType}]\ub85c \uc124\uc815\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4. (\uc720\uc9c0)`);
+const curTxt=(categoryBtn.innerText||categoryBtn.textContent||'').trim().replace(/[\s⌄∨▼▾vV]/g,'');
+let urlOption='';
+try{
+urlOption=(new URLSearchParams(window.location.search).get('\x71\x4f\x70\x74\x69\x6f\x6e')||'').trim();
+}catch(e){}
+console.log(`[\ud544\ud130] \ud604\uc7ac \uad6c\ubd84 \ud544\ud130 \uc0c1\ud0dc: \ubc84\ud2bc=[${curTxt}], URL(qOption)=[${urlOption||'\ubbf8\uc9c0\uc815'}] (\ubaa9\ud45c: [${targetType}])`);
+const urlMatchesTarget=!urlOption||urlOption===targetType;
+if(curTxt===targetType&&urlMatchesTarget){
+console.log(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130\uac00 \uc774\ubbf8 [${targetType}]\ub85c \uc815\ud655\ud788 \uc124\uc815\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4. (\uc720\uc9c0)`);
 return true;
 }
 if(categoryBtn.tagName==='\x41'||categoryBtn.closest('\x61')||categoryBtn.closest('\x2e\x71-\x74\x61\x62\x73, \x2e\x71-\x74\x61\x62, [\x72\x6f\x6c\x65="\x74\x61\x62"]')){
 console.warn(`[\ud544\ud130] \u26a0\ufe0f \uac10\uc9c0\ub41c \uc694\uc18c\uac00 \ub9c1\ud06c/\ud0ed \uc694\uc18c\uc774\ubbc0\ub85c \ud398\uc774\uc9c0 \uc774\ud0c8 \ubc29\uc9c0\ub97c \uc704\ud574 \ud074\ub9ad\uc744 \ucc28\ub2e8\ud569\ub2c8\ub2e4.`);
 return false;
 }
-console.log(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130 \ubc84\ud2bc \ud074\ub9ad -> \uc120\ud0dd \ubaa8\ub2ec \uc624\ud508`);
+console.log(`[\ud544\ud130] \uc88c\uce21 \uc0c1\ub2e8 \uad6c\ubd84 \ud544\ud130 \ubc84\ud2bc \ud074\ub9ad -> [${targetType}] \uc120\ud0dd \ubaa8\ub2ec \uc624\ud508`);
 categoryBtn.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 categoryBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 enforceNonSubmitButtonType(categoryBtn);
 await _0x1001(80);
 await _0x1005(categoryBtn);
-await _0x1001(120);
+await _0x1001(150);
 if(!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x62\x6f\x74\x74\x6f\x6d-\x73\x68\x65\x65\x74, \x2e\x71-\x6d\x65\x6e\x75, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"]')){
 try{categoryBtn.click();}catch(e){}
 }
 for(let w=0;w<10;w++){
 await _0x1001(150);
-const dialog=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x62\x6f\x74\x74\x6f\x6d-\x73\x68\x65\x65\x74, \x2e\x71-\x6d\x65\x6e\x75, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"]');
-const searchScope=dialog||document.body;
-const options=Array.from(searchScope.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x62\x75\x74\x74\x6f\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
+const popupEl=document.querySelector('\x2e\x71-\x6d\x65\x6e\x75\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x62\x6f\x74\x74\x6f\x6d-\x73\x68\x65\x65\x74, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"]');
+if(!popupEl)continue;
+const options=Array.from(popupEl.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x62\x75\x74\x74\x6f\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0)return false;
-if(!dialog&&el.closest('\x2e\x71-\x63\x61\x72\x64, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"]'))return false;
 if(el.tagName==='\x41'||el.closest('\x61'))return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
 return t===targetType;
 });
 if(options.length>0){
 const leaf=options.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length)[0];
-const opt=leaf.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x62\x75\x74\x74\x6f\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||leaf;
+const opt=leaf.closest('\x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"], [\x72\x6f\x6c\x65="\x72\x61\x64\x69\x6f"], [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x6c\x61\x62\x65\x6c, \x62\x75\x74\x74\x6f\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||leaf;
 opt.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x39\x38\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 enforceNonSubmitButtonType(opt);
 await _0x1001(80);
+const isAlreadyChecked=opt.getAttribute('\x61\x72\x69\x61-\x63\x68\x65\x63\x6b\x65\x64')==='\x74\x72\x75\x65'||
+opt.classList.contains('\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78--\x74\x72\x75\x74\x68\x79')||
+Boolean(opt.querySelector('\x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78--\x74\x72\x75\x74\x68\x79, [\x61\x72\x69\x61-\x63\x68\x65\x63\x6b\x65\x64="\x74\x72\x75\x65"], \x69\x6e\x70\x75\x74\x3a\x63\x68\x65\x63\x6b\x65\x64'));
+if(!isAlreadyChecked){
 await _0x1005(opt);
-console.log(`[\ud544\ud130] \ubaa8\ub2ec \ub0b4 [${targetType}] \ud074\ub9ad \uc644\ub8cc!`);
-await _0x1001(350);
+try{opt.click();}catch(e){}
+const innerInput=opt.querySelector('\x69\x6e\x70\x75\x74');
+if(innerInput&&!innerInput.checked){
+try{innerInput.click();}catch(e){}
+}
+}
+console.log(`[\ud544\ud130] \ubaa8\ub2ec \ub0b4 [${targetType}] \uc120\ud0dd \uc644\ub8cc!`);
+await _0x1001(200);
+const confirmBtns=Array.from(popupEl.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+return t==='\uc120\ud0dd'||t==='\ud655\uc778';
+});
+if(confirmBtns.length>0){
+confirmBtns.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
+const cBtn=confirmBtns[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||confirmBtns[0];
+enforceNonSubmitButtonType(cBtn);
+await _0x1005(cBtn);
+try{cBtn.click();}catch(e){}
+console.log(`[\ud544\ud130] \ubaa8\ub2ec \ud558\ub2e8 [\uc120\ud0dd] \ud655\uc778 \ubc84\ud2bc \ud074\ub9ad \uc644\ub8cc!`);
+}
+await _0x1001(400);
 return true;
 }
+}
+const openMenu=document.querySelector('\x2e\x71-\x6d\x65\x6e\x75\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"])');
+if(openMenu){
+try{document.body.click();}catch(e){}
 }
 console.warn(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130 \ubaa8\ub2ec \ub0b4\uc5d0\uc11c [${targetType}] \uc635\uc158\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
 return false;
@@ -2682,16 +2741,16 @@ if(/4인필수|1팀/.test(bTxt)){
 hasTransferTag=true;
 }
 }
-const textHasTransferBadge=/양도\s*\d*\s*건/.test(text);
-const textHasJoinBadge=/조인\s*\d*\s*건/.test(text);
-const textHasJoinChip=/부부|커플|\d+명|남성|여성|무관/.test(text);
+const textHasTransferBadge=/양도\s*\d+\s*건/.test(text);
+const textHasJoinBadge=/조인\s*\d+\s*건/.test(text);
+const textHasJoinChip=/부부|커플|\d+\s*명|남성|여성|무관/.test(text);
 const textHasTransferTag=/4인\s*필수|4인필수/.test(text);
-const isTransfer=hasTransferBadge||textHasTransferBadge||(hasTransferTag&&!hasJoinBadge&&!hasJoinChip);
+if((hasTransferBadge||textHasTransferBadge)&&!hasJoinBadge&&!textHasJoinBadge)return'\uc591\ub3c4';
+if((hasJoinBadge||textHasJoinBadge)&&!hasTransferBadge&&!textHasTransferBadge)return'\uc870\uc778';
+const isTransfer=hasTransferBadge||textHasTransferBadge||(hasTransferTag&&!hasJoinBadge&&!hasJoinChip&&!textHasJoinChip);
 const isJoin=hasJoinBadge||textHasJoinBadge||hasJoinChip||textHasJoinChip;
 if(isTransfer&&!isJoin)return'\uc591\ub3c4';
 if(isJoin&&!isTransfer)return'\uc870\uc778';
-if(hasTransferBadge&&!hasJoinBadge)return'\uc591\ub3c4';
-if(hasJoinBadge&&!hasTransferBadge)return'\uc870\uc778';
 return isTransfer?'\uc591\ub3c4':(isJoin?'\uc870\uc778':'\x75\x6e\x6b\x6e\x6f\x77\x6e');
 }
 function _0x1042(normCard,normG1,normG2){
@@ -2718,7 +2777,7 @@ if(el.offsetWidth<120)return false;
 if(el.closest('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, \x2e\x71-\x66\x6f\x6f\x74\x65\x72, \x66\x6f\x6f\x74\x65\x72, \x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]'))return false;
 const txt=el.innerText||el.textContent||'';
 if(!/\d{1,2}:\d{2}/.test(txt)||!/원/.test(txt))return false;
-if(!/진행중|마감|조인|양도|\d+\s*홀/.test(txt))return false;
+if(!/(?:조인|양도)\s*\d*\s*건/.test(txt)&&!/진행중|마감|지난티업/.test(txt))return false;
 return true;
 });
 const leafCards=allNodes.filter(item=>{
@@ -3072,8 +3131,8 @@ resolve({action:'\x73\x74\x6f\x70'});
 });
 }
 function isEditPage(){
-const curUrl=window.location.href;
-if(curUrl.includes('\x2f\x65\x64\x69\x74')||curUrl.includes('\x2f\x6d\x6f\x64\x69\x66\x79'))return true;
+const curUrl=window.location.href.toLowerCase();
+if(curUrl.includes('\x2f\x6f\x76\x65\x72\x77\x72\x69\x74\x65')||curUrl.includes('\x2f\x6a\x6f\x69\x6e\x77\x72\x69\x74\x65')||curUrl.includes('\x2f\x65\x64\x69\x74')||curUrl.includes('\x2f\x6d\x6f\x64\x69\x66\x79'))return true;
 const headerEl=document.querySelector('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72');
 const hTxt=(headerEl?headerEl.textContent:'').replace(/\s+/g,'');
 if(hTxt.includes('\uc218\uc815')&&(hTxt.includes('\uc591\ub3c4')||hTxt.includes('\uc870\uc778')))return true;
@@ -3085,6 +3144,73 @@ if(r.top<80)return false;
 const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
 return txt==='\uc218\uc815\ud558\uae30'||txt==='\uc218\uc815\uc644\ub8cc';
 });
+}
+function detectCurrentDetailPageType(){
+const headerEls=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, [\x63\x6c\x61\x73\x73*="\x68\x65\x61\x64\x65\x72"], [\x63\x6c\x61\x73\x73*="\x74\x6f\x6f\x6c\x62\x61\x72"]'))
+.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=90);
+for(const h of headerEls){
+const hTxt=(h.innerText||h.textContent||'').trim().replace(/\s+/g,'');
+if(hTxt.includes('\ub4f1\ub85d\uc0c1\ud488\ub0b4\uc5ed'))continue;
+if(hTxt.includes('\uc591\ub3c4')&&!hTxt.includes('\uc870\uc778'))return'\uc591\ub3c4';
+if(hTxt.includes('\uc870\uc778')&&!hTxt.includes('\uc591\ub3c4'))return'\uc870\uc778';
+}
+const topEls=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=85&&el.children.length<=2);
+for(const el of topEls){
+const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+if(t.endsWith('\uc591\ub3c4')&&!t.includes('\uc870\uc778'))return'\uc591\ub3c4';
+if(t.endsWith('\uc870\uc778')&&!t.includes('\uc591\ub3c4'))return'\uc870\uc778';
+}
+return'';
+}
+function detectCurrentEditPageType(){
+const curUrl=window.location.href.toLowerCase();
+if(curUrl.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6f\x76\x65\x72\x77\x72\x69\x74\x65')||curUrl.includes('\x2f\x6f\x76\x65\x72\x77\x72\x69\x74\x65'))return'\uc591\ub3c4';
+if(curUrl.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6a\x6f\x69\x6e\x77\x72\x69\x74\x65')||curUrl.includes('\x2f\x6a\x6f\x69\x6e\x77\x72\x69\x74\x65'))return'\uc870\uc778';
+const topEls=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, \x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=140);
+for(const el of topEls){
+const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+if(t==='\uc591\ub3c4\uc218\uc815'||t==='\uc591\ub3c4\uc0c1\uc138'||t.includes('\uc591\ub3c4\uc218\uc815'))return'\uc591\ub3c4';
+if(t==='\uc870\uc778\uc218\uc815'||t==='\uc870\uc778\uc0c1\uc138'||t.includes('\uc870\uc778\uc218\uc815'))return'\uc870\uc778';
+}
+const bodyTxt=(document.body.innerText||'').replace(/\s+/g,'');
+if(bodyTxt.includes('\uc591\ub3c4\uc218\uc815'))return'\uc591\ub3c4';
+if(bodyTxt.includes('\uc870\uc778\uc218\uc815')||bodyTxt.includes('\uc870\uc778\uc870\uac74\uc744\uc120\ud0dd\ud558\uc138\uc694')||bodyTxt.includes('\uc694\uccad\uc778\uc6d0\uc744\uc120\ud0dd\ud558\uc138\uc694'))return'\uc870\uc778';
+if(bodyTxt.includes('\uc591\ub3c4\uc778'))return'\uc591\ub3c4';
+return detectCurrentDetailPageType();
+}
+async function ensureCorrectEditRouteAndType(expectedCategory='\uc591\ub3c4',maxWaitMs=1500){
+const curUrl=window.location.href;
+const idMatch=curUrl.match(/[?&]id=(\d+)/);
+const postId=idMatch?idMatch[1]:'';
+if(expectedCategory==='\uc591\ub3c4'&&curUrl.toLowerCase().includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6a\x6f\x69\x6e\x77\x72\x69\x74\x65')&&postId){
+const targetOverwriteUrl=curUrl.replace(/\/booking\/joinwrite/i,'\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6f\x76\x65\x72\x77\x72\x69\x74\x65');
+console.log(`[\uc218\uc815\ub77c\uc6b0\ud2b8\ubcf4\uc815] \ud83d\udd04 \uc591\ub3c4 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '/booking/joinwrite?id=${postId}'(\uc870\uc778 \uc218\uc815)\uac00 \uc5f4\ub838\uc2b5\ub2c8\ub2e4 -> \uc815\uc0c1 \uc591\ub3c4 \uc218\uc815 \uc8fc\uc18c('/booking/overwrite?id=${postId}')\ub85c SPA \ub77c\uc6b0\ud130 \uc804\ud658\ud558\uc5ec \uc218\uc815\uc744 \uacc4\uc18d \uc9c4\ud589\ud569\ub2c8\ub2e4!`);
+try{
+window.history.replaceState(window.history.state,'',targetOverwriteUrl);
+window.dispatchEvent(new PopStateEvent('\x70\x6f\x70\x73\x74\x61\x74\x65',{state:window.history.state}));
+}catch(e){}
+await _0x1001(600);
+}else if(expectedCategory==='\uc870\uc778'&&curUrl.toLowerCase().includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6f\x76\x65\x72\x77\x72\x69\x74\x65')&&postId){
+const targetJoinwriteUrl=curUrl.replace(/\/booking\/overwrite/i,'\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x6a\x6f\x69\x6e\x77\x72\x69\x74\x65');
+console.log(`[\uc218\uc815\ub77c\uc6b0\ud2b8\ubcf4\uc815] \ud83d\udd04 \uc870\uc778 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '/booking/overwrite?id=${postId}'(\uc591\ub3c4 \uc218\uc815)\uac00 \uc5f4\ub838\uc2b5\ub2c8\ub2e4 -> \uc815\uc0c1 \uc870\uc778 \uc218\uc815 \uc8fc\uc18c('/booking/joinwrite?id=${postId}')\ub85c SPA \ub77c\uc6b0\ud130 \uc804\ud658\ud569\ub2c8\ub2e4!`);
+try{
+window.history.replaceState(window.history.state,'',targetJoinwriteUrl);
+window.dispatchEvent(new PopStateEvent('\x70\x6f\x70\x73\x74\x61\x74\x65',{state:window.history.state}));
+}catch(e){}
+await _0x1001(600);
+}
+const loops=Math.max(1,Math.ceil(maxWaitMs/100));
+for(let i=0;i<loops;i++){
+const nowType=detectCurrentEditPageType();
+const hasLoadedInput=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).some(inp=>(inp.value||'').trim().length>=3);
+if(expectedCategory&&nowType===expectedCategory&&hasLoadedInput){
+return nowType;
+}
+await _0x1001(100);
+}
+return detectCurrentEditPageType();
 }
 function isCurrentlyOnTargetEditPage(item){
 if(!isEditPage()||!item)return false;
@@ -3100,47 +3226,36 @@ const timeMatched=Boolean(timeInputMatched||(timeDigits&&bodyText.replace(/[^\d]
 return Boolean(golfMatched&&timeMatched);
 }
 function findDetailMoreButton(){
-const allDivs=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x70')).filter(el=>{
-if(el.offsetHeight<=0)return false;
-if(el.children.length>2)return false;
-const txt=(el.innerText||el.textContent||'').trim();
-return/\d{4}[./\-]\d{1,2}[./\-]\d{1,2}.*(?:수정|등록)/.test(txt)||
-(/\d{1,2}[./\-]\d{1,2}.*(?:수정|등록)/.test(txt)&&txt.includes('\x3a'));
-});
-for(const timeEl of allDivs){
-let rowContainer=timeEl.parentElement;
-for(let d=0;d<4&&rowContainer;d++){
-const btns=Array.from(rowContainer.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
+const headerContainers=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72'))
+.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=90);
+for(const hdr of headerContainers){
+const hdrRect=hdr.getBoundingClientRect();
+const hdrBtns=Array.from(hdr.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(b=>{
 if(b.offsetHeight<=0||b.offsetWidth<=0)return false;
 const r=b.getBoundingClientRect();
-return r.width<=90&&r.height<=90;
+return r.width<=90&&r.height<=90&&r.left>hdrRect.left+hdrRect.width*0.5;
 });
-if(btns.length>0){
-const moreBtn=btns.find(b=>{
+if(hdrBtns.length>0){
+const moreIconBtn=hdrBtns.find(b=>{
 const t=(b.innerText||b.textContent||'').trim().toLowerCase();
 const a=(b.getAttribute('\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c')||b.getAttribute('\x6e\x61\x6d\x65')||b.dataset?.icon||'').toLowerCase();
+const cls=(b.className&&typeof b.className==='\x73\x74\x72\x69\x6e\x67')?b.className.toLowerCase():'';
 return t==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||t==='\x6d\x6f\x72\x65'||t==='\u22ee'||t==='\ue5d4'||t==='\ufe19'||
-t.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||a.includes('\x6d\x6f\x72\x65')||a.includes('\ub354\ubcf4\uae30');
+t.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||a.includes('\x6d\x6f\x72\x65')||a.includes('\ub354\ubcf4\uae30')||cls.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74');
 });
-if(moreBtn){
-return moreBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||moreBtn;
+if(moreIconBtn){
+return moreIconBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||moreIconBtn;
 }
-const timeRect=timeEl.getBoundingClientRect();
-const rightBtns=btns.filter(b=>b.getBoundingClientRect().left>=timeRect.left+40);
-if(rightBtns.length>0){
-rightBtns.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
-return rightBtns[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||rightBtns[0];
-}
-}
-rowContainer=rowContainer.parentElement;
+hdrBtns.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
+return hdrBtns[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||hdrBtns[0];
 }
 }
 const topElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x61, \x73\x70\x61\x6e, \x64\x69\x76'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-if(r.top<-10||r.bottom>280)return false;
+if(r.top<-10||r.bottom>220)return false;
 if(r.width>90||r.height>90)return false;
 return true;
 });
@@ -3154,6 +3269,43 @@ txt.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||aria.includes('\x6d\x6f\x7
 if(iconMatch){
 return iconMatch.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||iconMatch;
 }
+const allDivs=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x70')).filter(el=>{
+if(el.offsetHeight<=0)return false;
+if(el.children.length>2)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+return/\d{4}[./\-]\d{1,2}[./\-]\d{1,2}.*(?:수정|등록)/.test(txt)||
+(/\d{1,2}[./\-]\d{1,2}.*(?:수정|등록)/.test(txt)&&txt.includes('\x3a'));
+});
+for(const timeEl of allDivs){
+const timeRect=timeEl.getBoundingClientRect();
+let rowContainer=timeEl.parentElement;
+for(let d=0;d<4&&rowContainer;d++){
+const btns=Array.from(rowContainer.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
+.filter(b=>{
+if(b.offsetHeight<=0||b.offsetWidth<=0)return false;
+const r=b.getBoundingClientRect();
+if(r.top>timeRect.bottom+8)return false;
+return r.width<=90&&r.height<=90;
+});
+if(btns.length>0){
+const moreBtn=btns.find(b=>{
+const t=(b.innerText||b.textContent||'').trim().toLowerCase();
+const a=(b.getAttribute('\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c')||b.getAttribute('\x6e\x61\x6d\x65')||b.dataset?.icon||'').toLowerCase();
+return t==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||t==='\x6d\x6f\x72\x65'||t==='\u22ee'||t==='\ue5d4'||t==='\ufe19'||
+t.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||a.includes('\x6d\x6f\x72\x65')||a.includes('\ub354\ubcf4\uae30');
+});
+if(moreBtn){
+return moreBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||moreBtn;
+}
+const rightBtns=btns.filter(b=>b.getBoundingClientRect().left>=timeRect.left+40);
+if(rightBtns.length>0){
+rightBtns.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
+return rightBtns[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||rightBtns[0];
+}
+}
+rowContainer=rowContainer.parentElement;
+}
+}
 const allMoreIcons=Array.from(document.querySelectorAll('\x69, \x2e\x71-\x69\x63\x6f\x6e, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -3164,11 +3316,11 @@ return t==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||t==='\u22ee'||t==='\ue5d4'||t
 if(allMoreIcons.length>0){
 return allMoreIcons[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||allMoreIcons[0];
 }
-const pageEl=document.querySelector('\x2e\x71-\x70\x61\x67\x65, \x6d\x61\x69\x6e, \x23\x71-\x61\x70\x70, \x62\x6f\x64\x79')||document.body;
+const pageEl=document.querySelector('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x2e\x71-\x70\x61\x67\x65, \x6d\x61\x69\x6e, \x23\x71-\x61\x70\x70, \x62\x6f\x64\x79')||document.body;
 const pageRect=pageEl.getBoundingClientRect();
-const probeYList=[65,80,95,110,125,140,155,170];
+const probeYList=[25,35,45,55,65];
 for(const py of probeYList){
-const pEl=document.elementFromPoint(pageRect.right-25,py)||document.elementFromPoint(pageRect.right-40,py);
+const pEl=document.elementFromPoint(pageRect.right-24,py)||document.elementFromPoint(pageRect.right-36,py);
 if(pEl&&pEl!==document.body&&pEl!==document.documentElement){
 const btn=pEl.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72');
 if(btn&&btn.offsetHeight>0&&btn.getBoundingClientRect().left>pageRect.left+150){
@@ -3179,27 +3331,33 @@ return btn;
 return null;
 }
 function findMenuEditItem(){
-const menuContainers=Array.from(document.querySelectorAll('\x2e\x71-\x6d\x65\x6e\x75, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75"], \x2e\x71-\x70\x6f\x72\x74\x61\x6c, \x2e\x71-\x64\x69\x61\x6c\x6f\x67'))
+const menuContainers=Array.from(document.querySelectorAll('\x2e\x71-\x6d\x65\x6e\x75, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75"], \x2e\x71-\x70\x6f\x72\x74\x61\x6c'))
 .filter(el=>el.offsetHeight>0);
 for(const menu of menuContainers){
-const items=Array.from(menu.querySelectorAll('*')).filter(el=>{
-if(el.offsetHeight<=0)return false;
-const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return txt==='\uc218\uc815'||txt==='\uc218\uc815\ud558\uae30'||(txt.includes('\uc218\uc815')&&!txt.includes('\x2f')&&!txt.includes('\x3a')&&txt.length<=6);
-});
-if(items.length>0){
-return items[0].closest('\x2e\x71-\x69\x74\x65\x6d, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||items[0];
-}
-}
-const allCandidates=Array.from(document.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x64\x69\x76, \x73\x70\x61\x6e'))
+const exactItems=Array.from(menu.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0)return false;
 const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-if(txt.length>6||txt.includes('\x2f')||txt.includes('\x3a')||txt.includes('('))return false;
+return txt==='\uc218\uc815'||txt==='\uc218\uc815\ud558\uae30';
+});
+if(exactItems.length>0){
+exactItems.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length);
+const leaf=exactItems[0];
+return leaf.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e')||leaf;
+}
+}
+const allCandidates=Array.from(document.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(el=>{
+if(el.offsetHeight<=0)return false;
+const r=el.getBoundingClientRect();
+if(r.top<0||r.bottom>280)return false;
+const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
 return txt==='\uc218\uc815'||txt==='\uc218\uc815\ud558\uae30';
 });
 if(allCandidates.length>0){
-return allCandidates[0].closest('\x2e\x71-\x69\x74\x65\x6d, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||allCandidates[0];
+allCandidates.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length);
+const leaf=allCandidates[0];
+return leaf.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6d\x65\x6e\x75\x69\x74\x65\x6d"], \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||leaf;
 }
 return null;
 }
@@ -3374,29 +3532,36 @@ const cx=rect.left+rect.width/2;
 const cy=rect.top+rect.height/2;
 const innerTarget=actualCard.querySelector('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72\x3a\x6e\x6f\x74(\x2e\x71-\x62\x61\x64\x67\x65)\x3a\x6e\x6f\x74(\x2e\x71-\x63\x68\x69\x70), \x61, \x2e\x71-\x69\x74\x65\x6d')||actualCard;
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 1\ucc28 \ub0b4\ubd80 \ud0c0\uac9f \ud074\ub9ad \uc2dc\ub3c4: <${innerTarget.tagName} class="${innerTarget.className}"> (\uc88c\ud45c: ${Math.round(cx)}, ${Math.round(cy)})`);
+try{
+innerTarget.click();
+}catch(e){
 await _0x1005(innerTarget,cx,cy);
-try{innerTarget.click();}catch(e){}
-if(actualCard!==innerTarget){
-try{actualCard.click();}catch(e){}
 }
 for(let w=0;w<18;w++){
 await _0x1001(100);
 if(isDetailPage()||isEditPage()){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc131\uacf5! (1\ucc28)`);
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+try{el.scrollTop=0;}catch(e){}
+});
 await _0x1001(300);
 return true;
 }
 }
-const centerPointEl=document.elementFromPoint(cx,cy);
+const centerPointEl=document.elementFromPoint(cx,cy)||innerTarget;
 if(centerPointEl){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 2\ucc28 \uc911\uc559 \uc88c\ud45c(${Math.round(cx)}, ${Math.round(cy)}) \ud074\ub9ad: <${centerPointEl.tagName}>`);
-await _0x1006(centerPointEl,cx,cy);
-try{centerPointEl.click();}catch(e){}
+await _0x1005(centerPointEl,cx,cy);
 }
 for(let w=0;w<18;w++){
 await _0x1001(100);
 if(isDetailPage()||isEditPage()){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc131\uacf5! (2\ucc28 \uc911\uc559 \uc88c\ud45c)`);
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+try{el.scrollTop=0;}catch(e){}
+});
 await _0x1001(300);
 return true;
 }
@@ -3405,24 +3570,30 @@ const topCy=rect.top+Math.min(35,rect.height*0.3);
 const topPointEl=document.elementFromPoint(cx,topCy);
 if(topPointEl){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 3\ucc28 \uc0c1\ub2e8 \ud14d\uc2a4\ud2b8 \uc88c\ud45c(${Math.round(cx)}, ${Math.round(topCy)}) \ud074\ub9ad: <${topPointEl.tagName}>`);
-await _0x1006(topPointEl,cx,topCy);
-try{topPointEl.click();}catch(e){}
+await _0x1005(topPointEl,cx,topCy);
 }
 for(let w=0;w<20;w++){
 await _0x1001(100);
 if(isDetailPage()||isEditPage()){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc131\uacf5! (3\ucc28 \uc0c1\ub2e8 \ud14d\uc2a4\ud2b8 \uc88c\ud45c)`);
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+try{el.scrollTop=0;}catch(e){}
+});
 await _0x1001(300);
 return true;
 }
 }
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 4\ucc28 \uce74\ub4dc \uc804\uccb4 \uc2dc\ubbac\ub808\uc774\uc158`);
-await _0x1006(actualCard,cx,cy);
 try{actualCard.click();}catch(e){}
 for(let w=0;w<20;w++){
 await _0x1001(100);
 if(isDetailPage()||isEditPage()){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc131\uacf5! (4\ucc28)`);
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+try{el.scrollTop=0;}catch(e){}
+});
 await _0x1001(300);
 return true;
 }
@@ -3432,60 +3603,73 @@ return false;
 }
 async function openMenuAndClickEdit(maxAttempts=20){
 console.log("[\uac00\uaca9\uc218\uc815] \uc0c1\uc138 \ud398\uc774\uc9c0 \uc6b0\uce21 \uc0c1\ub2e8 \ub354\ubcf4\uae30 \uba54\ub274(\u22ee) \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+try{el.scrollTop=0;}catch(e){}
+});
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
 if(isEditPage()){
 console.log("[\uac00\uaca9\uc218\uc815] \uc774\ubbf8 \uc218\uc815 \ud3fc \uc9c4\uc785 \ud655\uc778!");
 return true;
 }
+let editTarget=findMenuEditItem();
+if(!editTarget){
 const menuBtn=findDetailMoreButton();
 if(menuBtn){
 const targetBtn=menuBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||menuBtn;
 targetBtn.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 targetBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x37\x43\x33\x41\x45\x44','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 targetBtn.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \x31\x32\x70\x78 \x23\x37\x43\x33\x41\x45\x44','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+try{
+targetBtn.click();
+}catch(e){
 const rect=targetBtn.getBoundingClientRect();
-const cx=rect.left+rect.width/2;
-const cy=rect.top+rect.height/2;
-await _0x1006(targetBtn,cx,cy);
-await _0x1005(targetBtn,cx,cy);
-try{targetBtn.click();}catch(e){}
-let editTarget=null;
-for(let m=0;m<12;m++){
+await _0x1005(targetBtn,rect.left+rect.width/2,rect.top+rect.height/2);
+}
+for(let m=0;m<10;m++){
 await _0x1001(100);
 editTarget=findMenuEditItem();
 if(editTarget)break;
 }
 if(!editTarget){
-const pEl=document.elementFromPoint(cx,cy)||targetBtn;
-await _0x1006(pEl,cx,cy);
-try{pEl.click();}catch(e){}
+const rect=targetBtn.getBoundingClientRect();
+const cx=rect.left+rect.width/2;
+const cy=rect.top+rect.height/2;
+await _0x1005(targetBtn,cx,cy);
 for(let m=0;m<10;m++){
 await _0x1001(100);
 editTarget=findMenuEditItem();
 if(editTarget)break;
 }
 }
+}
+}
 if(editTarget){
-console.log("[\uac00\uaca9\uc218\uc815] \ud31d\uc5c5 \uba54\ub274 \ub0b4 '\uc218\uc815' \ud56d\ubaa9 \ubc1c\uacac! \ud074\ub9ad\ud569\ub2c8\ub2e4\x2e");
+console.log("[\uac00\uaca9\uc218\uc815] \ud31d\uc5c5 \uba54\ub274 \ub0b4 '\uc218\uc815' \ud56d\ubaa9 \ubc1c\uacac! \uc815\ubc00 \ub2e8\uc77c \ud074\ub9ad\uc744 \uc2e4\ud589\ud569\ub2c8\ub2e4\x2e");
 editTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1001(150);
+await _0x1001(80);
 const eRect=editTarget.getBoundingClientRect();
 const eCx=eRect.left+eRect.width/2;
 const eCy=eRect.top+eRect.height/2;
-await _0x1006(editTarget,eCx,eCy);
-await _0x1005(editTarget,eCx,eCy);
-try{editTarget.click();}catch(e){}
-for(let w=0;w<25;w++){
-await _0x1001(150);
+const evOpts={bubbles:true,cancelable:true,composed:true,view:window,clientX:eCx,clientY:eCy,button:0,buttons:1};
+try{editTarget.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x64\x6f\x77\x6e',evOpts));}catch(e){}
+try{editTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',evOpts));}catch(e){}
+await _0x1001(35);
+try{editTarget.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',evOpts));}catch(e){}
+try{editTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',evOpts));}catch(e){}
+try{editTarget.click();}catch(e){
+try{editTarget.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',evOpts));}catch(err){}
+}
+for(let w=0;w<18;w++){
+await _0x1001(140);
 if(isEditPage()){
 console.log("[\uac00\uaca9\uc218\uc815] \uc218\uc815 \ud3fc \ud654\uba74 \uc9c4\uc785 \uc131\uacf5!");
-await _0x1001(300);
+await _0x1001(450);
 return true;
 }
 }
-return true;
-}
+if(isEditPage())return true;
 }
 await _0x1001(300);
 }
@@ -3988,6 +4172,13 @@ if(item.isMeal!==undefined){
 await _0x1019(Boolean(item.isMeal));
 await _0x1001(150);
 }
+const isTransferEditMode=(item.roomType==='\uc591\ub3c4')||
+window.location.href.toLowerCase().includes('\x74\x72\x61\x6e\x73\x66\x65\x72')||
+Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72')).some(el=>{
+if(el.offsetHeight<=0||el.getBoundingClientRect().top>120)return false;
+return(el.innerText||el.textContent||'').trim().replace(/\s+/g,'')==='\uc591\ub3c4\uc218\uc815';
+});
+if(!isTransferEditMode){
 const targetPeopleMatch=(item.sizenum||'').toString().match(/\d+/);
 const targetPeopleNum=targetPeopleMatch?targetPeopleMatch[0]:'';
 let resolvedCondition=item.condition||'';
@@ -4005,6 +4196,9 @@ if(targetPeopleNum){
 console.log(`[\uac00\uaca9\uc218\uc815] \ubaa9\ud45c \uc778\uc6d0 \ubcc0\uacbd: [${targetPeopleNum}\uba85]`);
 await updatePeopleCountInEditForm(targetPeopleNum);
 await _0x1001(250);
+}
+}else{
+console.log(`[\uac00\uaca9\uc218\uc815] \uc591\ub3c4 \uc218\uc815 \ubaa8\ub4dc \ud655\uc778\ub428 -> \uc870\uc778 \uc870\uac74 \ubc0f \uc694\uccad \uc778\uc6d0 \ubcc0\uacbd \ub2e8\uacc4 \uc0dd\ub7b5`);
 }
 console.log("[\uac00\uaca9\uc218\uc815] \ud558\ub2e8 '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ub77c\uc774\ube0c \ud0d0\uc0c9 \ubc0f \uc81c\ucd9c \uc2e4\ud589\x2e\x2e\x2e");
 const liveSubmitBtn=findEditSubmitButton();
@@ -4225,6 +4419,8 @@ console.log(`[\ubcc0\ub3d9\uc218\uc815] \ud83d\udcc5 [${group.golf}] \uc2dc\uc79
 }
 }
 if(shouldStopRegistration)break;
+await _0x103f(groupCategory);
+await _0x1001(150);
 const isDateMatchingTarget=!group.date||_0x1038(group.date);
 let existingCards=[];
 if(!isDateMatchingTarget){
@@ -4382,10 +4578,26 @@ console.warn(`[\ubcc0\ub3d9\uc218\uc815] ${item.golf} (${item.time}) \uce74\ub4d
 await navigateBackToList(groupCategory);
 continue;
 }
+const detailTypeInPriceUpdate=detectCurrentDetailPageType();
+if((groupCategory==='\uc591\ub3c4'&&detailTypeInPriceUpdate==='\uc870\uc778')||
+(groupCategory==='\uc870\uc778'&&detailTypeInPriceUpdate==='\uc591\ub3c4')){
+console.warn(`[\ubcc0\ub3d9\uc218\uc815] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 \uc0c1\uc138 \ud398\uc774\uc9c0\uac00 [${detailTypeInPriceUpdate}]\ub85c \ud655\uc778\ub418\uc5b4 \uc989\uc2dc \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+await navigateBackToList(groupCategory);
+await _0x103f(groupCategory);
+continue;
+}
 const editOpened=await openMenuAndClickEdit();
 if(!editOpened||shouldStopRegistration){
 console.warn(`[\ubcc0\ub3d9\uc218\uc815] ${item.golf} (${item.time}) '\uc218\uc815' \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328`);
 await navigateBackToList(groupCategory);
+continue;
+}
+const editTypeInPriceUpdate=await ensureCorrectEditRouteAndType(groupCategory,1500);
+if((groupCategory==='\uc591\ub3c4'&&editTypeInPriceUpdate==='\uc870\uc778')||
+(groupCategory==='\uc870\uc778'&&editTypeInPriceUpdate==='\uc591\ub3c4')){
+console.warn(`[\ubcc0\ub3d9\uc218\uc815] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 [${editTypeInPriceUpdate} \uc218\uc815] \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5b4 \uc989\uc2dc \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+await navigateBackToList(groupCategory);
+await _0x103f(groupCategory);
 continue;
 }
 const editSuccess=await editFeeAndPeopleAndSubmit(item);
@@ -4566,6 +4778,13 @@ if(item.isMeal!==undefined){
 await _0x1019(Boolean(item.isMeal));
 await _0x1001(150);
 }
+const isTransferEditMode=(item.roomType==='\uc591\ub3c4')||
+window.location.href.toLowerCase().includes('\x74\x72\x61\x6e\x73\x66\x65\x72')||
+Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72')).some(el=>{
+if(el.offsetHeight<=0||el.getBoundingClientRect().top>120)return false;
+return(el.innerText||el.textContent||'').trim().replace(/\s+/g,'')==='\uc591\ub3c4\uc218\uc815';
+});
+if(!isTransferEditMode){
 const targetPeopleMatch=(item.sizenum||'').toString().match(/\d+/);
 const targetPeopleNum=targetPeopleMatch?targetPeopleMatch[0]:'';
 let resolvedCondition=item.condition||'';
@@ -4583,6 +4802,9 @@ if(targetPeopleNum){
 console.log(`[\uad50\uccb4\uc218\uc815] \ubaa9\ud45c \uc778\uc6d0 \ubcc0\uacbd: [${targetPeopleNum}\uba85]`);
 await updatePeopleCountInEditForm(targetPeopleNum);
 await _0x1001(250);
+}
+}else{
+console.log(`[\uad50\uccb4\uc218\uc815] \uc591\ub3c4 \uc218\uc815 \ubaa8\ub4dc \ud655\uc778\ub428 -> \uc870\uc778 \uc870\uac74 \ubc0f \uc694\uccad \uc778\uc6d0 \ubcc0\uacbd \ub2e8\uacc4 \uc0dd\ub7b5`);
 }
 const liveSubmitBtn=findEditSubmitButton();
 if(!liveSubmitBtn){
@@ -4616,14 +4838,10 @@ if(targetRoomType&&targetRoomType!=='\uc804\uccb4'){
 const cardPostType=_0x1041(el,rawTxt);
 if(targetRoomType==='\uc591\ub3c4'){
 if(cardPostType==='\uc870\uc778')continue;
-const hasExplicitJoin=Array.from(el.querySelectorAll('\x2e\x71-\x62\x61\x64\x67\x65, [\x63\x6c\x61\x73\x73*="\x62\x61\x64\x67\x65"], \x2e\x71-\x63\x68\x69\x70'))
-.some(b=>/^조인\d*건?$/.test((b.innerText||'').trim()));
-if(hasExplicitJoin)continue;
+if(/조인\s*\d*\s*건|\d+\s*명/.test(rawTxt))continue;
 }else if(targetRoomType==='\uc870\uc778'){
 if(cardPostType==='\uc591\ub3c4')continue;
-const hasExplicitTransfer=Array.from(el.querySelectorAll('\x2e\x71-\x62\x61\x64\x67\x65, [\x63\x6c\x61\x73\x73*="\x62\x61\x64\x67\x65"], \x2e\x71-\x63\x68\x69\x70'))
-.some(b=>/^양도\d*건?$/.test((b.innerText||'').trim()));
-if(hasExplicitTransfer)continue;
+if(/양도\s*\d*\s*건/.test(rawTxt))continue;
 }
 }
 if(targetDateStr){
@@ -4986,6 +5204,8 @@ console.log(`[${logTag}] \ud83d\udcc5 [${group.golf}] \uc2dc\uc791 \ub0a0\uc9dc(
 }
 }
 if(shouldStopRegistration)break;
+await _0x103f(groupCategory);
+await _0x1001(150);
 const normalizeTimeDigits=(t)=>(t||'').toString().replace(/[^\d]/g,'');
 const formatColonTime=(t)=>{
 const d=normalizeTimeDigits(t);
@@ -5051,23 +5271,6 @@ await _0x1001(250);
 const topCheckCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
 if(topCheckCards.length>initialCards.length){
 initialCards=topCheckCards;
-}
-if(initialCards.length===0&&(!group.date||_0x1038(group.date))){
-console.log(`[${logTag}] ${group.golf}: [${groupCategory}] \ud544\ud130\uc5d0\uc11c 0\uac74 -> \uad6c\ubd84 \ud544\ud130 [\uc804\uccb4]\ub85c \uae30\uc874 \ub4f1\ub85d\uae00 \uc7ac\ud655\uc778...`);
-await _0x103f('\uc804\uccb4');
-if(group.date&&!_0x1038(group.date)){
-await _0x103c(group.date);
-await _0x1001(300);
-}
-if(!group.date||_0x1038(group.date)){
-const allCatCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
-if(allCatCards.length>0){
-initialCards=allCatCards;
-console.log(`[${logTag}] \u2705 [\uc804\uccb4] \uad6c\ubd84 \ud544\ud130\uc5d0\uc11c \uae30\uc874 \uae00 ${initialCards.length}\uac74 \ubc1c\uacac! (${initialCards.map(c=>c.timeStr).join(', ')}) -> \uc2e0\uaddc\ub4f1\ub85d \ub300\uc2e0 \uae30\uc874\uae00 \uc218\uc815\uc73c\ub85c \uc804\ud658!`);
-}else{
-await _0x103f(groupCategory);
-}
-}
 }
 console.log(`[${logTag}] \ud83d\udcca [${groupCategory}] \uc7ac\ud0d0\uc0c9 \uacb0\uacfc \uae30\uc874 \uae00 ${initialCards.length}\uac74 \ud655\ubcf4 (${initialCards.map(c=>c.timeStr).join(', ')})`);
 }
@@ -5276,6 +5479,7 @@ await _0x1001(350);
 console.log(`[${logTag}] \ud83d\udcc5 \uc218\uc815 \uc804 \ud574\ub2f9 \ub0a0\uc9dc(${targetDate}) \uc774\ubbf8 \uc815\uc0c1 \uc120\ud0dd \ud655\uc778\ub428 -> \ud074\ub9ad \uc0dd\ub7b5 (\ud574\uc81c \ubc29\uc9c0)`);
 }
 }
+await _0x103f(groupCategory);
 window.scrollTo(0,0);
 let liveCardObj=null;
 const targetDigits=normalizeTimeDigits(targetCard?.timeStr);
@@ -5290,9 +5494,6 @@ return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<10;retry++){
 let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
-if(liveCards.length===0){
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
-}
 if(liveCards.length===0&&(retry===1||retry===3)){
 if(targetDate&&!_0x1038(targetDate)){
 await _0x103c(targetDate);
@@ -5303,10 +5504,10 @@ document.querySelectorAll('\x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x73\x63\x72\x
 try{el.scrollTop+=500;}catch(e){}
 });
 await _0x1001(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
 }
 if(liveCards.length===0&&retry===2){
-await _0x103f('\uc804\uccb4');
+await _0x103f(groupCategory);
 if(group.region&&group.region!=='\uc804\uccb4'){
 await _0x103d(group.region);
 }else{
@@ -5317,7 +5518,7 @@ await _0x103c(targetDate);
 await _0x1001(350);
 }
 await _0x1001(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
 }
 if(liveCards.length===0&&retry===4){
 await _0x103d('\uc804\uccb4');
@@ -5326,7 +5527,7 @@ await _0x103c(targetDate);
 await _0x1001(350);
 }
 await _0x1001(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
 }
 const eligibleCards=liveCards.filter(c=>{
 if(c.postId&&processedPostIds.has(c.postId))return false;
@@ -5417,6 +5618,44 @@ console.warn(`[${logTag}] ${item.golf} (${originalPostTime}) \uce74\ub4dc \ud074
 await navigateBackToList(groupCategory);
 continue;
 }
+const openedDetailType=detectCurrentDetailPageType();
+if((groupCategory==='\uc591\ub3c4'&&openedDetailType==='\uc870\uc778')||
+(groupCategory==='\uc870\uc778'&&openedDetailType==='\uc591\ub3c4')){
+console.warn(`[${logTag}] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 \uc0c1\uc138 \ud398\uc774\uc9c0 \uc88c\uce21 \uc0c1\ub2e8\uc774 [${openedDetailType}]\uc73c\ub85c \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc810\uc138\uac1c(\u22ee) \ud074\ub9ad\uc744 \uc911\ub2e8\ud558\uace0 \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud558\uc5ec [${groupCategory}] \uae00\ub9cc \ub2e4\uc2dc \ucc3e\uc2b5\ub2c8\ub2e4.`);
+_replacedCardsSet.add(targetCardEl);
+await navigateBackToList(groupCategory);
+await _0x103f(groupCategory);
+if(group.region&&group.region!=='\uc804\uccb4'){
+await _0x103d(group.region);
+}else{
+await _0x103d('\uc804\uccb4');
+}
+if(group.date&&!_0x1038(group.date))await _0x103c(group.date);
+await _0x103f(groupCategory);
+await _0x1001(350);
+const retryTypeCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date)
+.filter(c=>c.el!==targetCardEl&&!_replacedCardsSet.has(c.el)&&(!c.postId||!processedPostIds.has(c.postId)));
+if(retryTypeCards.length===0){
+console.warn(`[${logTag}] ${item.golf}: [${groupCategory}] \uad6c\ubd84\uc5d0 \ud574\ub2f9\ud558\ub294 \ubbf8\uc218\uc815 \uce74\ub4dc\uac00 \uc5c6\uc5b4 \uc218\uc815\uc744 \uac74\ub108\ub701\ub2c8\ub2e4.`);
+continue;
+}
+liveCardObj=retryTypeCards[0];
+targetCardEl=liveCardObj.el;
+originalPostTime=liveCardObj.timeStr;
+inDetail=await clickPostCardReliably(targetCardEl);
+if(!inDetail){
+await navigateBackToList(groupCategory);
+continue;
+}
+const recheckDetailType=detectCurrentDetailPageType();
+if((groupCategory==='\uc591\ub3c4'&&recheckDetailType==='\uc870\uc778')||
+(groupCategory==='\uc870\uc778'&&recheckDetailType==='\uc591\ub3c4')){
+console.warn(`[${logTag}] \u26a0\ufe0f \uc7ac\uc9c4\uc785\ud55c \uc0c1\uc138 \ud398\uc774\uc9c0\ub3c4 [${recheckDetailType}]\uc774\ubbc0\ub85c \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+_replacedCardsSet.add(targetCardEl);
+await navigateBackToList(groupCategory);
+continue;
+}
+}
 let curUrl=window.location.href;
 let curUrlMatch=curUrl.match(/[?&]id=(\d+)/)||curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/);
 let detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
@@ -5463,6 +5702,19 @@ continue;
 const openedEdit=await openMenuAndClickEdit();
 if(!openedEdit){
 console.warn(`[${logTag}] \uc218\uc815 \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+await navigateBackToList(groupCategory);
+continue;
+}
+const openedPageType=await ensureCorrectEditRouteAndType(groupCategory,1500);
+if(groupCategory==='\uc591\ub3c4'&&openedPageType==='\uc870\uc778'){
+console.warn(`[${logTag}] \u26a0\ufe0f \uc591\ub3c4 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '\uc870\uc778 \uc218\uc815' \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc870\uc778 \uae00 \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+_replacedCardsSet.add(targetCardEl);
+await navigateBackToList(groupCategory);
+continue;
+}
+if(groupCategory==='\uc870\uc778'&&openedPageType==='\uc591\ub3c4'){
+console.warn(`[${logTag}] \u26a0\ufe0f \uc870\uc778 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '\uc591\ub3c4 \uc218\uc815' \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc591\ub3c4 \uae00 \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+_replacedCardsSet.add(targetCardEl);
 await navigateBackToList(groupCategory);
 continue;
 }

@@ -1,4 +1,4 @@
-$owner = "purry85"
+﻿$owner = "purry85"
 $repo = "tee82"
 $branch = "main"
 $token = ""
@@ -6,6 +6,27 @@ $token = ""
 $targetDir = $PSScriptRoot
 if (-not (Test-Path (Join-Path $targetDir "manifest.json")) -and (Test-Path "C:\Tee82\manifest.json")) {
     $targetDir = "C:\Tee82"
+}
+
+# ★ [개발자 원본 소스코드 보호 가드]
+# 원본 작업 폴더(build_obfuscated.ps1 또는 upload.ps1가 존재하는 폴더)에서는
+# 실수로 업데이트를 실행해도 GitHub의 암호화(난독화)된 배포본이 원본 소스코드를 덮어쓰지 않도록 차단!
+if ((Test-Path (Join-Path $targetDir "build_obfuscated.ps1")) -or (Test-Path (Join-Path $targetDir "upload.ps1"))) {
+    Clear-Host
+    Write-Host "============================================================" -ForegroundColor Yellow
+    Write-Host "   🛡️ [원본 코드 보호] 개발자 원본 폴더가 감지되었습니다!" -ForegroundColor Yellow
+    Write-Host "============================================================" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  현재 폴더 : $targetDir" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  이 폴더는 수정 가능한 '원본 소스코드'가 보관된 마스터 폴더입니다." -ForegroundColor White
+    Write-Host "  GitHub의 암호화(난독화) 배포본으로 덮어써서 원본이 훼손되는 것을" -ForegroundColor White
+    Write-Host "  방지하기 위해 업데이트 덮어쓰기를 자동으로 차단했습니다." -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  (※ 일반 사용자들의 PC에는 이 보호 파일이 없으므로 정상 업데이트됩니다!)" -ForegroundColor Cyan
+    Write-Host "============================================================" -ForegroundColor Yellow
+    Start-Sleep -Seconds 4
+    exit 0
 }
 
 Clear-Host
