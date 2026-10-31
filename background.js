@@ -72,16 +72,38 @@ _0x1000();
 _0x1000();
 chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
 if(message.action==='\x4f\x50\x45\x4e\x5f\x53\x49\x44\x45\x5f\x50\x41\x4e\x45\x4c'){
+if(!chrome.sidePanel||typeof chrome.sidePanel.open!=='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+sendResponse({success:false,error:'\x73\x69\x64\x65\x50\x61\x6e\x65\x6c \x41\x50\x49 \x6e\x6f\x74 \x73\x75\x70\x70\x6f\x72\x74\x65\x64'});
+return false;
+}
+const targetWinId=sender.tab?.windowId;
+if(targetWinId){
+chrome.sidePanel.open({windowId:targetWinId}).then(()=>{
+sendResponse({success:true});
+}).catch(()=>{
+_0x1002(sendResponse);
+});
+return true;
+}
+_0x1002(sendResponse);
+return true;
+}
+});
+function _0x1002(sendResponse){
 chrome.tabs.query({active:true,currentWindow:true},(tabs)=>{
 if(tabs&&tabs[0]&&chrome.sidePanel){
 chrome.sidePanel.open({windowId:tabs[0].windowId}).then(()=>{
 sendResponse({success:true});
 }).catch((err)=>{
-console.error("\uc0ac\uc774\ub4dc\ud328\ub110 \uc5f4\uae30 \uc2e4\ud328\x3a",err);
-sendResponse({success:false,error:err.message});
+chrome.sidePanel.open({tabId:tabs[0].id}).then(()=>{
+sendResponse({success:true});
+}).catch((err2)=>{
+console.error("\uc0ac\uc774\ub4dc\ud328\ub110 \uc5f4\uae30 \uc2e4\ud328\x3a",err2);
+sendResponse({success:false,error:err2.message});
 });
+});
+}else{
+sendResponse({success:false});
 }
 });
-return true;
 }
-});
