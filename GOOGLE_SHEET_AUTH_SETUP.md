@@ -62,14 +62,132 @@ function handleAuth(e) {
       } catch(err) {}
     }
     const data = Object.assign({}, params, postData);
-    const action = data.action || 'verify';
-    const id = (data.id || '').trim();
-    const pw = (data.password || data.pw || '').trim();
-    const newPw = (data.newPassword || data.newPw || '').trim();
+    const action = data.action || params.action || 'verify';
+    const id = (data.id || params.id || '').trim();
+    const pw = (data.password || data.pw || params.password || params.pw || '').trim();
+    const newPw = (data.newPassword || data.newPw || params.newPassword || params.newPw || '').trim();
 
     // 1. 연결 테스트 핑
     if (action === 'ping') {
       return createJsonResponse({ success: true, message: 'pong' });
+    }
+
+    // ====================================================
+    // 2. 전체 사용자 공지 실시간 상호 동기화 (action: 'sync_notices')
+    // A가 등록한 공지 업로드 + B가 등록한 공지 다운로드 취합
+    // ====================================================
+    if (action === 'sync_notices' || action === 'get_notices') {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const noticeSheet = ss.getSheetByName('공지목록') || ss.insertSheet('공지목록');
+      
+      // 헤더 설정 (최초 생성 시)
+      if (noticeSheet.getLastRow() === 0) {
+        noticeSheet.appendRow(['구장명', '날짜', '시간', '시작분', '종료분', '캐디구분', '금액', '할인', '규칙유형', '원문전문', '등록자', '수신일시', '타임스탬프', '업데이트일시']);
+        noticeSheet.getRange(1, 1, 1, 14).setBackground('#E8F5E9').setFontWeight('bold');
+      }
+
+      // 기존 시트의 공지들 읽기
+      const existingData = noticeSheet.getDataRange().getValues();
+      const serverRules = [];
+      for (let i = 1; i < existingData.length; i++) {
+        const row = existingData[i];
+        if (!row[0]) continue;
+        serverRules.push({
+          course: String(row[0]),
+          date: String(row[1] || ''),
+          timeText: String(row[2] || ''),
+          startMins: Number(row[3]) || 0,
+          endMins: Number(row[4]) || 1440,
+          caddyType: row[5] ? String(row[5]) : null,
+          price: (row[6] !== '' && row[6] !== null && !isNaN(row[6])) ? Number(row[6]) : null,
+          discount: (row[7] !== '' && row[7] !== null && !isNaN(row[7])) ? Number(row[7]) : null,
+          type: String(row[8] || 'target'),
+          fullNoticeText: String(row[9] || ''),
+          registeredBy: String(row[10] || ''),
+          receivedAt: String(row[11] || ''),
+          receivedTimestamp: Number(row[12]) || 0,
+          updatedAt: String(row[13] || '')
+        });
+      }
+
+      // 클라이언트가 업로드한 규칙들
+      const incomingRules = Array.isArray(data.rules) ? data.rules : [];
+      const uploader = (data.userId || data.userName || data.id || '사용자').trim();
+      const nowStr = Utilities.formatDate(new Date(), "GMT+9", "yyyy-MM-dd HH:mm:ss");
+
+      // 병합 로직 (동일 구장, 동일 날짜, 시간대 겹침/동일 규칙 시 최신 타임스탬프가 우선)
+      incomingRules.forEach(inRule => {
+        if (!inRule.course) return;
+        const inCourse = inRule.course.trim();
+        const inDate = (inRule.date || '').trim();
+        const inStart = Number(inRule.startMins) || 0;
+        const inEnd = Number(inRule.endMins) || 1440;
+        const inCaddy = inRule.caddyType || null;
+        const inTs = Number(inRule.receivedTimestamp) || Date.now();
+
+        const existingIdx = serverRules.findIndex(sr => {
+          if (sr.course !== inCourse) return false;
+          if ((sr.date || '') !== inDate) return false;
+          const isOverlap = !(sr.endMins < inStart || sr.startMins > inEnd);
+          if (isOverlap) {
+            if (!sr.caddyType || !inCaddy || sr.caddyType === inCaddy) return true;
+          }
+          return false;
+        });
+
+        const mergedObj = {
+          course: inCourse,
+          date: inDate,
+          timeText: inRule.timeText || '',
+          startMins: inStart,
+          endMins: inEnd,
+          caddyType: inCaddy,
+          price: (inRule.price !== undefined && inRule.price !== null) ? inRule.price : null,
+          discount: (inRule.discount !== undefined && inRule.discount !== null) ? inRule.discount : null,
+          type: inRule.type || 'target',
+          fullNoticeText: inRule.fullNoticeText || '',
+          registeredBy: uploader,
+          receivedAt: inRule.receivedAt || '',
+          receivedTimestamp: inTs,
+          updatedAt: nowStr
+        };
+
+        if (existingIdx >= 0) {
+          if (inTs >= (serverRules[existingIdx].receivedTimestamp || 0)) {
+            serverRules[existingIdx] = mergedObj;
+          }
+        } else {
+          serverRules.push(mergedObj);
+        }
+      });
+
+      // 최신 등록순(타임스탬프 내림차순 LIFO) 정렬
+      serverRules.sort((a, b) => (b.receivedTimestamp || 0) - (a.receivedTimestamp || 0));
+
+      // 시트에 전체 데이터 다시 쓰기 (새 규칙이 업로드되었을 때)
+      if (incomingRules.length > 0) {
+        noticeSheet.clearContents();
+        noticeSheet.appendRow(['구장명', '날짜', '시간', '시작분', '종료분', '캐디구분', '금액', '할인', '규칙유형', '원문전문', '등록자', '수신일시', '타임스탬프', '업데이트일시']);
+        noticeSheet.getRange(1, 1, 1, 14).setBackground('#E8F5E9').setFontWeight('bold');
+
+        const rowsToWrite = serverRules.map(r => [
+          r.course, r.date, r.timeText, r.startMins, r.endMins, r.caddyType || '',
+          r.price !== null ? r.price : '', r.discount !== null ? r.discount : '',
+          r.type, r.fullNoticeText || '', r.registeredBy || '', r.receivedAt || '',
+          r.receivedTimestamp || 0, r.updatedAt || ''
+        ]);
+        if (rowsToWrite.length > 0) {
+          noticeSheet.getRange(2, 1, rowsToWrite.length, 14).setValues(rowsToWrite);
+        }
+      }
+
+      return createJsonResponse({
+        success: true,
+        message: '공지 동기화 완료',
+        rules: serverRules,
+        count: serverRules.length,
+        syncedAt: nowStr
+      });
     }
 
     if (!id || !pw) {
