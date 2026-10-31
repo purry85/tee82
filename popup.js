@@ -4519,11 +4519,14 @@ btnHeaderSync.title='\uc804\uccb4 \uc0ac\uc6a9\uc790 \uacf5\uc9c0 \ub3d9\uae30\u
 try{
 loadActiveNoticeRules();
 const uId=(currentAuthUser&&(currentAuthUser.id||currentAuthUser.name))?(currentAuthUser.id||currentAuthUser.name):'\uc0ac\uc6a9\uc790';
+const uPw=(currentAuthUser&&currentAuthUser.pw)?currentAuthUser.pw:'';
 const uName=(currentAuthUser&&currentAuthUser.name)?currentAuthUser.name:uId;
 const payload={
 action:'\x73\x79\x6e\x63\x5f\x6e\x6f\x74\x69\x63\x65\x73',
 id:uId,
 userId:uId,
+password:uPw,
+pw:uPw,
 userName:uName,
 rules:activeNoticeRules||[]
 };
@@ -4532,7 +4535,7 @@ const apiUrl=cleanGoogleWebAppUrl(rawApiUrl);
 if(!apiUrl){
 throw new Error('\uc778\uc99d \ubc0f \ub3d9\uae30\ud654 \uc11c\ubc84 \x55\x52\x4c\uc774 \uc124\uc815\ub418\uc5b4 \uc788\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e');
 }
-const targetUrl=`${apiUrl}?action=sync_notices&userId=${encodeURIComponent(uId)}&userName=${encodeURIComponent(uName)}&_t=${Date.now()}`;
+const targetUrl=`${apiUrl}?action=sync_notices&userId=${encodeURIComponent(uId)}&userName=${encodeURIComponent(uName)}&id=${encodeURIComponent(uId)}&pw=${encodeURIComponent(uPw)}&_t=${Date.now()}`;
 const res=await fetch(targetUrl,{
 method:'\x50\x4f\x53\x54',
 redirect:'\x66\x6f\x6c\x6c\x6f\x77',
@@ -4563,6 +4566,8 @@ renderActiveNoticeChips();
 const distinctCourses=[...new Set(activeNoticeRules.map(r=>r.course).filter(Boolean))];
 const courseCount=distinctCourses.length;
 _0x1019(`\ud83c\udf89 \uacf5\uc9c0 \ub3d9\uae30\ud654 \uc644\ub8cc! \ucd1d ${courseCount}\uac1c \uad6c\uc7a5 (${activeNoticeRules.length}\uac1c \ud0c0\uc784 \uaddc\uce59) \ucde8\ud569 \ubc18\uc601\ub428 (${appliedCount}\uac74 \uc801\uc6a9)`);
+}else if(json&&json.success&&!Array.isArray(json.rules)){
+throw new Error('\uad6c\uae00 \uc2dc\ud2b8 \x41\x70\x70\x73 \x53\x63\x72\x69\x70\x74\uc5d0 \uacf5\uc9c0 \ub3d9\uae30\ud654 \ucf54\ub4dc\uac00 \ubc18\uc601\ub418\uc9c0 \uc54a\uc740 \uad6c\ubc84\uc804 \ubc30\ud3ec \uc0c1\ud0dc\uc785\ub2c8\ub2e4\x2e (\ucd5c\uc2e0 \ucf54\ub4dc\ub85c \uc0c8 \ubc84\uc804 \ubc30\ud3ec \ud544\uc694)');
 }else{
 throw new Error(json?.message||'\ub3d9\uae30\ud654 \uc751\ub2f5 \ud615\uc2dd \uc624\ub958');
 }
