@@ -2920,6 +2920,45 @@ const normalizedSingle=normalizeNoticeBlockCourse(blocks[0]||text);
 return parseSingleNoticeBlock(normalizedSingle);
 }
 let activeNoticeRules=[];
+function formatNoticeReceivedTime(val,timestamp){
+let d=null;
+if(timestamp&&!isNaN(Number(timestamp))&&Number(timestamp)>1000000000){
+d=new Date(Number(timestamp));
+}else if(val){
+if(typeof val==='\x73\x74\x72\x69\x6e\x67'){
+const parsed=new Date(val);
+if(!isNaN(parsed.getTime())){
+d=parsed;
+}else{
+const m=val.match(/(?:(\d{2,4})[./\-])?(\d{1,2})[./\-](\d{1,2})\s+(\d{1,2}):(\d{2})/);
+if(m){
+const now=new Date();
+const yy=m[1]?(m[1].length===4?m[1].slice(-2):m[1]):String(now.getFullYear()).slice(-2);
+const mm=m[2].padStart(2,'\x30');
+const dd=m[3].padStart(2,'\x30');
+const hh=m[4].padStart(2,'\x30');
+const min=m[5];
+return`${yy}.${mm}.${dd} ${hh}:${min}`;
+}
+}
+}else if(val instanceof Date){
+d=val;
+}
+}
+if(!d||isNaN(d.getTime())){
+d=new Date();
+}
+const nowTs=Date.now();
+if(d.getTime()>nowTs+3600*1000){
+d=new Date();
+}
+const yy=String(d.getFullYear()).slice(-2);
+const mm=String(d.getMonth()+1).padStart(2,'\x30');
+const dd=String(d.getDate()).padStart(2,'\x30');
+const hh=String(d.getHours()).padStart(2,'\x30');
+const min=String(d.getMinutes()).padStart(2,'\x30');
+return`${yy}.${mm}.${dd} ${hh}:${min}`;
+}
 function getNoticeRuleExpirationTime(rule){
 if(!rule)return null;
 const now=new Date();
@@ -3140,7 +3179,7 @@ if(dates.length>0){
 validUntilStr=dates[dates.length-1];
 }
 const validityTag=validUntilStr?` <span style="opacity:0.85; font-size:11px; color:#2563EB;">(~${validUntilStr})</span>`:'';
-const receivedAtStr=list[0]?.receivedAt||'';
+const receivedAtStr=formatNoticeReceivedTime(list[0]?.receivedAt,list[0]?.receivedTimestamp);
 const receivedTag=receivedAtStr?` <span style="opacity:0.9; font-size:10.5px; color:#D97706; font-weight:600;" title="\uacf5\uc9c0 \uc218\uc2e0 \uc77c\uc2dc: ${receivedAtStr}">\ud83d\udd52 ${receivedAtStr}</span>`:'';
 const chip=document.createElement('\x64\x69\x76');
 chip.className='\x61\x63\x74\x69\x76\x65-\x6e\x6f\x74\x69\x63\x65-\x63\x68\x69\x70';
@@ -3205,7 +3244,7 @@ if(matchingRules.length>0){
 const lines=[];
 const r0=matchingRules[0];
 lines.push(`\u25a0 ${stdCourse}`);
-if(r0.receivedAt)lines.push(`[\uacf5\uc9c0 \uc218\uc2e0 \uc77c\uc2dc: ${r0.receivedAt}]`);
+if(r0.receivedAt||r0.receivedTimestamp)lines.push(`[\uacf5\uc9c0 \uc218\uc2e0 \uc77c\uc2dc: ${formatNoticeReceivedTime(r0.receivedAt,r0.receivedTimestamp)}]`);
 if(r0.dateRange)lines.push(`\uae30\uac04: ${r0.dateRange.text}`);
 else if(r0.date)lines.push(`\ub0a0\uc9dc: ${r0.date}`);
 lines.push('');
@@ -3241,7 +3280,7 @@ if(!r.course)return false;
 return isCourseMatch(stdCourse,r.course);
 });
 matchingRules.sort((a,b)=>(b.receivedTimestamp||0)-(a.receivedTimestamp||0));
-const receivedAt=matchingRules[0]?.receivedAt||'\ucd5c\uadfc';
+const receivedAt=formatNoticeReceivedTime(matchingRules[0]?.receivedAt,matchingRules[0]?.receivedTimestamp);
 let validUntil='';
 const dates=matchingRules.map(r=>{
 if(r.dateRange&&r.dateRange.endDate)return r.dateRange.endDate;
@@ -4219,7 +4258,8 @@ tr.dataset.noticeAdjusted='\x74\x72\x75\x65';
 tr.dataset.noticeType='\x74\x61\x72\x67\x65\x74';
 tr.dataset.noticePrice=noticePrice.toString();
 tr.dataset.noticeCaddyType=matchedRule.caddyType||'';
-tr.dataset.noticeReceivedAt=matchedRule.receivedAt||'';
+tr.dataset.noticeReceivedAt=formatNoticeReceivedTime(matchedRule.receivedAt,matchedRule.receivedTimestamp);
+tr.dataset.noticeReceivedTimestamp=matchedRule.receivedTimestamp||'';
 if(hasSlashFee){
 tr.dataset.slashFrontVal=noticePrice.toString();
 }
@@ -4252,7 +4292,8 @@ let finalVal=Math.round((discountedFront+noticePrepaidFee)*100)/100;
 tr.dataset.noticeAdjusted='\x74\x72\x75\x65';
 tr.dataset.noticeType='\x64\x69\x73\x63\x6f\x75\x6e\x74';
 tr.dataset.noticeDiscount=discount.toString();
-tr.dataset.noticeReceivedAt=matchedRule.receivedAt||'';
+tr.dataset.noticeReceivedAt=formatNoticeReceivedTime(matchedRule.receivedAt,matchedRule.receivedTimestamp);
+tr.dataset.noticeReceivedTimestamp=matchedRule.receivedTimestamp||'';
 const pDesc=matchedRule.parts?.desc?` (${matchedRule.parts.desc})`:'';
 tr.dataset.noticeTagDesc=`-${discount}\ub9cc${pDesc}`;
 delete tr.dataset.coursePriceAdj;
@@ -4557,6 +4598,7 @@ const beforeCount=activeNoticeRules.length;
 const mergedRules=json.rules;
 activeNoticeRules=mergedRules.map(r=>{
 r.course=normalizeNoticeCourseName(r.course||'');
+r.receivedAt=formatNoticeReceivedTime(r.receivedAt,r.receivedTimestamp);
 return r;
 });
 saveActiveNoticeRules();
@@ -5693,7 +5735,9 @@ const noticePrice=tr.dataset.noticePrice||'';
 const noticeTagDesc=tr.dataset.noticeTagDesc||'';
 const hasSlashFee=tr.dataset.hasSlashFee==='\x74\x72\x75\x65';
 const slashBackVal=tr.dataset.slashBackVal||'';
-const noticeReceivedAt=tr.dataset.noticeReceivedAt||'';
+const rawNoticeReceivedAt=tr.dataset.noticeReceivedAt||'';
+const noticeReceivedTimestamp=tr.dataset.noticeReceivedTimestamp||'';
+const noticeReceivedAt=formatNoticeReceivedTime(rawNoticeReceivedAt,noticeReceivedTimestamp);
 let noticeTagHtml='';
 if(isNoticeAdjusted){
 const timeBadge=noticeReceivedAt?` <span style="font-size:9.5px; opacity:0.85;">\ud83d\udd52 ${noticeReceivedAt}</span>`:'';
@@ -9275,8 +9319,8 @@ if(!isNoticeRulesActive){
 setNoticeRulesActive(true,false);
 }
 const now=new Date();
-const receivedAtStr=`${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'\x30')}:${String(now.getMinutes()).padStart(2,'\x30')}`;
 const nowTs=Date.now();
+const receivedAtStr=formatNoticeReceivedTime(now,nowTs);
 currentParsedNoticeRules.forEach(r=>{
 r.course=normalizeNoticeCourseName(r.course||manualCourse||'');
 if(!r.date&&manualDate&&manualDate!=='\uc804\uccb4'&&!manualDate.includes('\ubcf5\uc218'))r.date=manualDate;
