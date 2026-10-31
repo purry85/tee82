@@ -3264,56 +3264,56 @@ return false;
 }
 function findDetailMoreButton(){
 const winWidth=window.innerWidth||document.documentElement.clientWidth||450;
-const topBarProbePoints=[
-{x:winWidth-22,y:25},
-{x:winWidth-28,y:30},
-{x:winWidth-36,y:25},
-{x:winWidth-18,y:35},
-{x:winWidth-44,y:25}
-];
-for(const pt of topBarProbePoints){
-const el=document.elementFromPoint(pt.x,pt.y);
-if(el&&el!==document.body&&el!==document.documentElement){
-const btn=el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||el;
-if(btn&&btn.offsetHeight>0){
-const r=btn.getBoundingClientRect();
-if(r.top<=75&&r.bottom<=85&&r.right>=winWidth-95&&!isNavigationOrShareElement(btn)){
-return btn;
-}
-}
-}
-}
-const headerContainers=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72'))
-.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=75);
-for(const hdr of headerContainers){
-const hdrRect=hdr.getBoundingClientRect();
-const hdrBtns=Array.from(hdr.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
+const headerBtns=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72 \x62\x75\x74\x74\x6f\x6e, \x68\x65\x61\x64\x65\x72 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x68\x65\x61\x64\x65\x72 \x2e\x71-\x62\x74\x6e, \x68\x65\x61\x64\x65\x72 \x2e\x71-\x62\x74\x6e, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72 \x2e\x71-\x62\x74\x6e'))
 .filter(b=>{
 if(b.offsetHeight<=0||b.offsetWidth<=0)return false;
-if(isNavigationOrShareElement(b))return false;
 const r=b.getBoundingClientRect();
-return r.top<=75&&r.left>hdrRect.left+hdrRect.width*0.5;
+if(r.width>75||r.height>75||r.width<15||r.height<15)return false;
+if(r.top>75||r.top<-10)return false;
+if(r.left<winWidth*0.5)return false;
+if(isNavigationOrShareElement(b))return false;
+return true;
 });
-if(hdrBtns.length>0){
-const moreIconBtn=hdrBtns.find(b=>{
+if(headerBtns.length>0){
+const moreBtn=headerBtns.find(b=>{
 const t=(b.innerText||b.textContent||'').trim().toLowerCase();
 const a=(b.getAttribute('\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c')||b.getAttribute('\x6e\x61\x6d\x65')||b.dataset?.icon||'').toLowerCase();
 const cls=(b.className&&typeof b.className==='\x73\x74\x72\x69\x6e\x67')?b.className.toLowerCase():'';
 return t==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||t==='\x6d\x6f\x72\x65'||t==='\u22ee'||t==='\ue5d4'||t==='\ufe19'||
 t.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||a.includes('\x6d\x6f\x72\x65')||a.includes('\ub354\ubcf4\uae30')||cls.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74');
 });
-if(moreIconBtn){
-return moreIconBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||moreIconBtn;
+if(moreBtn)return moreBtn;
+headerBtns.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
+return headerBtns[0];
 }
-hdrBtns.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
-return hdrBtns[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||hdrBtns[0];
+const topBarProbePoints=[
+{x:winWidth-25,y:28},
+{x:winWidth-35,y:28},
+{x:winWidth-18,y:32},
+{x:winWidth-45,y:28},
+{x:winWidth-25,y:40}
+];
+for(const pt of topBarProbePoints){
+const el=document.elementFromPoint(pt.x,pt.y);
+if(el&&el!==document.body&&el!==document.documentElement){
+const btn=el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el;
+if(btn&&btn.offsetHeight>0){
+const tag=btn.tagName.toUpperCase();
+if(tag==='\x48\x45\x41\x44\x45\x52'||tag==='\x4d\x41\x49\x4e'||tag==='\x53\x45\x43\x54\x49\x4f\x4e'||tag==='\x4e\x41\x56')continue;
+const r=btn.getBoundingClientRect();
+if(r.width>75||r.height>75||r.width<15||r.height<15)continue;
+if(r.top<=75&&r.left>=winWidth*0.5&&!isNavigationOrShareElement(btn)){
+return btn;
+}
+}
 }
 }
 const allMoreIcons=Array.from(document.querySelectorAll('\x69, \x2e\x71-\x69\x63\x6f\x6e, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-if(r.top>80)return false;
+if(r.top>75||r.width>75||r.height>75)return false;
+if(r.left<winWidth*0.5)return false;
 if(isNavigationOrShareElement(el))return false;
 const t=(el.innerText||el.textContent||'').trim().toLowerCase();
 const a=(el.getAttribute('\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c')||'').toLowerCase();
@@ -3322,7 +3322,12 @@ return t==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||t==='\u22ee'||t==='\ue5d4'||t
 t.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74')||a.includes('\x6d\x6f\x72\x65')||a.includes('\ub354\ubcf4\uae30')||cls.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74');
 });
 if(allMoreIcons.length>0){
-return allMoreIcons[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||allMoreIcons[0];
+const directBtn=allMoreIcons[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]');
+if(directBtn){
+const dr=directBtn.getBoundingClientRect();
+if(dr.width<=75&&dr.height<=75)return directBtn;
+}
+return allMoreIcons[0];
 }
 return null;
 }
@@ -3617,8 +3622,25 @@ let editTarget=findMenuEditItem();
 if(!editTarget){
 const menuBtn=findDetailMoreButton();
 if(menuBtn){
-const targetBtn=menuBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||menuBtn;
-const rect=targetBtn.getBoundingClientRect();
+let targetBtn=menuBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||menuBtn;
+let rect=targetBtn.getBoundingClientRect();
+if(rect.width>75&&menuBtn.getBoundingClientRect().width<=75){
+targetBtn=menuBtn;
+rect=targetBtn.getBoundingClientRect();
+}
+if(rect.width>75){
+const winW=window.innerWidth||450;
+const innerBtns=Array.from(targetBtn.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'))
+.filter(b=>{
+const r=b.getBoundingClientRect();
+return r.width<=75&&r.height<=75&&r.left>=winW*0.5&&!isNavigationOrShareElement(b);
+})
+.sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right);
+if(innerBtns.length>0){
+targetBtn=innerBtns[0];
+rect=targetBtn.getBoundingClientRect();
+}
+}
 console.log(`[\uac00\uaca9\uc218\uc815] \ub354\ubcf4\uae30(\u22ee) \ud074\ub9ad \ub300\uc0c1 \uac10\uc9c0: <${targetBtn.tagName}> (X: ${Math.round(rect.left)}, Y: ${Math.round(rect.top)}, W: ${Math.round(rect.width)}, H: ${Math.round(rect.height)}) text='${(targetBtn.innerText||targetBtn.textContent||'').trim()}'`);
 targetBtn.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 targetBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x37\x43\x33\x41\x45\x44','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
