@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "GolfTee82",
-  "version": "2.0.29",
-  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.29)",
+  "version": "2.0.30",
+  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.30)",
   "icons": {
     "16": "icon.svg",
     "48": "icon.svg",
