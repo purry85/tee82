@@ -1477,8 +1477,10 @@ return`${sStr}~${eStr}`;
 }
 function normalizeNoticePrice(str){
 if(!str)return null;
-let s=str.replace(/[,원만!~:]/g,'').trim();
-let val=parseFloat(s);
+let s=str.toString().replace(/[,원만!~:]/g,' ').trim();
+const numMatch=s.match(/([0-9]+(?:\.[0-9]+)?)/);
+if(!numMatch)return null;
+let val=parseFloat(numMatch[1]);
 if(isNaN(val))return null;
 if(val>=10000){
 val=Math.round((val/10000)*100)/100;
@@ -1499,16 +1501,27 @@ month,
 day
 };
 }
-m=line.match(/(?:^|[^\d])(?:(\d{4}|\d{2})\s*[./\-]\s*)?(\d{1,2})[./\-](\d{1,2})(?:$|[^\d])/);
+m=line.match(/(?:^|[^\d])(?:(\d{4}|\d{2})\s*[./\-]\s*)?(\d{1,2})[./\-](\d{1,2})(?!\s*(?:만|만원|원))(?:$|[^\d])/);
 if(m){
 const y=m[1]?(m[1].length===2?2000+parseInt(m[1],10):parseInt(m[1],10)):null;
 const month=parseInt(m[2],10);
 const day=parseInt(m[3],10);
+if(month>=1&&month<=12&&day>=1&&day<=31){
 return{
 dateStr:`${month}.${day}`,
 year:y,
 month,
 day
+};
+}
+}
+if(/(?:^|[^\w가-힣])(?:당일|오늘)(?:$|[^\w가-힣])/i.test(line)&&!line.includes('\x3a')){
+const now=new Date();
+return{
+dateStr:`${now.getMonth()+1}.${now.getDate()}`,
+year:now.getFullYear(),
+month:now.getMonth()+1,
+day:now.getDate()
 };
 }
 const mDayOnly=line.trim().match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(\d{1,2})\s*(?:일)?\s*(?:\(([월화수목금토일])\)|([월화수목금토일]))?(?:요일)?\s*$/);
@@ -1533,7 +1546,7 @@ return detail?detail.dateStr:null;
 }
 function parseNoticeDateRange(line){
 if(!line)return null;
-const m1=line.match(/(?:(\d{4}|\d{2})\s*[년./\-]\s*)?(\d{1,2})\s*[월./\-]\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?\s*(?:~|-|부터)\s*(?:(\d{4}|\d{2})\s*[년./\-]\s*)?(\d{1,2})\s*[월./\-]\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?/);
+const m1=line.match(/(?:(\d{4}|\d{2})\s*[년./\-]\s*)?(\d{1,2})\s*[월./\-]\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?\s*(?:~|-|부터|,)\s*(?:(\d{4}|\d{2})\s*[년./\-]\s*)?(\d{1,2})\s*[월./\-]\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?/);
 if(m1){
 const startY=m1[1]?(m1[1].length===2?2000+parseInt(m1[1],10):parseInt(m1[1],10)):null;
 const startM=parseInt(m1[2],10);
@@ -1541,6 +1554,7 @@ const startD=parseInt(m1[3],10);
 const endY=m1[4]?(m1[4].length===2?2000+parseInt(m1[4],10):parseInt(m1[4],10)):startY;
 const endM=parseInt(m1[5],10);
 const endD=parseInt(m1[6],10);
+if(startM>=1&&startM<=12&&startD>=1&&startD<=31&&endM>=1&&endM<=12&&endD>=1&&endD<=31){
 return{
 startDate:`${startM}.${startD}`,
 endDate:`${endM}.${endD}`,
@@ -1550,12 +1564,14 @@ startM,startD,endM,endD,
 text:`${startM}.${startD}~${endM}.${endD}`
 };
 }
-const m2=line.match(/(?:(\d{4}|\d{2})\s*년\s*)?(\d{1,2})\s*월\s*(\d{1,2})\s*일?(?:\([가-힣\w]+\))?\s*(?:~|-|부터)\s*(\d{1,2})\s*일?(?:\([가-힣\w]+\))?/);
+}
+const m2=line.match(/(?:(\d{4}|\d{2})\s*[년./\-]\s*)?(\d{1,2})\s*[월./\-]\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?\s*(?:~|-|부터|,)\s*(\d{1,2})\s*(?:일)?(?:\([가-힣\w]+\))?/);
 if(m2){
 const y=m2[1]?(m2[1].length===2?2000+parseInt(m2[1],10):parseInt(m2[1],10)):null;
 const startM=parseInt(m2[2],10);
 const startD=parseInt(m2[3],10);
 const endD=parseInt(m2[4],10);
+if(startM>=1&&startM<=12&&startD>=1&&startD<=31&&endD>=1&&endD<=31){
 return{
 startDate:`${startM}.${startD}`,
 endDate:`${startM}.${endD}`,
@@ -1564,6 +1580,7 @@ endYear:y,
 startM,startD,endM:startM,endD,
 text:`${startM}.${startD}~${startM}.${endD}`
 };
+}
 }
 return null;
 }
@@ -1631,6 +1648,13 @@ const NOTICE_COURSE_SHORT_MAP={
 '\ud074\ub808\uc774\ud06c':'\ud074\ub7fd\x37\x32',
 '\ud074\ud074\ub798\uc2dd':'\ud074\ub7fd\x37\x32',
 '\ud074\uc624\uc158':'\ud074\ub7fd\x37\x32(\uc624\uc158)',
+'\uc784\ud398\ub9ac\uc5bc':'\uc784\ud398\ub9ac\uc5bc\ub808\uc774\ud06c',
+'\uc11c\ub0a8\uc11c':'\ub5bc\uc81c\ubca0(\uc11c\ub0a8)',
+'\uc11c\ub0a8':'\ub5bc\uc81c\ubca0(\uc11c\ub0a8)',
+'\ub3d9\ubd81\ub3d9':'\ub5bc\uc81c\ubca0(\ub3d9\ubd81)',
+'\ub3d9\ubd81':'\ub5bc\uc81c\ubca0(\ub3d9\ubd81)',
+'\uc62c\ub370\uc774':'\uc62c\ub370\uc774',
+'\uc625\uc2a4\ud544\ub4dc':'\uc625\uc2a4\ud544\ub4dc',
 '\ube44\uc5d0\uc774':'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0',
 '\ubca0\uc5b4\uc988':'\ubca0\uc5b4\uc988\ubca0\uc2a4\ud2b8\uccad\ub77c',
 '\uccad\ub77c':'\ubca0\uc5b4\uc988\ubca0\uc2a4\ud2b8\uccad\ub77c',
@@ -1646,7 +1670,7 @@ function detectCourseInLine(line){
 if(!line)return null;
 let raw=line.replace(/^\[[^\]]+\]\s*\[(?:오전|오후)?\s*\d{1,2}:\d{2}\]\s*/,'').trim();
 if(!raw)return null;
-const clean=raw.replace(/[\[\]\(\)\*#※■□▣◆◇▲▼▶▷◀◁●○★☆【】<>~_=\-]/g,'').trim();
+const clean=raw.replace(/[\[\]\(\)\*#※■□▣◆◇▲▼▶▷◀◁●○★☆【】<>~_=\-🔹📣📢📌📍]/g,'').trim();
 if(!clean)return null;
 if(_0x101e(raw)||_0x101e(clean))return null;
 if(isNonCourseWord(raw)||isNonCourseWord(clean))return null;
@@ -1778,15 +1802,43 @@ return t.includes(cleanNotice)||cleanNotice.includes(t);
 }
 function isDateMatch(noticeDate,rowDate){
 if(!noticeDate)return true;
-const nMatch=String(noticeDate).match(/(\d{1,2})[./\-](\d{1,2})/);
+const str=String(noticeDate).trim();
+if(str.includes('~')||(str.includes('-')&&!/^\d{4}[./\-]\d{1,2}/.test(str))){
+const dr=parseNoticeDateRange(str);
+if(dr)return isDateInRange(rowDate,dr);
+}
+if(str.includes(',')){
+const parts=str.split(',').map(s=>s.trim()).filter(Boolean);
+return parts.some(p=>isDateMatch(p,rowDate));
+}
+const nMatch=str.match(/(\d{1,2})[./\-](\d{1,2})/);
 const rMatch=String(rowDate||'').match(/(\d{1,2})[./\-](\d{1,2})/);
 if(nMatch&&rMatch){
 return parseInt(nMatch[1],10)===parseInt(rMatch[1],10)&&
 parseInt(nMatch[2],10)===parseInt(rMatch[2],10);
 }
-const cleanNotice=String(noticeDate).replace(/[\s\-_/]/g,'\x2e');
+const cleanNotice=str.replace(/[\s\-_/]/g,'\x2e');
 const cleanRow=String(rowDate||'').trim().replace(/[\s\-_/]/g,'\x2e');
 return cleanNotice===cleanRow;
+}
+function resolvePartsForTime(startMins,endMins,fallbackParts=null){
+const sM=startMins!==undefined?startMins:0;
+const eM=endMins!==undefined?endMins:sM;
+const p1=sM<660;
+const p2=(sM<960&&eM>=660);
+const p3=eM>=960;
+if(fallbackParts&&(fallbackParts.hasPart1||fallbackParts.hasPart2||fallbackParts.hasPart3)){
+const isCompatible=(p1&&fallbackParts.hasPart1)||(p2&&fallbackParts.hasPart2)||(p3&&fallbackParts.hasPart3);
+if(isCompatible){
+return fallbackParts;
+}
+}
+return{
+hasPart1:p1,
+hasPart2:p2,
+hasPart3:p3,
+desc:[p1?'\x31\ubd80':'',p2?'\x32\ubd80':'',p3?'\x33\ubd80':''].filter(Boolean).join('+')
+};
 }
 function parseNoticeText(text){
 if(!text||!text.trim())return[];
@@ -1831,6 +1883,12 @@ let currentYear=null;
 let currentDateRange=null;
 let pendingDiscount=null;
 let pendingParts=null;
+let pendingPrice=null;
+if(/(?:^|[^\w가-힣])(?:당일|오늘)(?:$|[^\w가-힣])/i.test(text)&&!/\d{1,2}\s*[./월\-]\s*\d{1,2}/.test(text)){
+const now=new Date();
+currentDate=`${now.getMonth()+1}.${now.getDate()}`;
+currentYear=now.getFullYear();
+}
 function flushPendingDiscount(){
 if(pendingDiscount!==null&&pendingDiscount>0){
 rules.push({
@@ -1884,25 +1942,41 @@ continue;
 }
 const detectedCourse=detectCourseInLine(line);
 if(detectedCourse&&!isNonCourseWord(detectedCourse)){
+currentCourse=detectedCourse;
 if(!primaryCourse){
 primaryCourse=detectedCourse;
-currentCourse=detectedCourse;
+}
+const inlineCoursePriceMatch=line.match(/(?:[:=\-→▶⇒~]|->)?\s*[(\[]\s*([0-9.]+)\s*(?:만|만원|원)?\s*[)\]]/i)||
+line.match(/\s+([0-9.]+)\s*(?:만|만원|원)/i);
+if(inlineCoursePriceMatch){
+const pv=normalizeNoticePrice(inlineCoursePriceMatch[1]);
+if(pv!==null){
+pendingPrice=pv;
+}else{
+pendingPrice=null;
+}
+}else{
+pendingPrice=null;
 }
 continue;
 }
 const parsedRange=parseNoticeDateRange(line);
 if(parsedRange){
+flushPendingDiscount();
 currentDateRange=parsedRange;
 currentDate='';
 currentYear=parsedRange.startYear||null;
+pendingParts=null;
 continue;
 }
 const fallbackM=currentDate?parseInt(currentDate.split('\x2e')[0],10):null;
 const parsedDateDetail=parseNoticeDateDetail(line,fallbackM);
 if(parsedDateDetail&&!line.includes('\x3a')&&!/\d{1,2}\s*시대/.test(line)){
+flushPendingDiscount();
 currentDate=parsedDateDetail.dateStr;
 currentYear=parsedDateDetail.year;
 currentDateRange=null;
+pendingParts=null;
 continue;
 }
 if(_0x101e(line)||line.startsWith('\u203b')||line.startsWith('\x23')){
@@ -1915,16 +1989,17 @@ const inlineParts=parseNoticeParts(line);
 if(inlineParts)pendingParts=inlineParts;
 continue;
 }
-const partPrefixMatch=line.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*([123]부|전부|전타임)\s*[:=\-]?\s*(.*)$/);
+const partPrefixMatch=line.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*([123]부|전부|전타임)(?:\s*(?:잔여\s*(?:타임|시간|티)?|전체))?\s*[:=\-→▶⇒~]?\s*(.*)$/);
 if(partPrefixMatch){
 const partName=partPrefixMatch[1];
-const rest=partPrefixMatch[2].trim();
+let rest=partPrefixMatch[2].trim();
 const pObj=parseNoticeParts(partName);
 if(pObj)pendingParts=pObj;
 if(!rest){
 continue;
 }
-if(!rest.includes('\x3a')&&!/\d{1,2}\s*시/.test(rest)){
+rest=rest.replace(/^[:=\-→▶⇒~]\s*/,'').trim();
+if(!/\d{1,2}:\d{2}/.test(rest)&&!/\d{1,2}\s*시대?/.test(rest)){
 const priceVal=normalizeNoticePrice(rest);
 if(priceVal!==null){
 let startMins=0;
@@ -1942,15 +2017,108 @@ year:currentYear,
 dateRange:currentDateRange,
 startMins:startMins,
 endMins:endMins,
+timeText:`${partName} \uc804\uccb4`,
 price:priceVal,
 slashBackPrice:slashBackVal,
 parts:pObj,
 rawLine:line
 });
+pendingParts=null;
 continue;
 }
 }else{
 line=rest;
+}
+}
+const subCourseMatch=line.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(서남서|서남|동북동|동북)\s*(?:\(?\s*([0-9.]+)\s*(?:만|만원|원)?\s*\)?)?/i);
+if(subCourseMatch){
+const scName=subCourseMatch[1];
+if(scName.includes('\uc11c\ub0a8')){
+currentCourse='\ub5bc\uc81c\ubca0(\uc11c\ub0a8)';
+}else if(scName.includes('\ub3d9\ubd81')){
+currentCourse='\ub5bc\uc81c\ubca0(\ub3d9\ubd81)';
+}
+if(subCourseMatch[2]){
+const pv=normalizeNoticePrice(subCourseMatch[2]);
+if(pv!==null)pendingPrice=pv;
+}
+continue;
+}
+if(!line.match(/\d{1,2}:\d{2}/)){
+const headerPriceMatch=line.match(/(?:셀프타임|캐디타임|셀프|캐디|노캐디|현장|특가|그린피)?\s*[(\[]\s*([0-9.]+)\s*(?:만|만원|원)?\s*[)\]]/i)||
+line.match(/^(?:셀프타임|캐디타임|셀프|캐디|노캐디)\s*[:=\-]?\s*([0-9.]+)\s*(?:만|만원|원)?$/i);
+if(headerPriceMatch){
+const pv=normalizeNoticePrice(headerPriceMatch[1]);
+if(pv!==null){
+pendingPrice=pv;
+continue;
+}
+}
+}
+if(line.match(/\d{1,2}:\d{2}/)&&(line.includes(',')||pendingPrice!==null||/^(?:셀프타임|캐디타임|셀프|캐디|노캐디)/i.test(line)||/[(\[]\s*[0-9.]+\s*(?:만|만원|원)?\s*[)\]]/.test(line))){
+let linePrice=pendingPrice;
+let timePartStr=line;
+const leadingPriceMatch=timePartStr.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|캐디타임|셀프|캐디|노캐디)?\s*[(\[]\s*([0-9.]+)\s*(?:만|만원|원)?\s*[)\]]\s*[:=\-→▶⇒~]?\s*(.*)$/i)||
+timePartStr.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|캐디타임|셀프|캐디|노캐디)\s*[:=\-]?\s*([0-9.]+)\s*(?:만|만원|원)\s*[:=\-→▶⇒~]?\s*(.*)$/i);
+if(leadingPriceMatch){
+const lp=normalizeNoticePrice(leadingPriceMatch[1]);
+if(lp!==null)linePrice=lp;
+timePartStr=leadingPriceMatch[2]||'';
+}else{
+const trailingPriceMatch=timePartStr.match(/(?:->|=>|→|▶|⇒)\s*(?:현장|특가|그린피)?\s*[(\[]?\s*([0-9.]+)\s*(?:만|만원|원)?\s*[)\]]?\s*$/i)||
+timePartStr.match(/[(\[]\s*([0-9.]+)\s*(?:만|만원|원)?\s*[)\]]\s*$/i)||
+timePartStr.match(/(?:\s+|[:=~-])\s*(?:현장|특가|그린피)?\s*([0-9.]+)\s*(?:만|만원|원)\s*$/i);
+if(trailingPriceMatch&&trailingPriceMatch[1]&&(timePartStr.includes(',')||pendingPrice!==null)){
+const tp=normalizeNoticePrice(trailingPriceMatch[1]);
+if(tp!==null){
+linePrice=tp;
+timePartStr=timePartStr.slice(0,trailingPriceMatch.index);
+}
+}
+}
+timePartStr=timePartStr.replace(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|캐디타임|셀프|캐디|노캐디)\s*[:=\-]?\s*/i,'').trim();
+if(linePrice!==null&&/\d{1,2}:\d{2}/.test(timePartStr)){
+const timeTokens=timePartStr.split(/[\s,+/~]+/);
+let curH=null;
+const parsedTimes=[];
+for(const tok of timeTokens){
+const t=tok.trim().replace(/[()\[\]]/g,'');
+if(!t)continue;
+const hhmm=t.match(/^(\d{1,2}):(\d{2})$/);
+if(hhmm){
+curH=parseInt(hhmm[1],10);
+const m=parseInt(hhmm[2],10);
+if(curH>=0&&curH<=23&&m>=0&&m<60){
+parsedTimes.push({h:curH,m:m,tMins:curH*60+m});
+}
+}else if(curH!==null&&/^\d{2}$/.test(t)){
+const m=parseInt(t,10);
+if(m>=0&&m<60){
+parsedTimes.push({h:curH,m:m,tMins:curH*60+m});
+}
+}
+}
+if(parsedTimes.length>0){
+for(const pt of parsedTimes){
+const timeDesc=`${String(pt.h).padStart(2,'\x30')}:${String(pt.m).padStart(2,'\x30')}`;
+const autoParts=resolvePartsForTime(pt.tMins,pt.tMins,pendingParts);
+rules.push({
+type:'\x74\x61\x72\x67\x65\x74',
+course:currentCourse,
+date:currentDate,
+year:currentYear,
+dateRange:currentDateRange,
+startMins:pt.tMins,
+endMins:pt.tMins,
+timeText:timeDesc,
+price:linePrice,
+slashBackPrice:null,
+parts:autoParts,
+rawLine:`${timeDesc} ${linePrice}\ub9cc`
+});
+}
+continue;
+}
 }
 }
 const hourSep='(?\x3a\\\x73*[,\x2f&~\\-]\\\x73*|\\\x73+(?\x3a\ubc0f|\uc640|\uacfc)\\\x73+)';
@@ -1969,18 +2137,7 @@ const endH=parseInt(rangeHMatch[2],10);
 if(!isNaN(startH)&&!isNaN(endH)&&startH<=endH&&startH>=0&&endH<=23){
 const sMins=startH*60;
 const eMins=endH*60+59;
-let autoParts=pendingParts;
-if(!autoParts){
-const p1=startH<11;
-const p2=startH<16&&endH>=11;
-const p3=endH>=16;
-autoParts={
-hasPart1:p1,
-hasPart2:p2,
-hasPart3:p3,
-desc:[p1?'\x31\ubd80':'',p2?'\x32\ubd80':'',p3?'\x33\ubd80':''].filter(Boolean).join('+')
-};
-}
+const autoParts=resolvePartsForTime(sMins,eMins,pendingParts);
 const timeDesc=`${String(startH).padStart(2,'\x30')}:00~${String(endH).padStart(2,'\x30')}:59`;
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
@@ -2007,18 +2164,7 @@ if(n>=0&&n<=23&&!hours.includes(n))hours.push(n);
 }
 if(hours.length>0){
 hours.forEach(h=>{
-let autoParts=pendingParts;
-if(!autoParts){
-const p1=h<11;
-const p2=h>=11&&h<16;
-const p3=h>=16;
-autoParts={
-hasPart1:p1,
-hasPart2:p2,
-hasPart3:p3,
-desc:[p1?'\x31\ubd80':'',p2?'\x32\ubd80':'',p3?'\x33\ubd80':''].filter(Boolean).join('+')
-};
-}
+const autoParts=resolvePartsForTime(h*60,h*60+59,pendingParts);
 const timeDesc=`${String(h).padStart(2,'\x30')}:00~${String(h).padStart(2,'\x30')}:59`;
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
@@ -2048,16 +2194,7 @@ const priceVal=normalizeNoticePrice(slotMatch[2]);
 const slashBackVal=slotMatch[3]?normalizeNoticePrice(slotMatch[3]):null;
 if(priceVal!==null&&h>=0&&h<=23){
 foundSlot=true;
-let autoParts=pendingParts;
-if(!autoParts){
-if(h<11){
-autoParts={hasPart1:true,hasPart2:false,hasPart3:false,desc:'\x31\ubd80'};
-}else if(h<16){
-autoParts={hasPart1:false,hasPart2:true,hasPart3:false,desc:'\x32\ubd80'};
-}else{
-autoParts={hasPart1:false,hasPart2:false,hasPart3:true,desc:'\x33\ubd80'};
-}
-}
+const autoParts=resolvePartsForTime(h*60,h*60+59,pendingParts);
 const timeDesc=`${String(h).padStart(2,'\x30')}:00~${String(h).padStart(2,'\x30')}:59`;
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
@@ -2077,22 +2214,23 @@ rawLine:line
 }
 if(foundSlot)continue;
 const singleTimeToken='(?\x3a\\\x64{\x31,\x32}\x3a\\\x64{\x32}|\\\x64{\x31,\x32}\\\x73*\uc2dc(?\x3a\\\x73*\\\x64{\x31,\x32}\\\x73*\ubd84?)?|\\\x64{\x34})';
-const multiTimeRegex=new RegExp('^[-*\u2022\u25b6\u25b7\u25a1\u25a0\u25a3\u2605\u2606\u25c6\u25c7\u25b2\u25bc\\\x73]*((?\x3a'+singleTimeToken+'\\\x73*[,\x2f&+]\\\x73*|'+singleTimeToken+'\\\x73+(?\x3a\ubc0f|\uc640|\uacfc)\\\x73+)+'+singleTimeToken+')[^\x30-\x39\x2e,]*?([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?(?\x3a\\\x73*\\\x2f\\\x73*([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?)?','\x69');
+const multiTimeRegex=new RegExp('(?\x3a^|[\\\x73\\[(])(?\x3a[-*\u2022\u25b6\u25b7\u25a1\u25a0\u25a3\u2605\u2606\u25c6\u25c7\u25b2\u25bc]\\\x73*)?(?\x3a(?\x3a[\uac00-\ud7a3\x61-\x7a\x41-\x5a][\uac00-\ud7a3\x61-\x7a\x41-\x5a\x30-\x39()\x2f\x2e\\[\\]-]*)\\\x73+)?((?\x3a'+singleTimeToken+'(?\x3a\\\x73*[,\x2f&+]\\\x73*|\\\x73+(?\x3a\ubc0f|\uc640|\uacfc)\\\x73+|\\\x73+))+'+singleTimeToken+')[^\x30-\x39\x2e,]*?(?\x3a->|=>|\u2192|\u25b6|\u21d2)?\\\x73*([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)(?\x3a\\\x73*\\\x2f\\\x73*([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?)?','\x69');
 const multiTimeMatch=line.match(multiTimeRegex);
 if(multiTimeMatch){
 const timeListStr=multiTimeMatch[1];
 const priceVal=normalizeNoticePrice(multiTimeMatch[2]);
 const slashBackVal=multiTimeMatch[3]?normalizeNoticePrice(multiTimeMatch[3]):null;
 if(priceVal!==null){
-const timeTokens=timeListStr.split(/[,/&+]|\s+및\s+|\s+와\s+|\s+과\s+/).map(s=>s.trim()).filter(Boolean);
+const timeTokens=timeListStr.split(/[,/&+]|\s+및\s+|\s+와\s+|\s+과\s+|\s+/).map(s=>s.trim()).filter(Boolean);
 let addedAny=false;
 timeTokens.forEach(tStr=>{
 const tMins=timeToMinutes(tStr);
-const isHourOnly=!tStr.includes('\x3a')&&!/\d{1,2}\s*분/.test(tStr);
+const isHourOnly=!tStr.includes('\x3a')&&!/\d{1,2}\s*분/.test(tStr)&&(tStr.replace(/\D/g,'').length<=2||/시(?:대)?$/.test(tStr));
 const endMins=isHourOnly?(tMins+59):tMins;
 const timeDesc=isHourOnly
 ?`${String(Math.floor(tMins/60)).padStart(2,'\x30')}:00~${String(Math.floor(tMins/60)).padStart(2,'\x30')}:59`
 :formatMinutesToTime(tMins,endMins);
+const autoParts=resolvePartsForTime(tMins,endMins,pendingParts);
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
 course:currentCourse,
@@ -2104,7 +2242,7 @@ endMins:endMins,
 timeText:timeDesc,
 price:priceVal,
 slashBackPrice:slashBackVal,
-parts:pendingParts,
+parts:autoParts,
 rawLine:`${tStr} ${priceVal}\ub9cc`
 });
 addedAny=true;
@@ -2122,20 +2260,7 @@ const slashBackVal=rangeMatch[4]?normalizeNoticePrice(rangeMatch[4]):null;
 if(priceVal!==null){
 const sM=timeToMinutes(startStr);
 const eM=timeToMinutes(endStr);
-let autoParts=pendingParts;
-if(!autoParts){
-const hasP1=(sM<660);
-const hasP2=(sM<960&&eM>=660);
-const hasP3=(eM>=960);
-if(hasP1||hasP2||hasP3){
-autoParts={
-hasPart1:hasP1,
-hasPart2:hasP2,
-hasPart3:hasP3,
-desc:[hasP1?'\x31\ubd80':'',hasP2?'\x32\ubd80':'',hasP3?'\x33\ubd80':''].filter(Boolean).join('+')
-};
-}
-}
+const autoParts=resolvePartsForTime(sM,eM,pendingParts);
 const timeDesc=formatMinutesToTime(sM,eM);
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
@@ -2161,6 +2286,7 @@ const priceVal=normalizeNoticePrice(afterMatch[2]);
 const slashBackVal=afterMatch[3]?normalizeNoticePrice(afterMatch[3]):null;
 if(priceVal!==null){
 const sM=timeToMinutes(startStr);
+const autoParts=resolvePartsForTime(sM,1439,pendingParts);
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
 course:currentCourse,
@@ -2172,7 +2298,7 @@ endMins:1439,
 timeText:`${formatMinutesToTime(sM,sM)}\uc774\ud6c4`,
 price:priceVal,
 slashBackPrice:slashBackVal,
-parts:pendingParts,
+parts:autoParts,
 rawLine:line
 });
 continue;
@@ -2185,6 +2311,7 @@ const priceVal=normalizeNoticePrice(beforeMatch[2]);
 const slashBackVal=beforeMatch[3]?normalizeNoticePrice(beforeMatch[3]):null;
 if(priceVal!==null){
 const eM=timeToMinutes(endStr);
+const autoParts=resolvePartsForTime(0,eM,pendingParts);
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
 course:currentCourse,
@@ -2196,31 +2323,54 @@ endMins:eM,
 timeText:`${formatMinutesToTime(eM,eM)}\uc774\uc804`,
 price:priceVal,
 slashBackPrice:slashBackVal,
-parts:pendingParts,
+parts:autoParts,
 rawLine:line
 });
 continue;
 }
 }
-const singleMatch=line.match(new RegExp('(?\x3a^|[\\\x73\\[(])(?\x3a[-*\u2022\u25b6\u25b7\u25a1\u25a0\u25a3\u2605\u2606\u25c6\u25c7\u25b2\u25bc]\\\x73*)?(?\x3a(?\x3a[\uac00-\ud7a3\\\x77()\x2f\x2e\\[\\]-]+)\\\x73+)?('+timePattern+')[^\x30-\x39\x2e,]*?([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?(?\x3a\\\x73*\\\x2f\\\x73*([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?)?','\x69'));
+const multiMinRegex=/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:(?:[가-힣a-zA-Z][가-힣a-zA-Z0-9()/.\\[\\]-]*)\s+)?(\d{1,2}):(\d{2})((?:\s*[/,]\s*\d{1,2})+)\s*[:=\-→▶⇒~]?\s*(?:현장|특가|그린피)?\s*([0-9.,]+)\s*(?:만|만원|원)?(?:\s*\/\s*([0-9.,]+)\s*(?:만|만원|원)?)?/i;
+const multiMinMatch=line.match(multiMinRegex);
+if(multiMinMatch){
+const baseHour=parseInt(multiMinMatch[1],10);
+const firstMin=parseInt(multiMinMatch[2],10);
+const extraMins=(multiMinMatch[3].match(/\d{1,2}/g)||[]).map(n=>parseInt(n,10));
+const allMins=[firstMin,...extraMins].filter(m=>!isNaN(m)&&m>=0&&m<60);
+const priceVal=normalizeNoticePrice(multiMinMatch[4]);
+const slashBackVal=multiMinMatch[5]?normalizeNoticePrice(multiMinMatch[5]):null;
+if(priceVal!==null&&allMins.length>0){
+for(const m of allMins){
+const tMins=baseHour*60+m;
+const autoParts=resolvePartsForTime(tMins,tMins,pendingParts);
+const timeDesc=`${String(baseHour).padStart(2,'\x30')}:${String(m).padStart(2,'\x30')}`;
+rules.push({
+type:'\x74\x61\x72\x67\x65\x74',
+course:currentCourse,
+date:currentDate,
+year:currentYear,
+dateRange:currentDateRange,
+startMins:tMins,
+endMins:tMins,
+timeText:timeDesc,
+price:priceVal,
+slashBackPrice:slashBackVal,
+parts:autoParts,
+rawLine:line
+});
+}
+continue;
+}
+}
+const singleMatch=line.match(new RegExp('(?\x3a^|[\\\x73\\[(])(?\x3a[-*\u2022\u25b6\u25b7\u25a1\u25a0\u25a3\u2605\u2606\u25c6\u25c7\u25b2\u25bc]\\\x73*)?(?\x3a(?\x3a[\uac00-\ud7a3\x61-\x7a\x41-\x5a][\uac00-\ud7a3\x61-\x7a\x41-\x5a\x30-\x39()\x2f\x2e\\[\\]-]*)\\\x73+)?('+timePattern+')[^\x30-\x39\x2e,]*?([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?(?\x3a\\\x73*\\\x2f\\\x73*([\x30-\x39\x2e,]+)\\\x73*(?\x3a\ub9cc|\ub9cc\uc6d0|\uc6d0)?)?','\x69'));
 if(singleMatch){
 const timeStr=singleMatch[1];
 const priceVal=normalizeNoticePrice(singleMatch[2]);
 const slashBackVal=singleMatch[3]?normalizeNoticePrice(singleMatch[3]):null;
 if(priceVal!==null){
 const tMins=timeToMinutes(timeStr);
-const isHourOnly=!timeStr.includes('\x3a')&&!/\d{1,2}\s*분/.test(timeStr);
+const isHourOnly=!timeStr.includes('\x3a')&&!/\d{1,2}\s*분/.test(timeStr)&&(timeStr.replace(/\D/g,'').length<=2||/시(?:대)?$/.test(timeStr));
 const endMins=isHourOnly?(tMins+59):tMins;
-let autoParts=pendingParts;
-if(!autoParts){
-if(tMins<660){
-autoParts={hasPart1:true,hasPart2:false,hasPart3:false,desc:'\x31\ubd80'};
-}else if(tMins<960){
-autoParts={hasPart1:false,hasPart2:true,hasPart3:false,desc:'\x32\ubd80'};
-}else{
-autoParts={hasPart1:false,hasPart2:false,hasPart3:true,desc:'\x33\ubd80'};
-}
-}
+const autoParts=resolvePartsForTime(tMins,endMins,pendingParts);
 const timeDesc=formatMinutesToTime(tMins,endMins);
 rules.push({
 type:'\x74\x61\x72\x67\x65\x74',
@@ -2285,8 +2435,6 @@ primaryCourse=Array.from(uniqueCourses)[0];
 rules.forEach(r=>{
 if(!r.course||isNonCourseWord(r.course)){
 r.course=primaryCourse;
-}else if(primaryCourse&&r.course!==primaryCourse){
-r.course=primaryCourse;
 }
 });
 }
@@ -2306,6 +2454,12 @@ targetM=parseInt(rule.dateRange.endM,10);
 targetD=parseInt(rule.dateRange.endD,10);
 targetY=rule.dateRange.endYear||rule.year||null;
 }else if(rule.date){
+const dr=parseNoticeDateRange(rule.date);
+if(dr&&dr.endM&&dr.endD){
+targetM=parseInt(dr.endM,10);
+targetD=parseInt(dr.endD,10);
+targetY=dr.endYear||rule.year||null;
+}else{
 const parts=String(rule.date).replace(/[^\d.]/g,'').split('\x2e');
 if(parts.length===3){
 targetY=parseInt(parts[0],10);
@@ -2315,6 +2469,7 @@ targetD=parseInt(parts[2],10);
 targetM=parseInt(parts[0],10);
 targetD=parseInt(parts[1],10);
 targetY=rule.year||null;
+}
 }
 }
 if(!targetM||!targetD||isNaN(targetM)||isNaN(targetD)){
@@ -2999,6 +3154,42 @@ itemEl.dataset.ruleId=rule.id||`rule_${idx}`;
 const badgeEl=document.createElement('\x73\x70\x61\x6e');
 badgeEl.className='\x72\x75\x6c\x65-\x69\x64\x78-\x62\x61\x64\x67\x65';
 badgeEl.textContent=String(idx+1);
+const courseInput=document.createElement('\x69\x6e\x70\x75\x74');
+courseInput.type='\x74\x65\x78\x74';
+courseInput.className='\x72\x75\x6c\x65-\x69\x74\x65\x6d-\x63\x6f\x75\x72\x73\x65';
+courseInput.title='\uad6c\uc7a5\uba85 (\uc608\x3a \uc62c\ub370\uc774, \uc784\ud398\ub9ac\uc5bc, \ub5bc\uc81c\ubca0(\uc11c\ub0a8), \ub5bc\uc81c\ubca0(\ub3d9\ubd81))';
+courseInput.placeholder='\uad6c\uc7a5';
+courseInput.value=rule.course||'';
+courseInput.style.width='\x37\x36\x70\x78';
+courseInput.style.fontSize='\x31\x31\x70\x78';
+courseInput.style.fontWeight='\x36\x30\x30';
+courseInput.style.textAlign='\x63\x65\x6e\x74\x65\x72';
+courseInput.style.borderRadius='\x34\x70\x78';
+courseInput.style.border='\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x43\x42\x44\x35\x45\x31';
+courseInput.style.background='\x23\x46\x38\x46\x41\x46\x43';
+courseInput.style.color='\x23\x31\x45\x32\x39\x33\x42';
+courseInput.style.flexShrink='\x30';
+courseInput.style.boxSizing='\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78';
+courseInput.addEventListener('\x69\x6e\x70\x75\x74',(e)=>{
+rule.course=e.target.value.trim();
+markManualNoticeModified();
+});
+const dateInput=document.createElement('\x69\x6e\x70\x75\x74');
+dateInput.type='\x74\x65\x78\x74';
+dateInput.className='\x72\x75\x6c\x65-\x69\x74\x65\x6d-\x64\x61\x74\x65';
+dateInput.title='\ub0a0\uc9dc (\uc608\x3a \x31\x31\x2e\x32, \x31\x31\x2e\x33, \uc804\uccb4)';
+dateInput.placeholder='\ub0a0\uc9dc';
+dateInput.value=rule.date||'';
+dateInput.addEventListener('\x69\x6e\x70\x75\x74',(e)=>{
+rule.date=e.target.value.trim();
+const dr=parseNoticeDateRange(rule.date);
+if(dr){
+rule.dateRange=dr;
+}else{
+rule.dateRange=null;
+}
+markManualNoticeModified();
+});
 const timeInput=document.createElement('\x69\x6e\x70\x75\x74');
 timeInput.type='\x74\x65\x78\x74';
 timeInput.className='\x72\x75\x6c\x65-\x69\x74\x65\x6d-\x74\x69\x6d\x65';
@@ -3114,6 +3305,8 @@ renderParsedNoticeRules();
 updateManualNoticeHint();
 });
 itemEl.appendChild(badgeEl);
+itemEl.appendChild(courseInput);
+itemEl.appendChild(dateInput);
 itemEl.appendChild(timeInput);
 itemEl.appendChild(partsWrap);
 itemEl.appendChild(priceInput);
@@ -3143,11 +3336,25 @@ const rules=parseNoticeText(cleanText);
 let detectedCourse='';
 let detectedDate='';
 if(rules&&rules.length>0){
+const distinctCourses=[...new Set(rules.map(r=>r.course).filter(Boolean))];
+if(distinctCourses.length>1){
+detectedCourse=`\ubcf5\uc218 \uad6c\uc7a5 (${distinctCourses.join(', ')})`;
+}else if(distinctCourses.length===1){
+detectedCourse=distinctCourses[0];
+}else{
 const courseRule=rules.find(r=>r.course);
 if(courseRule)detectedCourse=courseRule.course;
+}
+const distinctDates=[...new Set(rules.map(r=>r.date).filter(Boolean))];
+if(distinctDates.length>1){
+detectedDate=`\ubcf5\uc218 \ub0a0\uc9dc (${distinctDates.join(', ')})`;
+}else if(distinctDates.length===1){
+detectedDate=distinctDates[0];
+}else{
 const dateRule=rules.find(r=>r.date||r.dateRange);
 if(dateRule){
 detectedDate=dateRule.date||(dateRule.dateRange?dateRule.dateRange.text:'');
+}
 }
 }
 if(!detectedCourse){
@@ -3195,8 +3402,8 @@ if(rules&&rules.length>0){
 currentParsedNoticeRules=rules.map((r,i)=>({
 id:`parsed_${Date.now()}_${i}`,
 type:r.type||'\x74\x61\x72\x67\x65\x74',
-course:r.course||detectedCourse,
-date:r.date||detectedDate,
+course:r.course||(detectedCourse&&!detectedCourse.includes('\ubcf5\uc218')?detectedCourse:''),
+date:r.date||(r.dateRange?r.dateRange.text:(detectedDate&&!detectedDate.includes('\ubcf5\uc218')?detectedDate:'')),
 year:r.year||null,
 dateRange:r.dateRange||null,
 startMins:r.startMins!==undefined?r.startMins:0,
@@ -3389,11 +3596,16 @@ const roomType=(tr.dataset.roomType||'').trim();
 const isPrepaid=tr.dataset.isPrepaid==='\x74\x72\x75\x65';
 const isSeontiOrDaegi=(
 tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||
+tr.dataset.manualSeonti==='\x74\x72\x75\x65'||
+tr.dataset.isConfirmed==='\x74\x72\x75\x65'||
+tr.dataset.isDaegi==='\x74\x72\x75\x65'||
+(typeof _0x1045==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1045(tr))||
+(typeof _0x1044==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1044(tr))||
+tr.dataset.isPrepaid==='\x74\x72\x75\x65'||
 roomType==='\uc120\ud2f0\ubc29'||
 roomType==='\ub300\uae30\ubc29'||
 roomType.includes('\uc120\ud2f0')||
 roomType.includes('\ub300\uae30')||
-isPrepaid||
 /^[123]인$/.test(cells[7]?.textContent.trim()||'')
 );
 let rowPrepaidAmount=parseFloat(tr.dataset.prepaidAmount)||0;
@@ -3705,11 +3917,17 @@ if(!isNaN(origVal)){
 const roomType=(tr.dataset.roomType||'').trim();
 const isSeontiOrDaegi=(
 tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||
+tr.dataset.manualSeonti==='\x74\x72\x75\x65'||
+tr.dataset.isConfirmed==='\x74\x72\x75\x65'||
+tr.dataset.isDaegi==='\x74\x72\x75\x65'||
+(typeof _0x1045==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1045(tr))||
+(typeof _0x1044==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1044(tr))||
+tr.dataset.isPrepaid==='\x74\x72\x75\x65'||
 roomType==='\uc120\ud2f0\ubc29'||
 roomType==='\ub300\uae30\ubc29'||
 roomType.includes('\uc120\ud2f0')||
 roomType.includes('\ub300\uae30')||
-tr.dataset.isPrepaid==='\x74\x72\x75\x65'
+/^[123]인$/.test(cells[7]?.textContent.trim()||'')
 );
 const rowGolf=cells[2]?.textContent.trim()||'';
 const rowRawGolf=tr.dataset.rawGolf||rowGolf;
@@ -4175,7 +4393,8 @@ currentRegion=_0x1018(dictRegion||inlineRegion,currentGolfRaw+' '+currentGolf);
 }
 }
 const isLineConfirmed=(/\[\s*확정\s*\]|\(\s*확정\s*\)/.test(line)||(line.includes('\ud655\uc815')&&!line.includes('\ubbf8\ud655\uc815')&&!line.includes('\ud655\uc815\uc804')));
-if(line.includes('\uc120\ud2f0')||line.includes('\ub300\uae30')||isLineConfirmed)roomType='\uc120\ud2f0\ubc29';
+const isLineDaegi=(/\[\s*(?:예약\s*)?대기(?:중)?\s*\]|\(\s*(?:예약\s*)?대기(?:중)?\s*\)/i.test(line)||/대기(?:중)?\s*[:\s]?\s*\d+/.test(line)||(line.includes('\ub300\uae30')&&!line.includes('\ub300\uae30\uc5c6\uc74c')&&!line.includes('\ub300\uae30\x58')&&!line.includes('\ub300\uae30 \x78')));
+if(line.includes('\uc120\ud2f0')||isLineDaegi||isLineConfirmed)roomType='\uc120\ud2f0\ubc29';
 while(i+1<lines.length){
 let nextLine=lines[i+1].trim();
 if(!nextLine)break;
@@ -4442,11 +4661,11 @@ explicitWaitMatch||
 (waitCount!==null&&waitCount>0&&waitCount<4)||
 /(?:^|[\s\t(\[/])([1-3])인(?=[)\s\t/\]]|$)/.test(fullCheckText)
 );
-if(isTransferMode&&(hasExplicitJoinPax||(hasJoinPax&&!isConfirmed))){
+if(isTransferMode&&(hasExplicitJoinPax||(hasJoinPax&&!isConfirmed&&!isDaegi))){
 continue;
 }
 let reqPax=4;
-if(isTransferMode&&!isConfirmed){
+if(isTransferMode&&!isConfirmed&&!isDaegi){
 reqPax=4;
 roomType='\uc591\ub3c4';
 }else{
@@ -4456,12 +4675,12 @@ else if(waitCount===1)reqPax=3;
 else reqPax=4;
 }
 let sizenum=`${reqPax}\uc778`;
-const hasPersonnel=(reqPax>=1&&reqPax<=3)||(waitCount!==null&&waitCount>0&&waitCount<4)||(waitPax!==null&&waitPax>0&&waitPax<4)||hasJoinPax||isConfirmed;
-if(hasPersonnel||isConfirmed){
+const hasPersonnel=(reqPax>=1&&reqPax<=3)||(waitCount!==null&&waitCount>0&&waitCount<4)||(waitPax!==null&&waitPax>0&&waitPax<4)||hasJoinPax||isConfirmed||isDaegi;
+if(hasPersonnel||isConfirmed||isDaegi){
 roomType='\uc120\ud2f0\ubc29';
 }
 const actualWaitPax=(hasPersonnel&&(waitCount!==null&&waitCount>0))?waitCount:((hasPersonnel&&reqPax<4)?(4-reqPax):0);
-const resolvedWaitGender=(isTransferMode&&!isConfirmed||!hasPersonnel&&!isConfirmed||actualWaitPax===0)?'\uc778\uc6d0\uc5c6\uc74c':_0x102d(fullCheckText+' '+genderInfo,actualWaitPax);
+const resolvedWaitGender=(isTransferMode&&!isConfirmed&&!isDaegi||!hasPersonnel&&!isConfirmed&&!isDaegi||actualWaitPax===0)?'\uc778\uc6d0\uc5c6\uc74c':_0x102d(fullCheckText+' '+genderInfo,actualWaitPax);
 const isSeontiOrDaegi=(
 roomType==='\uc120\ud2f0\ubc29'||
 roomType.includes('\uc120\ud2f0')||
@@ -4469,6 +4688,7 @@ roomType.includes('\ub300\uae30')||
 fullCheckText.includes('\uc120\ud2f0')||
 fullCheckText.includes('\ub300\uae30')||
 isConfirmed||
+isDaegi||
 isPrepaid||
 hasPersonnel
 );
@@ -4522,7 +4742,7 @@ tr.dataset.origRoomType=roomType;
 tr.dataset.isPrepaid=isPrepaid?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65';
 tr.dataset.isMeal=isMeal?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65';
 tr.dataset.isSeontiOrDaegi=(isSeontiOrDaegi||isConfirmed||isDaegi)?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65';
-if(isConfirmed){
+if(isConfirmed||isDaegi){
 tr.dataset.manualSeonti='\x74\x72\x75\x65';
 tr.dataset.roomType='\uc120\ud2f0\ubc29';
 tr.dataset.origRoomType='\uc120\ud2f0\ubc29';
@@ -4915,6 +5135,10 @@ else if(region.includes('\uc81c\uc8fc')){regionBg='\x23\x43\x43\x46\x42\x46\x31'
 const isSeonti=(
 tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||
 tr.dataset.manualSeonti==='\x74\x72\x75\x65'||
+tr.dataset.isConfirmed==='\x74\x72\x75\x65'||
+tr.dataset.isDaegi==='\x74\x72\x75\x65'||
+(typeof _0x1045==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1045(tr))||
+(typeof _0x1044==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1044(tr))||
 roomType==='\uc120\ud2f0\ubc29'||
 roomType.includes('\uc120\ud2f0')||
 tr.dataset.isPrepaid==='\x74\x72\x75\x65'||
@@ -5401,7 +5625,7 @@ return _0x103e(pool);
 }
 function _0x1044(tr){
 if(!tr)return false;
-if(tr.dataset.isConfirmed==='\x74\x72\x75\x65'||tr.dataset.manualSeonti==='\x74\x72\x75\x65')return true;
+if(tr.dataset.isConfirmed==='\x74\x72\x75\x65')return true;
 const text=[
 tr.dataset.fullRawText||'',
 tr.cells[3]?.textContent||'',
@@ -8387,8 +8611,12 @@ setNoticeRulesActive(true,false);
 const now=new Date();
 const receivedAtStr=`${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,'\x30')}:${String(now.getMinutes()).padStart(2,'\x30')}`;
 currentParsedNoticeRules.forEach(r=>{
-if(!r.course&&manualCourse)r.course=manualCourse;
-if(!r.date&&manualDate&&manualDate!=='\uc804\uccb4')r.date=manualDate;
+if(!r.course&&manualCourse&&!manualCourse.includes('\ubcf5\uc218'))r.course=manualCourse;
+if(!r.date&&manualDate&&manualDate!=='\uc804\uccb4'&&!manualDate.includes('\ubcf5\uc218'))r.date=manualDate;
+if(!r.dateRange&&r.date){
+const parsedR=parseNoticeDateRange(r.date);
+if(parsedR)r.dateRange=parsedR;
+}
 if(!r.receivedAt)r.receivedAt=receivedAtStr;
 if(!r.receivedTimestamp)r.receivedTimestamp=Date.now();
 if(!r.fullNoticeText){
@@ -8406,7 +8634,11 @@ activeNoticeRules.push(r);
 saveActiveNoticeRules();
 const appliedCount=applyAllActiveNoticeRules();
 renderActiveNoticeChips();
-_0x1016(`\ud83d\udce2 [${manualCourse||'\uacf5\uc9c0'}] \ucd1d ${currentParsedNoticeRules.length}\uac1c \ud0c0\uc784 \uaddc\uce59\uc774 \uc77c\uad04 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4! (${appliedCount}\uac74 \ubc18\uc601)`);
+const distinctRegisteredCourses=[...new Set(currentParsedNoticeRules.map(r=>r.course).filter(Boolean))];
+const courseTitle=distinctRegisteredCourses.length>1
+?`${distinctRegisteredCourses[0]} \uc678 ${distinctRegisteredCourses.length-1}\uac1c \uad6c\uc7a5`
+:(distinctRegisteredCourses[0]||manualCourse||'\uacf5\uc9c0');
+_0x1016(`\ud83d\udce2 [${courseTitle}] \ucd1d ${currentParsedNoticeRules.length}\uac1c \ud0c0\uc784 \uaddc\uce59\uc774 \uc77c\uad04 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4! (${appliedCount}\uac74 \ubc18\uc601)`);
 if(noticeInputText)noticeInputText.value='';
 currentParsedNoticeRules=[];
 renderParsedNoticeRules();
