@@ -8199,14 +8199,24 @@ verifyAuthWithServer(currentAuthUser.id,currentAuthUser.pw,true);
 },5*60*1000);
 }
 function _0x1079(){
-if(!currentAuthUser)return false;
-const id=String(currentAuthUser.id||'').trim().toLowerCase();
-const name=String(currentAuthUser.name||'').trim().toLowerCase();
-const rawFeatures=String(currentAuthUser.features||'').trim().toLowerCase();
-if(id==='\x61\x64\x6d\x69\x6e'||id==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||id==='\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x61\x64\x6d\x69\x6e')return true;
-if(name==='\uad00\ub9ac\uc790'||name==='\ucd5c\uace0\uad00\ub9ac\uc790'||name==='\x61\x64\x6d\x69\x6e')return true;
+try{
+if(localStorage.getItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e')==='\x74\x72\x75\x65')return true;
+}catch(e){}
+let user=currentAuthUser;
+if(!user){
+try{
+const savedStr=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72');
+if(savedStr)user=JSON.parse(savedStr);
+}catch(e){}
+}
+if(!user)return false;
+const id=String(user.id||'').trim().toLowerCase();
+const name=String(user.name||'').trim().toLowerCase();
+const rawFeatures=String(user.features||'').trim().toLowerCase();
+if(id==='\x61\x64\x6d\x69\x6e'||id==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||id==='\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x61\x64\x6d\x69\x6e'||id.includes('\x61\x64\x6d\x69\x6e'))return true;
+if(name==='\uad00\ub9ac\uc790'||name==='\ucd5c\uace0\uad00\ub9ac\uc790'||name==='\x61\x64\x6d\x69\x6e'||name.includes('\uad00\ub9ac\uc790'))return true;
 const tokens=rawFeatures.split(/[,+\/\s|;]+/).map(s=>s.trim()).filter(Boolean);
-const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790'];
+const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790','\uc804\uccb4','\x61\x6c\x6c'];
 if(tokens.some(t=>adminTokens.includes(t)))return true;
 return false;
 }
@@ -8260,6 +8270,10 @@ if(labPanel)labPanel.style.display=isLabActive?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\
 _0x107c(isAdmin);
 const isLabActive=isAdmin&&localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 _0x107d(isLabActive);
+const cardMobileUpdate=document.getElementById('\x63\x61\x72\x64\x4d\x6f\x62\x69\x6c\x65\x55\x70\x64\x61\x74\x65');
+if(cardMobileUpdate){
+cardMobileUpdate.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79',isAdmin?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
 }
 const STEP_DELAY_OPTIONS={
 standard:[
@@ -9897,6 +9911,10 @@ function _0x1091(){
 if(updateModal){
 updateModal.style.display='\x66\x6c\x65\x78';
 _0x1090();
+const cardMobileUpdate=document.getElementById('\x63\x61\x72\x64\x4d\x6f\x62\x69\x6c\x65\x55\x70\x64\x61\x74\x65');
+if(cardMobileUpdate){
+cardMobileUpdate.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79',_0x1079()?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
 if(fullUpdateStatusHint){
 fullUpdateStatusHint.innerHTML="\u203b \ucd5c\ucd08 \x31\ud68c\ub294 \uc544\ub798 \x32\ubc88\uc758 <\x73\x74\x72\x6f\x6e\x67>[\uc6d0\ud074\ub9ad \ud658\uacbd \ub4f1\ub85d]<\x2f\x73\x74\x72\x6f\x6e\x67>\uc744 \uc644\ub8cc\ud574 \ub450\uc2dc\uba74 \ubc14\ub85c \uc5f0\uacb0\ub429\ub2c8\ub2e4\x2e";
 }
@@ -9923,7 +9941,35 @@ updateModal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 if(e.target===updateModal)_0x1092();
 });
 }
+const isMobileDevice=/Android|iPhone|iPad|iPod|Lemur/i.test(navigator.userAgent||'');
+const GITHUB_ZIP_DOWNLOAD_URL='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x69\x74\x68\x75\x62\x2e\x63\x6f\x6d\x2f\x70\x75\x72\x72\x79\x38\x35\x2f\x74\x65\x65\x38\x32\x2f\x61\x72\x63\x68\x69\x76\x65\x2f\x72\x65\x66\x73\x2f\x68\x65\x61\x64\x73\x2f\x6d\x61\x69\x6e\x2e\x7a\x69\x70';
 function _0x1093(){
+if(!_0x1079()){
+_0x1019('\u26a0\ufe0f \uad00\ub9ac\uc790 \uacc4\uc815\uc73c\ub85c \ub85c\uadf8\uc778\ud55c \uacbd\uc6b0\uc5d0\ub9cc \ubaa8\ubc14\uc77c \x5a\x49\x50 \ub2e4\uc6b4\ub85c\ub4dc\uac00 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e');
+return;
+}
+_0x1019('\ud83d\udce5 \ubaa8\ubc14\uc77c \ucd5c\uc2e0 \ubc30\ud3ec \x5a\x49\x50 \ub2e4\uc6b4\ub85c\ub4dc\ub97c \uc2dc\uc791\ud569\ub2c8\ub2e4\x2e\x2e\x2e');
+try{
+const link=document.createElement('\x61');
+link.href=GITHUB_ZIP_DOWNLOAD_URL;
+link.download='\x74\x65\x65\x38\x32-\x6c\x61\x74\x65\x73\x74\x2e\x7a\x69\x70';
+link.target='\x5f\x62\x6c\x61\x6e\x6b';
+document.body.appendChild(link);
+link.click();
+setTimeout(()=>link.remove(),1000);
+}catch(e){
+window.open(GITHUB_ZIP_DOWNLOAD_URL,'\x5f\x62\x6c\x61\x6e\x6b');
+}
+}
+const btnDownloadMobileZip=document.getElementById('\x62\x74\x6e\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x4d\x6f\x62\x69\x6c\x65\x5a\x69\x70');
+if(btnDownloadMobileZip){
+btnDownloadMobileZip.addEventListener('\x63\x6c\x69\x63\x6b',_0x1093);
+}
+function _0x1094(){
+if(isMobileDevice){
+_0x1093();
+return;
+}
 try{
 const link=document.createElement('\x61');
 link.href='\x74\x65\x65\x38\x32\x3a\x2f\x2f\x75\x70\x64\x61\x74\x65';
@@ -9938,7 +9984,7 @@ window.location.href='\x74\x65\x65\x38\x32\x3a\x2f\x2f\x75\x70\x64\x61\x74\x65';
 if(btnRunFullUpdate){
 btnRunFullUpdate.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const curVer=_0x108f();
-_0x1093();
+_0x1094();
 if(fullUpdateStatusHint){
 fullUpdateStatusHint.innerHTML=`
                     <span style="color:#2563EB; font-weight:700;">\ud83d\ude80 \uc5c5\ub370\uc774\ud2b8 \ub2e4\uc6b4\ub85c\ub354\ub97c \ud638\ucd9c\ud588\uc2b5\ub2c8\ub2e4! (\ud604\uc7ac Ver ${curVer})</span><br>
@@ -9962,23 +10008,23 @@ const btnQuickActionSetup=document.getElementById('\x62\x74\x6e\x51\x75\x69\x63\
 const btnCloseSetupGuideModalX=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x53\x65\x74\x75\x70\x47\x75\x69\x64\x65\x4d\x6f\x64\x61\x6c\x58');
 const btnCloseSetupGuideModal=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x53\x65\x74\x75\x70\x47\x75\x69\x64\x65\x4d\x6f\x64\x61\x6c');
 const btnTestProtocolLaunch=document.getElementById('\x62\x74\x6e\x54\x65\x73\x74\x50\x72\x6f\x74\x6f\x63\x6f\x6c\x4c\x61\x75\x6e\x63\x68');
-function _0x1094(){
+function _0x1095(){
 if(setupGuideModal)setupGuideModal.style.display='\x66\x6c\x65\x78';
 }
-function _0x1095(){
+function _0x1096(){
 if(setupGuideModal)setupGuideModal.style.display='\x6e\x6f\x6e\x65';
 }
-if(btnQuickActionSetup)btnQuickActionSetup.addEventListener('\x63\x6c\x69\x63\x6b',_0x1094);
-if(btnCloseSetupGuideModalX)btnCloseSetupGuideModalX.addEventListener('\x63\x6c\x69\x63\x6b',_0x1095);
-if(btnCloseSetupGuideModal)btnCloseSetupGuideModal.addEventListener('\x63\x6c\x69\x63\x6b',_0x1095);
+if(btnQuickActionSetup)btnQuickActionSetup.addEventListener('\x63\x6c\x69\x63\x6b',_0x1095);
+if(btnCloseSetupGuideModalX)btnCloseSetupGuideModalX.addEventListener('\x63\x6c\x69\x63\x6b',_0x1096);
+if(btnCloseSetupGuideModal)btnCloseSetupGuideModal.addEventListener('\x63\x6c\x69\x63\x6b',_0x1096);
 if(setupGuideModal){
 setupGuideModal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-if(e.target===setupGuideModal)_0x1095();
+if(e.target===setupGuideModal)_0x1096();
 });
 }
 if(btnTestProtocolLaunch){
 btnTestProtocolLaunch.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-_0x1093();
+_0x1094();
 _0x1019('\uc5f0\uacb0 \ud14c\uc2a4\ud2b8\ub97c \ud638\ucd9c\ud588\uc2b5\ub2c8\ub2e4\x2e \uc54c\ub9bc\ucc3d\uc774 \ub728\uba74 [\uc5f4\uae30]\ub97c \ub204\ub974\uc138\uc694\x2e');
 });
 }
