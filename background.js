@@ -88,6 +88,38 @@ return true;
 _0x1002(sendResponse);
 return true;
 }
+if(message.action==='\x43\x41\x4c\x4c\x5f\x47\x45\x4d\x49\x4e\x49\x5f\x4f\x43\x52'){
+const{modelName,payload,apiKey}=message;
+const cleanKey=(apiKey||'').trim();
+const url=`https://generativelanguage.googleapis.com/v1beta/models/${modelName||'\x67\x65\x6d\x69\x6e\x69-\x33\x2e\x35-\x66\x6c\x61\x73\x68-\x6c\x69\x74\x65'}:generateContent`;
+fetch(url,{
+method:'\x50\x4f\x53\x54',
+headers:{
+'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x6a\x73\x6f\x6e',
+'\x58-\x67\x6f\x6f\x67-\x61\x70\x69-\x6b\x65\x79':cleanKey
+},
+body:JSON.stringify(payload)
+})
+.then(async(resp)=>{
+if(resp.ok){
+const data=await resp.json();
+sendResponse({success:true,data});
+}else{
+const errTxt=await resp.text();
+let errMsg=`\uad6c\uae00 HTTP ${resp.status}`;
+try{
+const ej=JSON.parse(errTxt);
+if(ej.error&&ej.error.message)errMsg=`[Google AI ${resp.status}] ${ej.error.message}`;
+else errMsg=`[Google AI ${resp.status}] ${errTxt.slice(0,120)}`;
+}catch(e){errMsg=`[Google AI ${resp.status}] ${errTxt.slice(0,120)}`;}
+sendResponse({success:false,error:errMsg});
+}
+})
+.catch((err)=>{
+sendResponse({success:false,error:`[\ub124\ud2b8\uc6cc\ud06c \ud1b5\uc2e0 \uc624\ub958] ${err.message}`});
+});
+return true;
+}
 });
 function _0x1002(sendResponse){
 chrome.tabs.query({active:true,currentWindow:true},(tabs)=>{

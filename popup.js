@@ -2056,9 +2056,36 @@ if(cleanNotice!==cleanT)return false;
 return t.includes(cleanNotice)||cleanNotice.includes(t);
 });
 }
+function isDateWeekend(dateStr){
+if(!dateStr)return false;
+const s=String(dateStr).trim();
+if(/토|일/.test(s))return true;
+if(/월|화|수|목|금/.test(s))return false;
+const m=s.match(/(\d{1,2})[./\-](\d{1,2})/);
+if(m){
+const month=parseInt(m[1],10);
+const day=parseInt(m[2],10);
+const now=new Date();
+let year=now.getFullYear();
+if(month<now.getMonth()+1&&(now.getMonth()+1-month)>6){
+year+=1;
+}
+const d=new Date(year,month-1,day);
+const dayOfWeek=d.getDay();
+return dayOfWeek===0||dayOfWeek===6;
+}
+return false;
+}
 function isDateMatch(noticeDate,rowDate){
 if(!noticeDate)return true;
 const str=String(noticeDate).trim();
+if(str==='\uc804\uccb4'||str==='\uc804\uccb4\ub0a0\uc9dc'||str==='\uc804\uccb4 \ub0a0\uc9dc')return true;
+if(/주중|평일|월\s*[-~]\s*금/.test(str)){
+return!isDateWeekend(rowDate);
+}
+if(/주말|휴일|토\s*[-~,/]\s*일|공휴일/.test(str)){
+return isDateWeekend(rowDate);
+}
 if(str.includes('~')||(str.includes('-')&&!/^\d{4}[./\-]\d{1,2}/.test(str))){
 const dr=parseNoticeDateRange(str);
 if(dr)return isDateInRange(rowDate,dr);
@@ -2376,6 +2403,20 @@ flushPendingDiscount();
 currentDateRange=parsedRange;
 currentDate='';
 currentYear=parsedRange.startYear||null;
+pendingParts=null;
+pendingCaddyType=null;
+continue;
+}
+if(/^(?:[-*•▶▷□■▣★☆◆◇▲▼\s])*([(\[<【]?(?:주중|평일|주말|휴일|공휴일|월\s*[-~]\s*금|토\s*[-~,/]\s*일|전체)[)\]>】]?)(?:[가-힣\s]*)$/i.test(line)&&!line.includes('\x3a')&&!/\d{1,2}\s*시대/.test(line)){
+flushPendingDiscount();
+if(/주중|평일|월\s*[-~]\s*금/.test(line)){
+currentDate='\uc8fc\uc911';
+}else if(/주말|휴일|공휴일|토\s*[-~,/]\s*일/.test(line)){
+currentDate='\uc8fc\ub9d0';
+}else if(/전체/.test(line)){
+currentDate='\uc804\uccb4';
+}
+currentDateRange=null;
 pendingParts=null;
 pendingCaddyType=null;
 continue;
@@ -12473,7 +12514,7 @@ now+=0.08;
 });
 }catch(e){}
 }
-async function resizeImageForOcr(file,maxDimension=1800){
+async function resizeImageForOcr(file,maxDimension=1200){
 return new Promise((resolve,reject)=>{
 const reader=new FileReader();
 reader.onload=(e)=>{
@@ -12498,7 +12539,7 @@ ctx.fillStyle='\x23\x46\x46\x46\x46\x46\x46';
 ctx.fillRect(0,0,w,h);
 ctx.drawImage(img,0,0,w,h);
 const dataUrl=canvas.toDataURL('\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67',0.88);
-resolve({dataUrl,base64:dataUrl.split(',')[1]});
+resolve({dataUrl,base64:dataUrl.split(',')[1],mimeType:'\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67'});
 };
 img.onerror=reject;
 img.src=e.target.result;
@@ -12507,43 +12548,116 @@ reader.onerror=reject;
 reader.readAsDataURL(file);
 });
 }
-async function requestGeminiOcr(apiKey,base64Data){
-const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+const DEFAULT_GEMINI_API_KEY='\x41\x51\x2e\x41\x62\x38\x52\x4e\x36\x49\x69\x70\x6a\x79\x55\x79\x6a\x64\x68\x68\x47\x39\x77\x50\x35\x4c\x42\x4a\x72\x30\x69\x52\x31\x72\x53\x62\x6e\x42\x47-\x54\x6c\x34\x4c\x32\x5a\x7a\x38\x49\x72\x79\x79\x51';
+async function sendGeminiPost(baseUrl,payload,apiKey){
+const cleanKey=(apiKey||DEFAULT_GEMINI_API_KEY||'').trim();
+const controller=new AbortController();
+const timer=setTimeout(()=>controller.abort(),15000);
+try{
+const resp=await fetch(baseUrl,{
+method:'\x50\x4f\x53\x54',
+headers:{
+'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x6a\x73\x6f\x6e',
+'\x58-\x67\x6f\x6f\x67-\x61\x70\x69-\x6b\x65\x79':cleanKey
+},
+body:JSON.stringify(payload),
+signal:controller.signal
+});
+clearTimeout(timer);
+if(resp.ok)return await resp.json();
+const errTxt=await resp.text();
+let errMsg=`\uad6c\uae00 HTTP ${resp.status}`;
+try{
+const ej=JSON.parse(errTxt);
+if(ej.error&&ej.error.message)errMsg=`[\uad6c\uae00 ${resp.status}] ${ej.error.message}`;
+}catch(e){errMsg=`[\uad6c\uae00 ${resp.status}] ${errTxt.slice(0,120)}`;}
+throw new Error(errMsg);
+}catch(err){
+clearTimeout(timer);
+if(err.name==='\x41\x62\x6f\x72\x74\x45\x72\x72\x6f\x72'){
+throw new Error('\uad6c\uae00 \x41\x49 \uc11c\ubc84 \uc751\ub2f5 \uc2dc\uac04 \ucd08\uacfc (\x31\x35\ucd08)');
+}
+throw err;
+}
+}
+async function requestGeminiOcr(apiKey,base64Data,mimeType='\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67'){
+const keyToUse=(apiKey||DEFAULT_GEMINI_API_KEY||'').trim();
+if(!keyToUse)throw new Error('\x41\x50\x49 \ud0a4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e');
 const payload={
 contents:[{
 parts:[
 {
-text:"\uc774 \uace8\ud504 \ud2f0\ud0c0\uc784 \uacf5\uc9c0 \ub610\ub294 \uc5d1\uc140 \uc77c\uc815\ud45c \uc774\ubbf8\uc9c0\uc5d0\uc11c \ub0a0\uc9dc, \uad6c\uc7a5\uba85, \uc2dc\uac04, \uadf8\ub9b0\ud53c, \uc778\uc6d0, \ub300\uae30\uc870\uac74\uc744 \ub204\ub77d \uc5c6\uc774 \uc21c\uc11c\ub300\ub85c \ud14d\uc2a4\ud2b8 \ubaa9\ub85d\uc73c\ub85c \ucd94\ucd9c\ud574\uc918\x2e \ub9c8\ud06c\ub2e4\uc6b4 \uae30\ud638(\x23\x23\x23, **)\ub098 \ub2e4\ub978 \uc11c\uc2dd \uc548\ub0b4 \ubb38\uad6c \uc5c6\uc774 \uc624\uc9c1 \uacf5\uc9c0 \ud14d\uc2a4\ud2b8 \ub0b4\uc6a9\ub9cc \ucd9c\ub825\ud574\uc918\x2e"
+text:"\uc774 \uace8\ud504\uc7a5 \uc694\uae08\ud45c \uc774\ubbf8\uc9c0\uc5d0\uc11c \uad6c\uc7a5\uba85\uacfc \uc694\uae08\ud45c\ub97c \ud310\ub3c5\ud574\uc918\x2e\n"+
+"\u2605 \ud544\uc218 \uc694\uad6c\uc0ac\ud56d\x3a \ud45c\uc5d0 [\uc8fc\uc911]\uacfc [\uc8fc\ub9d0](\ub610\ub294 \ud2b9\uc815 \ub0a0\uc9dc) \uad6c\ubd84\uc774 \ub098\ub258\uc5b4 \uc788\ub2e4\uba74, \ubc18\ub4dc\uc2dc '\uc8fc\uc911'\uacfc '\uc8fc\ub9d0'\uc744 \uac01\uac01 \ub2e8\ub3c5 \uc904 \ud5e4\ub354\ub85c \uba85\uc2dc\ud558\uace0 \uadf8 \uc544\ub798\uc5d0 \ud574\ub2f9 \uc2dc\uac04\ub300\uc640 \uae08\uc561\uc744 \ucd9c\ub825\ud574\uc918\x2e\n"+
+"\uce74\ud3ec\uc640 \uc77c\ubc18 \uadf8\ub9b0\ud53c\uac00 \ub098\ub780\ud788 \uc788\ub2e4\uba74 \uae30\ubcf8 \uadf8\ub9b0\ud53c \uae08\uc561\uc744 \uc6b0\uc120 \ucd94\ucd9c\ud558\uace0, \uac01 \uc2dc\uac04\ub300\uc640 \uae08\uc561\uc744 '\uc2dc\uac04\ub300 \uae08\uc561' \ud615\uc2dd\uc73c\ub85c \uc904\ubc14\uafc8 \ucd9c\ub825\ud574\uc918\x2e\n"+
+"\ucd9c\ub825 \uc608\uc2dc\x3a\n"+
+"\uad6c\uc7a5\uba85\n"+
+"\uc8fc\uc911\n"+
+"\x36\uc2dc\ub300 \x39\x30,\x30\x30\x30\n"+
+"\x37\uc2dc\ub300 \x31\x30\x30,\x30\x30\x30\n"+
+"\x38\uc2dc\ub300 \x31\x31\x30,\x30\x30\x30\n"+
+"\x31\x31\x3a\x35\x30~\x31\x33\x3a\x32\x39 \x31\x32\x30,\x30\x30\x30\n"+
+"\x31\x33\x3a\x33\x30~ \x31\x31\x30,\x30\x30\x30\n"+
+"\x33\ubd80 \x38\x30,\x30\x30\x30\n\n"+
+"\uc8fc\ub9d0\n"+
+"\x36\uc2dc\ub300 \x31\x30\x30,\x30\x30\x30\n"+
+"\x37\uc2dc\ub300 \x31\x31\x30,\x30\x30\x30\n"+
+"\x38\uc2dc\ub300 \x31\x32\x30,\x30\x30\x30\n"+
+"\x31\x31\x3a\x35\x30~\x31\x33\x3a\x32\x39 \x31\x34\x30,\x30\x30\x30\n"+
+"\x31\x33\x3a\x33\x30~ \x31\x34\x30,\x30\x30\x30\n"+
+"\x33\ubd80 \x31\x30\x30,\x30\x30\x30\n"+
+"\ub9c8\ud06c\ub2e4\uc6b4 \uae30\ud638(\x23\x23\x23, **)\ub098 \uc124\uba85 \uc5c6\uc774 \uc624\uc9c1 \uc704 \ud615\uc2dd\uc758 \ud14d\uc2a4\ud2b8\ub9cc \ucd9c\ub825\ud574\uc918\x2e"
 },
 {
-inline_data:{
-mime_type:"\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67",
+inlineData:{
+mimeType:mimeType||"\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67",
 data:base64Data
 }
 }
 ]
 }]
 };
-const resp=await fetch(url,{
-method:'\x50\x4f\x53\x54',
-headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x6a\x73\x6f\x6e'},
-body:JSON.stringify(payload)
-});
-if(!resp.ok)throw new Error(`Gemini API Error: ${resp.status}`);
-const data=await resp.json();
-const candidateText=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+const models=[
+'\x67\x65\x6d\x69\x6e\x69-\x33\x2e\x35-\x66\x6c\x61\x73\x68-\x6c\x69\x74\x65',
+'\x67\x65\x6d\x69\x6e\x69-\x33\x2e\x38-\x66\x6c\x61\x73\x68',
+'\x67\x65\x6d\x69\x6e\x69-\x32\x2e\x35-\x66\x6c\x61\x73\x68'
+];
+let lastError=null;
+for(const m of models){
+try{
+showOcrLoading(`\ud83e\udd16 Google Gemini [${m}] AI \ubd84\uc11d \uc911...`);
+const url=`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
+const data=await sendGeminiPost(url,payload,keyToUse);
+const candidateParts=data.candidates?.[0]?.content?.parts||[];
+const textParts=candidateParts.filter(p=>!p.thought&&p.type!=='\x74\x68\x6f\x75\x67\x68\x74');
+const candidateText=(textParts.length>0?textParts:candidateParts)
+.map(p=>p.text||'')
+.filter(Boolean)
+.join('\n');
+if(candidateText&&candidateText.trim()){
+_0x101a(`\ud83e\udd16 Google Gemini (${m}) \ubd84\uc11d \uc644\ub8cc!`,2000);
 return candidateText.trim();
 }
-async function requestOcrSpace(dataUrl,apiKey='\x4b\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38'){
+}catch(e){
+lastError=e;
+console.warn(`[Gemini ${m}] \uc2e4\ud328:`,e.message);
+continue;
+}
+}
+throw lastError||new Error('\uad6c\uae00 \x47\x65\x6d\x69\x6e\x69 \x41\x49 \ubd84\uc11d \uc2e4\ud328');
+}
+async function requestOcrSpace(dataUrl,apiKey='\x4b\x38\x37\x34\x32\x30\x36\x31\x37\x38\x38\x38\x39\x35\x37'){
 const formData=new FormData();
 formData.append('\x62\x61\x73\x65\x36\x34\x49\x6d\x61\x67\x65',dataUrl);
+formData.append('\x62\x61\x73\x65\x36\x34\x69\x6d\x61\x67\x65',dataUrl);
+formData.append('\x66\x69\x6c\x65\x74\x79\x70\x65','\x50\x4e\x47');
 formData.append('\x6c\x61\x6e\x67\x75\x61\x67\x65','\x6b\x6f\x72');
 formData.append('\x69\x73\x4f\x76\x65\x72\x6c\x61\x79\x52\x65\x71\x75\x69\x72\x65\x64','\x66\x61\x6c\x73\x65');
 formData.append('\x4f\x43\x52\x45\x6e\x67\x69\x6e\x65','\x31');
 formData.append('\x69\x73\x54\x61\x62\x6c\x65','\x74\x72\x75\x65');
 formData.append('\x73\x63\x61\x6c\x65','\x74\x72\x75\x65');
 formData.append('\x64\x65\x74\x65\x63\x74\x4f\x72\x69\x65\x6e\x74\x61\x74\x69\x6f\x6e','\x74\x72\x75\x65');
-formData.append('\x61\x70\x69\x6b\x65\x79',apiKey||'\x68\x65\x6c\x6c\x6f\x77\x6f\x72\x6c\x64');
+formData.append('\x61\x70\x69\x6b\x65\x79',apiKey||'\x4b\x38\x37\x34\x32\x30\x36\x31\x37\x38\x38\x38\x39\x35\x37');
 const resp=await fetch('\x68\x74\x74\x70\x73\x3a\x2f\x2f\x61\x70\x69\x2e\x6f\x63\x72\x2e\x73\x70\x61\x63\x65\x2f\x70\x61\x72\x73\x65\x2f\x69\x6d\x61\x67\x65',{
 method:'\x50\x4f\x53\x54',
 body:formData
@@ -12551,7 +12665,8 @@ body:formData
 if(!resp.ok)throw new Error(`OCR Space API Error: ${resp.status}`);
 const data=await resp.json();
 if(data.IsErroredOnProcessing){
-throw new Error(data.ErrorMessage?.[0]||'\x4f\x43\x52 \ucc98\ub9ac \uc624\ub958');
+const errMsg=Array.isArray(data.ErrorMessage)?data.ErrorMessage.join(', '):(data.ErrorMessage||'\x4f\x43\x52 \ucc98\ub9ac \uc624\ub958');
+throw new Error(errMsg);
 }
 const text=data.ParsedResults?.[0]?.ParsedText||'';
 return text.trim();
@@ -12593,6 +12708,12 @@ return'';
 }
 function detectDateInText(text){
 if(!text)return'';
+if(/(?:^|[^\w가-힣])(?:주중|평일|월\s*[-~]\s*금)(?:$|[^\w가-힣])/i.test(text)){
+return'\uc8fc\uc911';
+}
+if(/(?:^|[^\w가-힣])(?:주말|토\s*[-~,/]\s*일|휴일|공휴일)(?:$|[^\w가-힣])/i.test(text)){
+return'\uc8fc\ub9d0';
+}
 const mYear=text.match(/202\d[./-](\d{1,2})[./-](\d{1,2})/);
 if(mYear){
 return`${parseInt(mYear[1],10)}.${parseInt(mYear[2],10)}`;
@@ -12607,13 +12728,42 @@ return`${m}.${d}`;
 }
 return'';
 }
-function extractTimeFeeItemsFromOcrText(text){
+function extractNoticeSectionsFromOcrText(text){
 if(!text)return[];
-const items=[];
 const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
-const timeRegex=/(\d{1,2}:\d{2}(?:\s*~\s*\d{1,2}:\d{2})?|\d{1,2}\s*시(?:대|대별|타임|\s*대)?(?:\s*~\s*\d{1,2}\s*시(?:대)?)?|\d{1,2}:\d{2}\s*~|[123]부|\b\d{4}\b)/;
-for(const line of lines){
-if(/^(?:구분|월요일|화요일|수요일|목요일|금요일|토요일|일요일|주중|주말|카포|그린피|시간)\b/.test(line)&&!/\d{3,}/.test(line))continue;
+const timeRegex=/(\d{1,2}:\d{2}(?:\s*~\s*\d{1,2}:\d{2})?|\d{1,2}\s*시(?:대|대별|타임|\s*대)?(?:\s*~\s*\d{1,2}\s*시(?:대)?)?|\d{1,2}:\d{2}\s*~|[123]부|\b\d{4}\b)/i;
+let currentSectionDate='';
+const sections=[];
+let currentItems=[];
+function flushCurrentSection(){
+if(currentItems.length>0){
+sections.push({
+date:currentSectionDate||'\uc8fc\uc911',
+items:currentItems
+});
+currentItems=[];
+}
+}
+for(let i=0;i<lines.length;i++){
+let line=lines[i];
+if(/^(?:[-*•▶▷□■▣★☆◆◇▲▼\s])*([(\[<【]?(?:주중|평일|월\s*[-~]\s*금)[)\]>】]?)(?:[가-힣\s]*)$/i.test(line)&&!line.includes('\x3a')&&!/\d{1,2}\s*시대/.test(line)){
+flushCurrentSection();
+currentSectionDate='\uc8fc\uc911';
+continue;
+}
+if(/^(?:[-*•▶▷□■▣★☆◆◇▲▼\s])*([(\[<【]?(?:주말|휴일|토\s*[-~,/]\s*일|공휴일)[)\]>】]?)(?:[가-힣\s]*)$/i.test(line)&&!line.includes('\x3a')&&!/\d{1,2}\s*시대/.test(line)){
+flushCurrentSection();
+currentSectionDate='\uc8fc\ub9d0';
+continue;
+}
+const dateMatch=line.match(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*([(\[<【]?\d{1,2}\s*[./월\-]\s*\d{1,2}(?:\s*\([가-힣]\))?[)\]>】]?)(?:[가-힣\s]*)$/);
+if(dateMatch&&!line.includes('\x3a')&&!/\d{1,2}\s*시대/.test(line)){
+flushCurrentSection();
+const dDetail=(typeof parseNoticeDateDetail==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?parseNoticeDateDetail(line):null;
+currentSectionDate=dDetail?dDetail.dateStr:dateMatch[1].replace(/[\[\]\(\)<>【】]/g,'').trim();
+continue;
+}
+if(/^(?:구분|카포|그린피|시간대?)\b/i.test(line)&&!/\d{3,}/.test(line))continue;
 if(typeof _0x1022==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1022(line))continue;
 const tMatch=line.match(timeRegex);
 if(!tMatch)continue;
@@ -12629,45 +12779,82 @@ if(n>=1000)n=Math.round((n/10000)*10)/10;
 feeVal=n+'\ub9cc';
 }
 }
-let note='';
-const noteMatch=line.match(/\[(.*?)\]/);
-if(noteMatch){
-note=noteMatch[1];
-}else if(/노캐디|카포|캐디|식사|모닝/.test(line)){
-const m=line.match(/노캐디|카포|캐디|식사|모닝/);
-if(m)note=m[0];
+if(timePart){
+if(!currentSectionDate){
+currentSectionDate=detectDateInText(text)||'\uc8fc\uc911';
 }
-items.push({
+currentItems.push({
 time:timePart,
-fee:feeVal,
-option:note,
-rawLine:line
+fee:feeVal
 });
 }
-return items;
 }
-function renderOcrReviewRows(items=[]){
+flushCurrentSection();
+if(sections.length===0&&currentItems.length>0){
+sections.push({
+date:detectDateInText(text)||'\uc8fc\uc911',
+items:currentItems
+});
+}
+return sections;
+}
+function extractTimeFeeItemsFromOcrText(text){
+const sections=extractNoticeSectionsFromOcrText(text);
+const flat=[];
+sections.forEach(s=>flat.push(...s.items));
+return flat;
+}
+function renderOcrReviewSections(sections=[]){
 const container=document.getElementById('\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72');
 const countEl=document.getElementById('\x6f\x63\x72\x49\x74\x65\x6d\x73\x43\x6f\x75\x6e\x74');
 if(!container)return;
 container.innerHTML='';
-const list=(items&&items.length>0)?items:[
-{time:'',fee:'',option:''},
-{time:'',fee:'',option:''}
+const list=(sections&&sections.length>0)?sections:[
+{date:'\uc8fc\uc911',items:[{time:'',fee:''},{time:'',fee:''}]}
 ];
-list.forEach(item=>{
+let totalCount=0;
+list.forEach(sec=>{
+const isWeekend=/주말|휴일|토|일/.test(sec.date);
+const cardBg=isWeekend?'\x23\x46\x45\x46\x32\x46\x32':'\x23\x45\x46\x46\x36\x46\x46';
+const cardBorder=isWeekend?'\x23\x46\x45\x43\x41\x43\x41':'\x23\x42\x46\x44\x42\x46\x45';
+const titleColor=isWeekend?'\x23\x44\x43\x32\x36\x32\x36':'\x23\x31\x44\x34\x45\x44\x38';
+const badgeText=isWeekend?'\uc8fc\ub9d0(\ud1a0-\uc77c)':(/주중|평일/.test(sec.date)?'\uc8fc\uc911(\uc6d4-\uae08)':sec.date);
+const card=document.createElement('\x64\x69\x76');
+card.className='\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x63\x61\x72\x64';
+card.style.cssText=`background: ${cardBg}; border: 1px solid ${cardBorder}; border-radius: 6px; padding: 7px 8px; margin-bottom: 8px;`;
+const headerDiv=document.createElement('\x64\x69\x76');
+headerDiv.style.cssText=`display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px dashed ${cardBorder};`;
+headerDiv.innerHTML=`
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: ${titleColor};">\ud83d\udcc5 \uc801\uc6a9 \uad6c\ubd84:</span>
+                <input type="text" class="ocr-section-date" value="${sec.date||''}" placeholder="\uc608: \uc8fc\uc911 \ub610\ub294 \uc8fc\ub9d0" style="width: 75px; height: 23px; font-size: 11px; font-weight: 700; color: ${titleColor}; background: #FFF; border: 1px solid ${cardBorder}; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
+                <span style="font-size: 10px; color: #64748B; font-weight: 600;">(${badgeText})</span>
+            </div>
+            <div style="display: flex; gap: 4px; align-items: center;">
+                <button type="button" class="btn-ocr-add-sec-row" style="font-size: 10px; font-weight: 600; padding: 2px 7px; background: #FFF; color: ${titleColor}; border: 1px solid ${cardBorder}; border-radius: 3px; cursor: pointer;">+ \ud589 \ucd94\uac00</button>
+                ${list.length>1?'<\x62\x75\x74\x74\x6f\x6e \x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e" \x63\x6c\x61\x73\x73="\x62\x74\x6e-\x6f\x63\x72-\x64\x65\x6c-\x73\x65\x63" \x74\x69\x74\x6c\x65="\uc774 \uad6c\uc5ed \uc804\uccb4 \uc0ad\uc81c" \x73\x74\x79\x6c\x65="\x66\x6f\x6e\x74-\x73\x69\x7a\x65\x3a \x31\x31\x70\x78; \x70\x61\x64\x64\x69\x6e\x67\x3a \x31\x70\x78 \x35\x70\x78; \x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a \x23\x46\x45\x45\x32\x45\x32; \x63\x6f\x6c\x6f\x72\x3a \x23\x44\x43\x32\x36\x32\x36; \x62\x6f\x72\x64\x65\x72\x3a \x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x46\x45\x43\x41\x43\x41; \x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73\x3a \x33\x70\x78; \x63\x75\x72\x73\x6f\x72\x3a \x70\x6f\x69\x6e\x74\x65\x72; \x66\x6f\x6e\x74-\x77\x65\x69\x67\x68\x74\x3a \x62\x6f\x6c\x64;">\u2715<\x2f\x62\x75\x74\x74\x6f\x6e>':''}
+            </div>
+        `;
+card.appendChild(headerDiv);
+const rowsWrap=document.createElement('\x64\x69\x76');
+rowsWrap.className='\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x72\x6f\x77\x73';
+const items=(sec.items&&sec.items.length>0)?sec.items:[{time:'',fee:''}];
+items.forEach(it=>{
+totalCount++;
 const row=document.createElement('\x64\x69\x76');
 row.className='\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77';
-row.style.cssText='\x64\x69\x73\x70\x6c\x61\x79\x3a \x66\x6c\x65\x78; \x67\x61\x70\x3a \x34\x70\x78; \x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73\x3a \x63\x65\x6e\x74\x65\x72; \x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d\x3a \x34\x70\x78;';
+row.style.cssText='\x64\x69\x73\x70\x6c\x61\x79\x3a \x66\x6c\x65\x78; \x67\x61\x70\x3a \x35\x70\x78; \x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73\x3a \x63\x65\x6e\x74\x65\x72; \x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d\x3a \x34\x70\x78;';
 row.innerHTML=`
-            <input type="text" class="ocr-item-time" value="${item.time||''}" placeholder="\uc2dc\uac04 (\uc608: 06:48, 7\uc2dc\ub300)" style="flex: 1.2; height: 25px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
-            <input type="text" class="ocr-item-fee" value="${item.fee||''}" placeholder="\uae08\uc561 (\uc608: 11\ub9cc, 9\ub9cc)" style="flex: 1; height: 25px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
-            <input type="text" class="ocr-item-opt" value="${item.option||''}" placeholder="\uc635\uc158 (\uc120\ud0dd)" style="flex: 0.8; height: 25px; font-size: 10px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 4px; box-sizing: border-box;">
-            <button type="button" class="btn-ocr-del-row" title="\ud589 \uc0ad\uc81c" style="width: 22px; height: 25px; background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">&times;</button>
-        `;
-container.appendChild(row);
+                <input type="text" class="ocr-item-time" value="${it.time||''}" placeholder="\uc2dc\uac04 (\uc608: 6\uc2dc\ub300, 11:50~13:29)" style="flex: 1.5; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+                <input type="text" class="ocr-item-fee" value="${it.fee||''}" placeholder="\uae08\uc561 (\uc608: 9\ub9cc, 10\ub9cc)" style="flex: 1.2; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+                <button type="button" class="btn-ocr-del-row" title="\ud589 \uc0ad\uc81c" style="width: 22px; height: 24px; background: #FFF; color: #DC2626; border: 1px solid #FECACA; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">&times;</button>
+            `;
+rowsWrap.appendChild(row);
 });
-if(countEl)countEl.innerText=list.length;
+card.appendChild(rowsWrap);
+container.appendChild(card);
+});
+if(countEl)countEl.innerText=totalCount;
 }
 function openOcrReviewModal(ocrData={}){
 const modal=document.getElementById('\x6f\x63\x72\x52\x65\x76\x69\x65\x77\x4d\x6f\x64\x61\x6c');
@@ -12682,25 +12869,30 @@ const inpCourse=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x43\x6
 if(inpCourse){
 inpCourse.value=ocrData.course||'';
 }
+let sections=ocrData.sections;
+if(!sections||sections.length===0){
+sections=extractNoticeSectionsFromOcrText(ocrData.rawText||'');
+}
+if(!sections||sections.length===0){
+const items=ocrData.items||[];
+sections=[{date:ocrData.date||'\uc8fc\uc911',items:items}];
+}
 const inpDate=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
 if(inpDate){
-if(ocrData.date){
-inpDate.value=ocrData.date;
+if(sections.length===1){
+inpDate.value=sections[0].date;
 }else{
-const now=new Date();
-inpDate.value=`${now.getMonth()+1}.${now.getDate()}`;
+inpDate.value=sections.map(s=>s.date).join(', ');
 }
 }
 const rawEl=document.getElementById('\x6f\x63\x72\x52\x61\x77\x54\x65\x78\x74');
 if(rawEl){
 rawEl.value=ocrData.rawText||'';
 }
-const items=(ocrData.items&&ocrData.items.length>0)?ocrData.items:extractTimeFeeItemsFromOcrText(ocrData.rawText||'');
-renderOcrReviewRows(items);
+renderOcrReviewSections(sections);
 const btnNotice=document.getElementById('\x62\x74\x6e\x4f\x63\x72\x41\x70\x70\x6c\x79\x4e\x6f\x74\x69\x63\x65');
 if(btnNotice){
-const hasSlotPattern=items.some(it=>/시대|시\s*대|~|[123]부/.test(it.time));
-btnNotice.style.display=hasSlotPattern?'\x69\x6e\x6c\x69\x6e\x65-\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
+btnNotice.style.display='\x69\x6e\x6c\x69\x6e\x65-\x62\x6c\x6f\x63\x6b';
 }
 modal.style.display='\x66\x6c\x65\x78';
 setTimeout(()=>{
@@ -12720,116 +12912,157 @@ document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x4f\x63\x72\x52\x65\x7
 document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x4f\x63\x72\x52\x65\x76\x69\x65\x77')?.addEventListener('\x63\x6c\x69\x63\x6b',closeOcrReviewModal);
 document.getElementById('\x62\x74\x6e\x4f\x63\x72\x51\x75\x69\x63\x6b\x54\x6f\x64\x61\x79')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const now=new Date();
+const dStr=`${now.getMonth()+1}.${now.getDate()}`;
 const inp=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
-if(inp)inp.value=`${now.getMonth()+1}.${now.getDate()}`;
+if(inp)inp.value=dStr;
+const firstSecDate=document.querySelector('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65');
+if(firstSecDate)firstSecDate.value=dStr;
 });
 document.getElementById('\x62\x74\x6e\x4f\x63\x72\x51\x75\x69\x63\x6b\x54\x6f\x6d\x6f\x72\x72\x6f\x77')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const tomorrow=new Date();
 tomorrow.setDate(tomorrow.getDate()+1);
+const dStr=`${tomorrow.getMonth()+1}.${tomorrow.getDate()}`;
 const inp=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
-if(inp)inp.value=`${tomorrow.getMonth()+1}.${tomorrow.getDate()}`;
+if(inp)inp.value=dStr;
+const firstSecDate=document.querySelector('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65');
+if(firstSecDate)firstSecDate.value=dStr;
+});
+document.getElementById('\x62\x74\x6e\x4f\x63\x72\x51\x75\x69\x63\x6b\x57\x65\x65\x6b\x64\x61\x79')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const inp=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
+if(inp)inp.value='\uc8fc\uc911';
+const firstSecDate=document.querySelector('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65');
+if(firstSecDate)firstSecDate.value='\uc8fc\uc911';
+});
+document.getElementById('\x62\x74\x6e\x4f\x63\x72\x51\x75\x69\x63\x6b\x57\x65\x65\x6b\x65\x6e\x64')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const inp=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
+if(inp)inp.value='\uc8fc\ub9d0';
+const firstSecDate=document.querySelector('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65');
+if(firstSecDate)firstSecDate.value='\uc8fc\ub9d0';
+});
+document.getElementById('\x62\x74\x6e\x4f\x63\x72\x51\x75\x69\x63\x6b\x41\x6c\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const inp=document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65');
+if(inp)inp.value='\uc804\uccb4';
+const firstSecDate=document.querySelector('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65');
+if(firstSecDate)firstSecDate.value='\uc804\uccb4';
 });
 document.getElementById('\x62\x74\x6e\x4f\x63\x72\x41\x64\x64\x52\x6f\x77')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const container=document.getElementById('\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72');
 if(!container)return;
+let lastCard=container.querySelector('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x63\x61\x72\x64\x3a\x6c\x61\x73\x74-\x63\x68\x69\x6c\x64');
+if(!lastCard){
+renderOcrReviewSections([{date:'\uc8fc\uc911',items:[{time:'',fee:''}]}]);
+return;
+}
+const rowsWrap=lastCard.querySelector('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x72\x6f\x77\x73');
+if(!rowsWrap)return;
 const row=document.createElement('\x64\x69\x76');
 row.className='\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77';
-row.style.cssText='\x64\x69\x73\x70\x6c\x61\x79\x3a \x66\x6c\x65\x78; \x67\x61\x70\x3a \x34\x70\x78; \x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73\x3a \x63\x65\x6e\x74\x65\x72; \x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d\x3a \x34\x70\x78;';
+row.style.cssText='\x64\x69\x73\x70\x6c\x61\x79\x3a \x66\x6c\x65\x78; \x67\x61\x70\x3a \x35\x70\x78; \x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73\x3a \x63\x65\x6e\x74\x65\x72; \x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d\x3a \x34\x70\x78;';
 row.innerHTML=`
-            <input type="text" class="ocr-item-time" placeholder="\uc2dc\uac04 (\uc608: 06:48, 7\uc2dc\ub300)" style="flex: 1.2; height: 25px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
-            <input type="text" class="ocr-item-fee" placeholder="\uae08\uc561 (\uc608: 11\ub9cc, 9\ub9cc)" style="flex: 1; height: 25px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
-            <input type="text" class="ocr-item-opt" placeholder="\uc635\uc158 (\uc120\ud0dd)" style="flex: 0.8; height: 25px; font-size: 10px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 4px; box-sizing: border-box;">
-            <button type="button" class="btn-ocr-del-row" title="\ud589 \uc0ad\uc81c" style="width: 22px; height: 25px; background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">&times;</button>
+            <input type="text" class="ocr-item-time" placeholder="\uc2dc\uac04 (\uc608: 6\uc2dc\ub300, 11:50~13:29)" style="flex: 1.5; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+            <input type="text" class="ocr-item-fee" placeholder="\uae08\uc561 (\uc608: 9\ub9cc, 10\ub9cc)" style="flex: 1.2; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+            <button type="button" class="btn-ocr-del-row" title="\ud589 \uc0ad\uc81c" style="width: 22px; height: 24px; background: #FFF; color: #DC2626; border: 1px solid #FECACA; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">&times;</button>
         `;
-container.appendChild(row);
+rowsWrap.appendChild(row);
 const countEl=document.getElementById('\x6f\x63\x72\x49\x74\x65\x6d\x73\x43\x6f\x75\x6e\x74');
 if(countEl)countEl.innerText=container.querySelectorAll('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77').length;
 row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.focus();
 });
 document.getElementById('\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-const delBtn=e.target.closest('\x2e\x62\x74\x6e-\x6f\x63\x72-\x64\x65\x6c-\x72\x6f\x77');
-if(delBtn){
-const row=delBtn.closest('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77');
+const container=document.getElementById('\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72');
+const addSecRowBtn=e.target.closest('\x2e\x62\x74\x6e-\x6f\x63\x72-\x61\x64\x64-\x73\x65\x63-\x72\x6f\x77');
+if(addSecRowBtn){
+const card=addSecRowBtn.closest('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x63\x61\x72\x64');
+const rowsWrap=card?.querySelector('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x72\x6f\x77\x73');
+if(rowsWrap){
+const row=document.createElement('\x64\x69\x76');
+row.className='\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77';
+row.style.cssText='\x64\x69\x73\x70\x6c\x61\x79\x3a \x66\x6c\x65\x78; \x67\x61\x70\x3a \x35\x70\x78; \x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73\x3a \x63\x65\x6e\x74\x65\x72; \x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d\x3a \x34\x70\x78;';
+row.innerHTML=`
+                    <input type="text" class="ocr-item-time" placeholder="\uc2dc\uac04 (\uc608: 6\uc2dc\ub300, 11:50~13:29)" style="flex: 1.5; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+                    <input type="text" class="ocr-item-fee" placeholder="\uae08\uc561 (\uc608: 9\ub9cc, 10\ub9cc)" style="flex: 1.2; height: 24px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; background: #FFF; box-sizing: border-box;">
+                    <button type="button" class="btn-ocr-del-row" title="\ud589 \uc0ad\uc81c" style="width: 22px; height: 24px; background: #FFF; color: #DC2626; border: 1px solid #FECACA; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1;">&times;</button>
+                `;
+rowsWrap.appendChild(row);
+const countEl=document.getElementById('\x6f\x63\x72\x49\x74\x65\x6d\x73\x43\x6f\x75\x6e\x74');
+if(countEl&&container)countEl.innerText=container.querySelectorAll('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77').length;
+row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.focus();
+}
+return;
+}
+const delRowBtn=e.target.closest('\x2e\x62\x74\x6e-\x6f\x63\x72-\x64\x65\x6c-\x72\x6f\x77');
+if(delRowBtn){
+const row=delRowBtn.closest('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77');
 if(row){
 row.remove();
-const container=document.getElementById('\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72');
 const countEl=document.getElementById('\x6f\x63\x72\x49\x74\x65\x6d\x73\x43\x6f\x75\x6e\x74');
 if(countEl&&container)countEl.innerText=container.querySelectorAll('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77').length;
 }
+return;
+}
+const delSecBtn=e.target.closest('\x2e\x62\x74\x6e-\x6f\x63\x72-\x64\x65\x6c-\x73\x65\x63');
+if(delSecBtn){
+const card=delSecBtn.closest('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x63\x61\x72\x64');
+if(card){
+card.remove();
+const countEl=document.getElementById('\x6f\x63\x72\x49\x74\x65\x6d\x73\x43\x6f\x75\x6e\x74');
+if(countEl&&container)countEl.innerText=container.querySelectorAll('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77').length;
+}
+return;
 }
 });
-document.getElementById('\x62\x74\x6e\x4f\x63\x72\x41\x70\x70\x6c\x79\x43\x61\x72\x64\x73')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+document.getElementById('\x62\x74\x6e\x4f\x63\x72\x41\x70\x70\x6c\x79\x4e\x6f\x74\x69\x63\x65')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const course=(document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x43\x6f\x75\x72\x73\x65')?.value||'').trim();
 if(!course){
 alert('\uace8\ud504\uc7a5\uba85\uc744 \uc785\ub825\ud558\uac70\ub098 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e');
 document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x43\x6f\x75\x72\x73\x65')?.focus();
 return;
 }
-let dateStr=(document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65')?.value||'').trim();
-if(!dateStr){
-const now=new Date();
-dateStr=`${now.getMonth()+1}.${now.getDate()}`;
-}
-dateStr=dateStr.replace(/[/]/g,'\x2e');
-const roomType=document.getElementById('\x6f\x63\x72\x53\x65\x6c\x52\x6f\x6f\x6d\x54\x79\x70\x65')?.value||'\uc870\uc778';
-const pax=document.getElementById('\x6f\x63\x72\x53\x65\x6c\x50\x61\x78')?.value||'\x34\uc778';
-const rowEls=Array.from(document.querySelectorAll('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77'));
-const gatheredLines=[];
-rowEls.forEach(row=>{
-const t=(row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.value||'').trim();
-let f=(row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x66\x65\x65')?.value||'').trim();
-const o=(row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x6f\x70\x74')?.value||'').trim();
-if(t){
-if(f&&!/만|원/.test(f)&&parseFloat(f)<1000)f+='\ub9cc';
-const lineParts=[t,f];
-if(o)lineParts.push(`[${o}]`);
-if(pax&&pax!=='\x34\uc778')lineParts.push(pax);
-gatheredLines.push(lineParts.join(' '));
-}
-});
-if(gatheredLines.length===0){
-const raw=(document.getElementById('\x6f\x63\x72\x52\x61\x77\x54\x65\x78\x74')?.value||'').trim();
-if(raw){
-gatheredLines.push(raw);
-}else{
-alert('\ucd5c\uc18c \x31\uac1c \uc774\uc0c1\uc758 \uc2dc\uac04 \ubc0f \uae08\uc561\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
-return;
-}
-}
-const fullGeneratedText=`${course}\n${dateStr}\n`+gatheredLines.join('\n');
-const inputEl=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74');
-if(inputEl){
-inputEl.value=fullGeneratedText;
-try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x49\x6e\x70\x75\x74\x54\x65\x78\x74',fullGeneratedText);}catch(e){}
-}
-closeOcrReviewModal();
-if(typeof _0x1039==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-const parsed=_0x1039(roomType==='\uc591\ub3c4'?'\x74\x72\x61\x6e\x73\x66\x65\x72':'\x6a\x6f\x69\x6e');
-playSuccessChime();
-const count=parsed?.rowDataList?.length||gatheredLines.length;
-_0x101a(`\ud83c\udf89 [${course}] ${count}\uac74\uc758 \ud2f0\ud0c0\uc784 \uce74\ub4dc\uac00 \uc131\uacf5\uc801\uc73c\ub85c \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
-}else{
-_0x101a(`\u2705 [${course}] \ud14d\uc2a4\ud2b8\uac00 \uc785\ub825\ucc3d\uc5d0 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
-}
-});
-document.getElementById('\x62\x74\x6e\x4f\x63\x72\x41\x70\x70\x6c\x79\x4e\x6f\x74\x69\x63\x65')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-const course=(document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x43\x6f\x75\x72\x73\x65')?.value||'').trim();
-let dateStr=(document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65')?.value||'').trim();
-if(!dateStr){
-const now=new Date();
-dateStr=`${now.getMonth()+1}.${now.getDate()}`;
-}
-dateStr=dateStr.replace(/[/]/g,'\x2e');
-const rowEls=Array.from(document.querySelectorAll('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77'));
-const noticeLines=[`${dateStr}`];
-rowEls.forEach(row=>{
-const t=(row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.value||'').trim();
-let f=(row.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x66\x65\x65')?.value||'').trim();
+const cards=Array.from(document.querySelectorAll('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x63\x61\x72\x64'));
+const noticeLines=[];
+let validCount=0;
+if(cards.length>0){
+cards.forEach(card=>{
+const secDate=(card.querySelector('\x2e\x6f\x63\x72-\x73\x65\x63\x74\x69\x6f\x6e-\x64\x61\x74\x65')?.value||'').trim()||'\uc8fc\uc911';
+const rows=Array.from(card.querySelectorAll('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77'));
+const secItems=[];
+rows.forEach(r=>{
+const t=(r.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.value||'').trim();
+let f=(r.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x66\x65\x65')?.value||'').trim();
 if(t&&f){
 if(!/만|원/.test(f)&&parseFloat(f)<1000)f+='\ub9cc';
-noticeLines.push(`${t} \ud604\uc7a5 ${f}`);
+secItems.push(`${t} \ud604\uc7a5 ${f}`);
+validCount++;
 }
 });
+if(secItems.length>0){
+if(noticeLines.length>0)noticeLines.push('');
+noticeLines.push(secDate);
+noticeLines.push(...secItems);
+}
+});
+}else{
+let dateStr=(document.getElementById('\x6f\x63\x72\x49\x6e\x70\x75\x74\x44\x61\x74\x65')?.value||'').trim()||'\uc8fc\uc911';
+const rowEls=Array.from(document.querySelectorAll('\x23\x6f\x63\x72\x52\x6f\x77\x73\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x72\x6f\x77'));
+const secItems=[];
+rowEls.forEach(r=>{
+const t=(r.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x74\x69\x6d\x65')?.value||'').trim();
+let f=(r.querySelector('\x2e\x6f\x63\x72-\x69\x74\x65\x6d-\x66\x65\x65')?.value||'').trim();
+if(t&&f){
+if(!/만|원/.test(f)&&parseFloat(f)<1000)f+='\ub9cc';
+secItems.push(`${t} \ud604\uc7a5 ${f}`);
+validCount++;
+}
+});
+if(secItems.length>0){
+noticeLines.push(dateStr);
+noticeLines.push(...secItems);
+}
+}
+if(validCount===0){
+alert('\ucd5c\uc18c \x31\uac1c \uc774\uc0c1\uc758 \uc720\ud6a8\ud55c \uc2dc\uac04\ub300\uc640 \uae08\uc561\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+return;
+}
 if(course)noticeLines.push(course);
 const noticeFullText=noticeLines.join('\n');
 closeOcrReviewModal();
@@ -12839,14 +13072,13 @@ noticeInput.value=noticeFullText;
 if(typeof syncParsedNoticeToManualInputs==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 syncParsedNoticeToManualInputs(noticeFullText);
 }
-const noticeModal=document.getElementById('\x6e\x6f\x74\x69\x63\x65\x4d\x6f\x64\x61\x6c');
-if(noticeModal&&noticeModal.style.display==='\x6e\x6f\x6e\x65'){
-const btnOpenNotice=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x4e\x6f\x74\x69\x63\x65\x4d\x6f\x64\x61\x6c');
-if(btnOpenNotice)btnOpenNotice.click();
 }
-_0x101a('\ud83d\udce2 \uacf5\uc9c0 \uad00\ub9ac\ucc3d\uc5d0 \uc785\ub825\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e \ud655\uc778 \ud6c4 [\uc801\uc6a9]\uc744 \ub20c\ub7ec\uc8fc\uc138\uc694\x2e');
+if(typeof applyNoticeFromText==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+applyNoticeFromText(noticeFullText,false,new Date());
+playSuccessChime();
+_0x101a(`\ud83c\udf89 [${course}] (${cards.length}\uac1c \uad6c\uc5ed \uc694\uae08\ud45c)\uac00 \uc989\uc2dc \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
 }else{
-_0x101a('\ud83d\udce2 \uacf5\uc9c0 \ud14d\uc2a4\ud2b8\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+_0x101a(`\ud83d\udce2 [${course}] \uacf5\uc9c0 \uc694\uae08\ud45c\uac00 \ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }
 });
 }
@@ -12906,54 +13138,45 @@ return null;
 }
 async function processOcrNoticeImage(file){
 if(!file)return;
-showOcrLoading('\ud83d\udce2 \uacf5\uc9c0 \uc694\uae08\ud45c \uc774\ubbf8\uc9c0 \ubd84\uc11d \uc911\x2e\x2e\x2e (\uc2dc\uac04\ub300\ubcc4 \uacf5\uc9c0 \ucd94\ucd9c)');
+showOcrLoading('\ud83e\udd16 \x47\x6f\x6f\x67\x6c\x65 \x47\x65\x6d\x69\x6e\x69 \x41\x49\ub85c \uacf5\uc9c0 \uc694\uae08\ud45c \ubd84\uc11d \uc911\x2e\x2e\x2e');
 try{
-const{dataUrl,base64}=await resizeImageForOcr(file);
+const{dataUrl,base64,mimeType}=await resizeImageForOcr(file);
 let extractedText='';
-const geminiKey=localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||'';
-if(geminiKey){
+const geminiKey=(localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||DEFAULT_GEMINI_API_KEY||'').trim();
+let geminiError=null;
 try{
-showOcrLoading('\ud83e\udd16 \x47\x65\x6d\x69\x6e\x69 \x41\x49\ub85c \uad6c\uc7a5 \uacf5\uc9c0 \uc694\uae08\ud45c \ubd84\uc11d \uc911\x2e\x2e\x2e');
-extractedText=await requestGeminiOcr(geminiKey,base64);
+extractedText=await requestGeminiOcr(geminiKey,base64,mimeType);
 }catch(e){
-console.warn('[\x4f\x43\x52 \x4e\x6f\x74\x69\x63\x65] \x47\x65\x6d\x69\x6e\x69 \ud638\ucd9c \uc2e4\ud328, \x4f\x43\x52\x2e\x73\x70\x61\x63\x65 \uc804\ud658\x3a',e);
-}
-}
-if(!extractedText){
-showOcrLoading('\ud83d\udd0d \uacf5\uc9c0 \uc694\uae08\ud45c \x4f\x43\x52 \ud14d\uc2a4\ud2b8 \ud310\ub3c5 \uc911\x2e\x2e\x2e');
-const ocrKeys=['\x4b\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38','\x68\x65\x6c\x6c\x6f\x77\x6f\x72\x6c\x64'];
-for(const key of ocrKeys){
-try{
-extractedText=await requestOcrSpace(dataUrl,key);
-if(extractedText)break;
-}catch(e){}
-}
+geminiError=e;
+console.error('[\x4f\x43\x52 \x4e\x6f\x74\x69\x63\x65] \x47\x65\x6d\x69\x6e\x69 \ud638\ucd9c \uc2e4\ud328\x3a',e);
 }
 extractedText=cleanOcrExtractedText(extractedText);
 hideOcrLoading();
 if(!extractedText){
-_0x101a('\u26a0\ufe0f \uc774\ubbf8\uc9c0\uc5d0\uc11c \uacf5\uc9c0 \ub0b4\uc6a9\uc744 \uc77d\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e \uc120\uba85\ud55c \uc694\uae08\ud45c \uc774\ubbf8\uc9c0\ub97c \ub123\uc5b4\uc8fc\uc138\uc694\x2e');
+let errMsg='\u26a0\ufe0f \uacf5\uc9c0 \uc774\ubbf8\uc9c0 \ud310\ub3c5 \uc2e4\ud328';
+if(geminiError){
+errMsg=`\u26a0\ufe0f ${geminiError.message||String(geminiError)}`;
+}
+_0x101a(errMsg,8000);
 return;
 }
 playSuccessChime();
 const detectedCourse=detectGolfCourseInText(extractedText);
-const detectedDate=detectDateInText(extractedText);
-const items=extractTimeFeeItemsFromOcrText(extractedText);
-let dateStr=detectedDate||'';
-if(!dateStr){
-const now=new Date();
-dateStr=`${now.getMonth()+1}.${now.getDate()}`;
-}
-const noticeLines=[dateStr];
-if(items&&items.length>0){
-items.forEach(it=>{
+const sections=extractNoticeSectionsFromOcrText(extractedText);
+const noticeLines=[];
+let totalItemsCount=0;
+sections.forEach(sec=>{
+if(sec.items&&sec.items.length>0){
+if(noticeLines.length>0)noticeLines.push('');
+noticeLines.push(sec.date);
+sec.items.forEach(it=>{
 let f=it.fee||'';
 if(f&&!/만|원/.test(f)&&parseFloat(f)<1000)f+='\ub9cc';
 noticeLines.push(`${it.time} \ud604\uc7a5 ${f}`);
+totalItemsCount++;
 });
-}else{
-noticeLines.push(extractedText);
 }
+});
 if(detectedCourse)noticeLines.push(detectedCourse);
 const noticeFullText=noticeLines.join('\n');
 const noticeInput=document.getElementById('\x6e\x6f\x74\x69\x63\x65\x49\x6e\x70\x75\x74\x54\x65\x78\x74');
@@ -12965,11 +13188,11 @@ syncParsedNoticeToManualInputs(noticeFullText);
 }
 openOcrReviewModal({
 course:detectedCourse,
-date:dateStr,
-items:items,
+sections:sections,
 rawText:extractedText
 });
-_0x101a(`\ud83c\udf89 [${detectedCourse||'\uacf5\uc9c0 \uc694\uae08\ud45c'}] ${items.length}\uac1c \uc2dc\uac04\ub300 \uc694\uae08\uc774 \uc778\uc2dd\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+const secSummary=sections.map(s=>s.date).join(', ');
+_0x101a(`\ud83c\udf89 [${detectedCourse||'\uacf5\uc9c0 \uc694\uae08\ud45c'}] ${secSummary} ${totalItemsCount}\uac1c \uc2dc\uac04\ub300 \uc694\uae08\uc774 \uc790\ub3d9 \ubd84\ub9ac \uc778\uc2dd\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }catch(err){
 hideOcrLoading();
 console.error('[\x4f\x43\x52 \x4e\x6f\x74\x69\x63\x65 \x45\x72\x72\x6f\x72]',err);
@@ -12978,82 +13201,7 @@ _0x101a(`\u26a0\ufe0f \uacf5\uc9c0 \uc774\ubbf8\uc9c0 \ubd84\uc11d \uc624\ub958:
 }
 async function processOcrImage(file){
 if(!file)return;
-const noticeModal=document.getElementById('\x6e\x6f\x74\x69\x63\x65\x4d\x6f\x64\x61\x6c');
-if(noticeModal&&noticeModal.style.display!=='\x6e\x6f\x6e\x65'){
 await processOcrNoticeImage(file);
-return;
-}
-showOcrLoading('\ud83d\udcf7 \ucea1\ucc98 \uc774\ubbf8\uc9c0 \uac10\uc9c0\ub428! \uace0\ud574\uc0c1\ub3c4 \ucd5c\uc801\ud654 \uc911\x2e\x2e\x2e');
-try{
-const{dataUrl,base64}=await resizeImageForOcr(file);
-let extractedText='';
-const geminiKey=localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||'';
-if(geminiKey){
-try{
-showOcrLoading('\ud83e\udd16 \x47\x65\x6d\x69\x6e\x69 \x56\x69\x73\x69\x6f\x6e \x41\x49 \ubaa8\ub378\ub85c \ud2f0\ud0c0\uc784 \ud45c \ucd08\uc815\ubc00 \ubd84\uc11d \uc911\x2e\x2e\x2e');
-extractedText=await requestGeminiOcr(geminiKey,base64);
-}catch(e){
-console.warn('[\x4f\x43\x52] \x47\x65\x6d\x69\x6e\x69 \ud638\ucd9c \uc2e4\ud328, \x4f\x43\x52\x2e\x73\x70\x61\x63\x65 \uc5d4\uc9c4\uc73c\ub85c \uc790\ub3d9 \uc804\ud658\x3a',e);
-}
-}
-if(!extractedText){
-showOcrLoading('\ud83d\udd0d \ud55c\uae00 \ud45c \uc778\uc2dd \ud2b9\ud654 \x4f\x43\x52 \uc5d4\uc9c4\uc73c\ub85c \ud14d\uc2a4\ud2b8 \ud310\ub3c5 \uc911\x2e\x2e\x2e');
-const ocrKeys=['\x4b\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38\x38','\x68\x65\x6c\x6c\x6f\x77\x6f\x72\x6c\x64'];
-for(const key of ocrKeys){
-try{
-extractedText=await requestOcrSpace(dataUrl,key);
-if(extractedText)break;
-}catch(e){
-console.warn(`[OCR] \ud0a4(${key}) \uc2dc\ub3c4 \uc2e4\ud328:`,e);
-}
-}
-}
-extractedText=cleanOcrExtractedText(extractedText);
-if(!extractedText){
-hideOcrLoading();
-_0x101a('\u26a0\ufe0f \uc774\ubbf8\uc9c0\uc5d0\uc11c \ud14d\uc2a4\ud2b8\ub97c \ud310\ub3c5\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e \ub354 \uc120\uba85\ud55c \uc774\ubbf8\uc9c0\ub97c \ubd99\uc5ec\ub123\uc5b4 \uc8fc\uc138\uc694\x2e');
-return;
-}
-const inputEl=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74');
-if(inputEl){
-inputEl.value=extractedText;
-try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x49\x6e\x70\x75\x74\x54\x65\x78\x74',extractedText);}catch(e){}
-}
-hideOcrLoading();
-playSuccessChime();
-const detectedCourse=detectGolfCourseInText(extractedText);
-const detectedDate=detectDateInText(extractedText);
-const items=extractTimeFeeItemsFromOcrText(extractedText);
-if(!detectedCourse||!detectedDate||(items&&items.length>0)){
-openOcrReviewModal({
-course:detectedCourse,
-date:detectedDate,
-items:items,
-rawText:extractedText
-});
-return;
-}
-if(typeof _0x1039==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-const parsed=_0x1039('\x6a\x6f\x69\x6e');
-const count=parsed?.rowDataList?.length||0;
-if(count>0){
-_0x101a(`\ud83c\udf89 \uc774\ubbf8\uc9c0 \ud310\ub3c5 \uc644\ub8cc! ${count}\uac74\uc758 \ud2f0\ud0c0\uc784 \uce74\ub4dc\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
-}else{
-openOcrReviewModal({
-course:detectedCourse,
-date:detectedDate,
-items:items,
-rawText:extractedText
-});
-}
-}else{
-_0x101a('\u2705 \uc774\ubbf8\uc9c0 \ud14d\uc2a4\ud2b8\uac00 \uc785\ub825\ucc3d\uc5d0 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
-}
-}catch(err){
-hideOcrLoading();
-console.error('[\x4f\x43\x52 \x45\x72\x72\x6f\x72]',err);
-_0x101a(`\u26a0\ufe0f OCR \ubd84\uc11d \uc624\ub958: ${err.message||'\uc774\ubbf8\uc9c0\ub97c \ud310\ub3c5\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'}`);
-}
 }
 function initOcrHandlers(){
 initOcrReviewHandlers();
@@ -13208,14 +13356,28 @@ e.target.value='';
 }
 });
 }
+localStorage.setItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79',DEFAULT_GEMINI_API_KEY);
 const geminiInput=document.getElementById('\x69\x6e\x70\x75\x74\x47\x65\x6d\x69\x6e\x69\x41\x70\x69\x4b\x65\x79');
 if(geminiInput){
-geminiInput.value=localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||'';
+geminiInput.value=localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||DEFAULT_GEMINI_API_KEY;
 geminiInput.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
-localStorage.setItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79',geminiInput.value.trim());
+const v=geminiInput.value.trim()||DEFAULT_GEMINI_API_KEY;
+localStorage.setItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79',v);
 _0x101a('\x47\x65\x6d\x69\x6e\x69 \x41\x50\x49 \ud0a4\uac00 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 });
 }
+const promptGeminiKey=()=>{
+const cur=localStorage.getItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79')||DEFAULT_GEMINI_API_KEY;
+const key=prompt('\x47\x6f\x6f\x67\x6c\x65 \x41\x49 \x53\x74\x75\x64\x69\x6f(\x61\x69\x73\x74\x75\x64\x69\x6f\x2e\x67\x6f\x6f\x67\x6c\x65\x2e\x63\x6f\x6d)\uc5d0\uc11c \ubc1c\uae09\ubc1b\uc740 \x47\x65\x6d\x69\x6e\x69 \x41\x50\x49 \ud0a4\ub97c \uc785\ub825\ud558\uc138\uc694\x2e\n(\uae30\ubcf8 \uc81c\uacf5 \ud0a4\uac00 \uc790\ub3d9 \ub4f1\ub85d\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4)\x3a',cur);
+if(key!==null){
+const trimmed=key.trim()||DEFAULT_GEMINI_API_KEY;
+localStorage.setItem('\x67\x65\x6d\x69\x6e\x69\x5f\x61\x70\x69\x5f\x6b\x65\x79',trimmed);
+if(geminiInput)geminiInput.value=trimmed;
+_0x101a('\u2705 \x47\x65\x6d\x69\x6e\x69 \x41\x49 \ud0a4\uac00 \uc124\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+}
+};
+document.getElementById('\x62\x74\x6e\x4e\x6f\x74\x69\x63\x65\x47\x65\x6d\x69\x6e\x69\x4b\x65\x79')?.addEventListener('\x63\x6c\x69\x63\x6b',promptGeminiKey);
+document.getElementById('\x62\x74\x6e\x4d\x61\x69\x6e\x47\x65\x6d\x69\x6e\x69\x4b\x65\x79')?.addEventListener('\x63\x6c\x69\x63\x6b',promptGeminiKey);
 chrome.runtime.onMessage.addListener((msg)=>{
 if(msg.type==='\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x53\x45\x53\x53\x49\x4f\x4e\x5f\x45\x58\x50\x49\x52\x45\x44'){
 _0x101a('\u26a0\ufe0f [\uace8\ud504\ubaac \uc138\uc158 \ub9cc\ub8cc] '+msg.message,8000);
