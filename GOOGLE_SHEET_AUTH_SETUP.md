@@ -73,8 +73,86 @@ function handleAuth(e) {
     }
 
     // ====================================================
-    // 2. 전체 사용자 공지 실시간 상호 동기화 (action: 'sync_notices')
-    // A가 등록한 공지 업로드 + B가 등록한 공지 다운로드 취합
+    // 2-1. 특정 구장 공지 삭제 (action: 'delete_notice')
+    // 사용자 누구나 특정 구장의 공지를 삭제 시 시트에서 해당 행 삭제 및 삭제이력(Tombstone) 등록
+    // ====================================================
+    if (action === 'delete_notice') {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const targetCourse = String(data.course || (e && e.parameter ? e.parameter.course : '') || '').trim();
+      const delTs = Number(data.deletedTimestamp || (e && e.parameter ? e.parameter.deletedTimestamp : 0)) || Date.now();
+      const uploader = String(data.userId || data.userName || data.id || (e && e.parameter ? e.parameter.userId : '') || '관리자').trim();
+      const nowStr = Utilities.formatDate(new Date(), "GMT+9", "yyyy-MM-dd HH:mm:ss");
+
+      if (targetCourse) {
+        // 1) 공지목록 시트에서 해당 구장의 모든 행 삭제
+        const noticeSheet = ss.getSheetByName('공지목록');
+        if (noticeSheet && noticeSheet.getLastRow() > 1) {
+          const values = noticeSheet.getDataRange().getValues();
+          const targetClean = targetCourse.replace(/[\s\-_]/g, '').toLowerCase();
+          for (let i = values.length - 1; i >= 1; i--) {
+            const rowCourse = String(values[i][0] || '').trim();
+            const rowClean = rowCourse.replace(/[\s\-_]/g, '').toLowerCase();
+            if (rowClean === targetClean || rowClean.includes(targetClean) || targetClean.includes(rowClean)) {
+              noticeSheet.deleteRow(i + 1);
+            }
+          }
+        }
+
+        // 2) 공지삭제이력 시트에 영구 기록 (일반 사용자의 과거 공지 부활 방지)
+        const delSheet = ss.getSheetByName('공지삭제이력') || ss.insertSheet('공지삭제이력');
+        if (delSheet.getLastRow() === 0) {
+          delSheet.appendRow(['구장명', '삭제일시', '삭제타임스탬프', '삭제자']);
+          delSheet.getRange(1, 1, 1, 4).setBackground('#FFEBEE').setFontWeight('bold');
+        }
+        delSheet.appendRow([targetCourse, nowStr, delTs, uploader]);
+      }
+
+      return createJsonResponse({
+        success: true,
+        message: `'${targetCourse}' 공지가 서버에서 정상 삭제되었습니다.`,
+        deletedCourse: targetCourse,
+        deletedTimestamp: delTs,
+        syncedAt: nowStr
+      });
+    }
+
+    // ====================================================
+    // 2-2. 전체 공지 초기화 (action: 'clear_all_notices')
+    // ====================================================
+    if (action === 'clear_all_notices') {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const delTs = Number(data.deletedTimestamp || (e && e.parameter ? e.parameter.deletedTimestamp : 0)) || Date.now();
+      const uploader = String(data.userId || data.userName || data.id || (e && e.parameter ? e.parameter.userId : '') || '관리자').trim();
+      const nowStr = Utilities.formatDate(new Date(), "GMT+9", "yyyy-MM-dd HH:mm:ss");
+
+      // 공지목록 전체 비우기
+      const noticeSheet = ss.getSheetByName('공지목록');
+      if (noticeSheet) {
+        noticeSheet.clearContents();
+        noticeSheet.appendRow(['구장명', '날짜', '시간', '시작분', '종료분', '캐디구분', '금액', '할인', '규칙유형', '원문전문', '등록자', '수신일시', '타임스탬프', '업데이트일시']);
+        noticeSheet.getRange(1, 1, 1, 14).setBackground('#E8F5E9').setFontWeight('bold');
+      }
+
+      // 공지삭제이력에 __ALL__ 마커 추가
+      const delSheet = ss.getSheetByName('공지삭제이력') || ss.insertSheet('공지삭제이력');
+      if (delSheet.getLastRow() === 0) {
+        delSheet.appendRow(['구장명', '삭제일시', '삭제타임스탬프', '삭제자']);
+        delSheet.getRange(1, 1, 1, 4).setBackground('#FFEBEE').setFontWeight('bold');
+      }
+      delSheet.appendRow(['__ALL__', nowStr, delTs, uploader]);
+
+      return createJsonResponse({
+        success: true,
+        message: '전체 공지가 초기화되었습니다.',
+        isAllCleared: true,
+        deletedTimestamp: delTs,
+        syncedAt: nowStr
+      });
+    }
+
+    // ====================================================
+    // 2-3. 전체 사용자 공지 실시간 상호 동기화 (action: 'sync_notices')
+    // A가 등록한 공지 업로드 + B가 등록한 공지 다운로드 취합 + 관리자 삭제 실시간 반영
     // ====================================================
     if (action === 'sync_notices' || action === 'get_notices') {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -86,14 +164,46 @@ function handleAuth(e) {
         noticeSheet.getRange(1, 1, 1, 14).setBackground('#E8F5E9').setFontWeight('bold');
       }
 
-      // 기존 시트의 공지들 읽기
+      // 1) 공지삭제이력 읽기 (삭제 마커 목록 로드)
+      const delSheet = ss.getSheetByName('공지삭제이력');
+      const deletedCourseMap = {};
+      let allClearedTimestamp = 0;
+      const deletedCoursesList = [];
+
+      if (delSheet && delSheet.getLastRow() > 1) {
+        const delData = delSheet.getDataRange().getValues();
+        for (let i = 1; i < delData.length; i++) {
+          const dCourse = String(delData[i][0] || '').trim();
+          const dTs = Number(delData[i][2]) || 0;
+          if (!dCourse) continue;
+          if (dCourse === '__ALL__') {
+            if (dTs > allClearedTimestamp) allClearedTimestamp = dTs;
+          } else {
+            const cleanKey = dCourse.replace(/[\s\-_]/g, '').toLowerCase();
+            if (!deletedCourseMap[cleanKey] || dTs > deletedCourseMap[cleanKey]) {
+              deletedCourseMap[cleanKey] = dTs;
+            }
+            deletedCoursesList.push({ course: dCourse, deletedTimestamp: dTs });
+          }
+        }
+      }
+
+      // 2) 기존 시트의 공지들 읽기
       const existingData = noticeSheet.getDataRange().getValues();
-      const serverRules = [];
+      let serverRules = [];
       for (let i = 1; i < existingData.length; i++) {
         const row = existingData[i];
         if (!row[0]) continue;
+        const rowCourse = String(row[0]);
+        const rowClean = rowCourse.replace(/[\s\-_]/g, '').toLowerCase();
+        const rTs = Number(row[12]) || 0;
+
+        // 삭제된 공지 필터링
+        if (allClearedTimestamp > 0 && rTs <= allClearedTimestamp) continue;
+        if (deletedCourseMap[rowClean] && rTs <= deletedCourseMap[rowClean]) continue;
+
         serverRules.push({
-          course: String(row[0]),
+          course: rowCourse,
           date: String(row[1] || ''),
           timeText: String(row[2] || ''),
           startMins: Number(row[3]) || 0,
@@ -105,13 +215,22 @@ function handleAuth(e) {
           fullNoticeText: String(row[9] || ''),
           registeredBy: String(row[10] || ''),
           receivedAt: String(row[11] || ''),
-          receivedTimestamp: Number(row[12]) || 0,
+          receivedTimestamp: rTs,
           updatedAt: String(row[13] || '')
         });
       }
 
-      // 클라이언트가 업로드한 규칙들
-      const incomingRules = Array.isArray(data.rules) ? data.rules : [];
+      // 3) 클라이언트가 업로드한 규칙들 필터링 (삭제된 공지는 부활 방지를 위해 철저히 제외)
+      const incomingRawRules = Array.isArray(data.rules) ? data.rules : [];
+      const incomingRules = incomingRawRules.filter(inRule => {
+        if (!inRule || !inRule.course) return false;
+        const inTs = Number(inRule.receivedTimestamp) || 0;
+        if (allClearedTimestamp > 0 && inTs <= allClearedTimestamp) return false;
+        const cleanCourse = inRule.course.replace(/[\s\-_]/g, '').toLowerCase();
+        if (deletedCourseMap[cleanCourse] && inTs <= deletedCourseMap[cleanCourse]) return false;
+        return true;
+      });
+
       const uploader = (data.userId || data.userName || data.id || '사용자').trim();
       const nowStr = Utilities.formatDate(new Date(), "GMT+9", "yyyy-MM-dd HH:mm:ss");
 
@@ -164,8 +283,8 @@ function handleAuth(e) {
       // 최신 등록순(타임스탬프 내림차순 LIFO) 정렬
       serverRules.sort((a, b) => (b.receivedTimestamp || 0) - (a.receivedTimestamp || 0));
 
-      // 시트에 전체 데이터 다시 쓰기 (새 규칙이 업로드되었을 때)
-      if (incomingRules.length > 0) {
+      // 시트에 전체 데이터 다시 쓰기 (새 규칙이 업로드되었거나 삭제 필터링되었을 때)
+      if (incomingRules.length > 0 || serverRules.length !== (existingData.length - 1)) {
         noticeSheet.clearContents();
         noticeSheet.appendRow(['구장명', '날짜', '시간', '시작분', '종료분', '캐디구분', '금액', '할인', '규칙유형', '원문전문', '등록자', '수신일시', '타임스탬프', '업데이트일시']);
         noticeSheet.getRange(1, 1, 1, 14).setBackground('#E8F5E9').setFontWeight('bold');
@@ -186,6 +305,8 @@ function handleAuth(e) {
         message: '공지 동기화 완료',
         rules: serverRules,
         count: serverRules.length,
+        deletedCourses: deletedCoursesList,
+        isAllCleared: allClearedTimestamp > 0,
         syncedAt: nowStr
       });
     }

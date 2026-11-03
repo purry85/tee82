@@ -42,12 +42,12 @@ CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 DATA_PATH = os.path.join(BASE_DIR, "collected_notices.json")
 
 config = {
-    "target_rooms": ["골프락_그린피방", "골프락", "그린피방"],
-    "auto_detect_golf_rooms": True,
-    "poll_interval_sec": 3,
+    "target_rooms": ["골프탑 공지방"],
+    "auto_detect_golf_rooms": False,
+    "poll_interval_sec": 2,
     "server_port": 18900,
     "server_host": "127.0.0.1",
-    "max_history_count": 50
+    "max_history_count": 1000
 }
 
 if os.path.exists(CONFIG_PATH):
@@ -133,26 +133,25 @@ def is_golf_notice(text):
 
 
 def find_target_chat_windows():
-    """열려 있는 카카오톡 창 중 공지 대상 채팅방 검색"""
-    target_rooms = config.get("target_rooms", [])
-    auto_detect = config.get("auto_detect_golf_rooms", True)
+    """열려 있는 카카오톡 창 중 오직 '골프탑 공지방'만 엄격 검색 (타 대화방/신입방/규정방 등 100% 배제)"""
+    target_rooms = config.get("target_rooms", ["골프탑 공지방"])
 
     root = auto.GetRootControl()
     found_windows = []
 
     for win in root.GetChildren():
         name = win.Name or ""
-        class_name = win.ClassName or ""
-
-        # 카카오톡 창 클래스(EVA_Window_Dblclk) 또는 이름 매칭
         if not name:
             continue
 
-        is_matched = any(target in name for target in target_rooms)
-        if not is_matched and auto_detect:
-            if any(k in name for k in ["골프", "그린피", "조인", "부킹", "티타임", "골프락", "골팡", "골마켓"]) and ("EVA" in class_name or "카카오톡" in name):
-                is_matched = True
+        clean_name = name.replace(" ", "").replace("_", "").replace("-", "")
 
+        # 대화방, 신입방, 대기방, 규정방, 조인방 등 타 카톡방 무조건 제외
+        if any(bad in clean_name for bad in ["대화", "신입", "대기", "규정", "조인", "수다", "잡담", "후기"]):
+            continue
+
+        # '골프탑'과 '공지'가 둘 다 들어가야 매칭
+        is_matched = any(t.replace(" ", "") in clean_name for t in target_rooms)
         if is_matched:
             found_windows.append(win)
 

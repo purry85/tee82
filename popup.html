@@ -529,7 +529,7 @@
 
         .update-actions-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 4px;
             margin-top: 2px;
         }
@@ -3558,14 +3558,9 @@
                 </button>
             </div>
             <div class="update-actions-grid" id="updateActionsGrid" style="display: none;">
-                <div class="update-action-group price-update-group" id="groupPriceUpdateAction" style="display: none;">
-                    <button type="button" class="btn-hero-submit btn-price-update-action" id="btnUpdateGolfmonPrices" title="골프몬 내글보기로 이동하여 인하된 가격이나 변경된 인원을 찾아 수정합니다">
-                        <span>골프몬 변동수정 (<span id="priceEditCount">0</span>건)</span>
-                    </button>
-                </div>
-                <div class="update-action-group replace-update-group" id="groupReplaceUpdateAction" style="display: none;">
-                    <button type="button" class="btn-hero-submit btn-replace-update-action" id="btnReplaceGolfmonPosts" title="[실험실 기능] 같은 날짜 같은 구장의 기존 등록글을 새로 선택된 타임(시간+가격+인원)으로 통째로 교체 수정합니다">
-                        <span>골프몬 교체수정 (<span id="replaceEditCount">0</span>건)</span>
+                <div class="update-action-group replace-update-group" id="groupReplaceUpdateAction" style="display: none; width: 100%;">
+                    <button type="button" class="btn-hero-submit btn-replace-update-action" id="btnReplaceGolfmonPosts" style="width: 100%;" title="[스마트 통합 수정] 가격·인원 변동분은 즉시 반영하고, 남는 타임은 교체하며, 부족한 타임은 신규 등록하여 목록의 모든 구장 타임을 골프몬에 완벽히 동기화합니다">
+                        <span>골프몬 스마트수정 (<span id="replaceEditCount">0</span>건)</span>
                     </button>
                 </div>
             </div>
@@ -3674,7 +3669,6 @@
                 <div class="settings-row">
                     <label>단계별 속도 (클릭/입력):</label>
                     <select id="selStepDelay" style="padding: 2px 4px; font-size: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; background: white; max-width: 155px;">
-                        <option value="human" selected>👤 사람 리듬 (0.4~1.1초 불규칙)</option>
                         <option value="slow">🐢 신중한 사람 (0.8~1.8초 여유)</option>
                         <option value="fast">⚡ 빠른 손 (0.2~0.5초 신속)</option>
                     </select>
@@ -3682,7 +3676,6 @@
                 <div class="settings-row">
                     <label>타임 간 대기 (건별 쿨다운):</label>
                     <select id="selRandomDelay" style="padding: 2px 4px; font-size: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; background: white; max-width: 155px;">
-                        <option value="safe" selected>🛡️ 보통 안심 (2~4.5초 불규칙)</option>
                         <option value="stealth">🕶️ 특급 위장 (3.5~7.5초 불규칙)</option>
                         <option value="fast">⚡ 빠른 진행 (1.2~2.6초 단축)</option>
                     </select>
@@ -3725,10 +3718,10 @@
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700;">
                         <input type="checkbox" id="chkOpenUpdateActions">
-                        <span>📉🔄 골프몬 변동수정 & 교체수정 기능 오픈 (메인 화면에 수정 버튼 노출)</span>
+                        <span>📉🔄 골프몬 스마트수정 기능 오픈 (메인 화면에 스마트수정 버튼 노출)</span>
                     </label>
                     <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
-                        * 체크 시 메인 화면에 [골프몬 변동수정] 및 [골프몬 교체수정] 2개 버튼이 함께 노출됩니다.
+                        * 체크 시 메인 화면에 [골프몬 스마트수정] 올인원 통합 버튼이 노출됩니다. (가격변동·타임교체·신규등록 자동수행)
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
                         <input type="checkbox" id="chkOpenDateReset">
@@ -3873,7 +3866,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.33</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.34</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4151,7 +4144,7 @@
                 <button class="unmapped-modal-close" id="btnCloseNoticeModalX" title="닫기">&times;</button>
             </div>
             <div class="notice-modal-desc">
-                📌 카톡이나 밴드로 전달받은 <strong>구장별 공지</strong>를 복사한 후, <strong>[📋 복사한 내용 바로 적용]</strong> 버튼을 누르거나 아래에 붙여넣어 적용하세요.
+                📌 카톡이나 밴드로 전달받은 <strong>구장별 공지</strong>를 복사한 후, <strong>[📋 복사한 내용 바로 적용]</strong> 버튼을 누르거나 <strong>[🔍 검색]</strong> 버튼으로 골프탑 공지방의 최신 공지를 즉시 읽어오세요.
             </div>
 
             <!-- 현재 적용 중인 공지 목록 컨테이너 -->
@@ -4168,7 +4161,10 @@
             <div class="notice-input-wrap">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                     <span style="font-size: 11px; color: #475569; font-weight: 700;">공지 텍스트 붙여넣기</span>
-                    <button type="button" id="btnPasteNoticeClipboard" style="background: #10B981; border: 1px solid #059669; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="클립보드에 복사된 공지를 가져와 즉시 적용합니다">📋 복사한 내용 바로 적용</button>
+                    <div style="display: flex; gap: 5px;">
+                        <button type="button" id="btnSearchKakaoNotice" style="background: #2563EB; border: 1px solid #1D4ED8; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="골프탑 공지방에서 수집된 최신 공지를 즉시 읽어와 추가합니다">🔍 검색</button>
+                        <button type="button" id="btnPasteNoticeClipboard" style="background: #10B981; border: 1px solid #059669; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="클립보드에 복사된 공지를 가져와 즉시 적용합니다">📋 복사한 내용 바로 적용</button>
+                    </div>
                 </div>
                 <textarea id="noticeInputText" class="notice-textarea" placeholder="[공지 텍스트 예시 1: 특정 시간대 금액 지정]
 솔트베이
@@ -4342,7 +4338,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.33 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.34 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4368,12 +4364,12 @@
                     </div>
                 </div>
 
-                <!-- ★ 모바일(Lemur Browser) 최신 ZIP 다운로드 및 설치 안내 (관리자 전용 - 상단 배치) -->
-                <div class="update-action-card" id="cardMobileUpdate" style="display: none; border-left-color: #8B5CF6; background: #FAF5FF;">
+                <!-- ★ 모바일(Lemur Browser) 최신 ZIP 다운로드 및 설치 안내 (상시 노출) -->
+                <div class="update-action-card" id="cardMobileUpdate" style="border-left-color: #8B5CF6; background: #FAF5FF;">
                     <div class="update-action-header">
                         <span class="action-num" style="background: #8B5CF6;">📱</span>
                         <div class="action-info">
-                            <div class="action-title" style="color: #6D28D9; font-weight: 800;">📱 모바일(Lemur Browser) 최신 ZIP 업데이트 (관리자 전용)</div>
+                            <div class="action-title" style="color: #6D28D9; font-weight: 800;">📱 모바일(Lemur Browser) 최신 ZIP 업데이트</div>
                             <div class="action-desc">스마트폰 Lemur Browser에서는 배치 파일이 지원되지 않으므로, 아래 버튼으로 최신 ZIP을 받아 확장 프로그램 메뉴에서 덮어씌워주시면 즉시 업데이트됩니다.</div>
                         </div>
                     </div>

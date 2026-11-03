@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 title [Tee82] KakaoTalk Notice Collector
 cd /d "%~dp0"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0kakaotalk_collector.ps1"

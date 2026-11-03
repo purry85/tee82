@@ -1,4 +1,4 @@
-# Tee82 - KakaoTalk PC Notice Collector (Ultra-Fast Native Win32 + Clipboard RPA Engine)
+﻿# Tee82 - KakaoTalk PC Notice Collector (Ultra-Fast Native Win32 + Clipboard RPA Engine)
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -118,43 +118,36 @@ public class Tee82Win32 {
                 if (!string.IsNullOrEmpty(title)) {
                     string lowerTitle = title.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "");
 
-                    // 1. Check if title matches any target keyword
+                    // 1. Strict Ignore List Check FIRST: 불필요한 방(대화, 신입, 대기, 규정, 조인, 수다, 잡담 등)은 예외 없이 100% 무조건 제외!
+                    if (ignoreWords != null && ignoreWords.Length > 0) {
+                        foreach (var ig in ignoreWords) {
+                            if (!string.IsNullOrEmpty(ig)) {
+                                string lowerIg = ig.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "");
+                                if (lowerTitle.Contains(lowerIg)) {
+                                    return true; // Ignore immediately!
+                                }
+                            }
+                        }
+                    }
+
+                    // 2. Check if title matches target keyword
                     bool matchesKeyword = false;
                     foreach (var kw in keywords) {
                         if (!string.IsNullOrEmpty(kw)) {
                             string lowerKw = kw.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "");
-                            if (lowerTitle.Contains(lowerKw)) {
+                            if (lowerKw == "골프탑공지방" || lowerKw.Contains("골프탑")) {
+                                // 골프탑 관련은 반드시 '골프탑'과 '공지'가 둘 다 있어야만 매칭 허용! (대화방, 신입방 등 오탐지 원천 차단)
+                                if (lowerTitle.Contains("골프탑") && lowerTitle.Contains("공지")) {
+                                    matchesKeyword = true;
+                                    break;
+                                }
+                            } else if (lowerTitle.Contains(lowerKw)) {
                                 matchesKeyword = true;
                                 break;
                             }
                         }
                     }
                     if (!matchesKeyword) return true;
-
-                    // 2. Check ignore words, but NEVER ignore if the ignore word conflicts with a target keyword!
-                    bool isIgnored = false;
-                    if (ignoreWords != null && ignoreWords.Length > 0) {
-                        foreach (var ig in ignoreWords) {
-                            if (!string.IsNullOrEmpty(ig)) {
-                                string lowerIg = ig.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "");
-                                if (lowerTitle.Contains(lowerIg)) {
-                                    bool kwContainsIg = false;
-                                    foreach (var kw in keywords) {
-                                        string lKw = kw.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "");
-                                        if (lKw.Contains(lowerIg) || lowerIg.Contains(lKw)) {
-                                            kwContainsIg = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!kwContainsIg) {
-                                        isIgnored = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (isIgnored) return true;
 
                     var sbClass = new StringBuilder(256);
                     GetClassName(hWnd, sbClass, 256);
@@ -472,22 +465,6 @@ $HttpServerScript = {
                                 if ($postObj.ignore_rooms) {
                                     $cfgObj.ignore_rooms = @($postObj.ignore_rooms)
                                 }
-                                if ($cfgObj.ignore_rooms) {
-                                    $filteredIg = @()
-                                    foreach ($ig in $cfgObj.ignore_rooms) {
-                                        $igClean = $ig.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
-                                        $conflict = $false
-                                        foreach ($tr in $cfgObj.target_rooms) {
-                                            $trClean = $tr.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
-                                            if ($trClean.Contains($igClean) -or $igClean.Contains($trClean)) {
-                                                $conflict = $true
-                                                break
-                                            }
-                                        }
-                                        if (-not $conflict) { $filteredIg += $ig }
-                                    }
-                                    $cfgObj.ignore_rooms = $filteredIg
-                                }
                                 $newJson = $cfgObj | ConvertTo-Json -Depth 5
                                 [System.IO.File]::WriteAllText($ConfigPath, $newJson, [System.Text.Encoding]::UTF8)
                             }
@@ -748,18 +725,7 @@ function Get-KakaoMessages {
     if ($Config.ignore_rooms) {
         foreach ($ig in $Config.ignore_rooms) {
             if (-not [string]::IsNullOrWhiteSpace($ig)) {
-                $igClean = $ig.Trim().ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
-                $isTargeted = $false
-                foreach ($kw in $keywords) {
-                    $kwClean = $kw.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
-                    if ($kwClean.Contains($igClean) -or $igClean.Contains($kwClean)) {
-                        $isTargeted = $true
-                        break
-                    }
-                }
-                if (-not $isTargeted) {
-                    [void]$ignoreList.Add($ig.Trim())
-                }
+                [void]$ignoreList.Add($ig.Trim())
             }
         }
     }
@@ -774,20 +740,11 @@ function Get-KakaoMessages {
                 $wTitle = $mw.Title
                 if ([string]::IsNullOrWhiteSpace($wTitle)) { continue }
 
-                # Check if this window matches an explicit target
                 $wClean = $wTitle.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "").Replace("[", "").Replace("]", "").Replace("(", "").Replace(")", "")
-                $isExplicitTarget = $false
-                foreach ($kw in $keywords) {
-                    $kwClean = $kw.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
-                    if ($wClean.Contains($kwClean)) {
-                        $isExplicitTarget = $true
-                        break
-                    }
-                }
 
-                # Check ignored rooms only if NOT an explicit target
+                # 1. Strict Ignore List Check FIRST
                 $isIgnored = $false
-                if (-not $isExplicitTarget -and $igArray.Length -gt 0) {
+                if ($igArray.Length -gt 0) {
                     foreach ($ig in $igArray) {
                         $igClean = $ig.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "").Replace("[", "").Replace("]", "").Replace("(", "").Replace(")", "")
                         if (-not [string]::IsNullOrEmpty($igClean) -and $wClean.Contains($igClean)) {
@@ -797,6 +754,22 @@ function Get-KakaoMessages {
                     }
                 }
                 if ($isIgnored) { continue }
+
+                # 2. Strict Target check
+                $isTarget = $false
+                foreach ($kw in $keywords) {
+                    $kwClean = $kw.ToLower().Replace(" ", "").Replace("_", "").Replace("-", "")
+                    if ($kwClean -eq "골프탑공지방" -or $kwClean.Contains("골프탑")) {
+                        if ($wClean.Contains("골프탑") -and $wClean.Contains("공지")) {
+                            $isTarget = $true
+                            break
+                        }
+                    } elseif ($wClean.Contains($kwClean)) {
+                        $isTarget = $true
+                        break
+                    }
+                }
+                if (-not $isTarget) { continue }
 
                 $foundTitles += $wTitle
 
