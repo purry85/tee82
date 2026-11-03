@@ -669,6 +669,21 @@
             transform: translateY(-50%) scale(0.95);
         }
 
+        /* 카카오톡 / 파일 드래그앤드롭 오버레이 */
+        .ocr-drag-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(2px);
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            box-sizing: border-box;
+        }
+
         /* 골프몬 날짜별(기간별) 전체리셋 바 */
         .reset-actions-bar {
             display: flex;
@@ -3567,7 +3582,7 @@
             
             <div class="platform-grid">
                 <div class="platform-btn-group" id="groupGolfmonBtns" style="position: relative; width: 100%; height: 25px;">
-                    <button class="btn-hero-submit" id="btnRegisterToGolfmon" style="width: 100%; height: 100%; margin: 0; padding-right: 6px;" title="골프몬 신규 자동등록">
+                    <button class="btn-hero-submit" id="btnRegisterToGolfmon" style="width: 100%; height: 100%; margin: 0; padding: 0 6px;" title="골프몬 신규 자동등록">
                         <span>골프몬 자동등록</span>
                     </button>
                     <button type="button" class="btn-refresh-inline" id="btnReplaceGolfmonPosts" style="display: none;" title="골프몬 스마트수정 (가격변동·타임교체·신규등록)">
@@ -3909,7 +3924,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.36</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.37</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4205,16 +4220,22 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                     <span style="font-size: 11px; color: #475569; font-weight: 700;">공지 텍스트 붙여넣기</span>
                     <div style="display: flex; gap: 5px;">
+                        <input type="file" id="inputNoticeOcrImageFile" accept="image/*" style="display: none;">
+                        <button type="button" id="btnNoticeOcrImage" style="background: #8B5CF6; border: 1px solid #7C3AED; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="공지 표 이미지를 AI/OCR로 읽어와 시간대별 공지로 자동 변환합니다">📷 이미지 공지 판독</button>
                         <button type="button" id="btnSearchKakaoNotice" style="background: #2563EB; border: 1px solid #1D4ED8; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="골프탑 공지방에서 수집된 최신 공지를 즉시 읽어와 추가합니다">🔍 검색</button>
                         <button type="button" id="btnPasteNoticeClipboard" style="background: #10B981; border: 1px solid #059669; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="클립보드에 복사된 공지를 가져와 즉시 적용합니다">📋 복사한 내용 바로 적용</button>
                     </div>
                 </div>
-                <textarea id="noticeInputText" class="notice-textarea" placeholder="[공지 텍스트 예시 1: 특정 시간대 금액 지정]
+                <textarea id="noticeInputText" class="notice-textarea" placeholder="[공지 텍스트 붙여넣기 또는 이미지 드래그 / Ctrl+V]
+카카오톡 공지 표 이미지를 여기에 드래그하거나 [이미지 복사 후 Ctrl+V] 하셔도 자동으로 시간대별 금액으로 인식됩니다!
+
+[예시]
 솔트베이
-[ 부분선결제 금액 인하 ] 
 10월 18일(일)
+6시대 현장 10만
+7시대 현장 12만
 05:46 ~ 06:07 - 10.9
-06:35 ~ 07:31 - 23.9
+06:35 ~ 07:31 - 23.9"></textarea>
 
 [공지 텍스트 예시 2: 기간/부제별 할인]
 유니아일랜드
@@ -4381,7 +4402,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.36 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.37 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4647,6 +4668,102 @@
     <style>
         @keyframes ocrSpin { to { transform: rotate(360deg); } }
     </style>
+
+    <!-- 📷 OCR 이미지 판독 및 누락 정보 보완 모달 -->
+    <div class="dict-modal-overlay" id="ocrReviewModal" style="display: none; z-index: 1080;">
+        <div class="unmapped-modal-card" style="max-width: 460px; width: 94%; max-height: 92vh; display: flex; flex-direction: column;">
+            <div class="unmapped-modal-header" style="background: #F0FDF4; border-bottom: 1px solid #BBF7D0;">
+                <div class="unmapped-modal-title" style="color: #15803D;">
+                    <span style="font-size: 16px;">📷</span>
+                    <span>이미지 티타임 판독 &amp; 정보 보완</span>
+                </div>
+                <button type="button" class="unmapped-modal-close" id="btnCloseOcrReviewModalX" title="닫기">&times;</button>
+            </div>
+            
+            <div style="padding: 10px 12px; overflow-y: auto; flex: 1;">
+                <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; font-size: 11px; color: #1E40AF; line-height: 1.4;">
+                    💡 이미지에서 판독된 내용입니다. <b>누락된 골프장명이나 날짜</b>를 입력·확인하고 <b>[티타임 생성]</b>을 눌러주세요.
+                </div>
+
+                <!-- 상단 골프장명 & 날짜 입력 그룹 -->
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">
+                            골프장명 <span style="color: #EF4444;">*</span>
+                        </label>
+                        <input type="text" id="ocrInputCourse" list="ocrCourseDatalist" class="input-base" placeholder="골프장명 입력 (예: 양평TPC)" style="width: 100%; height: 27px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 6px; box-sizing: border-box;">
+                        <datalist id="ocrCourseDatalist"></datalist>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">
+                            날짜 <span style="color: #EF4444;">*</span>
+                        </label>
+                        <div style="display: flex; gap: 3px;">
+                            <input type="text" id="ocrInputDate" class="input-base" placeholder="MM.DD (예: 11.4)" style="flex: 1; min-width: 0; height: 27px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 5px; box-sizing: border-box;">
+                            <button type="button" id="btnOcrQuickToday" style="padding: 0 5px; height: 27px; font-size: 10px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 4px; cursor: pointer; white-space: nowrap;">오늘</button>
+                            <button type="button" id="btnOcrQuickTomorrow" style="padding: 0 5px; height: 27px; font-size: 10px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 4px; cursor: pointer; white-space: nowrap;">내일</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 구분 & 인원 선택 -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">구분</label>
+                        <select id="ocrSelRoomType" style="width: 100%; height: 27px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 4px; box-sizing: border-box;">
+                            <option value="조인" selected>조인</option>
+                            <option value="양도">양도</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">기본 인원</label>
+                        <select id="ocrSelPax" style="width: 100%; height: 27px; font-size: 11px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 4px; box-sizing: border-box;">
+                            <option value="4인" selected>4인</option>
+                            <option value="1인">1인</option>
+                            <option value="2인">2인</option>
+                            <option value="3인">3인</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 판독된 티오프 시간 및 금액 리스트 헤더 -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #334155;">
+                        판독된 시간 및 금액 (<span id="ocrItemsCount">0</span>건)
+                    </span>
+                    <button type="button" id="btnOcrAddRow" style="font-size: 10px; padding: 2px 7px; background: #E0E7FF; color: #3730A3; border: 1px solid #C7D2FE; border-radius: 4px; cursor: pointer; font-weight: 600;">+ 행 추가</button>
+                </div>
+
+                <!-- 동적 타임 & 금액 행 컨테이너 -->
+                <div id="ocrRowsContainer" style="max-height: 180px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 6px; padding: 4px; background: #F8FAFC;">
+                    <!-- 동적 생성 행: [시간 input] [금액 input] [삭제버튼] -->
+                </div>
+
+                <!-- 하단 원본 텍스트 접기/펼치기 -->
+                <details style="margin-top: 8px; font-size: 10px; color: #64748B;">
+                    <summary style="cursor: pointer; padding: 2px 0;">OCR 원본 텍스트 직접 확인/편집</summary>
+                    <textarea id="ocrRawText" style="width: 100%; height: 70px; font-size: 10px; border: 1px solid #CBD5E1; border-radius: 4px; margin-top: 4px; padding: 4px; box-sizing: border-box; font-family: monospace;"></textarea>
+                </details>
+            </div>
+
+            <div class="unmapped-modal-footer" style="padding: 8px 12px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" class="btn-dict-cancel" id="btnCancelOcrReview" style="padding: 5px 12px; font-size: 11px;">취소</button>
+                <div style="display: flex; gap: 5px;">
+                    <button type="button" id="btnOcrApplyNotice" style="display: none; padding: 5px 10px; font-size: 11px; border: 1px solid #F59E0B; border-radius: 4px; background: #FEF3C7; color: #B45309; font-weight: 700; cursor: pointer;">📢 공지 요금표로 등록</button>
+                    <button type="button" id="btnOcrApplyCards" class="btn-notice-apply" style="padding: 5px 14px; font-size: 11px; font-weight: 700; cursor: pointer;">⚡ 티타임 카드로 생성</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📥 카카오톡 / 파일 드래그앤드롭 전체 안내 오버레이 -->
+    <div id="ocrDragOverlay" class="ocr-drag-overlay" style="display: none;">
+        <div style="background: rgba(15, 23, 42, 0.94); border: 2px dashed #38BDF8; border-radius: 12px; padding: 24px 32px; text-align: center; color: #FFFFFF; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div style="font-size: 32px; margin-bottom: 8px;">📥</div>
+            <div style="font-size: 15px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">카톡 이미지를 여기에 놓으세요!</div>
+            <div style="font-size: 11px; color: #94A3B8;">티타임 표 및 공지 이미지를 AI/OCR로 즉시 판독합니다</div>
+        </div>
+    </div>
 
     <!-- 토스트 알림 -->
     <div class="toast" id="toast"></div>
