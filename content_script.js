@@ -87,8 +87,8 @@ return false;
 var isRegistrationRunning=false;
 var shouldStopRegistration=false;
 function _0x1001(ms){
-if(!isRegistrationRunning){
-return new Promise(resolve=>setTimeout(resolve,ms));
+if(shouldStopRegistration){
+return Promise.resolve();
 }
 return new Promise((resolve)=>{
 const start=Date.now();
@@ -97,7 +97,7 @@ if(shouldStopRegistration||(Date.now()-start>=ms)){
 clearInterval(interval);
 resolve();
 }
-},40);
+},20);
 });
 }
 function _0x1002(actionType='\x6e\x6f\x72\x6d\x61\x6c',stepPreset='\x73\x6c\x6f\x77'){
@@ -1737,6 +1737,7 @@ regId:item.regId
 });
 try{
 if(shouldStopRegistration)break;
+if(await _0x102f()===false||shouldStopRegistration)break;
 await _0x1001(_0x1002('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)break;
 if(!_0x1034()&&!_0x100a()&&!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
@@ -1902,10 +1903,10 @@ var _sessionExpiredResumeResolve=null;
 function _0x102c(){
 try{
 const href=window.location.href.toLowerCase();
-if(href.includes('\x2f\x6c\x6f\x67\x69\x6e')||href.includes('\x6c\x6f\x67\x69\x6e\x2e\x68\x74\x6d\x6c')||href.includes('\x23\x2f\x6c\x6f\x67\x69\x6e')||href.includes('\x2f\x6d\x65\x6d\x62\x65\x72\x2f\x6c\x6f\x67\x69\x6e')){
+if(href.includes('\x2f\x6c\x6f\x67\x69\x6e')||href.includes('\x6c\x6f\x67\x69\x6e\x2e\x68\x74\x6d\x6c')||href.includes('\x23\x2f\x6c\x6f\x67\x69\x6e')||href.includes('\x2f\x6d\x65\x6d\x62\x65\x72\x2f\x6c\x6f\x67\x69\x6e')||href.includes('\x2f\x61\x75\x74\x68')){
 return true;
 }
-const dialogs=document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x63\x61\x72\x64, \x64\x69\x76');
+const dialogs=document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x63\x61\x72\x64, \x2e\x71-\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e, \x2e\x71-\x62\x61\x6e\x6e\x65\x72, \x64\x69\x76');
 for(const d of dialogs){
 if(d.offsetHeight===0)continue;
 const txt=(d.innerText||d.textContent||'').trim();
@@ -1913,12 +1914,14 @@ if(txt.includes('\ub85c\uadf8\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4')||
 txt.includes('\ub85c\uadf8\uc778 \ud6c4 \uc774\uc6a9')||
 txt.includes('\uc138\uc158\uc774 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4')||
 txt.includes('\ub85c\uadf8\uc778 \uc138\uc158\uc774 \ub9cc\ub8cc')||
+txt.includes('\ub2e4\uc2dc \ub85c\uadf8\uc778')||
+txt.includes('\uc138\uc158 \ub9cc\ub8cc')||
 txt.includes('\ud68c\uc6d0 \ub85c\uadf8\uc778\uc774 \ud544\uc694')){
 return true;
 }
 }
 const hasPwInput=document.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x70\x61\x73\x73\x77\x6f\x72\x64"]');
-const hasLoginId=document.querySelector('\x69\x6e\x70\x75\x74[\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72*="\uc544\uc774\ub514"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x75\x73\x65\x72\x5f\x69\x64"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x6c\x6f\x67\x69\x6e"]');
+const hasLoginId=document.querySelector('\x69\x6e\x70\x75\x74[\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72*="\uc544\uc774\ub514"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x75\x73\x65\x72\x5f\x69\x64"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x6c\x6f\x67\x69\x6e"], \x69\x6e\x70\x75\x74[\x69\x64*="\x6c\x6f\x67\x69\x6e"]');
 if(hasPwInput&&hasLoginId){
 return true;
 }
@@ -1928,7 +1931,7 @@ return(t==='\ub85c\uadf8\uc778'||t==='\ub85c\uadf8\uc778\ud558\uae30')&&el.offse
 });
 const hasLogoutBtn=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x73\x70\x61\x6e')).some(el=>{
 const t=(el.innerText||'').trim();
-return(t==='\ub85c\uadf8\uc544\uc6c3'||t.includes('\ub9c8\uc774\ud398\uc774\uc9c0'))&&el.offsetHeight>0;
+return(t==='\ub85c\uadf8\uc544\uc6c3'||t.includes('\ub9c8\uc774\ud398\uc774\uc9c0')||t.includes('\ub85c\uadf8\uc544\uc6c3'))&&el.offsetHeight>0;
 });
 if(loginBtn&&!hasLogoutBtn&&(_0x1034()||isEditPage()||isDetailPage())){
 return true;
@@ -4714,10 +4717,18 @@ await _0x1001(250);
 }else{
 console.log(`[\uac00\uaca9\uc218\uc815] \uc591\ub3c4 \uc218\uc815 \ubaa8\ub4dc \ud655\uc778\ub428 -> \uc870\uc778 \uc870\uac74 \ubc0f \uc694\uccad \uc778\uc6d0 \ubcc0\uacbd \ub2e8\uacc4 \uc0dd\ub7b5`);
 }
+if(shouldStopRegistration){
+console.log("\ud83d\uded1 [\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \ud074\ub9ad \uc9c1\uc804 \uc989\uc2dc\uc911\ub2e8 \uac10\uc9c0 -> \uc81c\ucd9c \ucde8\uc18c!");
+return false;
+}
 console.log("[\uac00\uaca9\uc218\uc815] \ud558\ub2e8 '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ub77c\uc774\ube0c \ud0d0\uc0c9 \ubc0f \uc81c\ucd9c \uc2e4\ud589\x2e\x2e\x2e");
 const liveSubmitBtn=findEditSubmitButton();
 if(!liveSubmitBtn){
 console.error("[\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568");
+return false;
+}
+if(shouldStopRegistration){
+console.log("\ud83d\uded1 [\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \ud074\ub9ad \uc9c1\uc804 \uc989\uc2dc\uc911\ub2e8 \uac10\uc9c0 -> \uc81c\ucd9c \ucde8\uc18c!");
 return false;
 }
 console.log(`[\uac00\uaca9\uc218\uc815] live '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ubc1c\uacac (${liveSubmitBtn.tagName}, ${liveSubmitBtn.textContent.trim()}) -> \ub2e8 1\ud68c \ud074\ub9ad \uc2e4\ud589`);
@@ -4997,6 +5008,7 @@ console.log(`[\ubcc0\ub3d9\uc218\uc815] \u26a0\ufe0f [${group.golf}] \uc9c0\uc5e
 existingCards=[];
 }else{
 for(let r=0;r<5;r++){
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 existingCards=_0x1056(group.golf,group.rawGolf,groupCategory,group.date);
 if(existingCards.length>0)break;
 await _0x1001(300);
@@ -5137,13 +5149,16 @@ await _0x1001(350);
 console.log(`[\ubcc0\ub3d9\uc218\uc815] \ud83d\udcc5 \uce74\ub4dc \ud074\ub9ad \uc804 \ub300\uc0c1 \ub0a0\uc9dc(${targetDate}) \uc774\ubbf8 \uc815\uc0c1 \uc120\ud0dd \ud655\uc778\ub428 -> \ud074\ub9ad \uc0dd\ub7b5 (\ub0a0\uc9dc \ud574\uc81c \ubc29\uc9c0)`);
 }
 }
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 const cardClicked=await clickPostCardReliably(targetCardToModify.el);
-if(!cardClicked||shouldStopRegistration){
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
+if(!cardClicked){
 console.warn(`[\ubcc0\ub3d9\uc218\uc815] ${item.golf} (${item.time}) \uce74\ub4dc \ud074\ub9ad \uc2e4\ud328`);
 await _0x1052(groupCategory);
 continue;
 }
 const detailTypeInPriceUpdate=detectCurrentDetailPageType();
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if((groupCategory==='\uc591\ub3c4'&&detailTypeInPriceUpdate==='\uc870\uc778')||
 (groupCategory==='\uc870\uc778'&&detailTypeInPriceUpdate==='\uc591\ub3c4')){
 console.warn(`[\ubcc0\ub3d9\uc218\uc815] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 \uc0c1\uc138 \ud398\uc774\uc9c0\uac00 [${detailTypeInPriceUpdate}]\ub85c \ud655\uc778\ub418\uc5b4 \uc989\uc2dc \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
@@ -5152,12 +5167,14 @@ await _0x1047(groupCategory);
 continue;
 }
 const editOpened=await openMenuAndClickEdit();
-if(!editOpened||shouldStopRegistration){
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
+if(!editOpened){
 console.warn(`[\ubcc0\ub3d9\uc218\uc815] ${item.golf} (${item.time}) '\uc218\uc815' \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328`);
 await _0x1052(groupCategory);
 continue;
 }
 const editTypeInPriceUpdate=await ensureCorrectEditRouteAndType(groupCategory,1500);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if((groupCategory==='\uc591\ub3c4'&&editTypeInPriceUpdate==='\uc870\uc778')||
 (groupCategory==='\uc870\uc778'&&editTypeInPriceUpdate==='\uc591\ub3c4')){
 console.warn(`[\ubcc0\ub3d9\uc218\uc815] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 [${editTypeInPriceUpdate} \uc218\uc815] \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5b4 \uc989\uc2dc \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
@@ -5379,9 +5396,17 @@ await _0x1001(250);
 }else{
 console.log(`[\uad50\uccb4\uc218\uc815] \uc591\ub3c4 \uc218\uc815 \ubaa8\ub4dc \ud655\uc778\ub428 -> \uc870\uc778 \uc870\uac74 \ubc0f \uc694\uccad \uc778\uc6d0 \ubcc0\uacbd \ub2e8\uacc4 \uc0dd\ub7b5`);
 }
+if(shouldStopRegistration){
+console.log("\ud83d\uded1 [\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ud074\ub9ad \uc9c1\uc804 \uc989\uc2dc\uc911\ub2e8 \uac10\uc9c0 -> \uc81c\ucd9c \ucde8\uc18c!");
+return false;
+}
 const liveSubmitBtn=findEditSubmitButton();
 if(!liveSubmitBtn){
 console.error("[\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568");
+return false;
+}
+if(shouldStopRegistration){
+console.log("\ud83d\uded1 [\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ud074\ub9ad \uc9c1\uc804 \uc989\uc2dc\uc911\ub2e8 \uac10\uc9c0 -> \uc81c\ucd9c \ucde8\uc18c!");
 return false;
 }
 await clickSubmitButtonReliably(liveSubmitBtn,item);
@@ -6140,17 +6165,20 @@ if(Math.abs(b.topY-a.topY)>25)return b.topY-a.topY;
 return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<10;retry++){
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 let liveCards=_0x1056(group.golf,group.rawGolf,groupCategory,group.date);
 if(liveCards.length===0&&(retry===1||retry===3)){
 if(targetDate&&!_0x1040(targetDate)){
 await _0x1044(targetDate);
 await _0x1001(350);
 }
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 window.scrollBy(0,500*retry);
 document.querySelectorAll('\x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x71-\x70\x61\x67\x65').forEach(el=>{
 try{el.scrollTop+=500;}catch(e){}
 });
 await _0x1001(250);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 liveCards=_0x1056(group.golf,group.rawGolf,groupCategory,group.date);
 }
 if(liveCards.length===0&&retry===2){
@@ -6164,7 +6192,9 @@ if(targetDate&&!_0x1040(targetDate)){
 await _0x1044(targetDate);
 await _0x1001(350);
 }
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 await _0x1001(250);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 liveCards=_0x1056(group.golf,group.rawGolf,groupCategory,group.date);
 }
 if(liveCards.length===0&&retry===4){
@@ -6173,7 +6203,9 @@ if(targetDate&&!_0x1040(targetDate)){
 await _0x1044(targetDate);
 await _0x1001(350);
 }
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 await _0x1001(250);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 liveCards=_0x1056(group.golf,group.rawGolf,groupCategory,group.date);
 }
 const eligibleCards=liveCards.filter(c=>{
@@ -6251,7 +6283,12 @@ liveCardObj=bottomMost;
 }
 }
 if(liveCardObj)break;
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 await _0x1001(300);
+}
+if(shouldStopRegistration||_activeMacroRunId!==myRunId){
+console.log(`\ud83d\uded1 [${logTag}] \uc911\ub2e8 \uc2e0\ud638 \uac10\uc9c0 -> \uc989\uc2dc \ub8e8\ud504 \ud0c8\ucd9c`);
+break;
 }
 if(!liveCardObj){
 console.warn(`[${logTag}] \uc218\uc815 \ub300\uc0c1 \uce74\ub4dc(${targetCard?.timeStr||''})\ub97c \ud654\uba74\uc5d0\uc11c \ucc3e\uc9c0 \ubabb\ud568 -> \ud1b5\uacfc`);
@@ -6259,7 +6296,9 @@ continue;
 }
 let targetCardEl=liveCardObj.el;
 let originalPostTime=liveCardObj.timeStr;
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 let inDetail=await clickPostCardReliably(targetCardEl);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if(!inDetail){
 console.warn(`[${logTag}] ${item.golf} (${originalPostTime}) \uce74\ub4dc \ud074\ub9ad \ud6c4 \uc0c1\uc138 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 await _0x1052(groupCategory);
@@ -6346,13 +6385,16 @@ await _0x1052(groupCategory);
 continue;
 }
 }
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 const openedEdit=await openMenuAndClickEdit();
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if(!openedEdit){
 console.warn(`[${logTag}] \uc218\uc815 \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 await _0x1052(groupCategory);
 continue;
 }
 const openedPageType=await ensureCorrectEditRouteAndType(groupCategory,1500);
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if(groupCategory==='\uc591\ub3c4'&&openedPageType==='\uc870\uc778'){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc591\ub3c4 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '\uc870\uc778 \uc218\uc815' \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc870\uc778 \uae00 \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
@@ -6366,7 +6408,7 @@ await _0x1052(groupCategory);
 continue;
 }
 await _0x1001(_0x1002('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
-if(shouldStopRegistration)break;
+if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 const editSuccess=await _0x1055(item);
 if(editSuccess){
 successCount++;
@@ -6628,6 +6670,12 @@ break;
 }
 return allCardsOrdered;
 };
+if(await _0x102f()===false||shouldStopRegistration){
+isRegistrationRunning=false;
+isDateResetRunning=false;
+chrome.runtime.sendMessage({type:'\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44',targetDate:rangeLabel,successCount:totalSuccessCount});
+return;
+}
 await _0x1036(effectiveFilter);
 if(shouldStopRegistration){
 isRegistrationRunning=false;
@@ -6644,6 +6692,7 @@ return;
 }
 for(let dIdx=0;dIdx<datesList.length;dIdx++){
 if(shouldStopRegistration)break;
+if(await _0x102f()===false||shouldStopRegistration)break;
 const targetDate=datesList[dIdx];
 const targetDay=_0x1037(targetDate);
 console.log(`\n\ud83d\udcc5 [\uc804\uccb4\ub9ac\uc14b \ub0a0\uc9dc ${dIdx+1}/${datesList.length}] [${targetDate}] (${targetDay}\uc77c) \ub9ac\uc14b \uc2dc\uc791...`);
@@ -6882,7 +6931,17 @@ if(_isAutoResuming)return;
 _isAutoResuming=true;
 try{
 await _0x1001(600);
-if(_isPageUnloading||isRegistrationRunning||isPostReplacementRunning||_priceUpdateRunning||isDateResetRunning){
+if(_isPageUnloading||isRegistrationRunning||isPostReplacementRunning||_priceUpdateRunning||isDateResetRunning||shouldStopRegistration){
+return;
+}
+const storageState=await new Promise(r=>{
+try{
+chrome.storage.local.get(['\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x73\x74\x6f\x70\x5f\x72\x65\x71\x75\x65\x73\x74\x65\x64\x5f\x61\x74','\x69\x73\x52\x65\x67\x69\x73\x74\x72\x61\x74\x69\x6f\x6e\x52\x75\x6e\x6e\x69\x6e\x67'],r);
+}catch(e){r({});}
+});
+if(storageState&&(storageState.isRegistrationRunning===false||(storageState.golfmon_stop_requested_at&&(Date.now()-storageState.golfmon_stop_requested_at<60000)))){
+console.log("\ud83d\uded1 [\uc790\ub3d9\ubcf5\uad6c \ucc28\ub2e8] \uc0ac\uc6a9\uc790\uac00 \ub9e4\ud06c\ub85c\ub97c \uc911\ub2e8\ud55c \uc0c1\ud0dc\uc774\ubbc0\ub85c \uc794\uc5ec \uc791\uc5c5 \uc790\ub3d9 \uc7ac\uac1c\ub97c \ucde8\uc18c\ud569\ub2c8\ub2e4\x2e");
+_0x1060();
 return;
 }
 const saved=_0x105f();
@@ -7041,6 +7100,11 @@ isRegistrationRunning=false;
 _priceUpdateRunning=false;
 isPostReplacementRunning=false;
 isDateResetRunning=false;
+try{
+sessionStorage.removeItem(ACTIVE_BATCH_STORAGE_KEY);
+chrome.storage.local.set({golfmon_stop_requested_at:Date.now(),isRegistrationRunning:false,active_batch_task:null});
+}catch(e){}
+console.log("\ud83d\uded1 [\x54\x65\x65\x38\x32 \uace8\ud504\ubaac] \x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e \uc989\uc2dc\uc911\ub2e8 \uc2e0\ud638 \uc218\uc2e0 \uc644\ub8cc! \ubaa8\ub4e0 \uc791\uc5c5 \ubc0f \ud050 \uac15\uc81c \uc815\uc9c0");
 sendResponse({status:'\x73\x74\x6f\x70\x70\x69\x6e\x67'});
 }else if(request.action==='\x43\x48\x45\x43\x4b\x5f\x53\x54\x41\x54\x55\x53'){
 sendResponse({isRunning:Boolean(isRegistrationRunning||isPostReplacementRunning||_priceUpdateRunning||isDateResetRunning||_isAutoResuming)});

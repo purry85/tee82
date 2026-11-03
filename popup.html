@@ -3568,6 +3568,7 @@
                 </div>
             </div>
             <div class="nav-actions">
+                <button class="nav-icon-btn" id="btnOpenStats" title="오늘의 작업 통계 대시보드 리포트">📊</button>
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="자동등록 즉시 중단">🛑</button>
                 <button class="nav-icon-btn" id="btnPopoutWindow" title="화면 절반 크기 독립창으로 분리">🗗</button>
@@ -3581,7 +3582,7 @@
             <div class="hero-status-title" id="heroStatusText">
                 대기 중: <span class="count-num" id="heroSelectedCount">0</span>개
             </div>
-            <div class="hero-sub-text" id="heroTotalCountText">텍스트를 붙여넣고 매크로를 실행하세요</div>
+            <div class="hero-sub-text" id="heroTotalCountText" style="display: none;"></div>
             
             <div class="platform-grid">
                 <div class="platform-btn-group" id="groupGolfmonBtns" style="position: relative; width: 100%; height: 25px;">
@@ -3613,6 +3614,23 @@
                 <button class="btn-hero-submit" id="btnRegisterToGolftop" title="골프탑 홍보 자동등록">
                     <span>골프탑 자동등록</span>
                 </button>
+            </div>
+
+            <!-- 🌐 멀티 플랫폼(전 플랫폼) 원클릭 동시 등록 배너 -->
+            <div class="multi-platform-banner" style="margin-top: 5px; display: flex; gap: 4px;">
+                <button class="btn-hero-submit" id="btnRegisterMultiPlatform" style="flex: 1; height: 26px; background: linear-gradient(135deg, #4338CA, #6366F1); color: white; border: none; border-radius: 5px; font-weight: 700; font-size: 11px; cursor: pointer; box-shadow: 0 2px 4px rgba(67, 56, 202, 0.25); display: flex; align-items: center; justify-content: center; gap: 5px;" title="골프몬, 골마켓, 골프락, 골프탑, 골프랜드 등 모든 플랫폼에 탭을 열어 원클릭 동시 등록합니다">
+                    <span style="font-size: 12px;">🌐</span>
+                    <span>전 플랫폼(멀티) 동시 등록</span>
+                </button>
+                <button type="button" id="btnToggleMultiSettings" style="width: 26px; height: 26px; background: #EEF2FF; border: 1px solid #C7D2FE; color: #4338CA; border-radius: 5px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center;" title="동시 등록 대상 플랫폼 선택/설정">⚙️</button>
+            </div>
+            <div id="multiPlatformSelectBox" style="display: none; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 5px 8px; margin-top: 4px; font-size: 10.5px; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <span style="font-weight: 700; color: #334155;">대상:</span>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfmon" checked> 골프몬</label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolmarket" checked> 골마켓</label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfrock" checked> 골프락</label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolftop" checked> 골프탑</label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfland" checked> 골프랜드</label>
             </div>
             <div class="reset-actions-bar" id="resetActionsBar" style="display: none;">
                 <input type="date" id="inputResetTargetDate" class="input-reset-date" title="전체리셋 시작 날짜를 지정하세요">
@@ -3920,7 +3938,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.38</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.39</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4391,7 +4409,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.38 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.39 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4507,7 +4525,7 @@
 
             <!-- 로그인 패널 -->
             <div id="authPanelSheet" class="auth-panel">
-                <form id="authLoginForm" class="auth-form" onsubmit="return false;">
+                <form id="authLoginForm" class="auth-form">
                     <div class="auth-field-group">
                         <label class="auth-label" for="authInputId">아이디</label>
                         <div class="auth-input-wrap">
@@ -4560,7 +4578,7 @@
                     현재 비밀번호 확인 후 새 비밀번호로 변경합니다.<br>
                     변경 시 구글 스프레드시트에 즉시 자동 업데이트됩니다.
                 </p>
-                <form id="formChangePw" onsubmit="return false;">
+                <form id="formChangePw">
                     <div class="auth-field-group">
                         <label class="auth-label" for="inputChangePwId">아이디</label>
                         <div class="auth-input-wrap">
@@ -4735,6 +4753,65 @@
             <div style="font-size: 32px; margin-bottom: 8px;">📥</div>
             <div style="font-size: 15px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">카톡 이미지를 여기에 놓으세요!</div>
             <div style="font-size: 11px; color: #94A3B8;">티타임 표 및 공지 이미지를 AI/OCR로 즉시 판독합니다</div>
+        </div>
+    </div>
+
+    <!-- 📊 일일 작업 통계 대시보드 리포트 모달 -->
+    <div class="dict-modal-overlay" id="dailyStatsModal" style="display: none; z-index: 1085;">
+        <div class="unmapped-modal-card" style="max-width: 480px; width: 94%; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="unmapped-modal-header" style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">
+                <div class="unmapped-modal-title" style="color: #1E293B; display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 17px;">📊</span>
+                    <span style="font-weight: 800;">일일 작업 통계 대시보드</span>
+                    <span id="statsDateBadge" style="font-size: 10.5px; background: #EEF2FF; color: #4338CA; padding: 2px 6px; border-radius: 10px; font-weight: 600;">2026-11-03</span>
+                </div>
+                <button type="button" class="unmapped-modal-close" id="btnCloseStatsModalX" title="닫기">&times;</button>
+            </div>
+
+            <div style="padding: 12px 14px; overflow-y: auto; flex: 1;">
+                <!-- 3단 요약 카드 -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                    <div style="background: linear-gradient(135deg, #EEF2FF, #E0E7FF); border: 1px solid #C7D2FE; border-radius: 8px; padding: 10px 8px; text-align: center;">
+                        <div style="font-size: 10.5px; color: #4338CA; font-weight: 700; margin-bottom: 2px;">총 처리 건수</div>
+                        <div id="statTotalCount" style="font-size: 20px; font-weight: 900; color: #1E1B4B;">0건</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border: 1px solid #A7F3D0; border-radius: 8px; padding: 10px 8px; text-align: center;">
+                        <div style="font-size: 10.5px; color: #047857; font-weight: 700; margin-bottom: 2px;">신규 등록</div>
+                        <div id="statRegisterCount" style="font-size: 20px; font-weight: 900; color: #064E3B;">0건</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 8px; text-align: center;">
+                        <div style="font-size: 10.5px; color: #B45309; font-weight: 700; margin-bottom: 2px;">수정 / 리셋</div>
+                        <div id="statModifyCount" style="font-size: 20px; font-weight: 900; color: #78350F;">0건</div>
+                    </div>
+                </div>
+
+                <!-- 플랫폼별 처리 건수 -->
+                <div style="margin-bottom: 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 10px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;">🌐 플랫폼별 처리 실적</div>
+                    <div id="statsPlatformBadges" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                        <!-- 동적 뱃지 생성: 골프몬 15건, 골마켓 5건 등 -->
+                    </div>
+                </div>
+
+                <!-- 구장별 처리 순위 바 리스트 -->
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 11.5px; font-weight: 700; color: #1E293B;">⛳ 구장별 처리 건수 랭킹</span>
+                        <span id="statsCourseTotalCount" style="font-size: 10px; color: #64748B;">총 0개 구장</span>
+                    </div>
+                    <div id="statsCourseList" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;">
+                        <!-- 동적 바 차트 행 생성 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="unmapped-modal-footer" style="padding: 10px 14px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" id="btnResetDailyStats" style="background: none; border: 1px solid #CBD5E1; color: #64748B; border-radius: 6px; padding: 6px 10px; font-size: 10.5px; cursor: pointer;">🗑️ 오늘 통계 초기화</button>
+                <div style="display: flex; gap: 6px;">
+                    <button type="button" id="btnCopyDailyStatsText" style="background: #3B82F6; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);">📋 카톡 보고용 복사</button>
+                    <button type="button" id="btnCloseDailyStatsModal" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; border-radius: 6px; padding: 6px 12px; font-size: 11px; cursor: pointer;">닫기</button>
+                </div>
+            </div>
         </div>
     </div>
 

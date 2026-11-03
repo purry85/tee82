@@ -3578,7 +3578,7 @@
             <div class="hero-status-title" id="heroStatusText">
                 대기 중: <span class="count-num" id="heroSelectedCount">0</span>개
             </div>
-            <div class="hero-sub-text" id="heroTotalCountText">텍스트를 붙여넣고 매크로를 실행하세요</div>
+            <div class="hero-sub-text" id="heroTotalCountText" style="display: none;"></div>
             
             <div class="platform-grid">
                 <div class="platform-btn-group" id="groupGolfmonBtns" style="position: relative; width: 100%; height: 25px;">
@@ -3917,7 +3917,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.38</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.39</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4388,7 +4388,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.38 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.39 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4504,7 +4504,7 @@
 
             <!-- 로그인 패널 -->
             <div id="authPanelSheet" class="auth-panel">
-                <form id="authLoginForm" class="auth-form" onsubmit="return false;">
+                <form id="authLoginForm" class="auth-form">
                     <div class="auth-field-group">
                         <label class="auth-label" for="authInputId">아이디</label>
                         <div class="auth-input-wrap">
@@ -4557,7 +4557,7 @@
                     현재 비밀번호 확인 후 새 비밀번호로 변경합니다.<br>
                     변경 시 구글 스프레드시트에 즉시 자동 업데이트됩니다.
                 </p>
-                <form id="formChangePw" onsubmit="return false;">
+                <form id="formChangePw">
                     <div class="auth-field-group">
                         <label class="auth-label" for="inputChangePwId">아이디</label>
                         <div class="auth-input-wrap">
