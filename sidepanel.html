@@ -638,6 +638,37 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
         }
 
+        /* 등록 버튼 내 우측 새로고침(스마트수정) 인라인 아이콘 버튼 */
+        .btn-refresh-inline {
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 21px;
+            height: 19px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+            color: #FFFFFF;
+            cursor: pointer;
+            padding: 0;
+            z-index: 2;
+            transition: all 0.15s ease;
+        }
+        .btn-refresh-inline:hover {
+            background: #0284C7;
+            border-color: #38BDF8;
+            color: #FFFFFF;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 2px 5px rgba(2, 132, 199, 0.4);
+        }
+        .btn-refresh-inline:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
         /* 골프몬 날짜별(기간별) 전체리셋 바 */
         .reset-actions-bar {
             display: flex;
@@ -3535,9 +3566,20 @@
             <div class="hero-sub-text" id="heroTotalCountText">텍스트를 붙여넣고 매크로를 실행하세요</div>
             
             <div class="platform-grid">
-                <button class="btn-hero-submit" id="btnRegisterToGolfmon">
-                    <span>골프몬 자동등록</span>
-                </button>
+                <div class="platform-btn-group" id="groupGolfmonBtns" style="position: relative; width: 100%; height: 25px;">
+                    <button class="btn-hero-submit" id="btnRegisterToGolfmon" style="width: 100%; height: 100%; margin: 0; padding-right: 6px;" title="골프몬 신규 자동등록">
+                        <span>골프몬 자동등록</span>
+                    </button>
+                    <button type="button" class="btn-refresh-inline" id="btnReplaceGolfmonPosts" style="display: none;" title="골프몬 스마트수정 (가격변동·타임교체·신규등록)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 2v6h-6"></path>
+                            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                            <path d="M3 22v-6h6"></path>
+                            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                        </svg>
+                        <span id="replaceEditCount" style="display: none;">0</span>
+                    </button>
+                </div>
                 <button class="btn-hero-submit" id="btnRegisterToGolfpang">
                     <span>골팡 자동등록</span>
                 </button>
@@ -3553,13 +3595,6 @@
                 <button class="btn-hero-submit" id="btnRegisterToGolftop" title="골프탑 홍보 자동등록">
                     <span>골프탑 자동등록</span>
                 </button>
-            </div>
-            <div class="update-actions-grid" id="updateActionsGrid" style="display: none;">
-                <div class="update-action-group replace-update-group" id="groupReplaceUpdateAction" style="display: none; width: 100%;">
-                    <button type="button" class="btn-hero-submit btn-replace-update-action" id="btnReplaceGolfmonPosts" style="width: 100%;" title="[스마트 통합 수정] 가격·인원 변동분은 즉시 반영하고, 남는 타임은 교체하며, 부족한 타임은 신규 등록하여 목록의 모든 구장 타임을 골프몬에 완벽히 동기화합니다">
-                        <span>골프몬 스마트수정 (<span id="replaceEditCount">0</span>건)</span>
-                    </button>
-                </div>
             </div>
             <div class="reset-actions-bar" id="resetActionsBar" style="display: none;">
                 <input type="date" id="inputResetTargetDate" class="input-reset-date" title="전체리셋 시작 날짜를 지정하세요">
@@ -3583,6 +3618,13 @@
                 <button type="button" class="btn-resume-clear-inline" id="btnResumeClearInline" title="기존 대기 타임을 모두 비우고 새로 시작">비우기</button>
             </div>
             <textarea id="inputText" placeholder="카톡/밴드 티타임 텍스트 붙여넣기..."></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 4px 2px 6px; font-size: 11px; color: #64748B;">
+                <span>📷 <b>캡처 이미지(Ctrl+V)</b> 붙여넣기 시 <b>AI/OCR 자동 판독</b></span>
+                <label style="cursor: pointer; color: #2563EB; font-weight: 600; font-size: 11px; display: inline-flex; align-items: center; gap: 3px;" title="공지/일정표 캡처 이미지 파일을 직접 불러옵니다">
+                    <input type="file" id="inputOcrImageFile" accept="image/*" style="display: none;">
+                    <span>🖼️ 이미지 선택</span>
+                </label>
+            </div>
             <div class="macro-row">
                 <button class="btn-macro-action join" id="btnMacroJoin">조인용 원클릭</button>
                 <button class="btn-macro-action transfer" id="btnMacroTransfer">양도용 원클릭</button>
@@ -3699,6 +3741,10 @@
                         <span>미체크 삭제 &amp; 신규타임 상단 우선 추가 (이어서 연속 진행)</span>
                     </label>
                 </div>
+                <div class="settings-row" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #CBD5E1;">
+                    <label title="캡처 이미지 분석 시 사용할 Gemini API 키 (미입력 시 기본 고성능 OCR 엔진으로 자동 분석)">Gemini API 키 (선택):</label>
+                    <input type="password" id="inputGeminiApiKey" placeholder="AI 초정밀 인식용 API Key (선택)" style="flex: 1; max-width: 155px; font-size: 10px; padding: 2px 4px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
                 <div class="settings-row" id="rowLabMode" style="display: none; border-top: 1px dashed #CBD5E1; padding-top: 6px; margin-top: 5px;">
                     <label style="color: #4F46E5; font-weight: 700; display: flex; align-items: center; gap: 4px;">
                         <span>🧪 실험실</span>
@@ -3715,10 +3761,10 @@
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700;">
                         <input type="checkbox" id="chkOpenUpdateActions">
-                        <span>📉🔄 골프몬 스마트수정 기능 오픈 (메인 화면에 스마트수정 버튼 노출)</span>
+                        <span>🔄 골프몬 스마트수정 기능 오픈 (골프몬 자동등록 우측 수정(⟳) 아이콘 노출)</span>
                     </label>
                     <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
-                        * 체크 시 메인 화면에 [골프몬 스마트수정] 올인원 통합 버튼이 노출됩니다. (가격변동·타임교체·신규등록 자동수행)
+                        * 체크 시 메인 화면 [골프몬 자동등록] 우측에 수정(⟳) 아이콘이 노출됩니다. (부여기능 '수정' 보유 회원에게는 상시 자동 노출)
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
                         <input type="checkbox" id="chkOpenDateReset">
@@ -3863,7 +3909,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.34</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 Tee82 Golf Booking Automation <span id="footerAppVersion">Ver 2.0.35</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4335,7 +4381,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.34 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.35 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4589,6 +4635,18 @@
             </div>
         </div>
     </div>
+
+    <!-- OCR 판독 로딩 모달 -->
+    <div id="ocrLoadingModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(2px);">
+        <div style="background: white; border-radius: 12px; padding: 22px 24px; width: 280px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+            <div style="width: 38px; height: 38px; border: 4px solid #E2E8F0; border-top-color: #2563EB; border-radius: 50%; animation: ocrSpin 0.8s linear infinite; margin: 0 auto 14px;"></div>
+            <div style="font-size: 14px; font-weight: 700; color: #1E293B; margin-bottom: 6px;">📷 이미지 공지 분석 중...</div>
+            <div id="ocrLoadingStatus" style="font-size: 11px; color: #64748B; line-height: 1.4;">AI / OCR 엔진이 티타임 표와 텍스트를 판독하고 있습니다.</div>
+        </div>
+    </div>
+    <style>
+        @keyframes ocrSpin { to { transform: rotate(360deg); } }
+    </style>
 
     <!-- 토스트 알림 -->
     <div class="toast" id="toast"></div>

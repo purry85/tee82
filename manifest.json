@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "GolfTee82",
-  "version": "2.0.34",
-  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.34)",
+  "version": "2.0.35",
+  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.35)",
   "icons": {
     "16": "icon.svg",
     "48": "icon.svg",
@@ -42,7 +42,9 @@
     "https://github.com/*",
     "https://raw.githubusercontent.com/*",
     "https://script.google.com/*",
-    "https://script.googleusercontent.com/*"
+    "https://script.googleusercontent.com/*",
+    "https://api.ocr.space/*",
+    "https://generativelanguage.googleapis.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
