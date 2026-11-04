@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
   "name": "GolfTee82",
-  "version": "2.0.39",
-  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.39)",
+  "version": "2.0.40",
+  "description": "GolfTee82 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.40)",
   "icons": {
-    "16": "icon.svg",
-    "48": "icon.svg",
-    "128": "icon.svg"
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "permissions": [
     "activeTab",
@@ -14,7 +14,8 @@
     "tabs",
     "storage",
     "sidePanel",
-    "downloads"
+    "downloads",
+    "notifications"
   ],
   "host_permissions": [
     "https://*.golfmon.net/*",
@@ -50,9 +51,9 @@
     "default_popup": "popup.html",
     "default_title": "Tee82",
     "default_icon": {
-      "16": "icon.svg",
-      "48": "icon.svg",
-      "128": "icon.svg"
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
     }
   },
   "side_panel": {
