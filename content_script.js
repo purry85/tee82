@@ -3994,7 +3994,11 @@ return false;
 }
 async function clickPostCardReliably(cardEl){
 if(!cardEl)return false;
-if(isDetailPage()||isEditPage())return true;
+if(isDetailPage()||isEditPage()){
+console.log("[\uce74\ub4dc\ud074\ub9ad] \uc774\uc804 \uc0c1\uc138\x2f\uc218\uc815 \ud654\uba74 \uac10\uc9c0 -> \ubaa9\ub85d\uc73c\ub85c \uc548\uc804 \ubcf5\uadc0 \ud6c4 \uce74\ub4dc \ud074\ub9ad \uc9c4\ud589");
+await _0x1051();
+await _0x1001(300);
+}
 document.querySelectorAll('[\x64\x61\x74\x61-\x74\x65\x65\x38\x32-\x6f\x75\x74\x6c\x69\x6e\x65="\x74\x72\x75\x65"]').forEach(el=>{
 el.style.outline='';
 el.style.boxShadow='';
@@ -5936,7 +5940,31 @@ if(isAlreadyMod)return false;
 return true;
 });
 const unassignedItems=[...group.items];
-if(existingCount>0){
+if(forceAllEdit){
+console.log(`[\uc804\uccb4\uc218\uc815] \ud83d\udd34 [${group.golf} ${group.date}] \uc0c8\ub85c \ucd94\uac00\ub41c \ubaa9\ub85d(${unassignedItems.length}\uac74)\uc73c\ub85c \uae30\uc874 \uae00(${unusedCards.length}\uac74)\uc744 \uc2a4\ud0b5 \uc5c6\uc774 1:1 \uc804\uccb4 \ub36e\uc5b4\uc4f0\uae30 \uc218\uc815\ud569\ub2c8\ub2e4.`);
+while(unusedCards.length>0&&unassignedItems.length>0){
+const card=unusedCards.shift();
+const item=unassignedItems.shift();
+plan.push({
+item:item,
+action:'\x6d\x6f\x64\x69\x66\x79',
+targetCard:card,
+reason:`\uc804\uccb4\uc218\uc815 (\uae30\uc874 ${card.timeStr||'\uae00'} \u2794 \uc0c8 \ud0c0\uc784 ${item.time}, ${item.fee}\ub9cc)`
+});
+}
+while(unassignedItems.length>0){
+const item=unassignedItems.shift();
+if(plan.length<2){
+plan.push({
+item:item,
+action:'\x72\x65\x67\x69\x73\x74\x65\x72',
+reason:'\uae30\uc874 \uae00 \ubd80\uc871 \uc2ac\ub86f \uc790\ub3d9 \ucc44\uc6c0 (\uc2e0\uaddc \ub4f1\ub85d)'
+});
+}else{
+console.warn(`[\uc804\uccb4\uc218\uc815] ${item.golf}: \uace8\ud504\ubaac \uad6c\uc7a5\ub2f9 \ucd5c\ub300 \ub4f1\ub85d \ud55c\ub3c4(1\uc77c 2\uac74) \ucd08\uacfc\ub85c \ub0a8\uc740 \ud0c0\uc784(${item.time}) \uc81c\uc678`);
+}
+}
+}else if(existingCount>0){
 for(let i=unassignedItems.length-1;i>=0;i--){
 const item=unassignedItems[i];
 const itemDigits=normalizeTimeDigits(item.time);
@@ -5967,18 +5995,14 @@ isConditionEqual=(matchedCard.rawTxt.includes('\uc5ec\uc790')||matchedCard.rawTx
 isConditionEqual=(matchedCard.rawTxt.includes('\ubd80\ubd80')||matchedCard.rawTxt.includes('\ucee4\ud50c'));
 }
 }
-if(!forceAllEdit&&isFeeEqual&&isPeopleEqual&&isConditionEqual){
+if(isFeeEqual&&isPeopleEqual&&isConditionEqual){
 plan.push({item:matchedItem,action:'\x61\x6c\x72\x65\x61\x64\x79\x5f\x73\x79\x6e\x63\x65\x64',targetCard:matchedCard,reason:'\uc2dc\uac04\u00b7\uac00\uaca9\u00b7\uc778\uc6d0\u00b7\uc870\uac74 \uc77c\uce58 (\ucd5c\uc2e0 \uc0c1\ud0dc \uc2a4\ud0b5)'});
 }else{
 const reasons=[];
-if(forceAllEdit&&isFeeEqual&&isPeopleEqual&&isConditionEqual){
-reasons.push('\uc804\uccb4\uc218\uc815(\ub3d9\uc77c \ud0c0\uc784 \ub36e\uc5b4\uc4f0\uae30)');
-}else{
 if(!isFeeEqual)reasons.push(`\uac00\uaca9 ${cardFeeMan!==null?cardFeeMan+'\ub9cc':'\uae30\uc874'} \u2794 ${targetFeeMan!==null?targetFeeMan+'\ub9cc':matchedItem.fee+'\ub9cc'}`);
 if(!isPeopleEqual)reasons.push(`\uc778\uc6d0 ${cardPeopleNum}\uba85 \u2794 ${targetPeopleNum}\uba85`);
 if(!isConditionEqual)reasons.push(`\uc870\uac74 \u2794 ${targetCond}`);
-}
-plan.push({item:matchedItem,action:'\x6d\x6f\x64\x69\x66\x79',targetCard:matchedCard,reason:reasons.length>0?reasons.join(', '):'\uc804\uccb4\uc218\uc815'});
+plan.push({item:matchedItem,action:'\x6d\x6f\x64\x69\x66\x79',targetCard:matchedCard,reason:reasons.length>0?reasons.join(', '):'\ubcc0\ub3d9\uc218\uc815'});
 }
 }
 }
@@ -6023,7 +6047,7 @@ action:'\x72\x65\x67\x69\x73\x74\x65\x72',
 reason:`\uae30\uc874 \uae00 \ubd80\uc871 \uc2ac\ub86f \uc790\ub3d9 \ucc44\uc6c0 (\uc2e0\uaddc \ub4f1\ub85d)`
 });
 }else{
-console.warn(`[${logTag}] ${item.golf}: \uace8\ud504\ubaac \uad6c\uc7a5\ub2f9 \ucd5c\ub300 \ub4f1\ub85d \ud55c\ub3c4(1\uc77c 2\uac74)\ub97c \ucd08\uacfc\ud558\ub294 \ub0a8\uc740 \ud0c0\uc784(${item.time})\uc740 \uc2dc\uc2a4\ud15c \uc81c\ud55c\uc73c\ub85c \uac74\ub108\ub701\ub2c8\ub2e4.`);
+console.warn(`[\uc2a4\ub9c8\ud2b8\uc218\uc815] ${item.golf}: \uace8\ud504\ubaac \uad6c\uc7a5\ub2f9 \ucd5c\ub300 \ub4f1\ub85d \ud55c\ub3c4(1\uc77c 2\uac74) \ucd08\uacfc \ud0c0\uc784(${item.time}) \uac74\ub108\ub700`);
 }
 }
 }else{
@@ -6053,6 +6077,9 @@ const{item,targetCard}=step;
 let action=step.action;
 globalIndex++;
 if(action==='\x61\x6c\x72\x65\x61\x64\x79\x5f\x73\x79\x6e\x63\x65\x64'){
+if(forceAllEdit){
+action='\x6d\x6f\x64\x69\x66\x79';
+}else{
 successCount++;
 console.log(`\u26a1 [${globalIndex}/${totalOverallCount}] ${item.golf} (${item.date} ${item.time}): ${step.reason||'\uc774\ubbf8 \ucd5c\uc2e0 \uc0c1\ud0dc'} \u2794 \uc218\uc815 \ubd88\ud544\uc694 (\ucd08\uace0\uc18d \uc989\uc2dc \ud1b5\uacfc!)`);
 chrome.runtime.sendMessage({
@@ -6065,6 +6092,7 @@ note:'\uc774\ubbf8 \ucd5c\uc2e0 \uc0c1\ud0dc'
 });
 await _0x1001(60);
 continue;
+}
 }
 _0x105e({
 macroType:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45',
@@ -6147,7 +6175,10 @@ await _0x1045(group.region);
 }else{
 await _0x1045('\uc804\uccb4');
 }
-await _0x1001(250);
+await _0x1001(350);
+}
+if(pIdx>0){
+await _0x1001(400);
 }
 const targetDate=item.date||group.date;
 if(targetDate){
@@ -6220,6 +6251,16 @@ const eligibleCards=liveCards.filter(c=>{
 if(c.postId&&processedPostIds.has(c.postId))return false;
 if(c.el&&_replacedCardsSet.has(c.el))return false;
 if(groupModifiedRecords.length>0){
+if(forceAllEdit){
+const isAlreadyReplacedInThisRun=groupModifiedRecords.some(rec=>{
+const timeSame=(c.timeDigits&&rec.newTimeDigits&&c.timeDigits===rec.newTimeDigits);
+const feeSame=(c.feeManVal!==null&&rec.newFeeManVal!==null&&Math.abs(c.feeManVal-rec.newFeeManVal)<0.05);
+return timeSame&&feeSame;
+});
+if(isAlreadyReplacedInThisRun&&liveCards.length>=2&&c.domOrderIdx<groupModifiedRecords.length){
+return false;
+}
+}else{
 if(liveCards.length>=2&&c.domOrderIdx<groupModifiedRecords.length){
 return false;
 }
@@ -6241,6 +6282,7 @@ return true;
 return false;
 });
 if(matchesModifiedRecord)return false;
+}
 }
 return true;
 });
@@ -6283,11 +6325,12 @@ liveCardObj=sortedByBottom[0];
 liveCardObj=eligibleCards[0];
 }
 }
-if(!liveCardObj&&groupModifiedRecords.length>0&&liveCards.length>=2){
-const sortedAllByBottom=[...liveCards].sort(compareReverseScreenOrder);
-const bottomMost=sortedAllByBottom.find(c=>(!c.postId||!processedPostIds.has(c.postId))&&!_replacedCardsSet.has(c.el));
-if(bottomMost){
-liveCardObj=bottomMost;
+if(!liveCardObj&&liveCards.length>0){
+const unmodCards=liveCards.filter(c=>(!c.postId||!processedPostIds.has(c.postId))&&!_replacedCardsSet.has(c.el));
+if(unmodCards.length>0){
+unmodCards.sort(groupModifiedRecords.length>0?compareReverseScreenOrder:(a,b)=>a.domOrderIdx-b.domOrderIdx);
+liveCardObj=unmodCards[0];
+console.log(`[${logTag}] \ud83c\udfaf \ud3f4\ubc31\uc73c\ub85c \ud654\uba74 \ub0b4 \ubbf8\uc218\uc815 \uce74\ub4dc(${liveCardObj.timeStr}) \ub9e4\uce6d \uc131\uacf5!`);
 }
 }
 if(liveCardObj)break;
@@ -6316,7 +6359,6 @@ const openedDetailType=detectCurrentDetailPageType();
 if((groupCategory==='\uc591\ub3c4'&&openedDetailType==='\uc870\uc778')||
 (groupCategory==='\uc870\uc778'&&openedDetailType==='\uc591\ub3c4')){
 console.warn(`[${logTag}] \u26a0\ufe0f [${groupCategory}] \uc218\uc815 \ubaa9\ud45c\uc778\ub370 \uc0c1\uc138 \ud398\uc774\uc9c0 \uc88c\uce21 \uc0c1\ub2e8\uc774 [${openedDetailType}]\uc73c\ub85c \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc810\uc138\uac1c(\u22ee) \ud074\ub9ad\uc744 \uc911\ub2e8\ud558\uace0 \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud558\uc5ec [${groupCategory}] \uae00\ub9cc \ub2e4\uc2dc \ucc3e\uc2b5\ub2c8\ub2e4.`);
-_replacedCardsSet.add(targetCardEl);
 await _0x1052(groupCategory);
 await _0x1047(groupCategory);
 if(group.region&&group.region!=='\uc804\uccb4'){
@@ -6345,7 +6387,6 @@ const recheckDetailType=detectCurrentDetailPageType();
 if((groupCategory==='\uc591\ub3c4'&&recheckDetailType==='\uc870\uc778')||
 (groupCategory==='\uc870\uc778'&&recheckDetailType==='\uc591\ub3c4')){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc7ac\uc9c4\uc785\ud55c \uc0c1\uc138 \ud398\uc774\uc9c0\ub3c4 [${recheckDetailType}]\uc774\ubbc0\ub85c \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
-_replacedCardsSet.add(targetCardEl);
 await _0x1052(groupCategory);
 continue;
 }
@@ -6353,10 +6394,11 @@ continue;
 let curUrl=window.location.href;
 let curUrlMatch=curUrl.match(/[?&]id=(\d+)/)||curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/);
 let detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
-if((detectedPostId&&processedPostIds.has(detectedPostId))||
-(/\/(?:detail|item|view)\b/.test(curUrl)&&processedDetailUrls.has(curUrl))){
-console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
-_replacedCardsSet.add(targetCardEl);
+const hasUniqueIdInUrl=/\/(?:detail|item|view)\/\d+/.test(curUrl)||/[?&]id=\d+/.test(curUrl);
+const isDuplicatePost=(detectedPostId&&processedPostIds.has(detectedPostId))||
+(hasUniqueIdInUrl&&processedDetailUrls.has(curUrl));
+if(isDuplicatePost){
+console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \ub2e4\ub978 \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 await _0x1052(groupCategory);
 await _0x1047(groupCategory);
 if(group.region&&group.region!=='\uc804\uccb4'){
@@ -6386,12 +6428,6 @@ continue;
 curUrl=window.location.href;
 curUrlMatch=curUrl.match(/[?&]id=(\d+)/)||curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/);
 detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
-if((detectedPostId&&processedPostIds.has(detectedPostId))||
-(/\/(?:detail|item|view)\b/.test(curUrl)&&processedDetailUrls.has(curUrl))){
-console.warn(`[${logTag}] \u26a0\ufe0f \uc7ac\uc120\ud0dd\ud55c \uce74\ub4dc \uc5ed\uc2dc \uc774\ubbf8 \uc218\uc815\ub41c \uae00(ID: ${detectedPostId})\uc774\ubbc0\ub85c \uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0\ub97c \uc704\ud574 \uac74\ub108\ub701\ub2c8\ub2e4.`);
-await _0x1052(groupCategory);
-continue;
-}
 }
 if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 const openedEdit=await openMenuAndClickEdit();
@@ -6405,13 +6441,11 @@ const openedPageType=await ensureCorrectEditRouteAndType(groupCategory,1500);
 if(shouldStopRegistration||_activeMacroRunId!==myRunId)break;
 if(groupCategory==='\uc591\ub3c4'&&openedPageType==='\uc870\uc778'){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc591\ub3c4 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '\uc870\uc778 \uc218\uc815' \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc870\uc778 \uae00 \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
-_replacedCardsSet.add(targetCardEl);
 await _0x1052(groupCategory);
 continue;
 }
 if(groupCategory==='\uc870\uc778'&&openedPageType==='\uc591\ub3c4'){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc870\uc778 \uc218\uc815 \ubaa9\ud45c\uc778\ub370 '\uc591\ub3c4 \uc218\uc815' \ud654\uba74\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uc591\ub3c4 \uae00 \uc624\uc218\uc815\uc744 \ucc28\ub2e8\ud558\uace0 \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
-_replacedCardsSet.add(targetCardEl);
 await _0x1052(groupCategory);
 continue;
 }
@@ -6424,7 +6458,7 @@ _replacedCardsSet.add(targetCardEl);
 if(detectedPostId){
 processedPostIds.add(detectedPostId);
 }
-if(/\/(?:detail|item)\/\d+/.test(curUrl)){
+if(hasUniqueIdInUrl){
 processedDetailUrls.add(curUrl);
 }
 const newDigits=normalizeTimeDigits(item.time);
@@ -6457,9 +6491,16 @@ newFee:item.fee
 }else{
 console.warn(`[${logTag}] \u274c ${item.golf} (${item.date} ${item.time}) \uc218\uc815 \uc2e4\ud328 (\uc11c\ubc84 \uc800\uc7a5 \uac70\ubd80 \ub4f1) -> \ubaa9\ub85d \ubcf5\uadc0`);
 }
-if(!_0x1034()||_0x1033()||_0x1032()){
+if(!_0x1034()||_0x1033()||_0x1032()||isDetailPage()||isEditPage()){
 await _0x1052(groupCategory);
 await _0x1001(350);
+}
+if(pIdx+1<plan.length){
+for(let w=0;w<25;w++){
+if(_0x1034()&&!isDetailPage()&&!isEditPage())break;
+await _0x1001(100);
+}
+await _0x1001(400);
 }
 }
 }catch(stepErr){
