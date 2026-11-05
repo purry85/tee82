@@ -132,63 +132,120 @@ if(hud)hud.remove();
 }
 function _0x1007(labelName){
 const cleanTarget=labelName.replace(/[\s\-_/]/g,'').toLowerCase();
-const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70'))
+const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x64\x74, \x64\x64'))
 .filter(el=>{
-if(el.offsetHeight<=0)return false;
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+if(el.children.length>2)return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'').toLowerCase();
 return t===cleanTarget||t.startsWith(cleanTarget);
 });
-for(const el of allLabels){
-const tr=el.closest('\x74\x72');
+if(allLabels.length>0){
+const exact=allLabels.find(el=>(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'').toLowerCase()===cleanTarget);
+return exact||allLabels[0];
+}
+return null;
+}
+function _0x1008(labelName){
+const labelEl=_0x1007(labelName);
+if(!labelEl)return null;
+const tr=labelEl.closest('\x74\x72');
 if(tr){
 const cells=Array.from(tr.querySelectorAll('\x74\x64, \x74\x68'));
-const cellIdx=cells.indexOf(el.closest('\x74\x64, \x74\x68'));
+const cellIdx=cells.indexOf(labelEl.closest('\x74\x64, \x74\x68'));
 if(cellIdx!==-1&&cellIdx+1<cells.length){
 return cells[cellIdx+1];
 }
 return tr;
 }
-const row=el.closest('\x2e\x72\x6f\x77, \x2e\x66\x6f\x72\x6d-\x67\x72\x6f\x75\x70, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x72\x6f\x77"]');
+const row=labelEl.closest('\x2e\x72\x6f\x77, \x2e\x66\x6f\x72\x6d-\x67\x72\x6f\x75\x70, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x72\x6f\x77"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x6c\x69\x6e\x65"]');
 if(row)return row;
-}
+if(labelEl.parentElement)return labelEl.parentElement;
 return null;
 }
-async function _0x1008(rowLabel,targetValue){
-const container=_0x1007(rowLabel)||document.body;
-const radios=Array.from(container.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x6c\x61\x62\x65\x6c'));
+async function _0x1009(rowLabel,targetValue){
+const container=_0x1008(rowLabel)||document.body;
+let radios=Array.from(container.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x6c\x61\x62\x65\x6c'));
+let targetRadio=null;
 for(const r of radios){
 const txt=(r.innerText||r.textContent||r.value||'').trim();
 if(txt.includes(targetValue)||targetValue.includes(txt)){
-const radioInput=(r.tagName==='\x49\x4e\x50\x55\x54')?r:r.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]')||r.previousElementSibling||r;
-if(radioInput){
-radioInput.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72'});
-await _0x1002(radioInput);
-if(radioInput.type==='\x72\x61\x64\x69\x6f'){
-radioInput.checked=true;
-radioInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
+targetRadio=(r.tagName==='\x49\x4e\x50\x55\x54')?r:r.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]')||r.previousElementSibling||r;
+break;
+}
+}
+if(!targetRadio){
+const labelEl=_0x1007(rowLabel);
+if(labelEl){
+const lRect=labelEl.getBoundingClientRect();
+const allRadiosAndLabels=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x6c\x61\x62\x65\x6c'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const r=el.getBoundingClientRect();
+return Math.abs(r.top-lRect.top)<30&&r.left>=lRect.left;
+});
+for(const r of allRadiosAndLabels){
+const txt=(r.innerText||r.textContent||r.value||'').trim();
+if(txt.includes(targetValue)||targetValue.includes(txt)){
+targetRadio=(r.tagName==='\x49\x4e\x50\x55\x54')?r:r.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]')||r.previousElementSibling||r;
+break;
+}
+}
+}
+}
+if(targetRadio){
+targetRadio.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72'});
+await _0x1002(targetRadio);
+if(targetRadio.type==='\x72\x61\x64\x69\x6f'){
+targetRadio.checked=true;
+targetRadio.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
 console.log(`[\uace8\ud504\ud0d1] [${rowLabel}] \ub77c\ub514\uc624 [${targetValue}] \uc120\ud0dd \uc644\ub8cc`);
 return true;
 }
-}
-}
+console.warn(`[\uace8\ud504\ud0d1] \u26a0\ufe0f [${rowLabel}] \ub77c\ub514\uc624 [${targetValue}] \ubbf8\ubc1c\uacac`);
 return false;
 }
-async function _0x1009(rowLabel,value){
-const container=_0x1007(rowLabel);
-if(!container)return false;
-const input=container.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x6e\x75\x6d\x62\x65\x72"], \x69\x6e\x70\x75\x74\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"])');
+async function _0x100a(rowLabel,value){
+const container=_0x1008(rowLabel);
+let input=container?container.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x6e\x75\x6d\x62\x65\x72"], \x74\x65\x78\x74\x61\x72\x65\x61, \x69\x6e\x70\x75\x74\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"])'):null;
+if(!input){
+const labelEl=_0x1007(rowLabel);
+if(labelEl){
+const lRect=labelEl.getBoundingClientRect();
+const candidateInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x6e\x75\x6d\x62\x65\x72"], \x74\x65\x78\x74\x61\x72\x65\x61, \x69\x6e\x70\x75\x74\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"])\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"])'))
+.filter(inp=>{
+if(inp.offsetHeight<=0||inp.offsetWidth<=0)return false;
+const r=inp.getBoundingClientRect();
+return Math.abs(r.top-lRect.top)<25&&r.left>=lRect.left;
+});
+if(candidateInputs.length>0){
+input=candidateInputs[0];
+}
+}
+}
 if(input){
 await _0x1003(input,value);
 console.log(`[\uace8\ud504\ud0d1] [${rowLabel}] \uc785\ub825\uac12: [${value}] \uc644\ub8cc`);
 return true;
 }
+console.warn(`[\uace8\ud504\ud0d1] \u26a0\ufe0f [${rowLabel}] \uc785\ub825 \ud544\ub4dc\ub97c \ucc3e\uc9c0 \ubabb\ud568`);
 return false;
 }
-async function _0x100a(rowLabel,targetText){
-const container=_0x1007(rowLabel);
-if(!container)return false;
-const sel=container.querySelector('\x73\x65\x6c\x65\x63\x74');
+async function _0x100b(rowLabel,targetText){
+const container=_0x1008(rowLabel);
+let sel=container?container.querySelector('\x73\x65\x6c\x65\x63\x74'):null;
+if(!sel){
+const labelEl=_0x1007(rowLabel);
+if(labelEl){
+const lRect=labelEl.getBoundingClientRect();
+const selects=Array.from(document.querySelectorAll('\x73\x65\x6c\x65\x63\x74')).filter(s=>{
+if(s.offsetHeight<=0||s.offsetWidth<=0)return false;
+const r=s.getBoundingClientRect();
+return Math.abs(r.top-lRect.top)<25&&r.left>=lRect.left;
+});
+if(selects.length>0)sel=selects[0];
+}
+}
 if(!sel)return false;
 const options=Array.from(sel.options);
 const cleanTarget=(targetText||'').trim();
@@ -204,27 +261,48 @@ return true;
 }
 return false;
 }
-async function _0x100b(rowLabel,cbLabel,shouldCheck){
-const container=_0x1007(rowLabel)||document.body;
+async function _0x100c(rowLabel,cbLabel,shouldCheck){
+const container=_0x1008(rowLabel)||document.body;
 const checkboxes=Array.from(container.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"], \x6c\x61\x62\x65\x6c'));
+let targetCb=null;
 for(const el of checkboxes){
 const txt=(el.innerText||el.textContent||'').trim();
 if(txt.includes(cbLabel)){
-const cb=(el.tagName==='\x49\x4e\x50\x55\x54')?el:el.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]')||el.previousElementSibling;
-if(cb&&cb.type==='\x63\x68\x65\x63\x6b\x62\x6f\x78'){
-if(cb.checked!==shouldCheck){
-await _0x1002(cb);
-cb.checked=shouldCheck;
-cb.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
+targetCb=(el.tagName==='\x49\x4e\x50\x55\x54')?el:el.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]')||el.previousElementSibling;
+break;
+}
+}
+if(!targetCb){
+const labelEl=_0x1007(rowLabel);
+if(labelEl){
+const lRect=labelEl.getBoundingClientRect();
+const allCbs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"], \x6c\x61\x62\x65\x6c'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const r=el.getBoundingClientRect();
+return Math.abs(r.top-lRect.top)<25&&r.left>=lRect.left;
+});
+for(const el of allCbs){
+const txt=(el.innerText||el.textContent||'').trim();
+if(txt.includes(cbLabel)){
+targetCb=(el.tagName==='\x49\x4e\x50\x55\x54')?el:el.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]')||el.previousElementSibling;
+break;
+}
+}
+}
+}
+if(targetCb&&targetCb.type==='\x63\x68\x65\x63\x6b\x62\x6f\x78'){
+if(targetCb.checked!==shouldCheck){
+await _0x1002(targetCb);
+targetCb.checked=shouldCheck;
+targetCb.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
 console.log(`[\uace8\ud504\ud0d1] [${rowLabel}] [${cbLabel}] \uccb4\ud06c\uc0c1\ud0dc: ${shouldCheck}`);
 return true;
 }
-}
-}
 return false;
 }
-async function _0x100c(dateStr){
+async function _0x100d(dateStr){
 if(!dateStr)return true;
 const dateMatch=dateStr.match(/(\d{1,2})[./\-](\d{1,2})/);
 if(!dateMatch)return true;
@@ -250,7 +328,7 @@ return true;
 }
 return false;
 }
-async function _0x100d(){
+async function _0x100e(){
 console.log("[\uace8\ud504\ud0d1] \ud83c\udfaf \uc2e0\uccad \uad6c\ubd84 [\ud64d\ubcf4] \ubaa8\ub4dc \uc804\ud658 \uc2dc\ub3c4\x2e\x2e\x2e");
 const allBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, \x73\x70\x61\x6e, \x6c\x61\x62\x65\x6c, \x64\x69\x76'))
 .filter(el=>{
@@ -276,48 +354,173 @@ return true;
 }
 return false;
 }
-async function _0x100e(golfName,rawGolfName){
-console.log(`[\uace8\ud504\ud0d1] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \uc2dc\ub3c4: [${golfName}] (\uc6d0\ubcf8: ${rawGolfName})...`);
-const clean1=(golfName||'').trim().replace(/[\s\-_]/g,'').toLowerCase();
-const clean2=(rawGolfName||'').trim().replace(/[\s\-_]/g,'').toLowerCase();
-const stripped1=clean1.replace(/cc|gc|골프장|골프클럽/gi,'');
-const stripped2=clean2.replace(/cc|gc|골프장|골프클럽/gi,'');
-const courseBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, \x64\x69\x76'))
+function _0x100f(){
+const headers=Array.from(document.querySelectorAll('\x68\x31, \x68\x32, \x68\x33, \x68\x34, \x68\x35, \x68\x36, \x74\x68, \x74\x64, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+if(el.children.length>2)return false;
+const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+return t==='\uace8\ud504\uc7a5\uc120\ud0dd'||t.includes('\uace8\ud504\uc7a5\uc120\ud0dd');
+});
+for(const h of headers){
+let parent=h.parentElement;
+for(let i=0;i<5&&parent;i++){
+const txt=(parent.innerText||parent.textContent||'');
+if(txt.includes('\uacbd\uae30\ubd81\ubd80')||txt.includes('\uacbd\uae30\ub0a8\ubd80')||txt.includes('\ucda9\uccad\ub3c4')){
+return parent;
+}
+parent=parent.parentElement;
+}
+}
+const regionContainers=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x65\x63\x74\x69\x6f\x6e, \x74\x61\x62\x6c\x65, \x66\x69\x65\x6c\x64\x73\x65\x74'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const txt=(el.innerText||el.textContent||'');
+return txt.includes('\uacbd\uae30\ubd81\ubd80')&&txt.includes('\uacbd\uae30\ub0a8\ubd80');
+});
+if(regionContainers.length>0){
+regionContainers.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
+return regionContainers[0];
+}
+return null;
+}
+async function _0x1010(golfName,rawGolfName){
+console.log(`[\uace8\ud504\ud0d1] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \uc2dc\ub3c4: [${golfName}] (\uc6d0\ubcf8: ${rawGolfName})...`);
+const cleanFn=(s)=>(s||'').trim().toLowerCase().replace(/[\s\-_/]/g,'');
+const stripSuffix=(s)=>cleanFn(s).replace(/cc|gc|골프장|골프클럽/gi,'');
+const stripParen=(s)=>(s||'').replace(/\([^)]*\)/g,'').replace(/\[[^\]]*\]/g,'').trim();
+const stripEllipsis=(s)=>(s||'').replace(/\.{2,}|…/g,'').trim();
+const combinedGolf=((golfName||'')+' '+(rawGolfName||'')).toLowerCase();
+const isBAPublic=combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x70)')||combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0 (\x70)')||
+combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')||combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0[\x70]')||
+combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\ud37c\ube14\ub9ad)');
+const isBAStandard=!isBAPublic&&combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0');
+if(isBAPublic){
+console.log("[\uace8\ud504\ud0d1] \u26f3 [\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x50)] \uac10\uc9c0 -> \ud654\uba74\uc758 [\ube44\uc5d0\uc774\ube44\uc2a4\x2e\x2e\x2e] \ubc84\ud2bc \uc6b0\uc120 \ub9e4\uce6d \ubaa8\ub4dc \uac00\ub3d9");
+}else if(isBAStandard){
+console.log("[\uace8\ud504\ud0d1] \u26f3 [\uc77c\ubc18 \ube44\uc5d0\uc774\ube44\uc2a4\ud0c0] \uac10\uc9c0 -> \ud654\uba74\uc758 [\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0] \ubc84\ud2bc \uc6b0\uc120 \ub9e4\uce6d \ubaa8\ub4dc \uac00\ub3d9");
+}
+const targetList=[
+golfName,
+rawGolfName,
+stripParen(golfName),
+stripParen(rawGolfName)
+].filter(Boolean);
+const courseContainer=_0x100f()||document.body;
+console.log("[\uace8\ud504\ud0d1] \u26f3 \uace8\ud504\uc7a5 \ucee8\ud14c\uc774\ub108 \ud0d0\uc0c9 \uacb0\uacfc\x3a",courseContainer===document.body?"\uc804\uccb4\ud654\uba74 \x46\x61\x6c\x6c\x62\x61\x63\x6b":"\uc804\uc6a9 \ucee8\ud14c\uc774\ub108 \ubc1c\uacac");
+const candidateNodes=Array.from(courseContainer.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, \x73\x70\x61\x6e, \x74\x64, \x64\x69\x76, \x6c\x69, \x6c\x61\x62\x65\x6c, \x70, \x62'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+if(el.children.length>=3)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+if(txt.length<2||txt.length>25)return false;
+const cleanT=txt.replace(/\s+/g,'');
+if(cleanT==='\uace8\ud504\uc7a5\uc120\ud0dd'||cleanT==='\uc9c0\uc5ed\ubcc4'||cleanT==='\uacbd\uae30\ubd81\ubd80'||cleanT==='\uacbd\uae30\ub0a8\ubd80'||cleanT==='\ucda9\uccad\ub3c4'||cleanT==='\uac15\uc6d0'||cleanT==='\uc804\ub77c'||cleanT==='\uacbd\uc0c1'||cleanT==='\uc81c\uc8fc')return false;
+if(courseContainer===document.body){
 const r=el.getBoundingClientRect();
-return r.left>=180&&r.left<=650&&r.top>=80&&r.top<=600;
-});
-let targetBtn=null;
-targetBtn=courseBtns.find(el=>{
-const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_]/g,'').toLowerCase();
-return t===clean1||t===clean2;
-});
-if(!targetBtn&&(stripped1.length>=2||stripped2.length>=2)){
-targetBtn=courseBtns.find(el=>{
-const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_]/g,'').toLowerCase().replace(/cc|gc|골프장|골프클럽/gi,'');
-return(stripped1&&t===stripped1)||(stripped2&&t===stripped2);
-});
+if(r.left<150||r.left>window.innerWidth*0.8)return false;
+if(r.top>window.innerHeight*0.75)return false;
 }
-if(!targetBtn&&(stripped1.length>=2||stripped2.length>=2)){
-targetBtn=courseBtns.find(el=>{
-const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_]/g,'').toLowerCase().replace(/cc|gc|골프장|골프클럽/gi,'');
-return(stripped1&&t.includes(stripped1))||(stripped2&&t.includes(stripped2))||
-(stripped1&&stripped1.includes(t))||(stripped2&&stripped2.includes(t));
+return true;
 });
+let bestEl=null;
+let bestScore=0;
+let bestMatchedText='';
+for(const el of candidateNodes){
+const rawTxt=(el.innerText||el.textContent||'').trim();
+const hasEllipsis=rawTxt.includes('\x2e\x2e\x2e')||rawTxt.includes('\u2026');
+const cleanTxt=cleanFn(rawTxt);
+const coreTxt=stripSuffix(rawTxt);
+const noEllipsisRaw=stripEllipsis(rawTxt);
+const cleanNoEllipsis=cleanFn(noEllipsisRaw);
+const coreNoEllipsis=stripSuffix(noEllipsisRaw);
+if(isBAPublic){
+if(rawTxt.startsWith('\ube44\uc5d0\uc774\ube44\uc2a4')&&hasEllipsis){
+bestEl=el;
+bestScore=200;
+bestMatchedText=rawTxt+' (\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x50) \uc804\uc6a9)';
+break;
 }
-if(targetBtn){
-const clickEl=targetBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61')||targetBtn;
-clickEl.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72'});
-await _0x1002(clickEl);
-console.log(`[\uace8\ud504\ud0d1] \u26f3 \uace8\ud504\uc7a5 \ubc84\ud2bc [${(clickEl.innerText||'').trim()}] \ud074\ub9ad \uc644\ub8cc!`);
-await sleep(500);
+if(cleanTxt==='\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'){
+continue;
+}
+}else if(isBAStandard){
+if(cleanTxt==='\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'&&!hasEllipsis){
+bestEl=el;
+bestScore=200;
+bestMatchedText=rawTxt+' (\uc77c\ubc18 \ube44\uc5d0\uc774\ube44\uc2a4\ud0c0 \uc804\uc6a9)';
+break;
+}
+if(rawTxt.startsWith('\ube44\uc5d0\uc774\ube44\uc2a4')&&hasEllipsis){
+continue;
+}
+}
+for(const t of targetList){
+const cleanT=cleanFn(t);
+const coreT=stripSuffix(t);
+const tNoParen=cleanFn(stripParen(t));
+const coreNoParen=stripSuffix(stripParen(t));
+let score=0;
+if(rawTxt===t||cleanTxt===cleanT){
+score=100;
+}
+else if(coreTxt.length>=2&&coreTxt===coreT){
+score=95;
+}
+else if(coreNoParen.length>=2&&(coreTxt===coreNoParen||coreNoEllipsis===coreNoParen)){
+score=92;
+}
+else if(coreNoEllipsis.length>=3&&(coreT.startsWith(coreNoEllipsis)||coreNoParen.startsWith(coreNoEllipsis))){
+score=90;
+}
+else if(coreNoParen.length>=3&&coreNoEllipsis.startsWith(coreNoParen)){
+score=88;
+}
+else if(coreNoEllipsis.length>=3&&(coreT.includes(coreNoEllipsis)||coreNoEllipsis.includes(coreT)||coreNoParen.includes(coreNoEllipsis))){
+score=80;
+}
+if(score>bestScore){
+bestScore=score;
+bestEl=el;
+bestMatchedText=rawTxt;
+}
+}
+}
+if(bestEl&&bestScore>=80){
+const clickTarget=bestEl.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61')||bestEl;
+let scrollParent=clickTarget.parentElement;
+while(scrollParent&&scrollParent!==document.body){
+const overflowY=window.getComputedStyle(scrollParent).overflowY;
+if(overflowY==='\x61\x75\x74\x6f'||overflowY==='\x73\x63\x72\x6f\x6c\x6c'||scrollParent.scrollHeight>scrollParent.clientHeight+10){
+const targetScrollTop=clickTarget.offsetTop-(scrollParent.clientHeight/2)+(clickTarget.offsetHeight/2);
+scrollParent.scrollTo({top:Math.max(0,targetScrollTop),behavior:'\x73\x6d\x6f\x6f\x74\x68'});
+break;
+}
+scrollParent=scrollParent.parentElement;
+}
+clickTarget.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x73\x6d\x6f\x6f\x74\x68'});
+clickTarget.style.setProperty('\x74\x72\x61\x6e\x73\x69\x74\x69\x6f\x6e','\x61\x6c\x6c \x30\x2e\x32\x35\x73 \x65\x61\x73\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x45\x46\x34\x34\x34\x34','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64-\x63\x6f\x6c\x6f\x72','\x23\x46\x45\x46\x30\x38\x41','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x63\x6f\x6c\x6f\x72','\x23\x31\x45\x32\x39\x33\x42','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \x32\x30\x70\x78 \x72\x67\x62\x61(\x32\x33\x39, \x36\x38, \x36\x38, \x30\x2e\x39)','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d','\x73\x63\x61\x6c\x65(\x31\x2e\x30\x38)','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x39\x39\x39\x39','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+_0x1005({desc:`\u26f3 [${bestMatchedText}] \uc2a4\ud06c\ub864 \uc774\ub3d9 \ubc0f \ud655\uc778 \uc911...`});
+console.log(`[\uace8\ud504\ud0d1] \u26f3 \uace8\ud504\uc7a5 \ubc84\ud2bc \ubc1c\uacac \ubc0f \uc2a4\ud06c\ub864 \uc774\ub3d9 \uc644\ub8cc: [${bestMatchedText}] (\ub9e4\uce6d \uc810\uc218: ${bestScore}\uc810)`);
+await sleep(600);
+await _0x1002(clickTarget);
+try{clickTarget.click();}catch(e){}
+await sleep(250);
+clickTarget.style.removeProperty('\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d');
+clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x31\x30\x42\x39\x38\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+await sleep(350);
 return true;
 }
-console.warn(`[\uace8\ud504\ud0d1] \u26a0\ufe0f \uace8\ud504\uc7a5 \ubc84\ud2bc [${golfName}] \ubbf8\ubc1c\uacac`);
+console.warn(`[\uace8\ud504\ud0d1] \u26a0\ufe0f \uace8\ud504\uc7a5 \ubc84\ud2bc [${golfName}] \ubbf8\ubc1c\uacac (\ucd5c\uace0 \uc810\uc218: ${bestScore}\uc810)`);
 return false;
 }
-async function _0x100f(timeStr){
+async function _0x1011(timeStr){
 if(!timeStr)return false;
 const cleanTime=timeStr.replace(/[^\d]/g,'');
 const colonTime=(cleanTime.length===4)?`${cleanTime.slice(0,2)}:${cleanTime.slice(2)}`:timeStr;
@@ -348,7 +551,135 @@ return true;
 console.log(`[\uace8\ud504\ud0d1] \u2139\ufe0f \uc794\uc5ec\ud0c0\uc784 \ubaa9\ub85d\uc5d0 [${colonTime}] \ubbf8\uc874\uc7ac -> \ud558\ub2e8 '\ud76c\ub9dd\uc2dc\uac04' \uc9c1\uc811 \uc785\ub825\uc73c\ub85c \uc804\ud658`);
 return false;
 }
-async function _0x1010(){
+function _0x1012(){
+const allNodes=Array.from(document.querySelectorAll('*'));
+const promoEl=allNodes.find(el=>{
+if(el.children.length>2)return false;
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+return txt==='\ud64d\ubcf4\ub418\uc5c8\uc2b5\ub2c8\ub2e4'||txt.includes('\ud64d\ubcf4\ub418\uc5c8\uc2b5\ub2c8\ub2e4');
+});
+if(promoEl){
+let cur=promoEl;
+for(let i=0;i<6&&cur&&cur!==document.body;i++){
+const st=window.getComputedStyle(cur);
+if(st.position==='\x66\x69\x78\x65\x64'||st.position==='\x61\x62\x73\x6f\x6c\x75\x74\x65'||
+cur.classList.contains('\x73\x77\x61\x6c\x32-\x70\x6f\x70\x75\x70')||cur.classList.contains('\x6d\x6f\x64\x61\x6c')||
+cur.getAttribute('\x72\x6f\x6c\x65')==='\x64\x69\x61\x6c\x6f\x67'||parseInt(st.zIndex,10)>100){
+return cur;
+}
+cur=cur.parentElement;
+}
+return promoEl.parentElement?.parentElement||promoEl.parentElement;
+}
+const swal=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x70\x6f\x70\x75\x70, \x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x77\x65\x65\x74-\x61\x6c\x65\x72\x74, \x2e\x6d\x6f\x64\x61\x6c\x2e\x73\x68\x6f\x77, \x2e\x6d\x6f\x64\x61\x6c-\x64\x69\x61\x6c\x6f\x67');
+if(swal&&swal.offsetHeight>0)return swal;
+return null;
+}
+function _0x1013(){
+const modal=_0x1012();
+if(modal){
+const modalBtns=Array.from(modal.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, \x69\x6e\x70\x75\x74, \x64\x69\x76, \x73\x70\x61\x6e, \x70'))
+.filter(b=>{
+if(b.offsetHeight<=0||b.offsetWidth<=0)return false;
+if(b.children.length>2)return false;
+const txt=(b.innerText||b.textContent||b.value||'').trim().replace(/\s+/g,'');
+return txt==='\ud655\uc778'||txt==='\x4f\x4b'||txt.includes('\ud655\uc778');
+});
+if(modalBtns.length>0){
+const btnTag=modalBtns.find(b=>b.tagName==='\x42\x55\x54\x54\x4f\x4e'||b.classList.contains('\x62\x74\x6e')||b.classList.contains('\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d'));
+return btnTag||modalBtns[modalBtns.length-1];
+}
+}
+const swalBtn=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x62\x75\x74\x74\x6f\x6e\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x2e\x73\x77\x61\x6c\x32-\x61\x63\x74\x69\x6f\x6e\x73 \x62\x75\x74\x74\x6f\x6e, \x2e\x73\x77\x65\x65\x74-\x61\x6c\x65\x72\x74 \x62\x75\x74\x74\x6f\x6e\x2e\x63\x6f\x6e\x66\x69\x72\x6d, \x2e\x73\x61-\x63\x6f\x6e\x66\x69\x72\x6d-\x62\x75\x74\x74\x6f\x6e-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72 \x62\x75\x74\x74\x6f\x6e');
+if(swalBtn&&swalBtn.offsetHeight>0&&swalBtn.offsetWidth>0){
+return swalBtn;
+}
+const centerBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x61, \x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(b=>{
+if(b.offsetHeight<=0||b.offsetWidth<=0)return false;
+if(b.children.length>1)return false;
+const txt=(b.innerText||b.textContent||b.value||'').trim().replace(/\s+/g,'');
+if(txt!=='\ud655\uc778')return false;
+const r=b.getBoundingClientRect();
+const inCenter=(r.top>window.innerHeight*0.15&&r.bottom<window.innerHeight*0.85&&
+r.left>window.innerWidth*0.15&&r.right<window.innerWidth*0.85);
+return inCenter;
+});
+if(centerBtns.length>0){
+return centerBtns[centerBtns.length-1];
+}
+return null;
+}
+async function _0x1014(maxWaitMs=8000){
+console.log("[\uace8\ud504\ud0d1] \u23f3 '\ud64d\ubcf4 \ub418\uc5c8\uc2b5\ub2c8\ub2e4' \ud655\uc778 \ud31d\uc5c5 \ub300\uae30 \uc911\x2e\x2e\x2e");
+_0x1005({desc:'\u23f3 \ud64d\ubcf4 \uc644\ub8cc \ud31d\uc5c5 \ud655\uc778 \uc911\x2e\x2e\x2e'});
+const startTime=Date.now();
+while(Date.now()-startTime<maxWaitMs){
+if(shouldStopRegistration)return false;
+const confirmBtn=_0x1013();
+const promoModal=_0x1012();
+if(confirmBtn||promoModal){
+console.log("[\uace8\ud504\ud0d1] \ud83c\udfaf '\ud64d\ubcf4 \ub418\uc5c8\uc2b5\ub2c8\ub2e4' \ud31d\uc5c5 \uac10\uc9c0 -> [\ud655\uc778] \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589!");
+const targetBtn=confirmBtn||promoModal.querySelector('\x62\x75\x74\x74\x6f\x6e, \x61, \x64\x69\x76, \x73\x70\x61\x6e');
+if(targetBtn){
+targetBtn.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',inline:'\x63\x65\x6e\x74\x65\x72'});
+targetBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x45\x46\x34\x34\x34\x34','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+targetBtn.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \x32\x30\x70\x78 \x72\x67\x62\x61(\x32\x33\x39, \x36\x38, \x36\x38, \x30\x2e\x39)','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+await sleep(250);
+await _0x1002(targetBtn);
+try{targetBtn.click();}catch(e){}
+['\x6b\x65\x79\x64\x6f\x77\x6e','\x6b\x65\x79\x75\x70'].forEach(evt=>{
+const ke=new KeyboardEvent(evt,{key:'\x45\x6e\x74\x65\x72',keyCode:13,which:13,code:'\x45\x6e\x74\x65\x72',bubbles:true,cancelable:true});
+targetBtn.dispatchEvent(ke);
+document.dispatchEvent(ke);
+});
+}
+for(let check=0;check<16;check++){
+await sleep(250);
+const stillModal=_0x1012();
+const stillBtn=_0x1013();
+if(!stillModal&&!stillBtn){
+console.log("[\uace8\ud504\ud0d1] \u2705 \ud31d\uc5c5 \ub2eb\ud798 \ud655\uc778 \uc644\ub8cc! -> \ub2e4\uc74c \ud0c0\uc784\uc73c\ub85c \uc548\uc804\ud558\uac8c \uc774\ub3d9");
+await sleep(400);
+return true;
+}
+console.log(`[\uace8\ud504\ud0d1] \ud83d\udd04 \ud31d\uc5c5 \ub2eb\ud798 \ub300\uae30 \uc911... \uc7ac\uc2dc\ub3c4 (${check+1}/16)`);
+const retryBtn=stillBtn||stillModal?.querySelector('\x62\x75\x74\x74\x6f\x6e, \x61, \x64\x69\x76, \x73\x70\x61\x6e');
+if(retryBtn){
+try{retryBtn.click();}catch(e){}
+const ke=new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x6e\x74\x65\x72',keyCode:13,which:13,bubbles:true});
+retryBtn.dispatchEvent(ke);
+}
+}
+console.log("[\uace8\ud504\ud0d1] \u2705 \ud31d\uc5c5 \ub300\uae30 \uc644\ub8cc \ud6c4 \ub2e4\uc74c\uc73c\ub85c \uc9c4\ud589");
+return true;
+}
+await sleep(200);
+}
+console.log("[\uace8\ud504\ud0d1] \u2139\ufe0f \ud31d\uc5c5 \ub300\uae30 \uc2dc\uac04 \ucd08\uacfc \ub610\ub294 \ud31d\uc5c5 \ubbf8\ubc1c\uc0dd -> \ub2e4\uc74c\uc73c\ub85c \uc9c4\ud589");
+return true;
+}
+async function _0x1015(){
+const confirmBtn=_0x1013();
+const promoModal=_0x1012();
+if(confirmBtn||promoModal){
+console.log("[\uace8\ud504\ud0d1] \u26a0\ufe0f \uc794\uc5ec \ud31d\uc5c5 \ubc1c\uacac -> [\ud655\uc778] \ud074\ub9ad\ud558\uc5ec \ub2eb\uc74c");
+const btn=confirmBtn||promoModal.querySelector('\x62\x75\x74\x74\x6f\x6e, \x61, \x64\x69\x76, \x73\x70\x61\x6e');
+if(btn){
+try{btn.click();}catch(e){}
+await _0x1002(btn);
+const ke=new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x6e\x74\x65\x72',keyCode:13,which:13,bubbles:true});
+btn.dispatchEvent(ke);
+document.dispatchEvent(ke);
+}
+await sleep(400);
+}
+}
+await sleep(300);
+}
+}
+async function _0x1016(){
 console.log("[\uace8\ud504\ud0d1] \ud83d\ude80 \ud558\ub2e8 \ub178\ub780\uc0c9 [\ud64d\ubcf4] \uc81c\ucd9c \ubc84\ud2bc \ud0d0\uc0c9 \ubc0f \ud074\ub9ad\x2e\x2e\x2e");
 const candidates=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x61'))
 .filter(el=>{
@@ -365,34 +696,35 @@ submitBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6
 await sleep(100);
 await _0x1002(submitBtn);
 console.log("[\uace8\ud504\ud0d1] \ud83d\ude80 [\ud64d\ubcf4] \uc81c\ucd9c \ubc84\ud2bc \ud074\ub9ad \uc644\ub8cc!");
-await sleep(600);
+await _0x1014(6000);
 return true;
 }
 console.error("[\uace8\ud504\ud0d1] \u274c \ud558\ub2e8 [\ud64d\ubcf4] \uc81c\ucd9c \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-async function _0x1011(item,customMemo='',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x1017(item,customMemo='',stepPreset='\x68\x75\x6d\x61\x6e'){
 console.log(`\n================== [\uace8\ud504\ud0d1 \uc790\ub3d9\ub4f1\ub85d] ${item.golf} (${item.date} ${item.time}) ==================`);
-await _0x100c(item.date);
+await _0x1015();
+await _0x100d(item.date);
 if(shouldStopRegistration)return false;
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
-await _0x100d();
-if(shouldStopRegistration)return false;
-await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
-await _0x100e(item.golf,item.rawGolf);
+const courseSelected=await _0x1010(item.golf,item.rawGolf);
 if(shouldStopRegistration)return false;
 await sleep(_0x1000('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
-const appliedTime=await _0x100f(item.time);
+await _0x100e();
+if(shouldStopRegistration)return false;
+await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
+const appliedTime=await _0x1011(item.time);
 if(shouldStopRegistration)return false;
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 const timeClean=(item.time||'').replace(/[^\d]/g,'');
 const formattedTime=(timeClean.length===4)?`${timeClean.slice(0,2)}:${timeClean.slice(2)}`:item.time;
 if(!appliedTime){
-await _0x1009('\ud76c\ub9dd\uc2dc\uac04',formattedTime);
+await _0x100a('\ud76c\ub9dd\uc2dc\uac04',formattedTime||timeClean);
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 }
 const isTransfer=(item.roomType==='\uc591\ub3c4');
-await _0x1008('\uc591\ub3c4\x2f\uc870\uc778',isTransfer?'\uc591\ub3c4':'\uc870\uc778');
+await _0x1009('\uc591\ub3c4\x2f\uc870\uc778',isTransfer?'\uc591\ub3c4':'\uc870\uc778');
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 const fieldFeeNum=parseFloat((item.fieldFee||item.fee||'').toString().replace(/[^\d.]/g,''))||0;
 const preFeeNum=parseFloat((item.prepaidFee||'').toString().replace(/[^\d.]/g,''))||0;
@@ -400,14 +732,14 @@ let payType='\ud604\uc7a5';
 if(fieldFeeNum>0&&preFeeNum>0)payType='\uc77c\ubd80\uc120\uacb0';
 else if(preFeeNum>0&&fieldFeeNum<=0)payType='\uc804\uc561\uc120\uacb0';
 else payType='\ud604\uc7a5';
-await _0x1008('\uacb0\uc81c\uad6c\ubd84',payType);
+await _0x1009('\uacb0\uc81c\uad6c\ubd84',payType);
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 if(fieldFeeNum>0){
-await _0x1009('\ud604\uc7a5\uacb0\uc81c',String(fieldFeeNum));
+await _0x100a('\ud604\uc7a5\uacb0\uc81c',String(fieldFeeNum));
 await sleep(100);
 }
 if(preFeeNum>0){
-await _0x1009('\uc120\uacb0\uc81c',String(preFeeNum));
+await _0x100a('\uc120\uacb0\uc81c',String(preFeeNum));
 await sleep(100);
 }
 const rawGender=(item.waitGender||item.gender||'').trim();
@@ -418,7 +750,7 @@ else if(rawGender.includes('\ub0a8\uc5ec')||rawGender.includes('\ubd80\ubd80'))t
 else if(rawGender.includes('\ub0a8'))targetGender='\ub0a8';
 else if(rawGender.includes('\uc5ec'))targetGender='\uc5ec';
 if(targetGender!=='\uc120\ud0dd'){
-await _0x100a('\ub300\uae30\uc131\ubcc4',targetGender);
+await _0x100b('\ub300\uae30\uc131\ubcc4',targetGender);
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 }
 const cond=(item.condition||'').trim();
@@ -426,14 +758,14 @@ let reqGender='\uc0c1\uad00\uc5c6\uc74c';
 if(cond.includes('\ub0a8\uc790')||cond.includes('\ub0a8\uc131'))reqGender='\ub0a8\uc131\ub9cc';
 else if(cond.includes('\uc5ec\uc790')||cond.includes('\uc5ec\uc131'))reqGender='\uc5ec\uc131\ub9cc';
 else if(cond.includes('\ubd80\ubd80')||cond.includes('\ucee4\ud50c'))reqGender='\ub0a8\uc5ec\ub9cc';
-await _0x1008('\uc694\uccad\uc131\ubcc4',reqGender);
+await _0x1009('\uc694\uccad\uc131\ubcc4',reqGender);
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 const hasCart=Boolean(item.isCart||(item.rawText||'').includes('\uce74\ud3ec')||(item.rawText||'').includes('\uce74\ud2b8\ud3ec\ud568'));
 const hasMeal=Boolean(item.isMeal||(item.rawText||'').includes('\uc2dd\ud3ec')||(item.rawText||'').includes('\uc2dd\uc0ac\ud3ec\ud568')||(item.rawText||'').includes('\uc870\uc2dd'));
-await _0x100b('\uc870\uac74\uc120\ud0dd','\uce74\ud3ec',hasCart);
-await _0x100b('\uc870\uac74\uc120\ud0dd','\uc2dd\ud3ec',hasMeal);
-await _0x100b('\uc870\uac74\uc120\ud0dd','\ucee4\ud53c',false);
-await _0x100b('\uc870\uac74\uc120\ud0dd','\uc2dc\uc124\x58',false);
+await _0x100c('\uc870\uac74\uc120\ud0dd','\uce74\ud3ec',hasCart);
+await _0x100c('\uc870\uac74\uc120\ud0dd','\uc2dd\ud3ec',hasMeal);
+await _0x100c('\uc870\uac74\uc120\ud0dd','\ucee4\ud53c',false);
+await _0x100c('\uc870\uac74\uc120\ud0dd','\uc2dc\uc124\x58',false);
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 const cadyRaw=(item.cady||'\uce90\ub514').trim();
 let cadyTarget='\uce90\ud2f0';
@@ -442,14 +774,14 @@ else if(cadyRaw.includes('\uc6b4\uc804')||cadyRaw.includes('\ub4dc\ub77c\uc774\u
 else if(cadyRaw.includes('\uc2e0\uc785')||cadyRaw.includes('\uad50\uc721\uc0dd'))cadyTarget='\uc2e0\uc785\uce90\ub514';
 else if(cadyRaw.includes('\ud2b9\uc218'))cadyTarget='\ud2b9\uc218\uce90\ub514';
 else cadyTarget='\uce90\ud2f0';
-const cadyDone=await _0x1008('\uce90\ub514\uc720\ubb34',cadyTarget);
+const cadyDone=await _0x1009('\uce90\ub514\uc720\ubb34',cadyTarget);
 if(!cadyDone&&cadyTarget==='\uce90\ud2f0'){
-await _0x1008('\uce90\ub514\uc720\ubb34','\uce90\ub514');
+await _0x1009('\uce90\ub514\uc720\ubb34','\uce90\ub514');
 }
 await sleep(_0x1000('\x66\x61\x73\x74',stepPreset));
 const memoVal=item.memo||customMemo||'';
 if(memoVal){
-const container=_0x1007('\ub9e4\ub2c8\uc800\ube44\uace0');
+const container=_0x1008('\ub9e4\ub2c8\uc800\ube44\uace0');
 if(container){
 const memoInput=container.querySelector('\x74\x65\x78\x74\x61\x72\x65\x61, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"]');
 if(memoInput){
@@ -459,12 +791,12 @@ await sleep(100);
 }
 }
 }
-const submitted=await _0x1010();
+const submitted=await _0x1016();
 if(!submitted)return false;
 await sleep(_0x1000('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 return true;
 }
-async function _0x1012(items,memo='',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x1018(items,memo='',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
 if(!items||items.length===0)return;
 isRegistrationRunning=true;
 shouldStopRegistration=false;
@@ -495,7 +827,7 @@ fee:item.fee,
 regId:item.regId
 });
 try{
-const ok=await _0x1011(item,memo,stepPreset);
+const ok=await _0x1017(item,memo,stepPreset);
 if(ok){
 successCount++;
 console.log(`\u2705 [\uace8\ud504\ud0d1] [${i+1}/${items.length}] ${item.golf} (${item.time}) \ub4f1\ub85d \uc644\ub8cc!`);
@@ -530,7 +862,7 @@ chrome.runtime.onMessage.addListener((msg,sender,sendResponse)=>{
 if(msg.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
 console.log("[\uace8\ud504\ud0d1] \uc790\ub3d9\ub4f1\ub85d \uc2dc\uc791 \uc694\uccad \uc218\uc2e0\x3a",msg);
 shouldStopRegistration=false;
-_0x1012(msg.items,msg.memo,msg.delayPreset,msg.stepPreset);
+_0x1018(msg.items,msg.memo,msg.delayPreset,msg.stepPreset);
 sendResponse({success:true});
 return true;
 }else if(msg.action==='\x53\x54\x4f\x50\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'||msg.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
@@ -542,4 +874,4 @@ sendResponse({success:true});
 return true;
 }
 });
-console.log("[\x54\x65\x65\x38\x32] \uace8\ud504\ud0d1(\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72) \uc790\ub3d9\ub4f1\ub85d \ucf58\ud150\uce20 \uc2a4\ud06c\ub9bd\ud2b8 \ub85c\ub4dc \uc644\ub8cc (\x56\x65\x72 \x32\x2e\x30\x2e\x32\x30)");
+console.log("[\x54\x65\x65\x38\x32] \uace8\ud504\ud0d1(\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72) \uc790\ub3d9\ub4f1\ub85d \ucf58\ud150\uce20 \uc2a4\ud06c\ub9bd\ud2b8 \ub85c\ub4dc \uc644\ub8cc (\x56\x65\x72 \x32\x2e\x30\x2e\x32\x32)");

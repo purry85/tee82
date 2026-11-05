@@ -7722,7 +7722,7 @@ const origGolf=cells[2].textContent.trim();
 const rawGolf=tr.dataset.rawGolf||origGolf;
 const golmarketGolf=tr.dataset.golmarketGolf||_0x101e(rawGolf,'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74').name||_0x1002(origGolf)||origGolf;
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
-const itemMemo=_0x101b(golfmonGolf||rawGolf||origGolf);
+const itemMemo=_0x101b(golmarketGolf||rawGolf||origGolf);
 return{
 regId:tr.dataset.regId,
 date:cells[0].textContent.trim(),
@@ -7859,7 +7859,7 @@ const mappedRock=_0x101e(rawGolf,'\x67\x6f\x6c\x66\x72\x6f\x63\x6b');
 const golfrockGolf=tr.dataset.golfrockGolf||mappedRock.name||origGolf;
 const golfrockRegion=mappedRock.region||_0x1003(cells[1].textContent.trim())||cells[1].textContent.trim();
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
-const itemMemo=_0x101b(golfmonGolf||rawGolf||origGolf);
+const itemMemo=_0x101b(golfrockGolf||rawGolf||origGolf);
 const waitPax=parseInt(tr.dataset.waitPax,10)||0;
 const waitGender=tr.dataset.waitGender||(waitPax===0?'\uc778\uc6d0\uc5c6\uc74c':'\ub0a8');
 return{
@@ -7968,7 +7968,7 @@ const origGolf=cells[2].textContent.trim();
 const rawGolf=tr.dataset.rawGolf||origGolf;
 const golflandGolf=tr.dataset.golflandGolf||_0x101e(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name||origGolf;
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
-const itemMemo=_0x101b(golfmonGolf||rawGolf||origGolf);
+const itemMemo=_0x101b(golflandGolf||rawGolf||origGolf);
 return{
 regId:tr.dataset.regId,
 date:cells[0].textContent.trim(),
