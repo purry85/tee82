@@ -13876,6 +13876,159 @@ btnSubmit.innerText='\ubcc0\uacbd\ud558\uae30';
 }
 }
 }
+async function registerUserWithServer(id,pw,name,phone){
+let apiUrl=getAuthApiUrl();
+if(!apiUrl){
+return{success:false,message:'\uc778\uc99d\uc11c\ubc84 \x55\x52\x4c\uc774 \uc124\uc815\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e \uad00\ub9ac\uc790\uc5d0\uac8c \ubb38\uc758\ud574\uc8fc\uc138\uc694\x2e'};
+}
+try{
+const cleanUrl=cleanGoogleWebAppUrl(apiUrl);
+const targetUrl=cleanUrl+'?\x61\x63\x74\x69\x6f\x6e=\x72\x65\x67\x69\x73\x74\x65\x72&\x69\x64='+encodeURIComponent(id)+
+'&\x70\x61\x73\x73\x77\x6f\x72\x64='+encodeURIComponent(pw)+
+'&\x6e\x61\x6d\x65='+encodeURIComponent(name||'')+
+'&\x70\x68\x6f\x6e\x65='+encodeURIComponent(phone||'')+
+'&\x5f\x74='+Date.now();
+const controller=new AbortController();
+const timeoutId=setTimeout(()=>controller.abort(),12000);
+let response=await fetch(targetUrl,{
+method:'\x47\x45\x54',
+redirect:'\x66\x6f\x6c\x6c\x6f\x77',
+signal:controller.signal
+});
+clearTimeout(timeoutId);
+let text=await response.text();
+if(!text.trim().startsWith('{')){
+try{
+const postResponse=await fetch(cleanUrl,{
+method:'\x50\x4f\x53\x54',
+headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x74\x65\x78\x74\x2f\x70\x6c\x61\x69\x6e;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'},
+body:JSON.stringify({action:'\x72\x65\x67\x69\x73\x74\x65\x72',id:id,password:pw,name:name,phone:phone}),
+redirect:'\x66\x6f\x6c\x6c\x6f\x77'
+});
+const postText=await postResponse.text();
+if(postText.trim().startsWith('{')){
+text=postText;
+}
+}catch(e){}
+}
+let data=null;
+try{
+data=JSON.parse(text);
+}catch(e){
+throw new Error('\uc11c\ubc84 \uc751\ub2f5 \uc624\ub958 (\uad6c\uae00 \uc2a4\ud06c\ub9bd\ud2b8 \ucd5c\uc2e0 \ubc84\uc804 \ubc30\ud3ec \ud544\uc694)');
+}
+return data||{success:false,message:'\uc11c\ubc84 \uc751\ub2f5 \uc5c6\uc74c'};
+}catch(err){
+console.warn('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65 \x41\x75\x74\x68] \ud68c\uc6d0\uac00\uc785 \uc624\ub958\x3a',err);
+return{success:false,message:err.message||'\uc778\uc99d \uc11c\ubc84 \uc5f0\uacb0 \uc2e4\ud328'};
+}
+}
+function openRegisterModal(){
+const modal=document.getElementById('\x61\x75\x74\x68\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x6f\x64\x61\x6c');
+const inputId=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x49\x64');
+const inputPw=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x77');
+const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x43\x6f\x6e\x66\x69\x72\x6d');
+const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
+const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
+const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
+if(!modal)return;
+if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
+if(inputPw)inputPw.value='';
+if(inputConfirm)inputConfirm.value='';
+if(inputName)inputName.value='';
+if(inputPhone)inputPhone.value='';
+const loginId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64')?.value?.trim();
+if(inputId){
+inputId.value=loginId||'';
+}
+modal.style.display='\x66\x6c\x65\x78';
+setTimeout(()=>{
+if(loginId)inputPw?.focus();
+else inputId?.focus();
+},100);
+}
+function closeRegisterModal(){
+const modal=document.getElementById('\x61\x75\x74\x68\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x6f\x64\x61\x6c');
+if(modal)modal.style.display='\x6e\x6f\x6e\x65';
+}
+async function handleRegisterSubmit(){
+const inputId=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x49\x64');
+const inputPw=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x77');
+const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x43\x6f\x6e\x66\x69\x72\x6d');
+const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
+const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
+const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
+const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
+const id=inputId?.value?.trim();
+const pw=inputPw?.value?.trim();
+const confirmPw=inputConfirm?.value?.trim();
+const name=inputName?.value?.trim();
+const phone=inputPhone?.value?.trim();
+const showStatus=(msg,isSuccess=false)=>{
+if(!statusBox)return;
+statusBox.className='\x61\x75\x74\x68-\x61\x64\x6d\x69\x6e-\x73\x74\x61\x74\x75\x73 '+(isSuccess?'\x73\x75\x63\x63\x65\x73\x73':'\x65\x72\x72\x6f\x72');
+statusBox.innerText=msg;
+statusBox.style.display='\x62\x6c\x6f\x63\x6b';
+};
+if(!id){
+showStatus('\uc544\uc774\ub514\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputId?.focus();
+return;
+}
+if(id.length<3){
+showStatus('\uc544\uc774\ub514\ub97c \x33\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputId?.focus();
+return;
+}
+if(!pw){
+showStatus('\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputPw?.focus();
+return;
+}
+if(pw.length<2){
+showStatus('\ube44\ubc00\ubc88\ud638\ub97c \x32\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputPw?.focus();
+return;
+}
+if(pw!==confirmPw){
+showStatus('\ube44\ubc00\ubc88\ud638 \ud655\uc778\uc774 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e');
+inputConfirm?.focus();
+return;
+}
+if(!name){
+showStatus('\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputName?.focus();
+return;
+}
+if(btnSubmit){
+btnSubmit.disabled=true;
+btnSubmit.innerText='\uc2e0\uccad \uc911\x2e\x2e\x2e';
+}
+if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
+try{
+const result=await registerUserWithServer(id,pw,name,phone);
+if(result&&result.success){
+showStatus('\ud83c\udf89 \ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uad6c\uae00 \uc2dc\ud2b8\uc5d0 [\ub300\uae30] \uc0c1\ud0dc\ub85c \ub4f1\ub85d\ub418\uc5c8\uc73c\uba70, \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \ub85c\uadf8\uc778\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e',true);
+_0x101b('\ud83c\udf89 \ud68c\uc6d0\uac00\uc785 \uc2e0\uccad \uc644\ub8cc! \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc0ac\uc6a9 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e');
+const authInputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
+const authInputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
+if(authInputId)authInputId.value=id;
+if(authInputPw)authInputPw.value=pw;
+setTimeout(()=>{
+closeRegisterModal();
+},2500);
+}else{
+showStatus(result?.message||'\ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e');
+}
+}catch(err){
+showStatus('\uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x3a '+(err.message||err));
+}finally{
+if(btnSubmit){
+btnSubmit.disabled=false;
+btnSubmit.innerHTML='<\x73\x70\x61\x6e>\ud83d\ude80<\x2f\x73\x70\x61\x6e> \uac00\uc785 \uc2e0\uccad\ud558\uae30';
+}
+}
+}
 async function handleAuthLoginSubmit(){
 const idInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 const pwInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
@@ -13985,6 +14138,48 @@ e.stopPropagation();
 if(confirm('\ub85c\uadf8\uc544\uc6c3 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?')){
 logoutUser(true);
 }
+});
+}
+const btnOpenRegister=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x6f\x64\x61\x6c');
+const btnCloseRegister=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x6f\x64\x61\x6c');
+const btnCancelRegister=document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x52\x65\x67\x69\x73\x74\x65\x72');
+const btnSubmitRegister=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
+const formRegister=document.getElementById('\x66\x6f\x72\x6d\x52\x65\x67\x69\x73\x74\x65\x72');
+const registerModal=document.getElementById('\x61\x75\x74\x68\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x6f\x64\x61\x6c');
+const btnToggleRegisterPw=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x52\x65\x67\x69\x73\x74\x65\x72\x50\x77');
+const inputRegisterPw=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x77');
+if(btnOpenRegister){
+btnOpenRegister.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+openRegisterModal();
+});
+}
+if(btnCloseRegister){
+btnCloseRegister.addEventListener('\x63\x6c\x69\x63\x6b',closeRegisterModal);
+}
+if(btnCancelRegister){
+btnCancelRegister.addEventListener('\x63\x6c\x69\x63\x6b',closeRegisterModal);
+}
+if(btnSubmitRegister){
+btnSubmitRegister.addEventListener('\x63\x6c\x69\x63\x6b',handleRegisterSubmit);
+}
+if(formRegister){
+formRegister.addEventListener('\x73\x75\x62\x6d\x69\x74',(e)=>{
+e.preventDefault();
+handleRegisterSubmit();
+});
+}
+if(registerModal){
+registerModal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+if(e.target===registerModal){
+closeRegisterModal();
+}
+});
+}
+if(btnToggleRegisterPw&&inputRegisterPw){
+btnToggleRegisterPw.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const isPw=inputRegisterPw.type==='\x70\x61\x73\x73\x77\x6f\x72\x64';
+inputRegisterPw.type=isPw?'\x74\x65\x78\x74':'\x70\x61\x73\x73\x77\x6f\x72\x64';
+btnToggleRegisterPw.innerText=isPw?'\ud83d\ude48':'\ud83d\udc41\ufe0f';
 });
 }
 const btnPillChangePw=document.getElementById('\x62\x74\x6e\x50\x69\x6c\x6c\x43\x68\x61\x6e\x67\x65\x50\x77');

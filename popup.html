@@ -4234,7 +4234,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.86</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.87</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4714,7 +4714,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.86 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.87 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4855,11 +4855,100 @@
                     </button>
                 </form>
 
-                <div class="auth-footer" style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-                    <button type="button" class="btn-auth-admin-gear" id="btnOpenChangePwModal" title="비밀번호 변경" style="font-size: 10.5px; color: #94A3B8; font-weight: 600;">🔑 비밀번호 변경</button>
-                    <span style="font-size: 10px; color: #475569;">v2.0 · © AutomaTee</span>
-                    <button type="button" class="btn-auth-admin-gear" id="btnOpenAuthAdminModal" title="관리자 설정" style="opacity: 0.65; font-size: 10px; color: #64748B;">⚙️ 관리자 설정</button>
+                <div class="auth-footer" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
+                    <!-- 1열: 회원가입 과 비밀번호 변경 -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 2px;">
+                        <button type="button" class="btn-auth-admin-gear" id="btnOpenRegisterModal" title="신규 회원가입 신청" style="font-size: 11px; color: #38BDF8; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
+                            <span>✨</span> 회원가입
+                        </button>
+                        <button type="button" class="btn-auth-admin-gear" id="btnOpenChangePwModal" title="비밀번호 변경" style="font-size: 11px; color: #94A3B8; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
+                            <span>🔑</span> 비밀번호 변경
+                        </button>
+                    </div>
+
+                    <!-- 2열: 카피라이트와 관리자설정 (한 칸 아래) -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 2px;">
+                        <span style="font-size: 10px; color: #475569; padding-left: 4px;">v2.0 &middot; &copy; AutomaTee</span>
+                        <button type="button" class="btn-auth-admin-gear" id="btnOpenAuthAdminModal" title="관리자 설정" style="opacity: 0.65; font-size: 10px; color: #64748B;">⚙️ 관리자 설정</button>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규 회원가입 신청 모달 -->
+    <div id="authRegisterModal" class="dict-modal-overlay" style="display: none; z-index: 100001;">
+        <div class="auth-admin-card" style="max-width: 330px; width: 90%; background: #0b1322; border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);">
+            <div class="auth-admin-header" style="background: radial-gradient(120% 70% at 50% 0%, #15324d 0%, #0d192c 100%); border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding: 12px 16px;">
+                <h3 style="font-size: 13px; font-weight: 800; color: #F8FAFC; margin: 0; display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #38BDF8;">✨</span> AutomaTee 회원가입 신청
+                </h3>
+                <button type="button" class="btn-auth-admin-close" id="btnCloseRegisterModal" style="color: #94A3B8;">&times;</button>
+            </div>
+            <div class="auth-admin-body" style="padding: 14px 16px; background: #0b1322; color: #F1F5F9;">
+                <p class="auth-admin-desc" style="font-size: 10.5px; margin-bottom: 12px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); color: #BAE6FD; padding: 8px 10px; border-radius: 6px; line-height: 1.45;">
+                    💡 정보를 입력하시면 구글 시트에 <strong style="color: #38BDF8;">신규 회원</strong>으로 등록되며, 관리자 승인 후 즉시 로그인하여 사용하실 수 있습니다.
+                </p>
+                <form id="formRegister">
+                    <div class="auth-field-group">
+                        <label class="auth-label" for="inputRegisterId" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                            <span>아이디 <span style="color: #F43F5E;">*</span></span>
+                            <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">영문/숫자 3자 이상</span>
+                        </label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">👤</span>
+                            <input type="text" id="inputRegisterId" class="auth-input" placeholder="사용할 아이디 입력" autocomplete="username" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                        </div>
+                    </div>
+                    <div class="auth-field-group" style="margin-top: 8px;">
+                        <label class="auth-label" for="inputRegisterPw" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                            <span>비밀번호 <span style="color: #F43F5E;">*</span></span>
+                            <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">2자 이상</span>
+                        </label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">🔒</span>
+                            <input type="password" id="inputRegisterPw" class="auth-input" placeholder="비밀번호 입력" autocomplete="new-password" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <button type="button" class="btn-toggle-pw" id="btnToggleRegisterPw" title="비밀번호 보기/숨기기" style="opacity: 0.7;">👁️</button>
+                        </div>
+                    </div>
+                    <div class="auth-field-group" style="margin-top: 8px;">
+                        <label class="auth-label" for="inputRegisterConfirm" style="display: block; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                            <span>비밀번호 확인 <span style="color: #F43F5E;">*</span></span>
+                        </label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">✅</span>
+                            <input type="password" id="inputRegisterConfirm" class="auth-input" placeholder="비밀번호 재입력" autocomplete="new-password" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                        </div>
+                    </div>
+                    <div class="auth-field-group" style="margin-top: 8px;">
+                        <label class="auth-label" for="inputRegisterName" style="display: block; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                            <span>이름 <span style="color: #F43F5E;">*</span></span>
+                        </label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">🏷️</span>
+                            <input type="text" id="inputRegisterName" class="auth-input" placeholder="성함 (예: 홍길동)" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                        </div>
+                    </div>
+                    <div class="auth-field-group" style="margin-top: 8px;">
+                        <label class="auth-label" for="inputRegisterPhone" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                            <span>연락처</span>
+                            <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">선택 사항</span>
+                        </label>
+                        <div class="auth-input-wrap">
+                            <span class="auth-input-icon">📞</span>
+                            <input type="text" id="inputRegisterPhone" class="auth-input" placeholder="휴대폰 번호 (예: 010-1234-5678)" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                        </div>
+                    </div>
+
+                    <div id="registerStatusBox" class="auth-admin-status" style="display: none; margin-top: 10px;"></div>
+
+                    <div class="auth-admin-footer" style="padding: 12px 0 0 0; margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.10); display: flex; justify-content: flex-end; gap: 8px;">
+                        <button type="button" class="btn-modal-cancel" id="btnCancelRegister" style="height: 36px; background: rgba(255, 255, 255, 0.08); color: #CBD5E1; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; padding: 0 14px;">취소</button>
+                        <button type="button" id="btnSubmitRegister" style="height: 36px; background: linear-gradient(90deg, #0284C7, #0EA5E9 50%, #10B981); color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; padding: 0 16px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);">
+                            <span>🚀</span> 가입 신청하기
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
