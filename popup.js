@@ -14008,8 +14008,8 @@ if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
 try{
 const result=await registerUserWithServer(id,pw,name,phone);
 if(result&&result.success){
-showStatus('\ud83c\udf89 \ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uad6c\uae00 \uc2dc\ud2b8\uc5d0 [\ub300\uae30] \uc0c1\ud0dc\ub85c \ub4f1\ub85d\ub418\uc5c8\uc73c\uba70, \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \ub85c\uadf8\uc778\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e',true);
-_0x101b('\ud83c\udf89 \ud68c\uc6d0\uac00\uc785 \uc2e0\uccad \uc644\ub8cc! \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc0ac\uc6a9 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e');
+showStatus('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc744 \uc644\ub8cc\ud558\uc2dc\uace0, \uad00\ub9ac\uc790 \uc2b9\uc778 \uc774\ud6c4 \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e',true);
+_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc744 \uc644\ub8cc\ud558\uc2dc\uace0, \uad00\ub9ac\uc790 \uc2b9\uc778 \uc774\ud6c4 \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e');
 const authInputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 const authInputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
 if(authInputId)authInputId.value=id;
