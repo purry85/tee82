@@ -7745,7 +7745,8 @@ break;
 }
 if(picked.length>=maxTargetCount)break;
 }
-if(picked.length<maxTargetCount){
+const hasSpecificPartFilter=(p1||p2||p3);
+if(picked.length<maxTargetCount&&!hasSpecificPartFilter){
 const allRemaining=list.filter(tr=>!picked.includes(tr));
 while(picked.length<maxTargetCount&&allRemaining.length>0){
 const partNum=getTrPart(allRemaining[0])||2;
@@ -13341,6 +13342,82 @@ pill.title=`\ud68c\uc6d0: ${user.name||user.id} (\ub9cc\ub8cc\uc77c: ${user.expi
 }
 if(pill)pill.style.display='\x69\x6e\x6c\x69\x6e\x65-\x66\x6c\x65\x78';
 }
+let _cachedDeviceId=null;
+async function getStoredMachineFileId(){
+try{
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.runtime?.getURL){
+const url=chrome.runtime.getURL('\x6d\x61\x63\x68\x69\x6e\x65\x2e\x6a\x73\x6f\x6e');
+const res=await fetch(url);
+if(res.ok){
+const data=await res.json();
+if(data&&data.machineId){
+return String(data.machineId).trim();
+}
+}
+}
+}catch(e){}
+return null;
+}
+function generateHardwareFingerprintId(){
+try{
+const parts=[];
+parts.push(navigator.platform||'\x57\x69\x6e\x33\x32');
+parts.push(navigator.hardwareConcurrency||'\x34');
+parts.push(navigator.deviceMemory||'\x38');
+parts.push(`${screen.width}x${screen.height}x${screen.colorDepth}`);
+parts.push(Intl.DateTimeFormat().resolvedOptions().timeZone||'\x41\x73\x69\x61\x2f\x53\x65\x6f\x75\x6c');
+try{
+const canvas=document.createElement('\x63\x61\x6e\x76\x61\x73');
+const gl=canvas.getContext('\x77\x65\x62\x67\x6c')||canvas.getContext('\x65\x78\x70\x65\x72\x69\x6d\x65\x6e\x74\x61\x6c-\x77\x65\x62\x67\x6c');
+if(gl){
+const ext=gl.getContext('\x77\x65\x62\x67\x6c')?.getExtension('\x57\x45\x42\x47\x4c\x5f\x64\x65\x62\x75\x67\x5f\x72\x65\x6e\x64\x65\x72\x65\x72\x5f\x69\x6e\x66\x6f')||gl.getExtension('\x57\x45\x42\x47\x4c\x5f\x64\x65\x62\x75\x67\x5f\x72\x65\x6e\x64\x65\x72\x65\x72\x5f\x69\x6e\x66\x6f');
+if(ext){
+parts.push(gl.getParameter(ext.UNMASKED_VENDOR_WEBGL)||'');
+parts.push(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)||'');
+}
+}
+}catch(e){}
+const raw=parts.join('||');
+let hash=0;
+for(let i=0;i<raw.length;i++){
+hash=((hash<<5)-hash)+raw.charCodeAt(i);
+hash|=0;
+}
+return'\x50\x43\x5f\x46\x50\x5f'+Math.abs(hash).toString(36)+'\x5f'+(screen.width+'\x78'+screen.height);
+}catch(e){
+return'\x50\x43\x5f\x44\x45\x46\x41\x55\x4c\x54';
+}
+}
+async function getDeviceId(){
+if(_cachedDeviceId)return _cachedDeviceId;
+const isMobile=/Android|iPhone|iPad|iPod|Lemur/i.test(navigator.userAgent||'');
+if(isMobile){
+let mobId=localStorage.getItem('\x76\x32\x5f\x64\x65\x76\x69\x63\x65\x5f\x69\x64\x5f\x6d\x6f\x62');
+if(!mobId&&typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage?.local){
+try{
+const s=await chrome.storage.local.get(['\x76\x32\x5f\x64\x65\x76\x69\x63\x65\x5f\x69\x64\x5f\x6d\x6f\x62']);
+mobId=s?.v2_device_id_mob;
+}catch(e){}
+}
+if(!mobId){
+mobId='\x4d\x4f\x42\x5f'+(Date.now().toString(36)+'\x5f'+Math.random().toString(36).substring(2,10)).toUpperCase();
+try{localStorage.setItem('\x76\x32\x5f\x64\x65\x76\x69\x63\x65\x5f\x69\x64\x5f\x6d\x6f\x62',mobId);}catch(e){}
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage?.local){
+try{chrome.storage.local.set({v2_device_id_mob:mobId});}catch(e){}
+}
+}
+_cachedDeviceId=mobId;
+return mobId;
+}
+let pcId=await getStoredMachineFileId();
+if(pcId){
+_cachedDeviceId=pcId;
+return pcId;
+}
+pcId=generateHardwareFingerprintId();
+_cachedDeviceId=pcId;
+return pcId;
+}
 async function verifyAuthWithServer(id,pw,silent=true,isExplicitLogin=false){
 let apiUrl=getAuthApiUrl();
 if(!apiUrl){
@@ -13352,7 +13429,8 @@ return{success:false,message:'\uc778\uc99d\uc11c\ubc84 \x55\x52\x4c \ubbf8\uc124
 try{
 const cleanUrl=cleanGoogleWebAppUrl(apiUrl);
 const currentToken=currentAuthUser?.sessionToken||localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x65\x73\x73\x69\x6f\x6e\x5f\x74\x6f\x6b\x65\x6e')||'';
-let targetUrl=cleanUrl+'?\x61\x63\x74\x69\x6f\x6e=\x76\x65\x72\x69\x66\x79&\x69\x64='+encodeURIComponent(id)+'&\x70\x61\x73\x73\x77\x6f\x72\x64='+encodeURIComponent(pw)+'&\x5f\x74='+Date.now();
+const deviceId=await getDeviceId();
+let targetUrl=cleanUrl+'?\x61\x63\x74\x69\x6f\x6e=\x76\x65\x72\x69\x66\x79&\x69\x64='+encodeURIComponent(id)+'&\x70\x61\x73\x73\x77\x6f\x72\x64='+encodeURIComponent(pw)+'&\x64\x65\x76\x69\x63\x65\x49\x64='+encodeURIComponent(deviceId)+'&\x5f\x74='+Date.now();
 if(isExplicitLogin){
 targetUrl+='&\x6e\x65\x77\x4c\x6f\x67\x69\x6e=\x74\x72\x75\x65';
 }else if(currentToken){
@@ -13373,6 +13451,7 @@ const postPayload={
 action:'\x76\x65\x72\x69\x66\x79',
 id:id,
 password:pw,
+deviceId:deviceId,
 newLogin:isExplicitLogin
 };
 if(!isExplicitLogin&&currentToken)postPayload.sessionToken=currentToken;
@@ -13394,10 +13473,13 @@ data=JSON.parse(text);
 }catch(e){
 throw new Error('\uc11c\ubc84 \uc751\ub2f5 \uc624\ub958 (\uad6c\uae00 \uc2a4\ud06c\ub9bd\ud2b8 \uad8c\ud55c \uc2b9\uc778 \ud544\uc694)');
 }
-if(data&&(data.code==='\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e'||data.isConcurrentLogin)){
+const isAdminUser=(data&&(data.isAdmin===true||data.id==='\x61\x64\x6d\x69\x6e'||data.id==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'))||
+(typeof _0x1047==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1047())||
+(id&&(id.toLowerCase()==='\x61\x64\x6d\x69\x6e'||id.toLowerCase()==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||id.toLowerCase().includes('\x61\x64\x6d\x69\x6e')));
+if(!isAdminUser&&data&&(data.code==='\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e'||data.isConcurrentLogin)){
 if(typeof stopRegistration==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')stopRegistration();
 logoutUser(false);
-showAuthOverlay('\u26a0\ufe0f \ub3d9\uc2dc \uc811\uc18d \uac10\uc9c0\x3a \ub2e4\ub978 \uae30\uae30(\ube0c\ub77c\uc6b0\uc800)\uc5d0\uc11c \ub3d9\uc77c \uc544\uc774\ub514\ub85c \ub85c\uadf8\uc778\ub418\uc5b4 \ud604\uc7ac \uc138\uc158\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e\n\ub2e4\uc2dc \ub85c\uadf8\uc778\ud574\uc8fc\uc138\uc694\x2e','\x65\x72\x72\x6f\x72');
+showAuthOverlay('\u26a0\ufe0f \ub3d9\uc2dc \uc811\uc18d \uac10\uc9c0\x3a \ub2e4\ub978 \ucef4\ud4e8\ud130(\ub610\ub294 \ubaa8\ubc14\uc77c)\uc5d0\uc11c \ub3d9\uc77c \uc544\uc774\ub514\ub85c \ub85c\uadf8\uc778\ub418\uc5b4 \ud604\uc7ac \uc138\uc158\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e\n\ub2e4\uc2dc \ub85c\uadf8\uc778\ud574\uc8fc\uc138\uc694\x2e','\x65\x72\x72\x6f\x72');
 return{success:false,code:'\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e',message:data.message};
 }
 if(data&&data.success){
@@ -13406,11 +13488,13 @@ currentAuthUser={
 id:data.id||id,
 pw:pw,
 name:data.name||id,
+isAdmin:data.isAdmin!==undefined?data.isAdmin:isAdminUser,
 expireDate:data.expireDate,
 daysLeft:data.daysLeft,
 features:data.features||(currentAuthUser?currentAuthUser.features:'')||'',
 sites:(data.sites!==undefined?data.sites:(currentAuthUser?currentAuthUser.sites:''))||'',
 sessionToken:newSessionToken,
+deviceId:deviceId,
 isLoggedIn:true,
 lastVerifiedAt:Date.now()
 };

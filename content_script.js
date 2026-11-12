@@ -2653,6 +2653,22 @@ return isTransfer?'\uc591\ub3c4':(isJoin?'\uc870\uc778':'\x75\x6e\x6b\x6e\x6f\x7
 }
 function _0x1043(normCard,normG1,normG2){
 if(!normCard)return 0;
+const targetHasClub72=(normG1&&normG1.includes('\ud074\ub7fd\x37\x32'))||(normG2&&normG2.includes('\ud074\ub7fd\x37\x32'));
+const cardHasClub72=normCard.includes('\ud074\ub7fd\x37\x32');
+if(targetHasClub72||cardHasClub72){
+const targetIsOcean=(normG1&&normG1.includes('\uc624\uc158'))||(normG2&&normG2.includes('\uc624\uc158'));
+const cardIsOcean=normCard.includes('\uc624\uc158');
+if(targetIsOcean!==cardIsOcean)return 0;
+const targetIsSky=(normG1&&normG1.includes('\ud558\ub298'))||(normG2&&normG2.includes('\ud558\ub298'));
+const cardIsSky=normCard.includes('\ud558\ub298');
+if(targetIsSky!==cardIsSky)return 0;
+const targetIsLakeClassic=(normG1&&(normG1.includes('\ub808\uc774\ud06c')||normG1.includes('\ud074\ub798\uc2dd')||normG1.includes('\ub808\ud074')))||
+(normG2&&(normG2.includes('\ub808\uc774\ud06c')||normG2.includes('\ud074\ub798\uc2dd')||normG2.includes('\ub808\ud074')));
+if(targetIsLakeClassic&&(cardIsOcean||cardIsSky))return 0;
+if(!targetIsLakeClassic&&!targetIsOcean&&!targetIsSky){
+if(cardIsOcean||cardIsSky)return 0;
+}
+}
 if(normG1&&normCard.includes(normG1))return 100;
 if(normG2&&normCard.includes(normG2))return 95;
 const chainPrefixRegex=/^(골프존|클럽디|한림)/;
@@ -4220,6 +4236,18 @@ if(tn.children.length>2)continue;
 const tTxt=(tn.innerText||tn.textContent||'').trim().toLowerCase();
 const norm=_0x1040(tTxt);
 if(!norm)continue;
+if((normG1&&normG1.includes('\ud074\ub7fd\x37\x32'))||(normG2&&normG2.includes('\ud074\ub7fd\x37\x32'))||norm.includes('\ud074\ub7fd\x37\x32')){
+const targetIsOcean=(normG1&&normG1.includes('\uc624\uc158'))||(normG2&&normG2.includes('\uc624\uc158'));
+const nodeIsOcean=norm.includes('\uc624\uc158');
+if(targetIsOcean!==nodeIsOcean)continue;
+const targetIsSky=(normG1&&normG1.includes('\ud558\ub298'))||(normG2&&normG2.includes('\ud558\ub298'));
+const nodeIsSky=norm.includes('\ud558\ub298');
+if(targetIsSky!==nodeIsSky)continue;
+const targetIsLakeClassic=(normG1&&(normG1.includes('\ub808\uc774\ud06c')||normG1.includes('\ud074\ub798\uc2dd')||normG1.includes('\ub808\ud074')))||
+(normG2&&(normG2.includes('\ub808\uc774\ud06c')||normG2.includes('\ud074\ub798\uc2dd')||normG2.includes('\ub808\ud074')));
+if(targetIsLakeClassic&&(nodeIsOcean||nodeIsSky))continue;
+if(!targetIsLakeClassic&&!targetIsOcean&&!targetIsSky&&(nodeIsOcean||nodeIsSky))continue;
+}
 const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)))||
 (normG2&&(norm===normG2||norm.includes(normG2)));
 if(isMatch){
