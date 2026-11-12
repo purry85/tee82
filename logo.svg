@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 84" width="100%" height="100%">
+  <!-- GolfTee82 Transparent Vector Logo (AdGuard Proportions) -->
+  <defs>
+    <style>
+      .g-dark { fill: #13392E; }
+      .g-gold { fill: #C78B1A; }
+      .g-text {
+        font-family: 'Montserrat', 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 38px;
+        letter-spacing: -0.5px;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. 골프공 & 티 엠블럼 -->
+  <g>
+    <!-- 골프공 외곽 링 -->
+    <circle cx="36" cy="34" r="25" stroke="#13392E" stroke-width="4.5" fill="none" />
+
+    <!-- 딤플 패턴 -->
+    <!-- 1행: 5개 -->
+    <circle cx="22" cy="30" r="1.8" class="g-dark" />
+    <circle cx="29" cy="30" r="1.8" class="g-dark" />
+    <circle cx="36" cy="30" r="1.8" class="g-dark" />
+    <circle cx="43" cy="30" r="1.8" class="g-dark" />
+    <circle cx="50" cy="30" r="1.8" class="g-dark" />
+
+    <!-- 2행: 6개 -->
+    <circle cx="18" cy="37" r="1.8" class="g-dark" />
+    <circle cx="25" cy="37" r="1.8" class="g-dark" />
+    <circle cx="32" cy="37" r="1.8" class="g-dark" />
+    <circle cx="40" cy="37" r="1.8" class="g-dark" />
+    <circle cx="47" cy="37" r="1.8" class="g-dark" />
+    <circle cx="54" cy="37" r="1.8" class="g-dark" />
+
+    <!-- 3행: 5개 -->
+    <circle cx="22" cy="44" r="1.8" class="g-dark" />
+    <circle cx="29" cy="44" r="1.8" class="g-dark" />
+    <circle cx="36" cy="44" r="1.8" class="g-dark" />
+    <circle cx="43" cy="44" r="1.8" class="g-dark" />
+    <circle cx="50" cy="44" r="1.8" class="g-dark" />
+
+    <!-- 4행: 3개 -->
+    <circle cx="29" cy="49" r="1.6" class="g-dark" />
+    <circle cx="36" cy="50" r="1.6" class="g-dark" />
+    <circle cx="43" cy="49" r="1.6" class="g-dark" />
+
+    <!-- 티 바디 (Cup & Stem) -->
+    <path class="g-dark" d="
+      M 14 42
+      C 15 53, 23 60, 36 60
+      C 49 60, 57 53, 58 42
+      C 56 57, 46 63, 39 63
+      L 39 70
+      L 33 70
+      L 33 63
+      C 26 63, 16 57, 14 42
+      Z
+    " />
+
+    <!-- 하단 골드 티 팁 -->
+    <polygon class="g-gold" points="32.5,72.5 39.5,72.5 36,83" />
+  </g>
+
+  <!-- 2. 브랜드 워드마크: GolfTee82 -->
+  <text x="76" y="54" class="g-text">
+    <tspan class="g-dark">Golf</tspan><tspan class="g-gold">T</tspan><tspan class="g-dark">ee82</tspan>
+  </text>
+</svg>

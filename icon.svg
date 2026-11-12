@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- GolfTee82 Transparent App Icon -->
+  <defs>
+    <style>
+      .golf-dark { fill: #13392E; }
+      .golf-gold { fill: #C78B1A; }
+    </style>
+  </defs>
+
+  <g transform="translate(0, 2)">
+    <!-- 골프공 외곽 링 -->
+    <circle cx="64" cy="46" r="33" stroke="#13392E" stroke-width="5.5" fill="none" />
+
+    <!-- 골프공 딤플 -->
+    <!-- 1행: 5개 -->
+    <circle cx="47" cy="40" r="2.4" class="golf-dark" />
+    <circle cx="55.5" cy="40" r="2.4" class="golf-dark" />
+    <circle cx="64" cy="40" r="2.4" class="golf-dark" />
+    <circle cx="72.5" cy="40" r="2.4" class="golf-dark" />
+    <circle cx="81" cy="40" r="2.4" class="golf-dark" />
+
+    <!-- 2행: 6개 -->
+    <circle cx="41.5" cy="48.5" r="2.4" class="golf-dark" />
+    <circle cx="50.5" cy="48.5" r="2.4" class="golf-dark" />
+    <circle cx="59.5" cy="48.5" r="2.4" class="golf-dark" />
+    <circle cx="68.5" cy="48.5" r="2.4" class="golf-dark" />
+    <circle cx="77.5" cy="48.5" r="2.4" class="golf-dark" />
+    <circle cx="86.5" cy="48.5" r="2.4" class="golf-dark" />
+
+    <!-- 3행: 5개 -->
+    <circle cx="46" cy="57" r="2.4" class="golf-dark" />
+    <circle cx="55" cy="57" r="2.4" class="golf-dark" />
+    <circle cx="64" cy="57" r="2.4" class="golf-dark" />
+    <circle cx="73" cy="57" r="2.4" class="golf-dark" />
+    <circle cx="82" cy="57" r="2.4" class="golf-dark" />
+
+    <!-- 4행: 3개 -->
+    <circle cx="55.5" cy="64.5" r="2.2" class="golf-dark" />
+    <circle cx="64" cy="65.5" r="2.2" class="golf-dark" />
+    <circle cx="72.5" cy="64.5" r="2.2" class="golf-dark" />
+
+    <!-- 골프 티 바디 (Tee Cup & Stem) -->
+    <path class="golf-dark" d="
+      M 33 55
+      C 34 68, 45 78, 64 78
+      C 83 78, 94 68, 95 55
+      C 93 74, 79 81, 68 82
+      L 68 94
+      L 60 94
+      L 60 82
+      C 49 81, 35 74, 33 55
+      Z
+    " />
+
+    <!-- 하단 골드 티 팁 (Golden Spike Tip) -->
+    <polygon class="golf-gold" points="59.5,98 68.5,98 64,113" />
+  </g>
+</svg>

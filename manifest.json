@@ -1,0 +1,196 @@
+{
+  "manifest_version": 3,
+  "name": "오토매티 자동등록 솔루션",
+  "version": "2.0.84",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlTRkdYi/GHaRDuhqtHHOfCKQtXFp4eyMbpD2lt17kfuWPU+Kjzsc1jc8j1IShmM6ZirpMkXD5N2VpVW+e0/qkYnarifRHB5h0rtIEvscv8TMfRVviq89sp+JatCy73MsBAWIfRX7WgtKgUZ7S7rAilwLKw+vp8wk1eFbsFEfWKt685LqZl+2U4aF0D1YivJUTP/49MnBtPy+VFlX5MFp+pvCKdva6h2on+LrEzWLPfhQTkRF5AL+DAswgptL5NYi7m/S1i4c7Lo4CxB+MMlsCNHmPG+ZaOnZq/GqVtSky1PXRe8VnBsD5R9xiXBtA67FKToGTAIj3Y6HPxUL5bPzZQIDAQAB",
+  "description": "오토매티 자동등록 솔루션 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.84)",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage",
+    "sidePanel",
+    "downloads",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://*.golfmon.net/*",
+    "http://*.golfmon.net/*",
+    "https://golfmon.net/*",
+    "http://golfmon.net/*",
+    "https://*.golmarket.co.kr/*",
+    "http://*.golmarket.co.kr/*",
+    "https://golmarket.co.kr/*",
+    "http://golmarket.co.kr/*",
+    "https://*.golfrock.co.kr/*",
+    "http://*.golfrock.co.kr/*",
+    "https://golfrock.co.kr/*",
+    "http://golfrock.co.kr/*",
+    "https://*.golfland.co.kr/*",
+    "http://*.golfland.co.kr/*",
+    "https://golfland.co.kr/*",
+    "http://golfland.co.kr/*",
+    "https://*.golftop.kr/*",
+    "http://*.golftop.kr/*",
+    "https://intra.golftop.kr/*",
+    "http://intra.golftop.kr/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "https://github.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*",
+    "https://api.ocr.space/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "오토매티 자동등록 솔루션",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.golfmon.net/*",
+        "http://*.golfmon.net/*",
+        "https://golfmon.net/*",
+        "http://golfmon.net/*"
+      ],
+      "js": [
+        "content_script.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golmarket.co.kr/*",
+        "http://*.golmarket.co.kr/*",
+        "https://golmarket.co.kr/*",
+        "http://golmarket.co.kr/*"
+      ],
+      "js": [
+        "golmarket_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golfrock.co.kr/*",
+        "http://*.golfrock.co.kr/*",
+        "https://golfrock.co.kr/*",
+        "http://golfrock.co.kr/*"
+      ],
+      "js": [
+        "golfrock_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golfrock.co.kr/*",
+        "http://*.golfrock.co.kr/*",
+        "https://golfrock.co.kr/*",
+        "http://golfrock.co.kr/*"
+      ],
+      "js": [
+        "golfrock_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golfland.co.kr/*",
+        "http://*.golfland.co.kr/*",
+        "https://golfland.co.kr/*",
+        "http://golfland.co.kr/*"
+      ],
+      "js": [
+        "golfland_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golfland.co.kr/*",
+        "http://*.golfland.co.kr/*",
+        "https://golfland.co.kr/*",
+        "http://golfland.co.kr/*"
+      ],
+      "js": [
+        "golfland_content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.golftop.kr/*",
+        "http://*.golftop.kr/*",
+        "https://intra.golftop.kr/*",
+        "http://intra.golftop.kr/*"
+      ],
+      "js": [
+        "golftop_interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.golftop.kr/*",
+        "http://*.golftop.kr/*",
+        "https://intra.golftop.kr/*",
+        "http://intra.golftop.kr/*"
+      ],
+      "js": [
+        "golftop_content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "sidepanel.html",
+        "popup.html",
+        "popup.js",
+        "icon.png",
+        "automatee_tile.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- 배경: 스퀘어클 (#5C479C) -->
+  <rect width="128" height="128" rx="26" fill="#5C479C"/>
+
+  <!-- T82 모노그램 엠블럼 (화이트) -->
+  <g fill="#FFFFFF">
+    <!-- 상단 T 바 (티 상단) -->
+    <path d="M 24 22 L 104 22 L 104 33 L 95 37 L 89 32 L 39 32 L 33 37 L 24 33 Z"/>
+
+    <!-- 원형 핀 실루엣 + 하단 뾰족한 골프 티 포인트 (▼) -->
+    <!-- 외곽 원형 + 하단 삼각 팁 -->
+    <path fill-rule="evenodd" d="
+      M 64 36 
+      C 84 36 100 51 100 70 
+      C 100 80 94 89 86 94 
+      L 74 97 
+      L 64 114 
+      L 54 97 
+      L 42 94 
+      C 34 89 28 80 28 70 
+      C 28 51 44 36 64 36 Z 
+      M 64 47 
+      C 50 47 39 57 39 70 
+      C 39 83 50 93 64 93 
+      C 78 93 89 83 89 70 
+      C 89 57 78 47 64 47 Z
+    "/>
+
+    <!-- 내부 T & 82 텍스트 (볼드, 산세리프) -->
+    <text x="64" y="78" font-family="'Montserrat', 'Arial Black', -apple-system, sans-serif" font-size="28" font-weight="900" text-anchor="middle" letter-spacing="-1">82</text>
+  </g>
+</svg>

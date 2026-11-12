@@ -1,0 +1,8 @@
+*.zip
+*.tar.gz
+*.rar
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
