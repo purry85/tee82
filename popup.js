@@ -9871,6 +9871,11 @@ setInterval(async function(){
 if(currentAuthUser&&currentAuthUser.id&&currentAuthUser.pw&&currentAuthUser.isLoggedIn){
 await verifyAuthWithServer(currentAuthUser.id,currentAuthUser.pw,true,false);
 }
+try{
+if(typeof _0x1073==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+_0x1073(false);
+}
+}catch(e){}
 },90*1000);
 }
 function _0x1048(){
@@ -9891,13 +9896,18 @@ const rawFeatures=String(user.features||'').trim().toLowerCase();
 const tokens=rawFeatures.split(/[,+\/\s|;]+/).map(s=>s.trim()).filter(Boolean);
 const isAdminId=(id==='\x61\x64\x6d\x69\x6e'||id==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||id==='\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x61\x64\x6d\x69\x6e'||id==='\x70\x75\x72\x72\x79'||id==='\x70\x75\x72\x72\x79\x38\x35'||id==='\x79\x65\x62\x62\x61'||id.includes('\x61\x64\x6d\x69\x6e')||id.includes('\x6d\x61\x73\x74\x65\x72'));
 const isAdminName=(name==='\uad00\ub9ac\uc790'||name==='\ucd5c\uace0\uad00\ub9ac\uc790'||name==='\x61\x64\x6d\x69\x6e'||name==='\ub9c8\uc2a4\ud130'||name.includes('\uad00\ub9ac\uc790'));
-const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790','\uc804\uccb4','\x61\x6c\x6c','\uac1c\ubc1c\uc790'];
+const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790','\uac1c\ubc1c\uc790'];
 const isAdminToken=tokens.some(t=>adminTokens.includes(t));
-const isManualAdmin=localStorage.getItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e')==='\x74\x72\x75\x65';
-const isAdmin=isAdminId||isAdminName||isAdminToken||isManualAdmin;
+const isExplicitAdmin=(user.isAdmin===true);
+const isAdmin=isExplicitAdmin||isAdminId||isAdminName||isAdminToken;
 try{
 if(isAdmin){
 localStorage.setItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e','\x74\x72\x75\x65');
+}else{
+localStorage.removeItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e');
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
+chrome.storage.local.remove(['\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e']);
+}
 }
 }catch(e){}
 return isAdmin;
@@ -11931,6 +11941,13 @@ return;
 }catch(e){}
 const INITIAL_APP_VERSION="\x32\x2e\x30\x2e\x30";
 function _0x1066(){
+let customVer=null;
+try{
+customVer=localStorage.getItem('\x76\x32\x5f\x63\x75\x73\x74\x6f\x6d\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e');
+}catch(e){}
+if(customVer&&/^\d+(\.\d+)+$/.test(customVer.trim())){
+return customVer.trim();
+}
 let manifestVer=null;
 try{
 if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.runtime?.getManifest?.()?.version){
@@ -11948,12 +11965,6 @@ document.querySelectorAll('\x23\x62\x61\x64\x67\x65\x43\x75\x72\x72\x65\x6e\x74\
 el.textContent=`Ver ${v} (\ucd5c\uc2e0)`;
 });
 }
-try{
-localStorage.removeItem('\x76\x32\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e');
-if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage?.local){
-chrome.storage.local.remove(['\x76\x32\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e']);
-}
-}catch(e){}
 _0x1067();
 const updateModal=document.getElementById('\x75\x70\x64\x61\x74\x65\x4d\x6f\x64\x61\x6c');
 const btnOpenUpdateModal=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x55\x70\x64\x61\x74\x65\x4d\x6f\x64\x61\x6c');
@@ -12185,18 +12196,19 @@ if(!cardAdmin)return;
 if(isAdmin){
 const curVer=_0x1066();
 const savedVer=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x76\x65\x72')||curVer;
-const savedTitle=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65')||`v${savedVer} \uc8fc\uc694 \uae30\ub2a5 \uac1c\uc120`;
+const defaultVer=(typeof _0x1070==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1070(curVer,savedVer)>=0)?curVer:savedVer;
+const savedTitle=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65')||`v${defaultVer} \uc8fc\uc694 \uae30\ub2a5 \uac1c\uc120`;
 const savedNotes=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x6e\x6f\x74\x65\x73')||"\u2022 \ud50c\ub7ab\ud3fc \ub3d9\uc2dc \ub4f1\ub85d \uac1c\ud3b8 (\uc6d0\ud558\ub294 \uc0ac\uc774\ud2b8 \uccb4\ud06c \uc2e4\ud589)\n\u2022 \uacf5\uc9c0 \ub3d9\uae30\ud654 \ubcf5\uad6c (\x33\uc911 \ubb34\uc7a5\uc560 \uc548\uc2ec \ub3d9\uae30\ud654)\n\u2022 \uae30\ubcf8 \uc18d\ub3c4 '\ube60\ub978 \uc190 \x2f \ube60\ub978 \uc9c4\ud589' \ucd5c\uc801\ud654\n\u2022 \uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc790\ub3d9 \uc5c5\ub370\uc774\ud2b8 \uc2dc\uc2a4\ud15c \ud0d1\uc7ac";
-if(inputVer&&!inputVer.value)inputVer.value=savedVer;
+if(inputVer&&!inputVer.value)inputVer.value=defaultVer;
 if(inputTitle&&!inputTitle.value)inputTitle.value=savedTitle;
 if(inputNotes&&!inputNotes.value)inputNotes.value=savedNotes;
-if(btnRunNow&&!btnRunNow.dataset.bound){
-btnRunNow.dataset.bound='\x74\x72\x75\x65';
-btnRunNow.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-const curVer=_0x1066();
-_0x106a();
-_0x106c();
-_0x101b(`\u26a1 \uc6d0\ud074\ub9ad \uc5c5\ub370\uc774\ud2b8\ub97c \uc2e4\ud589\ud588\uc2b5\ub2c8\ub2e4! (\ud604\uc7ac Ver ${curVer})`);
+if(inputVer&&!inputVer.dataset.bound){
+inputVer.dataset.bound='\x74\x72\x75\x65';
+inputVer.addEventListener('\x69\x6e\x70\x75\x74',()=>{
+const v=inputVer.value.trim();
+if(v&&inputTitle&&(!inputTitle.value||inputTitle.value.startsWith('\x76'))){
+inputTitle.value=`v${v} \uc8fc\uc694 \uae30\ub2a5 \uac1c\uc120`;
+}
 });
 }
 if(btnPublish&&!btnPublish.dataset.bound){
@@ -12206,7 +12218,7 @@ const ver=(inputVer?.value||'').trim();
 const title=(inputTitle?.value||'').trim()||`v${ver} \ucd5c\uc2e0 \uc5c5\ub370\uc774\ud2b8`;
 const notes=(inputNotes?.value||'').trim();
 if(!ver){
-alert('\ubc1c\ud589\ud560 \ubc84\uc804 \ubc88\ud638\ub97c \uc785\ub825\ud574 \uc8fc\uc138\uc694\x2e (\uc608\x3a \x32\x2e\x30\x2e\x39\x30)');
+alert('\ubc1c\ud589\ud560 \ubc84\uc804 \ubc88\ud638\ub97c \uc785\ub825\ud574 \uc8fc\uc138\uc694\x2e (\uc608\x3a \x32\x2e\x30\x2e\x39\x35)');
 inputVer?.focus();
 return;
 }
@@ -12216,13 +12228,18 @@ inputNotes?.focus();
 return;
 }
 btnPublish.disabled=true;
-btnPublish.innerHTML='<\x73\x70\x61\x6e>\u23f3<\x2f\x73\x70\x61\x6e> <\x73\x70\x61\x6e>\uacf5\uc9c0 \ubc1c\ud589 \uc911\x2e\x2e\x2e<\x2f\x73\x70\x61\x6e>';
+btnPublish.innerHTML='<\x73\x70\x61\x6e>\u23f3<\x2f\x73\x70\x61\x6e> <\x73\x70\x61\x6e>\ubc84\uc804 \uc5c5\ub370\uc774\ud2b8 \ubc0f \uc2e4\uc2dc\uac04 \ubc30\ud3ec \uc911\x2e\x2e\x2e<\x2f\x73\x70\x61\x6e>';
 try{
+localStorage.setItem('\x76\x32\x5f\x63\x75\x73\x74\x6f\x6d\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e',ver);
 localStorage.setItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x76\x65\x72',ver);
 localStorage.setItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65',title);
 localStorage.setItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x6e\x6f\x74\x65\x73',notes);
+localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x5f\x73\x65\x65\x6e\x5f\x76\x65\x72\x73\x69\x6f\x6e',ver);
+sessionStorage.setItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x5f\x64\x69\x73\x6d\x69\x73\x73\x65\x64',ver);
 try{
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
 chrome.storage.local.set({
+v2_custom_app_version:ver,
 v2_published_release:{
 version:ver,
 title:title,
@@ -12230,7 +12247,11 @@ releaseNotes:notes,
 publishedAt:Date.now()
 }
 });
+}
 }catch(e){}
+_0x1067(ver);
+const topBanner=document.getElementById('\x74\x6f\x70\x55\x70\x64\x61\x74\x65\x42\x61\x6e\x6e\x65\x72');
+if(topBanner)topBanner.style.display='\x6e\x6f\x6e\x65';
 const rawApiUrl=(typeof getAuthApiUrl==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?getAuthApiUrl():'')||currentAuthApiUrl||DEFAULT_AUTH_API_URL;
 const apiUrl=cleanGoogleWebAppUrl(rawApiUrl);
 let sheetSaved=false;
@@ -12259,26 +12280,20 @@ sheetErrMsg=pJson.message||'';
 sheetErrMsg=e.message||'';
 }
 }
-if(sheetSaved){
-_0x101b(`\ud83d\udce2 \ucd5c\uc2e0 \ubc84\uc804(v${ver}) \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0\uac00 \uad6c\uae00 \uc2dc\ud2b8\uc5d0 \uc131\uacf5\uc801\uc73c\ub85c \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uc774\uc81c \ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \ud574\ub2f9 \uacf5\uc9c0 \ud31d\uc5c5\uc774 \uc2e4\uc2dc\uac04 \ub178\ucd9c\ub429\ub2c8\ub2e4.`);
-}else if(apiUrl){
-_0x101b(`\u26a0\ufe0f [\uc8fc\uc758] \ub85c\uceec\uc5d0\ub294 \uc800\uc7a5\ub418\uc5c8\uc73c\ub098 \uad6c\uae00 \uc2dc\ud2b8 \uc800\uc7a5 \uc2e4\ud328!\n${sheetErrMsg?'('+sheetErrMsg+') ':''}\uad6c\uae00 \uc2dc\ud2b8 Apps Script\uc5d0 \ucd5c\uc2e0 \ucf54\ub4dc [\uc0c8 \ubc84\uc804 \ubc30\ud3ec]\uac00 \ud544\uc694\ud569\ub2c8\ub2e4.`);
-}else{
-_0x101b(`\ud83d\udce2 \ucd5c\uc2e0 \ubc84\uc804(v${ver}) \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0\uac00 \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
-}
 const updateModal=document.getElementById('\x75\x70\x64\x61\x74\x65\x4d\x6f\x64\x61\x6c');
 if(updateModal)updateModal.style.display='\x6e\x6f\x6e\x65';
-const previewData={
-version:ver,
-title:title,
-releaseNotes:notes
-};
-_0x1072(previewData,curVer,false,true);
+if(sheetSaved){
+_0x101b(`\ud83d\ude80 \ub0b4 \ud504\ub85c\uadf8\ub7a8 \ubc84\uc804\uc774 [Ver ${ver}]\ub85c \uc989\uc2dc \uc5c5\ub370\uc774\ud2b8\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uad6c\uae00 \uc2dc\ud2b8\uc5d0 \ub4f1\ub85d\ub418\uc5b4 \ub2e4\ub978 \ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \uc2e4\uc2dc\uac04 \uc5c5\ub370\uc774\ud2b8 \ud31d\uc5c5\uc774 \ub178\ucd9c\ub429\ub2c8\ub2e4.`);
+}else if(apiUrl){
+_0x101b(`\u2705 \ub0b4 \ud504\ub85c\uadf8\ub7a8 \ubc84\uc804\uc774 [Ver ${ver}]\ub85c \uc989\uc2dc \uc5c5\ub370\uc774\ud2b8\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\u26a0\ufe0f \uad6c\uae00 \uc2dc\ud2b8 \ub4f1\ub85d \uc54c\ub9bc: ${sheetErrMsg||'\ud655\uc778 \ud544\uc694'}`);
+}else{
+_0x101b(`\u2705 \ub0b4 \ud504\ub85c\uadf8\ub7a8 \ubc84\uc804\uc774 [Ver ${ver}]\ub85c \uc989\uc2dc \uc5c5\ub370\uc774\ud2b8\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
+}
 }catch(err){
-_0x101b('\uacf5\uc9c0 \ubc1c\ud589 \uc644\ub8cc');
+_0x101b(`\ubc84\uc804 \uc5c5\ub370\uc774\ud2b8 \uc644\ub8cc (Ver ${ver})`);
 }finally{
 btnPublish.disabled=false;
-btnPublish.innerHTML='<\x73\x70\x61\x6e>\ud83d\udce2<\x2f\x73\x70\x61\x6e> <\x73\x70\x61\x6e>\uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0 \uc804\uccb4 \uc0ac\uc6a9\uc790\uc5d0\uac8c \ubc1c\ud589\ud558\uae30<\x2f\x73\x70\x61\x6e>';
+btnPublish.innerHTML='<\x73\x70\x61\x6e>\ud83d\ude80<\x2f\x73\x70\x61\x6e> <\x73\x70\x61\x6e>\ucd5c\uc2e0 \ubc84\uc804 \ubc30\ud3ec \ubc0f \ub0b4 \ubc84\uc804 \uc989\uc2dc \uc801\uc6a9 (\uc804\uccb4 \uc0ac\uc6a9\uc790 \uc2e4\uc2dc\uac04 \uc804\ud30c)<\x2f\x73\x70\x61\x6e>';
 }
 });
 }
@@ -12510,6 +12525,20 @@ _0x1071();
 _0x1074();
 _0x1073(false);
 },800);
+setInterval(()=>{
+try{
+_0x1073(false);
+}catch(e){}
+},60*1000);
+try{
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.onChanged){
+chrome.storage.onChanged.addListener((changes,areaName)=>{
+if(areaName==='\x6c\x6f\x63\x61\x6c'&&(changes.v2_published_release||changes.v2_custom_app_version)){
+_0x1073(false);
+}
+});
+}
+}catch(e){}
 if(btnSyncDictFromGitHub){
 btnSyncDictFromGitHub.addEventListener('\x63\x6c\x69\x63\x6b',async()=>{
 if(syncDictStatusHint){
@@ -14343,9 +14372,15 @@ data=JSON.parse(text);
 }catch(e){
 throw new Error('\uc11c\ubc84 \uc751\ub2f5 \uc624\ub958 (\uad6c\uae00 \uc2a4\ud06c\ub9bd\ud2b8 \uad8c\ud55c \uc2b9\uc778 \ud544\uc694)');
 }
-const isAdminUser=(data&&(data.isAdmin===true||data.id==='\x61\x64\x6d\x69\x6e'||data.id==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'))||
-(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1048())||
-(id&&(id.toLowerCase()==='\x61\x64\x6d\x69\x6e'||id.toLowerCase()==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||id.toLowerCase().includes('\x61\x64\x6d\x69\x6e')));
+const targetId=String(data?.id||id||'').trim().toLowerCase();
+const targetName=String(data?.name||'').trim().toLowerCase();
+const targetFeatures=String(data?.features||'').trim().toLowerCase();
+const targetTokens=targetFeatures.split(/[,+\/\s|;]+/).map(s=>s.trim()).filter(Boolean);
+const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790','\uac1c\ubc1c\uc790'];
+const isAdminUser=(data&&data.isAdmin===true)||
+(targetId==='\x61\x64\x6d\x69\x6e'||targetId==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||targetId==='\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x61\x64\x6d\x69\x6e'||targetId==='\x70\x75\x72\x72\x79'||targetId==='\x70\x75\x72\x72\x79\x38\x35'||targetId==='\x79\x65\x62\x62\x61'||targetId.includes('\x61\x64\x6d\x69\x6e')||targetId.includes('\x6d\x61\x73\x74\x65\x72'))||
+(targetName==='\uad00\ub9ac\uc790'||targetName==='\ucd5c\uace0\uad00\ub9ac\uc790'||targetName.includes('\uad00\ub9ac\uc790'))||
+targetTokens.some(t=>adminTokens.includes(t));
 if(!isAdminUser&&data&&(data.code==='\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e'||data.isConcurrentLogin)){
 if(typeof stopRegistration==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')stopRegistration();
 logoutUser(false);
@@ -14359,7 +14394,7 @@ id:data.id||id,
 pw:pw,
 name:data.name||id,
 phone:data.phone||(currentAuthUser?currentAuthUser.phone:'')||'',
-isAdmin:data.isAdmin!==undefined?data.isAdmin:isAdminUser,
+isAdmin:isAdminUser,
 expireDate:data.expireDate,
 daysLeft:data.daysLeft,
 features:data.features||(currentAuthUser?currentAuthUser.features:'')||'',
@@ -14370,6 +14405,16 @@ isLoggedIn:true,
 lastVerifiedAt:Date.now()
 };
 try{localStorage.setItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x65\x73\x73\x69\x6f\x6e\x5f\x74\x6f\x6b\x65\x6e',newSessionToken);}catch(e){}
+if(isAdminUser){
+try{localStorage.setItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e','\x74\x72\x75\x65');}catch(e){}
+}else{
+try{
+localStorage.removeItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e');
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
+chrome.storage.local.remove(['\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e']);
+}
+}catch(e){}
+}
 saveAuthUserSession(currentAuthUser);
 updateAuthUI(currentAuthUser);
 _0x104b();
