@@ -4899,6 +4899,21 @@ if(timeInput)timeInput.value='';
 if(priceInput)priceInput.value='';
 _0x101b(`\u2795 [${timeDesc}] ${priceRaw} \uaddc\uce59\uc774 \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4. (\ucd1d ${currentParsedNoticeRules.length}\uac1c)`);
 }
+function isClub72Course(golfName,rawGolfName='',golfmonGolfName=''){
+const names=[golfName,rawGolfName,golfmonGolfName]
+.filter(Boolean)
+.map(n=>String(n).trim().replace(/[\s\-_]/g,'').toLowerCase());
+return names.some(n=>
+n.includes('\ud074\ub7fd\x37\x32')||
+n.includes('\x63\x6c\x75\x62\x37\x32')||
+n.includes('\uc2a4\uce74\uc774\x37\x32')||
+n.includes('\x73\x6b\x79\x37\x32')||
+n.includes('\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd')||
+n.includes('\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c')||
+n==='\ub808\x2f\ud074'||
+n==='\ub808\ud074'
+);
+}
 function applyAllActiveNoticeRules(){
 pruneExpiredNoticeRules();
 const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
@@ -4932,6 +4947,7 @@ delete tr.dataset.noticeTagDesc;
 delete tr.dataset.noticeType;
 delete tr.dataset.noticeReceivedAt;
 delete tr.dataset.noticeHasMeal;
+delete tr.dataset.coursePriceAdj;
 const rowDate=cells[0]?.textContent.trim()||'';
 const rowGolf=cells[2]?.textContent.trim()||'';
 const rowTime=cells[3]?.textContent.trim()||'';
@@ -4941,12 +4957,14 @@ const rowTimeMins=timeToMinutes(rowTime);
 const roomType=(tr.dataset.roomType||'').trim();
 const isPrepaid=tr.dataset.isPrepaid==='\x74\x72\x75\x65';
 const isTransferRow=(roomType==='\uc591\ub3c4');
-const isSeontiOrDaegi=isTransferRow
+const isSeontiOrConfirmed=isTransferRow
 ?(
 tr.dataset.manualSeonti==='\x74\x72\x75\x65'||
 tr.dataset.isConfirmed==='\x74\x72\x75\x65'||
 tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||
-(typeof isConfirmedTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isConfirmedTr(tr))
+(typeof isConfirmedTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isConfirmedTr(tr))||
+(tr.dataset.roomType||'').includes('\uc120\ud2f0')||
+/선티|확정/.test(tr.dataset.fullRawText||'')
 )
 :(
 tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||
@@ -4959,8 +4977,32 @@ roomType==='\uc120\ud2f0\ubc29'||
 roomType==='\ub300\uae30\ubc29'||
 roomType.includes('\uc120\ud2f0')||
 roomType.includes('\ub300\uae30')||
+/선티|확정|대기/.test(tr.dataset.fullRawText||'')||
 /^[123]인$/.test(cells[7]?.textContent.trim()||'')
 );
+if(isSeontiOrConfirmed){
+delete tr.dataset.coursePriceAdj;
+delete tr.dataset.noticeAdjusted;
+delete tr.dataset.noticePrice;
+delete tr.dataset.noticeDiscount;
+delete tr.dataset.noticeTagDesc;
+delete tr.dataset.noticeType;
+delete tr.dataset.noticeReceivedAt;
+delete tr.dataset.noticeReceivedTimestamp;
+const origTotal=tr.dataset.origTotalFee||tr.dataset.origBaseFee||cells[4].textContent.trim();
+const origField=tr.dataset.origFieldFee||'';
+const origPre=tr.dataset.origPrepaidFee||'';
+tr.dataset.totalFee=origTotal;
+tr.dataset.baseFee=origTotal;
+if(origField)tr.dataset.fieldFee=origField;
+if(origPre)tr.dataset.prepaidFee=origPre;
+if(origField&&origPre){
+cells[4].textContent=`${origField} / ${origPre} (\ud569 ${origTotal})`;
+}else if(origTotal){
+cells[4].textContent=origTotal;
+}
+return;
+}
 let rowPrepaidAmount=parseFloat(tr.dataset.prepaidAmount)||0;
 let hasSlashFee=tr.dataset.hasSlashFee==='\x74\x72\x75\x65';
 let slashBackVal=parseFloat(tr.dataset.slashBackVal)||0;
@@ -4994,10 +5036,12 @@ break;
 }
 }
 }
-const hasPrepaidDeposit=!isSeontiOrDaegi&&rowPrepaidAmount>0;
+const hasPrepaidDeposit=rowPrepaidAmount>0;
 const prepaidAddAmount=rowPrepaidAmount;
+const rawCourseAdj=_0x1017(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime)||0;
+const isClub72=isClub72Course(rowGolf,rowRawGolf,rowGolfmonGolf);
 let matchedRule=null;
-if(!isSeontiOrDaegi&&isNoticeRulesActive&&isNoticeFeatureAvailable()){
+if(isNoticeRulesActive&&isNoticeFeatureAvailable()){
 const candidates=activeNoticeRules.filter(rule=>{
 if(rule.course&&!isCourseMatch(rule.course,rowGolf,rowRawGolf,rowGolfmonGolf)){
 return false;
@@ -5055,6 +5099,11 @@ matchedRule=priceCandidates[0];
 matchedRule=matchedMealRule;
 }
 }
+const hasPriceNotice=matchedRule&&(matchedRule.type==='\x74\x61\x72\x67\x65\x74'||matchedRule.type==='\x64\x69\x73\x63\x6f\x75\x6e\x74');
+let effectiveCourseAdj=rawCourseAdj;
+if(hasPriceNotice&&isClub72){
+effectiveCourseAdj=0;
+}
 if(matchedRule){
 const hasMealNoticeApplied=tr.dataset.noticeHasMeal==='\x74\x72\x75\x65'||tr.dataset.isMeal==='\x74\x72\x75\x65';
 const mealNoticeSuffix=(hasMealNoticeApplied&&matchedRule.type!=='\x6d\x65\x61\x6c')?' + \ud83c\udf5a\uc2dd\uc0ac':'';
@@ -5065,15 +5114,18 @@ if(matchedRule.type==='\x74\x61\x72\x67\x65\x74'){
 const noticePrice=(matchedRule.price!==null&&matchedRule.price!==undefined&&!isNaN(Number(matchedRule.price)))?Number(matchedRule.price):null;
 if(noticePrice===null){
 }else{
-let finalVal=noticePrice;
 let noticeFieldFee=noticePrice;
-let noticePrepaidFee=0;
+let noticePrepaidFee=hasPrepaidDeposit?prepaidAddAmount:0;
+if(effectiveCourseAdj!==0){
+noticeFieldFee=Math.max(0,Math.round((noticeFieldFee+effectiveCourseAdj)*100)/100);
+tr.dataset.coursePriceAdj=String(effectiveCourseAdj);
+}else{
+delete tr.dataset.coursePriceAdj;
+}
+const finalVal=Math.round((noticeFieldFee+noticePrepaidFee)*100)/100;
 if(hasPrepaidDeposit){
-finalVal=Math.round((noticePrice+prepaidAddAmount)*100)/100;
-noticePrepaidFee=prepaidAddAmount;
 tr.dataset.noticeTagDesc=`${noticePrice}\ub9cc / ${prepaidAddAmount}\ub9cc${caddyDesc}${mealNoticeSuffix}`;
 }else{
-finalVal=noticePrice;
 tr.dataset.noticeTagDesc=`${noticePrice}\ub9cc${caddyDesc}${mealNoticeSuffix}`;
 }
 tr.dataset.noticeAdjusted='\x74\x72\x75\x65';
@@ -5083,9 +5135,8 @@ tr.dataset.noticeCaddyType=matchedRule.caddyType||'';
 tr.dataset.noticeReceivedAt=formatNoticeReceivedTime(matchedRule.receivedAt,matchedRule.receivedTimestamp);
 tr.dataset.noticeReceivedTimestamp=matchedRule.receivedTimestamp?String(matchedRule.receivedTimestamp):'';
 if(hasSlashFee){
-tr.dataset.slashFrontVal=String(noticePrice);
+tr.dataset.slashFrontVal=String(noticeFieldFee);
 }
-delete tr.dataset.coursePriceAdj;
 const finalFeeStr=Number.isInteger(finalVal)?String(finalVal):finalVal.toFixed(1);
 const finalFieldStr=Number.isInteger(noticeFieldFee)?String(noticeFieldFee):noticeFieldFee.toFixed(1);
 const finalPrepaidStr=noticePrepaidFee>0?(Number.isInteger(noticePrepaidFee)?String(noticePrepaidFee):noticePrepaidFee.toFixed(1)):'';
@@ -5108,10 +5159,16 @@ origFrontPrice=Math.max(0,origTotal-prepaidAddAmount);
 }else if(hasSlashFee&&slashBackVal>0){
 origFrontPrice=parseFloat(tr.dataset.origSlashFrontVal||tr.dataset.slashFrontVal)||Math.max(0,origTotal-slashBackVal);
 }
-const discountedFront=Math.max(0,Math.round((origFrontPrice-discount)*100)/100);
-let noticeFieldFee=discountedFront;
-let noticePrepaidFee=hasPrepaidDeposit?prepaidAddAmount:0;
-let finalVal=Math.round((discountedFront+noticePrepaidFee)*100)/100;
+let discountedFront=Math.max(0,Math.round((origFrontPrice-discount)*100)/100);
+if(effectiveCourseAdj!==0){
+discountedFront=Math.max(0,Math.round((discountedFront+effectiveCourseAdj)*100)/100);
+tr.dataset.coursePriceAdj=String(effectiveCourseAdj);
+}else{
+delete tr.dataset.coursePriceAdj;
+}
+const noticeFieldFee=discountedFront;
+const noticePrepaidFee=hasPrepaidDeposit?prepaidAddAmount:0;
+const finalVal=Math.round((discountedFront+noticePrepaidFee)*100)/100;
 tr.dataset.noticeAdjusted='\x74\x72\x75\x65';
 tr.dataset.noticeType='\x64\x69\x73\x63\x6f\x75\x6e\x74';
 tr.dataset.noticeDiscount=String(discount);
@@ -5119,7 +5176,6 @@ tr.dataset.noticeReceivedAt=formatNoticeReceivedTime(matchedRule.receivedAt,matc
 tr.dataset.noticeReceivedTimestamp=matchedRule.receivedTimestamp?String(matchedRule.receivedTimestamp):'';
 const pDesc=matchedRule.parts?.desc?` (${matchedRule.parts.desc})`:'';
 tr.dataset.noticeTagDesc=`-${discount}\ub9cc${pDesc}${mealNoticeSuffix}`;
-delete tr.dataset.coursePriceAdj;
 const finalFeeStr=Number.isInteger(finalVal)?String(finalVal):finalVal.toFixed(1);
 const finalFieldStr=Number.isInteger(noticeFieldFee)?String(noticeFieldFee):noticeFieldFee.toFixed(1);
 const finalPrepaidStr=noticePrepaidFee>0?(Number.isInteger(noticePrepaidFee)?String(noticePrepaidFee):noticePrepaidFee.toFixed(1)):'';
@@ -5143,11 +5199,10 @@ const origTotal=parseFloat(tr.dataset.origTotalFee||tr.dataset.origBaseFee||tr.d
 const origPre=parseFloat(tr.dataset.origPrepaidFee)||0;
 let origField=parseFloat(tr.dataset.origFieldFee)||(origTotal-origPre);
 let finalVal=origTotal;
-const courseAdj=!isSeontiOrDaegi?(_0x1017(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime)||0):0;
-if(courseAdj!==0){
-origField=Math.max(0,Math.round((origField+courseAdj)*100)/100);
+if(rawCourseAdj!==0){
+origField=Math.max(0,Math.round((origField+rawCourseAdj)*100)/100);
 finalVal=Math.round((origField+origPre)*100)/100;
-tr.dataset.coursePriceAdj=String(courseAdj);
+tr.dataset.coursePriceAdj=String(rawCourseAdj);
 }else{
 delete tr.dataset.coursePriceAdj;
 }
@@ -5175,11 +5230,10 @@ const origTotal=parseFloat(tr.dataset.origTotalFee||tr.dataset.origBaseFee||tr.d
 const origPre=parseFloat(tr.dataset.origPrepaidFee)||0;
 let origField=parseFloat(tr.dataset.origFieldFee)||(origTotal-origPre);
 let finalVal=origTotal;
-const courseAdj=!isSeontiOrDaegi?(_0x1017(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime)||0):0;
-if(courseAdj!==0){
-origField=Math.max(0,Math.round((origField+courseAdj)*100)/100);
+if(rawCourseAdj!==0){
+origField=Math.max(0,Math.round((origField+rawCourseAdj)*100)/100);
 finalVal=Math.round((origField+origPre)*100)/100;
-tr.dataset.coursePriceAdj=String(courseAdj);
+tr.dataset.coursePriceAdj=String(rawCourseAdj);
 }else{
 delete tr.dataset.coursePriceAdj;
 }
@@ -7003,7 +7057,7 @@ noticeTagHtml=`<span class="card-tag notice-tag" data-course="${_0x1023(golf)}" 
 }
 }
 const hasPriceNotice=isNoticeAdjusted&&(tr.dataset.noticeType==='\x74\x61\x72\x67\x65\x74'||tr.dataset.noticeType==='\x64\x69\x73\x63\x6f\x75\x6e\x74');
-const coursePriceAdj=(!hasPriceNotice)?(parseFloat(tr.dataset.coursePriceAdj)||0):0;
+const coursePriceAdj=parseFloat(tr.dataset.coursePriceAdj)||0;
 let courseAdjTagHtml='';
 if(coursePriceAdj!==0){
 const sign=coursePriceAdj>0?`+${coursePriceAdj}`:`${coursePriceAdj}`;

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "오토매티 자동등록 솔루션",
-  "version": "2.0.92",
+  "version": "2.0.93",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlTRkdYi/GHaRDuhqtHHOfCKQtXFp4eyMbpD2lt17kfuWPU+Kjzsc1jc8j1IShmM6ZirpMkXD5N2VpVW+e0/qkYnarifRHB5h0rtIEvscv8TMfRVviq89sp+JatCy73MsBAWIfRX7WgtKgUZ7S7rAilwLKw+vp8wk1eFbsFEfWKt685LqZl+2U4aF0D1YivJUTP/49MnBtPy+VFlX5MFp+pvCKdva6h2on+LrEzWLPfhQTkRF5AL+DAswgptL5NYi7m/S1i4c7Lo4CxB+MMlsCNHmPG+ZaOnZq/GqVtSky1PXRe8VnBsD5R9xiXBtA67FKToGTAIj3Y6HPxUL5bPzZQIDAQAB",
-  "description": "오토매티 자동등록 솔루션 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.92)",
+  "description": "오토매티 자동등록 솔루션 - 골프몬 & 골마켓 & 골프락 & 골프랜드 & 골프탑 자동등록 변환기 (Ver 2.0.93)",
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
