@@ -902,6 +902,16 @@ const itemText=(item.innerText||item.textContent||'').trim();
 const cleanItem=itemText.replace(/\s+/g,'').toLowerCase();
 if(cleanItem.includes(cleanTarget)||cleanTarget.includes(cleanItem))return item;
 }
+const normTarget=_0x1040(targetText);
+if(normTarget&&normTarget.length>=2){
+for(const item of items){
+const itemText=(item.innerText||item.textContent||'').trim();
+const normItem=_0x1040(itemText);
+if(normItem&&(normItem===normTarget||normItem.includes(normTarget)||normTarget.includes(normItem))){
+return item;
+}
+}
+}
 const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false);
 let node;
 let exactFound=null;
@@ -918,6 +928,12 @@ break;
 }
 if(!partialFound&&(cleanNode.includes(cleanTarget)||cleanTarget.includes(cleanNode))){
 partialFound=parent;
+}
+if(normTarget&&normTarget.length>=2&&!partialFound){
+const normNode=_0x1040(text);
+if(normNode&&(normNode===normTarget||normNode.includes(normTarget)||normTarget.includes(normNode))){
+partialFound=parent;
+}
 }
 }
 return exactFound||partialFound;
@@ -2572,6 +2588,9 @@ return false;
 }
 function _0x1040(str){
 let s=(str||'').toLowerCase();
+s=s.replace(/\(?\s*p?\d+\s*홀(?:\s*[x*]\s*\d+)?\s*\)?/gi,'')
+.replace(/\(?\s*p\d+\s*\)?/gi,'')
+.replace(/\(\s*p\s*\)/gi,'');
 s=s.replace(/cc|gc|골프장|골프클럽|골프코스/gi,'');
 s=s.replace(/club\s*d/gi,'\ud074\ub7fd\ub514')
 .replace(/club/gi,'\ud074\ub7fd')
@@ -2675,8 +2694,8 @@ if(!targetIsLakeClassic&&!targetIsOcean&&!targetIsSky){
 if(cardIsOcean||cardIsSky)return 0;
 }
 }
-if(normG1&&normCard.includes(normG1))return 100;
-if(normG2&&normCard.includes(normG2))return 95;
+if(normG1&&(normCard.includes(normG1)||(normG1.includes(normCard)&&normCard.length>=2)))return 100;
+if(normG2&&(normCard.includes(normG2)||(normG2.includes(normCard)&&normCard.length>=2)))return 95;
 const chainPrefixRegex=/^(골프존|클럽디|한림)/;
 const stripped1=(normG1&&chainPrefixRegex.test(normG1))?normG1.replace(chainPrefixRegex,''):'';
 const stripped2=(normG2&&chainPrefixRegex.test(normG2))?normG2.replace(chainPrefixRegex,''):'';
@@ -4254,8 +4273,8 @@ const targetIsLakeClassic=(normG1&&(normG1.includes('\ub808\uc774\ud06c')||normG
 if(targetIsLakeClassic&&(nodeIsOcean||nodeIsSky))continue;
 if(!targetIsLakeClassic&&!targetIsOcean&&!targetIsSky&&(nodeIsOcean||nodeIsSky))continue;
 }
-const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)))||
-(normG2&&(norm===normG2||norm.includes(normG2)));
+const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)||(normG1.includes(norm)&&norm.length>=2)))||
+(normG2&&(norm===normG2||norm.includes(normG2)||(normG2.includes(norm)&&norm.length>=2)));
 if(isMatch){
 let curr=tn;
 let foundBox=null;
