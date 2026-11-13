@@ -1,0 +1,13 @@
+{
+  "version": "2.0.89",
+  "releaseDate": "2026-11-13",
+  "title": "v2.0.89 최신 기능 업데이트",
+  "releaseNotes": [
+    "🌐 플랫폼 동시 등록 개편: 원하는 사이트(몬, 탑, 마켓, 락, 랜드)만 체크하여 동시 실행",
+    "⚡ 등록 속도 기본값 최적화: '빠른 손' & '빠른 진행' 기본 적용",
+    "🔄 공지 동기화 복구: 상시 노출 및 구글 시트·GitHub·로컬 3중 안심 동기화",
+    "🚀 원클릭 프로그램 자동 업데이트 시스템 탑재"
+  ],
+  "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
+  "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
+}
