@@ -3423,6 +3423,43 @@ saveActiveNoticeRules();
 }
 return prunedCount;
 }
+function isNoticeRuleSlotConflict(existing,incoming){
+if(!existing||!incoming)return false;
+if(!existing.course||!incoming.course)return false;
+if(!isCourseMatch(incoming.course,existing.course))return false;
+const isExistingMeal=existing.type==='\x6d\x65\x61\x6c'||(existing.isMeal&&(existing.price===null||existing.price===undefined));
+const isIncomingMeal=incoming.type==='\x6d\x65\x61\x6c'||(incoming.isMeal&&(incoming.price===null||incoming.price===undefined));
+if(isExistingMeal!==isIncomingMeal)return false;
+const eCaddy=existing.caddyType||'\x61\x6e\x79';
+const iCaddy=incoming.caddyType||'\x61\x6e\x79';
+if(eCaddy!=='\x61\x6e\x79'&&iCaddy!=='\x61\x6e\x79'&&eCaddy!==iCaddy)return false;
+const eDate=String(existing.date||'').trim();
+const iDate=String(incoming.date||'').trim();
+const isEAllDate=(!eDate||eDate==='\uc804\uccb4'||eDate==='\uc804\uccb4\ub0a0\uc9dc'||eDate==='\uc0c1\uc2dc'||eDate==='\ubcc4\ub3c4\uacf5\uc9c0\uc804\uae4c\uc9c0');
+const isIAllDate=(!iDate||iDate==='\uc804\uccb4'||iDate==='\uc804\uccb4\ub0a0\uc9dc'||iDate==='\uc0c1\uc2dc'||iDate==='\ubcc4\ub3c4\uacf5\uc9c0\uc804\uae4c\uc9c0');
+let datesConflict=false;
+if(isEAllDate&&isIAllDate){
+datesConflict=true;
+}else if(!isEAllDate&&!isIAllDate){
+datesConflict=(typeof isDateMatch==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')
+?(isDateMatch(incoming.date,existing.date)||isDateMatch(existing.date,incoming.date))
+:(eDate===iDate);
+}else{
+if(isIAllDate){
+datesConflict=true;
+}else{
+datesConflict=true;
+}
+}
+if(!datesConflict)return false;
+const s1=existing.startMins!==undefined?existing.startMins:0;
+const e1=(existing.endMins!==undefined&&existing.endMins!==null)?existing.endMins:1439;
+const s2=incoming.startMins!==undefined?incoming.startMins:0;
+const e2=(incoming.endMins!==undefined&&incoming.endMins!==null)?incoming.endMins:1439;
+const timesOverlap=Math.max(s1,s2)<=Math.min(e1,e2);
+if(!timesOverlap)return false;
+return true;
+}
 function getLocallyDeletedNoticeCourses(){
 try{
 const saved=localStorage.getItem('\x76\x32\x5f\x64\x65\x6c\x65\x74\x65\x64\x4e\x6f\x74\x69\x63\x65\x43\x6f\x75\x72\x73\x65\x73');
@@ -3551,33 +3588,6 @@ if(activeNoticeRules.length!==prevLen){
 rulesChanged=true;
 }
 }
-const latestTimestampByCourse={};
-activeNoticeRules.forEach(r=>{
-const stdC=normalizeNoticeCourseName(r.course||'');
-if(stdC){
-const isMeal=r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined));
-const key=`${stdC}__${isMeal?'\x6d\x65\x61\x6c':'\x70\x72\x69\x63\x65'}`;
-const ts=Number(r.receivedTimestamp)||0;
-if(!latestTimestampByCourse[key]||ts>latestTimestampByCourse[key]){
-latestTimestampByCourse[key]=ts;
-}
-}
-});
-const beforeStaleFilterCount=activeNoticeRules.length;
-activeNoticeRules=activeNoticeRules.filter(r=>{
-const stdC=normalizeNoticeCourseName(r.course||'');
-const isMeal=r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined));
-const key=`${stdC}__${isMeal?'\x6d\x65\x61\x6c':'\x70\x72\x69\x63\x65'}`;
-const maxTs=latestTimestampByCourse[key]||0;
-const rTs=Number(r.receivedTimestamp)||0;
-if(maxTs>0&&rTs>0&&(maxTs-rTs>3600*1000)){
-return false;
-}
-return true;
-});
-if(beforeStaleFilterCount!==activeNoticeRules.length){
-rulesChanged=true;
-}
 const seenRuleKeys=new Set();
 const dedupedRules=[];
 const sortedForDedup=[...activeNoticeRules].sort((a,b)=>(b.receivedTimestamp||0)-(a.receivedTimestamp||0));
@@ -3585,8 +3595,9 @@ sortedForDedup.forEach(r=>{
 const cKey=normalizeNoticeCourseName(r.course||'');
 const isMeal=r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined));
 const typeDomain=isMeal?'\x6d\x65\x61\x6c':'\x70\x72\x69\x63\x65';
-const dKey=r.date||'\uc804\uccb4';
-const tKey=`${r.startMins||0}_${r.endMins||0}`;
+const dKey=(r.date||'\uc804\uccb4').replace(/[\/\-]/g,'\x2e');
+const endMinsVal=(r.endMins!==undefined&&r.endMins!==null)?r.endMins:1439;
+const tKey=`${r.startMins||0}_${endMinsVal}`;
 const cdKey=r.caddyType||'\x61\x6e\x79';
 const uniqueKey=`${cKey}__${typeDomain}__${dKey}__${tKey}__${cdKey}`;
 if(!seenRuleKeys.has(uniqueKey)){
@@ -3881,9 +3892,11 @@ if(domainType==='\x70\x72\x69\x63\x65'&&isMeal)return false;
 return true;
 });
 matchingRules.sort((a,b)=>(b.receivedTimestamp||0)-(a.receivedTimestamp||0));
-const ruleWithText=matchingRules.find(r=>r.fullNoticeText||r.rawNoticeText);
-if(ruleWithText&&(ruleWithText.fullNoticeText||ruleWithText.rawNoticeText)){
-return ruleWithText.fullNoticeText||ruleWithText.rawNoticeText;
+const distinctTexts=[...new Set(matchingRules.map(r=>(r.fullNoticeText||r.rawNoticeText||'').trim()).filter(Boolean))];
+if(distinctTexts.length===1){
+return distinctTexts[0];
+}else if(distinctTexts.length>1){
+return distinctTexts.join('\n\n--- [\ucd94\uac00 \ubcd1\ud569\ub41c \uacf5\uc9c0] ---\n\n');
 }
 if(typeof lastCollectedKakaoNotices!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&Array.isArray(lastCollectedKakaoNotices)&&lastCollectedKakaoNotices.length>0){
 const matchedItem=lastCollectedKakaoNotices.find(item=>{
@@ -5336,28 +5349,18 @@ return 0;
 }
 const newCourses=new Set(rulesToRegister.map(r=>normalizeNoticeCourseName(r.course)).filter(Boolean));
 newCourses.forEach(cName=>removeLocallyDeletedNoticeCourse(cName));
-const hasNewPriceRules=rulesToRegister.some(r=>r.type==='\x74\x61\x72\x67\x65\x74'||r.type==='\x64\x69\x73\x63\x6f\x75\x6e\x74');
-const hasNewMealRules=rulesToRegister.some(r=>r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined)));
-if(newCourses.size>0){
-activeNoticeRules=activeNoticeRules.filter(r=>{
-if(!r.course)return false;
-const matchesCourse=Array.from(newCourses).some(nc=>isCourseMatch(nc,r.course,r.course,r.course));
-if(!matchesCourse)return true;
-const isExistingMeal=r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined));
-const isExistingPrice=r.type==='\x74\x61\x72\x67\x65\x74'||r.type==='\x64\x69\x73\x63\x6f\x75\x6e\x74';
-if(hasNewPriceRules&&!hasNewMealRules&&isExistingMeal)return true;
-if(hasNewMealRules&&!hasNewPriceRules&&isExistingPrice)return true;
-return false;
+if(rulesToRegister.length>0){
+activeNoticeRules=activeNoticeRules.filter(existing=>{
+if(!existing||!existing.course)return false;
+const hasConflict=rulesToRegister.some(incoming=>isNoticeRuleSlotConflict(existing,incoming));
+return!hasConflict;
 });
-}
 activeNoticeRules.push(...rulesToRegister);
+}
 newCourses.forEach(cName=>{
 activeNoticeRules.forEach(ar=>{
-if(isCourseMatch(cName,ar.course)){
-const isArMeal=ar.type==='\x6d\x65\x61\x6c'||(ar.isMeal&&(ar.price===null||ar.price===undefined));
-if(hasNewMealRules&&isArMeal&&text)ar.fullNoticeText=text;
-else if(hasNewPriceRules&&!isArMeal&&text)ar.fullNoticeText=text;
-else if(!ar.fullNoticeText&&text)ar.fullNoticeText=text;
+if(isCourseMatch(cName,ar.course)&&!ar.fullNoticeText&&text){
+ar.fullNoticeText=text;
 }
 });
 });
@@ -6606,14 +6609,19 @@ const actualWaitPax=(!isTransferMode&&hasPersonnel&&(waitCount!==null&&waitCount
 const resolvedWaitGender=(isTransferMode||(!hasPersonnel&&!isConfirmed&&!isDaegi)||actualWaitPax===0)?'\uc778\uc6d0\uc5c6\uc74c':_0x1031(fullCheckText+' '+genderInfo,actualWaitPax);
 let joinCondition='\ubb34\uad00';
 const isAdminUser=(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1048():false;
-if(fullCheckText.includes('\uc5ec\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub140\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub0a8\ubd88\uac00')){
+if(fullCheckText.includes('\uc5ec\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub140\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub0a8\ubd88\uac00')||fullCheckText.includes('\ubd80\ubd80\ubd88\uac00')||fullCheckText.includes('\ucee4\ud50c\ubd88\uac00')){
 joinCondition='\ubb34\uad00';
 }else{
 const hasExplicitCoupleOnly=/남[여녀]\s*만|남\/여\s*만|부부\s*\/?\s*커플|부부만|커플만/.test(fullCheckText)||
 (/(?:^|[^\w가-힣])(?:부부|커플)(?:[^\w가-힣]|$)/.test(fullCheckText)&&!fullCheckText.includes('\ubd88\uac00'));
 const hasExplicitMaleOnly=fullCheckText.includes('\ub0a8\uc790\ub9cc')||fullCheckText.includes('\ub0a8\uc131\ub9cc')||fullCheckText.includes('\ub0a8\uc790 \uc804\uc6a9')||fullCheckText.includes('\ub0a8\uc131 \uc804\uc6a9')||fullCheckText.includes('\ub0a8\ub0a8\ub9cc');
 const hasExplicitFemaleOnly=fullCheckText.includes('\uc5ec\uc790\ub9cc')||fullCheckText.includes('\uc5ec\uc131\ub9cc')||fullCheckText.includes('\uc5ec\uc790 \uc804\uc6a9')||fullCheckText.includes('\uc5ec\uc131 \uc804\uc6a9')||fullCheckText.includes('\uc5ec\uc5ec\ub9cc');
-if(hasExplicitCoupleOnly){
+const isCoupleWait=(resolvedWaitGender==='\ub0a8\uc5ec')||
+(actualWaitPax===2&&/남[여녀]|부부|커플/.test(fullCheckText))||
+/대기(?:중)?\s*[:\s]?\s*2\s*인?\s*[\[\(]?\s*(?:2인\s*[\/:\-]?)?남[여녀]/.test(fullCheckText)||
+/\[\s*2인\s*\(\s*남[여녀]\s*\)\s*\]|\(\s*2인\s*\[\s*남[여녀]\s*\]\s*\)/.test(fullCheckText)||
+/(?:^|[\s,;([/])2인\s*[\(\[]?\s*남[여녀]\s*[\)\]]?(?=[\s,;)/\]]|$)/.test(fullCheckText);
+if(hasExplicitCoupleOnly||isCoupleWait){
 joinCondition='\ubd80\ubd80\x2f\ucee4\ud50c';
 }else if(hasExplicitMaleOnly){
 joinCondition='\ub0a8\uc790';
@@ -6625,8 +6633,6 @@ joinCondition='\ubb34\uad00';
 }else if(actualWaitPax===2){
 if(resolvedWaitGender==='\uc5ec\uc5ec'){
 joinCondition='\ub0a8\uc790';
-}else if(resolvedWaitGender==='\ub0a8\uc5ec'){
-joinCondition='\ubd80\ubd80\x2f\ucee4\ud50c';
 }else{
 joinCondition='\ubb34\uad00';
 }
@@ -11380,21 +11386,8 @@ setNoticeRulesActive(true,false);
 const now=new Date();
 const nowTs=Date.now();
 const receivedAtStr=formatNoticeReceivedTime(now,nowTs);
-const hasNewPriceRules=currentParsedNoticeRules.some(r=>r.type==='\x74\x61\x72\x67\x65\x74'||r.type==='\x64\x69\x73\x63\x6f\x75\x6e\x74');
-const hasNewMealRules=currentParsedNoticeRules.some(r=>r.type==='\x6d\x65\x61\x6c'||(r.isMeal&&(r.price===null||r.price===undefined)));
 const distinctRegisteredCourses=[...new Set(currentParsedNoticeRules.map(r=>normalizeNoticeCourseName(r.course||manualCourse||'')).filter(Boolean))];
-if(distinctRegisteredCourses.length>0){
-activeNoticeRules=activeNoticeRules.filter(existing=>{
-if(!existing.course)return false;
-const courseMatches=distinctRegisteredCourses.some(dc=>isCourseMatch(dc,existing.course));
-if(!courseMatches)return true;
-const isExistingMeal=existing.type==='\x6d\x65\x61\x6c'||(existing.isMeal&&(existing.price===null||existing.price===undefined));
-const isExistingPrice=existing.type==='\x74\x61\x72\x67\x65\x74'||existing.type==='\x64\x69\x73\x63\x6f\x75\x6e\x74';
-if(hasNewPriceRules&&!hasNewMealRules&&isExistingMeal)return true;
-if(hasNewMealRules&&!hasNewPriceRules&&isExistingPrice)return true;
-return false;
-});
-}
+distinctRegisteredCourses.forEach(cName=>removeLocallyDeletedNoticeCourse(cName));
 currentParsedNoticeRules.forEach(r=>{
 r.course=normalizeNoticeCourseName(r.course||manualCourse||'');
 if((!r.date||r.date==='\uc804\uccb4')&&manualDate&&manualDate!=='\uc804\uccb4'&&!manualDate.includes('\ubcf5\uc218')&&manualDate!=='\ubcc4\ub3c4\uacf5\uc9c0\uc804\uae4c\uc9c0'){
@@ -11409,15 +11402,17 @@ r.receivedTimestamp=nowTs;
 if(!r.fullNoticeText){
 r.fullNoticeText=raw||`\u25a0 ${r.course||'\uacf5\uc9c0'}\n\uc2dc\uac04: ${r.timeText||'\uc804\uccb4'}\n\uae08\uc561: ${r.price||r.discount}\ub9cc`;
 }
-activeNoticeRules.push(r);
 });
+activeNoticeRules=activeNoticeRules.filter(existing=>{
+if(!existing||!existing.course)return false;
+const hasConflict=currentParsedNoticeRules.some(incoming=>isNoticeRuleSlotConflict(existing,incoming));
+return!hasConflict;
+});
+activeNoticeRules.push(...currentParsedNoticeRules);
 distinctRegisteredCourses.forEach(cName=>{
 activeNoticeRules.forEach(ar=>{
-if(isCourseMatch(cName,ar.course)){
-const isArMeal=ar.type==='\x6d\x65\x61\x6c'||(ar.isMeal&&(ar.price===null||ar.price===undefined));
-if(hasNewMealRules&&isArMeal&&raw)ar.fullNoticeText=raw;
-else if(hasNewPriceRules&&!isArMeal&&raw)ar.fullNoticeText=raw;
-else if(!ar.fullNoticeText&&raw)ar.fullNoticeText=raw;
+if(isCourseMatch(cName,ar.course)&&!ar.fullNoticeText&&raw){
+ar.fullNoticeText=raw;
 }
 });
 });
