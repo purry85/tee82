@@ -4232,7 +4232,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.91</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.92</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4713,7 +4713,10 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.91 (최신)</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.92 (최신)</span>
+                            <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[📋 업데이트 내용 보기]</a>
+                        </div>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4808,10 +4811,14 @@
                     </div>
                     <div style="background: #FEF3C7; border: 1px solid #FDE68A; padding: 7px 9px; border-radius: 6px; font-size: 10px; color: #92400E; line-height: 1.45;">
                         <strong>📂 등록 방법 (1초 완료)</strong><br>
-                        1. AutomaTee 설치 폴더 안의 <strong>'원클릭_등록.bat'</strong>을 더블클릭합니다.<br>
-                        2. 검은색 창에 <strong>[SUCCESS]</strong>가 뜨면 아무 키나 눌러 닫습니다.<br>
-                        3. 아래의 [연동 연결 테스트]를 눌러 정상 작동을 확인하세요!
+                        1. 아래 <strong>[원클릭_등록.bat 받기]</strong> 버튼을 누릅니다.<br>
+                        2. 다운로드된 <strong>'원클릭_등록.bat'</strong> 파일을 클릭하여 실행합니다.<br>
+                        3. 검은색 창에 <strong>[SUCCESS]</strong>가 뜨면 등록 완료! 아래 [연동 연결 테스트]를 눌러 확인하세요.
                     </div>
+                    <button type="button" class="btn-update-primary" id="btnDownloadSetupBat" style="background: linear-gradient(135deg, #D97706, #B45309); box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35); font-weight: 800; margin-top: 6px; margin-bottom: 5px; height: 35px; font-size: 11.5px;">
+                        <span>📥</span>
+                        <span>최초 1회 원클릭 환경 등록 (원클릭_등록.bat 받기)</span>
+                    </button>
                     <button type="button" class="btn-update-amber" id="btnTestProtocolLaunch">
                         <span>⚡</span>
                         <span>지금 연동 연결 테스트 실행</span>

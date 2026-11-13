@@ -5447,33 +5447,27 @@ deletedCourses:deletedCoursesList
 const rawApiUrl=(typeof getAuthApiUrl==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?getAuthApiUrl():'')||currentAuthApiUrl||DEFAULT_AUTH_API_URL;
 const apiUrl=cleanGoogleWebAppUrl(rawApiUrl);
 let sheetSuccess=false;
-if(apiUrl){
-try{
-const targetUrl=`${apiUrl}?action=sync_notices&userId=${encodeURIComponent(uId)}&userName=${encodeURIComponent(uName)}&id=${encodeURIComponent(uId)}&pw=${encodeURIComponent(uPw)}&password=${encodeURIComponent(uPw)}&_t=${Date.now()}`;
-const controller=new AbortController();
-const timeoutId=setTimeout(()=>controller.abort(),6000);
-const res=await fetch(targetUrl,{
-method:'\x50\x4f\x53\x54',
-redirect:'\x66\x6f\x6c\x6c\x6f\x77',
-headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x74\x65\x78\x74\x2f\x70\x6c\x61\x69\x6e;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'},
-body:JSON.stringify(payload),
-signal:controller.signal
-});
-clearTimeout(timeoutId);
-const text=await res.text();
-let json=null;
-try{
-json=JSON.parse(text);
-}catch(e){}
-if(json&&json.success){
-sheetSuccess=true;
-if(json.isAllCleared){
+let sheetWarnMsg='';
+function applyReceivedNoticeRules(json,isSilentMode){
+if(!json)return false;
+const localHasRules=Array.isArray(activeNoticeRules)&&activeNoticeRules.length>0;
+const incomingClearedTs=Number(json.allClearedTimestamp||json.deletedTimestamp||0);
+const localMaxRuleTs=(activeNoticeRules||[]).reduce((max,r)=>Math.max(max,Number(r.receivedTimestamp)||0),0);
+if(json.isAllCleared&&(!Array.isArray(json.rules)||json.rules.length===0)){
+if(localHasRules&&localMaxRuleTs>incomingClearedTs&&incomingClearedTs>0){
+console.log('[\x4e\x6f\x74\x69\x63\x65 \x53\x79\x6e\x63] \ub85c\uceec \uacf5\uc9c0\uac00 \ucd08\uae30\ud654 \ub9c8\ucee4\ubcf4\ub2e4 \ucd5c\uc2e0\uc774\ubbc0\ub85c \uc0ad\uc81c\ub97c \ubcf4\ub958\ud558\uace0 \uc11c\ubc84\uc5d0 \uc720\uc9c0\ud569\ub2c8\ub2e4\x2e');
+}else if(!localHasRules){
+if(!isSilentMode)_0x101b('\u2139\ufe0f [\uad6c\uae00 \uc2dc\ud2b8] \ub3d9\uae30\ud654\ud560 \uc218\uc2e0 \uacf5\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e');
+return true;
+}else{
 activeNoticeRules=[];
 saveActiveNoticeRules();
 revertNoticeRules();
 renderActiveNoticeChips();
-if(!isSilent)_0x101b('\u2139\ufe0f \uad00\ub9ac\uc790\uc5d0 \uc758\ud574 \uc804\uccb4 \uacf5\uc9c0\uac00 \ucd08\uae30\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
-return;
+updateHeaderNoticeBadge();
+if(!isSilentMode)_0x101b('\u2139\ufe0f \uad00\ub9ac\uc790\uc5d0 \uc758\ud574 \uc804\uccb4 \uacf5\uc9c0\uac00 \ucd08\uae30\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+return true;
+}
 }
 if(Array.isArray(json.deletedCourses)&&json.deletedCourses.length>0){
 const deletedMap={};
@@ -5500,18 +5494,18 @@ if(beforeDelCount!==activeNoticeRules.length){
 saveActiveNoticeRules();
 }
 }
-if(Array.isArray(json.rules)&&json.rules.length>0){
-let mergedRules=json.rules;
+if(Array.isArray(json.rules)){
+let serverRules=json.rules;
 const currentLocalDeleted=getLocallyDeletedNoticeCourses();
 const allClearedTs=Number(localStorage.getItem('\x76\x32\x5f\x61\x6c\x6c\x4e\x6f\x74\x69\x63\x65\x73\x43\x6c\x65\x61\x72\x65\x64\x54\x69\x6d\x65\x73\x74\x61\x6d\x70')||0);
-mergedRules=mergedRules.filter(r=>{
+serverRules=serverRules.filter(r=>{
 if(!r||!r.course)return false;
 const rTs=Number(r.receivedTimestamp)||0;
 if(allClearedTs>0&&(!rTs||rTs<=allClearedTs))return false;
 if(isCourseLocallyDeleted(r.course,rTs,currentLocalDeleted))return false;
 return true;
 });
-activeNoticeRules=mergedRules.map(r=>{
+const normalizedServerRules=serverRules.map(r=>{
 r.course=normalizeNoticeCourseName(r.course||'');
 r.receivedAt=formatNoticeReceivedTime(r.receivedAt,r.receivedTimestamp);
 if(r.type==='\x74\x61\x72\x67\x65\x74'&&(r.price===null||r.price===undefined||r.price==='')){
@@ -5522,21 +5516,85 @@ r.isMeal=true;
 }
 return r;
 });
+const mergedRuleMap=new Map();
+(activeNoticeRules||[]).forEach(r=>{
+if(!r||!r.course)return;
+const key=`${normalizeNoticeCourseName(r.course)}__${r.date||''}__${r.startMins||0}_${r.endMins||1440}__${r.caddyType||''}__${r.type||'\x74\x61\x72\x67\x65\x74'}`;
+mergedRuleMap.set(key,r);
+});
+normalizedServerRules.forEach(sr=>{
+const key=`${normalizeNoticeCourseName(sr.course)}__${sr.date||''}__${sr.startMins||0}_${sr.endMins||1440}__${sr.caddyType||''}__${sr.type||'\x74\x61\x72\x67\x65\x74'}`;
+const localRule=mergedRuleMap.get(key);
+if(!localRule||(Number(sr.receivedTimestamp)||0)>=(Number(localRule.receivedTimestamp)||0)){
+mergedRuleMap.set(key,sr);
+}
+});
+activeNoticeRules=Array.from(mergedRuleMap.values());
 saveActiveNoticeRules();
 setNoticeRulesActive(true,false);
 const appliedCount=applyAllActiveNoticeRules();
 renderActiveNoticeChips();
 updateHeaderNoticeBadge();
 const distinctCourses=[...new Set(activeNoticeRules.map(r=>r.course).filter(Boolean))];
-if(!isSilent){
-_0x101b(`\ud83c\udf89 \uacf5\uc9c0 \ub3d9\uae30\ud654 \uc644\ub8cc! \ucd1d ${distinctCourses.length}\uac1c \uad6c\uc7a5 (${activeNoticeRules.length}\uac1c \uaddc\uce59) \ucde8\ud569 \ubc18\uc601\ub428 (${appliedCount}\uac74 \uc801\uc6a9)`);
+if(!isSilentMode){
+if(distinctCourses.length===0){
+_0x101b('\u2139\ufe0f [\uc2e4\uc2dc\uac04 \uad6c\uae00 \uc2dc\ud2b8] \ud604\uc7ac \ub4f1\ub85d\ub41c \ud65c\uc131 \uacf5\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e');
+}else{
+_0x101b(`\ud83c\udf89 [\uc2e4\uc2dc\uac04 \uad6c\uae00 \uc2dc\ud2b8] \uacf5\uc9c0 \ub3d9\uae30\ud654 \uc644\ub8cc! \ucd1d ${distinctCourses.length}\uac1c \uad6c\uc7a5 (${activeNoticeRules.length}\uac1c \uaddc\uce59) \ucde8\ud569 \ubc18\uc601\ub428 (${appliedCount}\uac74 \uc801\uc6a9)`);
 }
+}
+return true;
+}
+return false;
+}
+if(apiUrl){
+try{
+const targetUrl=`${apiUrl}?action=sync_notices&userId=${encodeURIComponent(uId)}&userName=${encodeURIComponent(uName)}&id=${encodeURIComponent(uId)}&pw=${encodeURIComponent(uPw)}&password=${encodeURIComponent(uPw)}&_t=${Date.now()}`;
+const controller=new AbortController();
+const timeoutId=setTimeout(()=>controller.abort(),12000);
+const res=await fetch(targetUrl,{
+method:'\x50\x4f\x53\x54',
+redirect:'\x66\x6f\x6c\x6c\x6f\x77',
+headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x74\x65\x78\x74\x2f\x70\x6c\x61\x69\x6e;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'},
+body:JSON.stringify(payload),
+signal:controller.signal
+});
+clearTimeout(timeoutId);
+const text=await res.text();
+let json=null;
+try{json=JSON.parse(text);}catch(e){}
+if(json&&json.success){
+sheetSuccess=applyReceivedNoticeRules(json,isSilent);
+}else if(text&&(text.includes('\x61\x63\x63\x6f\x75\x6e\x74\x73\x2e\x67\x6f\x6f\x67\x6c\x65\x2e\x63\x6f\x6d')||text.includes('\x47\x6f\x6f\x67\x6c\x65 \x44\x72\x69\x76\x65')||text.includes('\x53\x69\x67\x6e \x69\x6e'))){
+sheetWarnMsg='\u26a0\ufe0f [\uad6c\uae00 \uc2dc\ud2b8 \uad8c\ud55c \ud544\uc694] \uc6f9\uc571 \ubc30\ud3ec \uc124\uc815\uc5d0\uc11c \uc561\uc138\uc2a4 \uad8c\ud55c\uc744 [\ubaa8\ub4e0 \uc0ac\uc6a9\uc790(\x41\x6e\x79\x6f\x6e\x65)]\ub85c \uc124\uc815\ud574\uc57c \ud569\ub2c8\ub2e4\x2e';
+}else if(json&&json.message&&json.message.includes('\uc544\uc774\ub514\uc640 \ube44\ubc00\ubc88\ud638')){
+sheetWarnMsg='\u26a0\ufe0f [\uad6c\uae00 \uc2dc\ud2b8 \ubc30\ud3ec \ud544\uc694] \uad6c\uae00 \uc2dc\ud2b8\uc5d0 \ucd5c\uc2e0 \uacf5\uc9c0 \uc5f0\ub3d9 \uc2a4\ud06c\ub9bd\ud2b8\uac00 \ubc30\ud3ec\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\x41\x70\x70\x73 \x53\x63\x72\x69\x70\x74\uc5d0\uc11c \ucd5c\uc2e0 \ucf54\ub4dc\ub97c [\uc0c8 \ubc84\uc804 \ubc30\ud3ec]\ud574\uc8fc\uc138\uc694\x2e';
+}
+}catch(e){
+console.warn('[\x4e\x6f\x74\x69\x63\x65 \x53\x79\x6e\x63 \x50\x4f\x53\x54 \x45\x78\x63\x65\x70\x74\x69\x6f\x6e]',e);
+}
+if(!sheetSuccess&&!sheetWarnMsg){
+try{
+const getTargetUrl=`${apiUrl}?action=sync_notices&altAction=get_notices&userId=${encodeURIComponent(uId)}&userName=${encodeURIComponent(uName)}&id=${encodeURIComponent(uId)}&pw=${encodeURIComponent(uPw)}&password=${encodeURIComponent(uPw)}&_t=${Date.now()}`;
+const getController=new AbortController();
+const getTimeoutId=setTimeout(()=>getController.abort(),10000);
+const getRes=await fetch(getTargetUrl,{signal:getController.signal});
+clearTimeout(getTimeoutId);
+const getText=await getRes.text();
+let getJson=null;
+try{getJson=JSON.parse(getText);}catch(e){}
+if(getJson&&getJson.success){
+sheetSuccess=applyReceivedNoticeRules(getJson,isSilent);
+}
+}catch(e){}
+}
+}
+if(sheetSuccess){
 return;
 }
-}
-}catch(sheetErr){
-console.warn('[\x4e\x6f\x74\x69\x63\x65 \x53\x79\x6e\x63] \uad6c\uae00 \uc2dc\ud2b8 \ub3d9\uae30\ud654 \uc751\ub2f5 \uc9c0\uc5f0\x2f\ubbf8\ubc30\ud3ec\x2e \x47\x69\x74\x48\x75\x62\x2f\ub85c\uceec \uacf5\uc9c0 \ubcf4\uad00\uc18c\ub85c \uc790\ub3d9 \ud3f4\ubc31\ud569\ub2c8\ub2e4\x3a',sheetErr);
-}
+if(sheetWarnMsg&&!isSilent){
+_0x101b(sheetWarnMsg);
+return;
 }
 await syncNoticesFromGitHubOrLocal(isSilent);
 }catch(err){
@@ -9924,8 +9982,8 @@ if(cardMobileUpdate){
 cardMobileUpdate.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 _0x104a();
-if(typeof _0x1070==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-_0x1070();
+if(typeof _0x1071==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+_0x1071();
 }
 }
 const STEP_DELAY_OPTIONS={
@@ -11857,7 +11915,7 @@ function _0x1068(){
 if(updateModal){
 updateModal.style.display='\x66\x6c\x65\x78';
 _0x1067();
-if(typeof _0x1070==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')_0x1070();
+if(typeof _0x1071==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')_0x1071();
 const cardMobileUpdate=document.getElementById('\x63\x61\x72\x64\x4d\x6f\x62\x69\x6c\x65\x55\x70\x64\x61\x74\x65');
 if(cardMobileUpdate){
 cardMobileUpdate.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -11986,13 +12044,46 @@ setupGuideModal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 if(e.target===setupGuideModal)_0x106e();
 });
 }
+const btnDownloadSetupBat=document.getElementById('\x62\x74\x6e\x44\x6f\x77\x6e\x6c\x6f\x61\x64\x53\x65\x74\x75\x70\x42\x61\x74');
+if(btnDownloadSetupBat){
+btnDownloadSetupBat.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+_0x106f();
+});
+}
+function _0x106f(){
+const batContent=`@echo off\\r\\nchcp 65001 >nul\\r\\ntitle AutomaTee \uc6d0\ud074\ub9ad \ud658\uacbd \uc790\ub3d9 \ub4f1\ub85d\\r\\necho ============================================================\\r\\necho        AutomaTee \uc6d0\ud074\ub9ad \uc790\ub3d9 \uc5c5\ub370\uc774\ud2b8 \ud658\uacbd \ub4f1\ub85d\uae30\\r\\necho ============================================================\\r\\necho.\\r\\necho [1/3] \ub4f1\ub85d \ub514\ub809\ud1a0\ub9ac \uc124\uc815 \uc911...\\r\\nset "TARGET_DIR=%LOCALAPPDATA%\\Automatee"\\r\\nif not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"\\r\\necho.\\r\\necho [2/3] \uc5c5\ub370\uc774\ud2b8 \uc2a4\ud06c\ub9bd\ud2b8(updater.ps1 / updater.bat) \uc0dd\uc131 \uc911...\\r\\npowershell.exe -NoProfile -ExecutionPolicy Bypass -Command "\$b='W0NvbnNvbGVdOjpPdXRwdXRFbmNvZGluZyA9IFtTeXN0ZW0uVGV4dC5FbmNvZGluZ106OlVURjgKJEhvc3QuVUkuUmF3VUkuV2luZG93VGl0bGUgPSAiQXV0b21hVGVlIOybkO2BtOumrSDtlITroZzqt7jrnqgg7JeF642w7J207Yq4IChHaXRIdWIpIgpXcml0ZS1Ib3N0ICI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iIC1Gb3JlZ3JvdW5kQ29sb3IgQ3lhbgpXcml0ZS1Ib3N0ICIgICBBdXRvbWFUZWUg7LWc7IugIOy9lOuTnCDri6TsmrTroZzrk5wg67CPIOyXheuNsOydtO2KuCAoR2l0SHViKSIgLUZvcmVncm91bmRDb2xvciBDeWFuCldyaXRlLUhvc3QgIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSIgLUZvcmVncm91bmRDb2xvciBDeWFuCiR0YXJnZXREaXIgPSBbU3lzdGVtLklPLlBhdGhdOjpDb21iaW5lKCRlbnY6TE9DQUxBUFBEQVRBLCAnQXV0b21hdGVlJywgJ2V4dGVuc2lvbicpCldyaXRlLUhvc3QgKCLshKTsuZgg6rK966GcOiAiICsgJHRhcmdldERpcikgLUZvcmVncm91bmRDb2xvciBEYXJrR3JheQpXcml0ZS1Ib3N0ICIiCldyaXRlLUhvc3QgIj4+IFsxLzNdIEdpdEh1YuyXkOyEnCDstZzsi6Ag67Cw7Y+sIO2MqO2CpOyngCDri6TsmrTroZzrk5wg7KSRLi4uIiAtRm9yZWdyb3VuZENvbG9yIFllbGxvdwokemlwVXJsID0gJ2h0dHBzOi8vZ2l0aHViLmNvbS9wdXJyeTg1L3RlZTgyL2FyY2hpdmUvcmVmcy9oZWFkcy9tYWluLnppcCcKJHRlbXBaaXAgPSBbU3lzdGVtLklPLlBhdGhdOjpDb21iaW5lKCRlbnY6VEVNUCwgJ2F1dG9tYXRlZV91cGRhdGVfJyArIFtTeXN0ZW0uR3VpZF06Ok5ld0d1aWQoKS5Ub1N0cmluZygnTicpICsgJy56aXAnKQokdGVtcEV4dHJhY3QgPSBbU3lzdGVtLklPLlBhdGhdOjpDb21iaW5lKCRlbnY6VEVNUCwgJ2F1dG9tYXRlZV9leHRfJyArIFtTeXN0ZW0uR3VpZF06Ok5ld0d1aWQoKS5Ub1N0cmluZygnTicpKQpbU3lzdGVtLk5ldC5TZXJ2aWNlUG9pbnRNYW5hZ2VyXTo6U2VjdXJpdHlQcm90b2NvbCA9IFtTeXN0ZW0uTmV0LlNlY3VyaXR5UHJvdG9jb2xUeXBlXTo6VGxzMTIKKE5ldy1PYmplY3QgU3lzdGVtLk5ldC5XZWJDbGllbnQpLkRvd25sb2FkRmlsZSgkemlwVXJsLCAkdGVtcFppcCkKCldyaXRlLUhvc3QgIj4+IFsyLzNdIOyVley2lSDtlbTsoJwg67CPIOy1nOyLoCDtjIzsnbwg6rKA7KadIOykkS4uLiIgLUZvcmVncm91bmRDb2xvciBZZWxsb3cKQWRkLVR5cGUgLUFzc2VtYmx5TmFtZSBTeXN0ZW0uSU8uQ29tcHJlc3Npb24uRmlsZVN5c3RlbQpbU3lzdGVtLklPLkNvbXByZXNzaW9uLlppcEZpbGVdOjpFeHRyYWN0VG9EaXJlY3RvcnkoJHRlbXBaaXAsICR0ZW1wRXh0cmFjdCkKJGV4dHJhY3RlZFJvb3QgPSBHZXQtQ2hpbGRJdGVtIC1QYXRoICR0ZW1wRXh0cmFjdCAtRGlyZWN0b3J5IHwgU2VsZWN0LU9iamVjdCAtRmlyc3QgMQppZiAoJGV4dHJhY3RlZFJvb3QpIHsgJHNvdXJjZURpciA9ICRleHRyYWN0ZWRSb290LkZ1bGxOYW1lIH0gZWxzZSB7ICRzb3VyY2VEaXIgPSAkdGVtcEV4dHJhY3QgfQoKV3JpdGUtSG9zdCAiPj4gWzMvM10g7LWc7IugIO2MjOydvCDqtZDssrQg7KCB7JqpIOykkS4uLiIgLUZvcmVncm91bmRDb2xvciBZZWxsb3cKaWYgKC1ub3QgKFRlc3QtUGF0aCAkdGFyZ2V0RGlyKSkgeyBOZXctSXRlbSAtSXRlbVR5cGUgRGlyZWN0b3J5IC1QYXRoICR0YXJnZXREaXIgLUZvcmNlIHwgT3V0LU51bGwgfQpDb3B5LUl0ZW0gLVBhdGggKEpvaW4tUGF0aCAkc291cmNlRGlyICcqJykgLURlc3RpbmF0aW9uICR0YXJnZXREaXIgLVJlY3Vyc2UgLUZvcmNlClJlbW92ZS1JdGVtIC1QYXRoICR0ZW1wWmlwIC1Gb3JjZSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQpSZW1vdmUtSXRlbSAtUGF0aCAkdGVtcEV4dHJhY3QgLVJlY3Vyc2UgLUZvcmNlIC1FcnJvckFjdGlvbiBTaWxlbnRseUNvbnRpbnVlCgpXcml0ZS1Ib3N0ICIiCldyaXRlLUhvc3QgIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSIgLUZvcmVncm91bmRDb2xvciBHcmVlbgpXcml0ZS1Ib3N0ICIgIFtTVUNDRVNTXSBBdXRvbWFUZWUg7JuQ7YG066atIOy1nOyLoCDsl4XrjbDsnbTtirgg7JmE66OMISIgLUZvcmVncm91bmRDb2xvciBHcmVlbgpXcml0ZS1Ib3N0ICIgIO2BrOuhrCDtmZXsnqXtlITroZzqt7jrnqgg66qp66GdKGNocm9tZTovL2V4dGVuc2lvbnMp7JeQ7IScIOyDiOuhnOqzoOy5qOydhCDriIzrn6zso7zshLjsmpQuIiAtRm9yZWdyb3VuZENvbG9yIFllbGxvdwpXcml0ZS1Ib3N0ICI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iIC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW4KV3JpdGUtSG9zdCAiIgpXcml0ZS1Ib3N0ICI17LSIIO2bhCDssL3snbQg7J6Q64+Z7Jy866GcIOuLq+2emeuLiOuLpCAo65iQ64qUIOyVhOustCDtgqTrgpgg64iE66W07IS47JqUKS4uLiIgLUZvcmVncm91bmRDb2xvciBHcmF5CiR0aW1lb3V0ID0gNQp3aGlsZSAoJHRpbWVvdXQgLWd0IDApIHsKICAgIGlmIChbQ29uc29sZV06OktleUF2YWlsYWJsZSkgeyBicmVhayB9CiAgICBTdGFydC1TbGVlcCAtU2Vjb25kcyAxCiAgICAkdGltZW91dC0tCn0K'; [System.IO.File]::WriteAllBytes(\$env:LOCALAPPDATA + '\\Automatee\\updater.ps1', [System.Convert]::FromBase64String(\$b))"\\r\\necho @echo off > "%TARGET_DIR%\\updater.bat"\\r\\necho powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%TARGET_DIR%\\updater.ps1" >> "%TARGET_DIR%\\updater.bat"\\r\\necho.\\r\\necho [3/3] tee82:// \ud504\ub85c\ud1a0\ucf5c \uc708\ub3c4\uc6b0 \ub808\uc9c0\uc2a4\ud2b8\ub9ac \ub4f1\ub85d \uc911...\\r\\nreg add "HKCU\\Software\\Classes\\tee82" /ve /t REG_SZ /d "URL:AutomaTee Protocol" /f >nul\\r\\nreg add "HKCU\\Software\\Classes\\tee82" /v "URL Protocol" /t REG_SZ /d "" /f >nul\\r\\nreg add "HKCU\\Software\\Classes\\tee82\\shell\\open\\command" /ve /t REG_SZ /d "cmd.exe /c start \\"\\" \\"%TARGET_DIR%\\updater.bat\\"" /f >nul\\r\\necho.\\r\\npowershell.exe -NoProfile -ExecutionPolicy Bypass -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Write-Host '============================================================' -ForegroundColor Green; Write-Host '  [SUCCESS] AutomaTee \uc6d0\ud074\ub9ad \ud658\uacbd \ub4f1\ub85d\uc774 \uc131\uacf5\uc801\uc73c\ub85c \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!' -ForegroundColor Green; Write-Host '  \uc774\uc81c \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c [\uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc5c5\ub370\uc774\ud2b8] \ubc84\ud2bc\uc744 \ub204\ub974\uba74' -ForegroundColor Yellow; Write-Host '  \ucd5c\uc2e0 \ucf54\ub4dc\ub85c \uc790\ub3d9 \uad50\uccb4\ub429\ub2c8\ub2e4.' -ForegroundColor Yellow; Write-Host '============================================================' -ForegroundColor Green"\\r\\necho.\\r\\necho \ub4f1\ub85d\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ucc3d\uc744 \ub2eb\uc73c\ub824\uba74 \uc544\ubb34 \ud0a4\ub098 \ub204\ub974\uc138\uc694.\\r\\npause >nul`;
+try{
+const blob=new Blob([batContent],{type:'\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x78-\x62\x61\x74;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('\x61');
+a.href=url;
+a.download='\uc6d0\ud074\ub9ad\x5f\ub4f1\ub85d\x2e\x62\x61\x74';
+document.body.appendChild(a);
+a.click();
+setTimeout(()=>{
+URL.revokeObjectURL(url);
+a.remove();
+},1500);
+const setupStatusHint=document.getElementById('\x73\x65\x74\x75\x70\x53\x74\x61\x74\x75\x73\x48\x69\x6e\x74');
+if(setupStatusHint){
+setupStatusHint.innerHTML=`
+                    <span style="color:#059669; font-weight:700;">\u2705 '\uc6d0\ud074\ub9ad_\ub4f1\ub85d.bat' \ud30c\uc77c\uc774 \ub2e4\uc6b4\ub85c\ub4dc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!</span><br>
+                    \ub2e4\uc6b4\ub85c\ub4dc \ucc3d\uc5d0\uc11c <strong>'\uc6d0\ud074\ub9ad_\ub4f1\ub85d.bat'</strong>\uc744 \ud074\ub9ad\ud558\uc5ec 1\ud68c \uc2e4\ud589\ud558\uc2e0 \ub4a4,<br>
+                    \uc544\ub798\uc758 <strong>[\uc9c0\uae08 \uc5f0\ub3d9 \uc5f0\uacb0 \ud14c\uc2a4\ud2b8 \uc2e4\ud589]</strong>\uc744 \ub20c\ub7ec \uc815\uc0c1 \ub4f1\ub85d\uc744 \ud655\uc778\ud558\uc138\uc694.
+                `;
+}
+_0x101b('\ud83d\udce5 [\uc6d0\ud074\ub9ad\x5f\ub4f1\ub85d\x2e\x62\x61\x74] \ub2e4\uc6b4\ub85c\ub4dc \uc644\ub8cc! \ub2e4\uc6b4\ub85c\ub4dc\ub41c \ud30c\uc77c\uc744 \ud074\ub9ad\ud558\uc5ec \uc2e4\ud589\ud574 \uc8fc\uc138\uc694\x2e');
+}catch(e){
+alert('\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x3a '+e.message);
+}
+}
 if(btnTestProtocolLaunch){
 btnTestProtocolLaunch.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 _0x106c();
 _0x101b('\uc5f0\uacb0 \ud14c\uc2a4\ud2b8\ub97c \ud638\ucd9c\ud588\uc2b5\ub2c8\ub2e4\x2e \uc54c\ub9bc\ucc3d\uc774 \ub728\uba74 [\uc5f4\uae30]\ub97c \ub204\ub974\uc138\uc694\x2e');
 });
 }
-function _0x106f(v1,v2){
+function _0x1070(v1,v2){
 if(!v1||!v2)return 0;
 const p1=String(v1).replace(/^v/i,'').split('\x2e').map(n=>parseInt(n,10)||0);
 const p2=String(v2).replace(/^v/i,'').split('\x2e').map(n=>parseInt(n,10)||0);
@@ -12005,7 +12096,7 @@ if(num1<num2)return-1;
 }
 return 0;
 }
-function _0x1070(){
+function _0x1071(){
 const cardAdmin=document.getElementById('\x63\x61\x72\x64\x41\x64\x6d\x69\x6e\x52\x65\x6c\x65\x61\x73\x65\x50\x75\x62\x6c\x69\x73\x68');
 const inputVer=document.getElementById('\x69\x6e\x70\x75\x74\x41\x64\x6d\x69\x6e\x52\x65\x6c\x65\x61\x73\x65\x56\x65\x72');
 const inputTitle=document.getElementById('\x69\x6e\x70\x75\x74\x41\x64\x6d\x69\x6e\x52\x65\x6c\x65\x61\x73\x65\x54\x69\x74\x6c\x65');
@@ -12028,7 +12119,7 @@ localStorage.setItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e','\x74\x72\x75\x6
 try{
 chrome.storage.local.set({v2_isAdmin:true});
 }catch(e){}
-_0x1070();
+_0x1071();
 _0x101b('\ud83d\udc51 \uad00\ub9ac\uc790 \uc778\uc99d \uc644\ub8cc! \ucd5c\uc2e0 \ubc30\ud3ec \ubc0f \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0 \uc791\uc131\uae30\uac00 \ud65c\uc131\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }else if(pw){
 alert('\uad00\ub9ac\uc790 \ube44\ubc00\ubc88\ud638\uac00 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e');
@@ -12088,23 +12179,47 @@ publishedAt:Date.now()
 }catch(e){}
 const rawApiUrl=(typeof getAuthApiUrl==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?getAuthApiUrl():'')||currentAuthApiUrl||DEFAULT_AUTH_API_URL;
 const apiUrl=cleanGoogleWebAppUrl(rawApiUrl);
+let sheetSaved=false;
+let sheetErrMsg='';
 if(apiUrl){
 try{
 const uId=(currentAuthUser&&(currentAuthUser.id||currentAuthUser.name))?(currentAuthUser.id||currentAuthUser.name):'\x61\x64\x6d\x69\x6e';
 const uPw=(currentAuthUser&&currentAuthUser.pw)?currentAuthUser.pw:'\x31\x32\x33\x34';
 const targetUrl=`${apiUrl}?action=publish_release&version=${encodeURIComponent(ver)}&title=${encodeURIComponent(title)}&notes=${encodeURIComponent(notes)}&id=${encodeURIComponent(uId)}&pw=${encodeURIComponent(uPw)}&_t=${Date.now()}`;
-await fetch(targetUrl,{
+const pRes=await fetch(targetUrl,{
 method:'\x50\x4f\x53\x54',
 headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x74\x65\x78\x74\x2f\x70\x6c\x61\x69\x6e;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'},
 body:JSON.stringify({action:'\x70\x75\x62\x6c\x69\x73\x68\x5f\x72\x65\x6c\x65\x61\x73\x65',version:ver,title:title,notes:notes})
 });
-}catch(e){}
+const pText=await pRes.text();
+let pJson=null;
+try{pJson=JSON.parse(pText);}catch(e){}
+if(pJson&&pJson.success){
+sheetSaved=true;
+}else if(pText&&(pText.includes('\x61\x63\x63\x6f\x75\x6e\x74\x73\x2e\x67\x6f\x6f\x67\x6c\x65\x2e\x63\x6f\x6d')||pText.includes('\x47\x6f\x6f\x67\x6c\x65 \x44\x72\x69\x76\x65')||pText.includes('\x53\x69\x67\x6e \x69\x6e'))){
+sheetErrMsg='\uc6f9\uc571 \ubc30\ud3ec \uc124\uc815\uc774 [\ubaa8\ub4e0 \uc0ac\uc6a9\uc790(\x41\x6e\x79\x6f\x6e\x65)]\uac00 \uc544\ub2d9\ub2c8\ub2e4\x2e';
+}else if(pJson&&!pJson.success){
+sheetErrMsg=pJson.message||'';
 }
-_0x101b(`\ud83d\udce2 \ucd5c\uc2e0 \ubc84\uc804(v${ver}) \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0\uac00 \uc131\uacf5\uc801\uc73c\ub85c \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uc774\uc81c \ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \ud574\ub2f9 \uacf5\uc9c0 \ud31d\uc5c5\uc774 \ub178\ucd9c\ub429\ub2c8\ub2e4.`);
-if(confirm(`\ud83d\udce2 v${ver} \uacf5\uc9c0\uac00 \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uc9c0\uae08 \ub0b4 PC\uc5d0\uc11c\ub3c4 \ucd5c\uc2e0 \ubc84\uc804\uc73c\ub85c \uc5c5\ub370\uc774\ud2b8\ub97c \uc2e4\ud589\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?`)){
-_0x106a();
-_0x106c();
+}catch(e){
+sheetErrMsg=e.message||'';
 }
+}
+if(sheetSaved){
+_0x101b(`\ud83d\udce2 \ucd5c\uc2e0 \ubc84\uc804(v${ver}) \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0\uac00 \uad6c\uae00 \uc2dc\ud2b8\uc5d0 \uc131\uacf5\uc801\uc73c\ub85c \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uc774\uc81c \ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \ud574\ub2f9 \uacf5\uc9c0 \ud31d\uc5c5\uc774 \uc2e4\uc2dc\uac04 \ub178\ucd9c\ub429\ub2c8\ub2e4.`);
+}else if(apiUrl){
+_0x101b(`\u26a0\ufe0f [\uc8fc\uc758] \ub85c\uceec\uc5d0\ub294 \uc800\uc7a5\ub418\uc5c8\uc73c\ub098 \uad6c\uae00 \uc2dc\ud2b8 \uc800\uc7a5 \uc2e4\ud328!\n${sheetErrMsg?'('+sheetErrMsg+') ':''}\uad6c\uae00 \uc2dc\ud2b8 Apps Script\uc5d0 \ucd5c\uc2e0 \ucf54\ub4dc [\uc0c8 \ubc84\uc804 \ubc30\ud3ec]\uac00 \ud544\uc694\ud569\ub2c8\ub2e4.`);
+}else{
+_0x101b(`\ud83d\udce2 \ucd5c\uc2e0 \ubc84\uc804(v${ver}) \uc5c5\ub370\uc774\ud2b8 \uacf5\uc9c0\uac00 \ubc1c\ud589\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+}
+const updateModal=document.getElementById('\x75\x70\x64\x61\x74\x65\x4d\x6f\x64\x61\x6c');
+if(updateModal)updateModal.style.display='\x6e\x6f\x6e\x65';
+const previewData={
+version:ver,
+title:title,
+releaseNotes:notes
+};
+_0x1072(previewData,curVer,false,true);
 }catch(err){
 _0x101b('\uacf5\uc9c0 \ubc1c\ud589 \uc644\ub8cc');
 }finally{
@@ -12115,18 +12230,42 @@ btnPublish.innerHTML='<\x73\x70\x61\x6e>\ud83d\udce2<\x2f\x73\x70\x61\x6e> <\x73
 }
 }
 }
-function _0x1071(remoteData,currentVer){
+function _0x1072(remoteData,currentVer,isPostUpdate=false,isPublisherPreview=false){
 const modal=document.getElementById('\x6e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x41\x6c\x65\x72\x74\x4d\x6f\x64\x61\x6c');
 if(!modal)return;
 const lblCurrent=document.getElementById('\x6c\x62\x6c\x43\x75\x72\x72\x65\x6e\x74\x56\x65\x72\x54\x65\x78\x74');
 const lblRemote=document.getElementById('\x6c\x62\x6c\x52\x65\x6d\x6f\x74\x65\x56\x65\x72\x54\x65\x78\x74');
 const headerTitle=document.getElementById('\x6e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x4d\x6f\x64\x61\x6c\x48\x65\x61\x64\x65\x72\x54\x69\x74\x6c\x65');
+const notesHeader=document.getElementById('\x6c\x62\x6c\x52\x65\x6c\x65\x61\x73\x65\x4e\x6f\x74\x65\x73\x48\x65\x61\x64\x65\x72');
 const notesBox=document.getElementById('\x6e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x52\x65\x6c\x65\x61\x73\x65\x4e\x6f\x74\x65\x73');
 const btnExecute=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x4f\x6e\x65\x43\x6c\x69\x63\x6b\x55\x70\x64\x61\x74\x65');
 const btnText=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x4f\x6e\x65\x43\x6c\x69\x63\x6b\x55\x70\x64\x61\x74\x65\x54\x65\x78\x74');
-if(lblCurrent)lblCurrent.textContent=`v${currentVer}`;
-if(lblRemote)lblRemote.textContent=`v${remoteData.version}`;
-if(headerTitle)headerTitle.textContent=remoteData.title||`AutomaTee v${remoteData.version} \uc0c8 \ubc84\uc804 \ucd9c\uc2dc`;
+const hintEl=document.getElementById('\x6e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x55\x70\x64\x61\x74\x65\x48\x69\x6e\x74');
+const btnDismiss=document.getElementById('\x62\x74\x6e\x44\x69\x73\x6d\x69\x73\x73\x4e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x4d\x6f\x64\x61\x6c');
+const btnCloseX=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x4e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x4d\x6f\x64\x61\x6c\x58');
+const closeModal=()=>{
+modal.style.display='\x6e\x6f\x6e\x65';
+};
+if(btnCloseX)btnCloseX.onclick=closeModal;
+if(btnDismiss)btnDismiss.onclick=closeModal;
+if(notesHeader){
+notesHeader.textContent=isPostUpdate?'\ud83d\udccb \uc774\ubc88 \ubc84\uc804 \uc5c5\ub370\uc774\ud2b8 \ub0b4\uc6a9\x3a':(isPublisherPreview?'\ud83d\udce2 \ubc1c\ud589\ub41c \uc5c5\ub370\uc774\ud2b8 \uc0c1\uc138 \ub0b4\uc6a9 (\ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \ub178\ucd9c)\x3a':'\ud83d\udccb \uc8fc\uc694 \uc5c5\ub370\uc774\ud2b8 \ub0b4\uc6a9\x3a');
+}
+if(lblCurrent){
+lblCurrent.innerHTML=isPostUpdate?`\uc774\uc804: <b>v${currentVer}</b>`:(isPublisherPreview?`\ub0b4 PC: <b>v${currentVer}</b>`:`\ud604\uc7ac: <b>v${currentVer}</b>`);
+}
+if(lblRemote){
+lblRemote.textContent=isPostUpdate?`v${remoteData.version} (\ucd5c\uc2e0)`:`v${remoteData.version}`;
+}
+if(headerTitle){
+if(isPostUpdate){
+headerTitle.textContent=`\ud83c\udf89 AutomaTee v${remoteData.version} \uc5c5\ub370\uc774\ud2b8 \uc644\ub8cc!`;
+}else if(isPublisherPreview){
+headerTitle.textContent=`\ud83d\udce2 v${remoteData.version} \uacf5\uc9c0 \ubc1c\ud589 \uc644\ub8cc (${remoteData.title||'\uc0c8 \ubc84\uc804'})`;
+}else{
+headerTitle.textContent=remoteData.title||`AutomaTee v${remoteData.version} \uc0c8 \ubc84\uc804 \ucd9c\uc2dc`;
+}
+}
 if(notesBox){
 let text='';
 if(Array.isArray(remoteData.releaseNotes)){
@@ -12138,6 +12277,35 @@ text=remoteData.notes;
 }
 notesBox.textContent=text||'\u2022 \ucd5c\uc2e0 \uae30\ub2a5 \uac1c\uc120 \ubc0f \uc548\uc815\uc131 \ud5a5\uc0c1 \ud328\uce58\uac00 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e';
 }
+if(isPostUpdate){
+if(btnExecute&&btnText){
+btnText.textContent='\u2728 \ud655\uc778 (\ucd5c\uc2e0 \ubc84\uc804 \uc0ac\uc6a9\ud558\uae30)';
+btnExecute.style.background='\x6c\x69\x6e\x65\x61\x72-\x67\x72\x61\x64\x69\x65\x6e\x74(\x31\x33\x35\x64\x65\x67, \x23\x30\x35\x39\x36\x36\x39, \x23\x30\x34\x37\x38\x35\x37)';
+btnExecute.onclick=()=>{
+closeModal();
+_0x101b('\ud83d\ude80 \ucd5c\uc2e0 \ubc84\uc804\uc774 \uc131\uacf5\uc801\uc73c\ub85c \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4!');
+};
+}
+if(hintEl){
+hintEl.innerHTML='\u203b \ucd5c\uc2e0 \uae30\ub2a5 \ubc0f \ubc84\uadf8 \uc218\uc815 \ud328\uce58\uac00 \uc131\uacf5\uc801\uc73c\ub85c \ubc18\uc601\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e';
+}
+if(btnDismiss)btnDismiss.textContent='\ub2eb\uae30';
+}else if(isPublisherPreview){
+if(btnExecute&&btnText){
+btnText.textContent='\u26a1 \uc9c0\uae08 \ub0b4 \x50\x43\uc5d0\uc11c\ub3c4 \ucd5c\uc2e0 \ubc84\uc804 \uc5c5\ub370\uc774\ud2b8 \uc2e4\ud589';
+btnExecute.style.background='\x6c\x69\x6e\x65\x61\x72-\x67\x72\x61\x64\x69\x65\x6e\x74(\x31\x33\x35\x64\x65\x67, \x23\x34\x46\x34\x36\x45\x35, \x23\x34\x33\x33\x38\x43\x41)';
+btnExecute.onclick=()=>{
+_0x106a();
+_0x106c();
+_0x101b(`\u26a1 \uc6d0\ud074\ub9ad \uc5c5\ub370\uc774\ud2b8\ub97c \uc2e4\ud589\ud588\uc2b5\ub2c8\ub2e4! (Ver ${remoteData.version})`);
+closeModal();
+};
+}
+if(hintEl){
+hintEl.innerHTML='\u203b \uc774 \uacf5\uc9c0\uc640 \uc5c5\ub370\uc774\ud2b8\uac00 \ubaa8\ub4e0 \uc0ac\uc6a9\uc790\uc5d0\uac8c \uc2e4\uc2dc\uac04 \uc804\ud30c\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e<\x62\x72>\ub0b4 \x50\x43\ub3c4 \ucd5c\uc2e0 \ubc84\uc804\uc73c\ub85c \uad50\uccb4\ud558\uc2dc\ub824\uba74 \uc704 \ubc84\ud2bc\uc744 \ub20c\ub7ec\uc8fc\uc138\uc694\x2e';
+}
+if(btnDismiss)btnDismiss.textContent='\ub098\uc911\uc5d0 \uc5c5\ub370\uc774\ud2b8 (\ub2eb\uae30)';
+}else{
 if(btnExecute&&btnText){
 btnText.textContent='\uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc5c5\ub370\uc774\ud2b8 \uc2e4\ud589';
 btnExecute.style.background='\x6c\x69\x6e\x65\x61\x72-\x67\x72\x61\x64\x69\x65\x6e\x74(\x31\x33\x35\x64\x65\x67, \x23\x34\x46\x34\x36\x45\x35, \x23\x34\x33\x33\x38\x43\x41)';
@@ -12161,9 +12329,14 @@ _0x101b('\u2705 \ucd5c\uc2e0 \ubc84\uc804 \uc5c5\ub370\uc774\ud2b8 \uc644\ub8cc!
 },3500);
 };
 }
+if(hintEl){
+hintEl.innerHTML='\u203b \ud074\ub9ad \uc2dc \ucd5c\uc2e0 \ucf54\ub4dc\uac00 \ubc31\uadf8\ub77c\uc6b4\ub4dc\uc5d0\uc11c \x33\ucd08 \ub9cc\uc5d0 \uc790\ub3d9 \uad50\uccb4\ub429\ub2c8\ub2e4\x2e<\x62\x72><\x61 \x68\x72\x65\x66="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x69\x74\x68\x75\x62\x2e\x63\x6f\x6d\x2f\x70\x75\x72\x72\x79\x38\x35\x2f\x74\x65\x65\x38\x32\x2f\x61\x72\x63\x68\x69\x76\x65\x2f\x72\x65\x66\x73\x2f\x68\x65\x61\x64\x73\x2f\x6d\x61\x69\x6e\x2e\x7a\x69\x70" \x74\x61\x72\x67\x65\x74="\x5f\x62\x6c\x61\x6e\x6b" \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a \x23\x34\x46\x34\x36\x45\x35; \x74\x65\x78\x74-\x64\x65\x63\x6f\x72\x61\x74\x69\x6f\x6e\x3a \x75\x6e\x64\x65\x72\x6c\x69\x6e\x65;">\ucc3d\uc774 \uc548 \ub730 \uacbd\uc6b0 \uc218\ub3d9 \x5a\x49\x50 \ub2e4\uc6b4\ub85c\ub4dc<\x2f\x61>';
+}
+if(btnDismiss)btnDismiss.textContent='\ub098\uc911\uc5d0 \ud558\uae30 (\ub2eb\uae30)';
+}
 modal.style.display='\x66\x6c\x65\x78';
 }
-async function _0x1072(isManual=false){
+async function _0x1073(isManual=false){
 try{
 const currentVer=_0x1066();
 let remoteData=null;
@@ -12176,7 +12349,9 @@ const timeoutId=setTimeout(()=>controller.abort(),4000);
 const res=await fetch(`${apiUrl}?action=get_release&_t=${Date.now()}`,{signal:controller.signal});
 clearTimeout(timeoutId);
 if(res.ok){
-const json=await res.json();
+const text=await res.text();
+let json=null;
+try{json=JSON.parse(text);}catch(e){}
 if(json&&json.success&&json.version){
 remoteData=json;
 }
@@ -12199,7 +12374,7 @@ if(isManual)_0x101b(`\u2705 \ud604\uc7ac \ucd5c\uc2e0 \ubc84\uc804(Ver ${current
 return;
 }
 const remoteVer=remoteData.version.trim();
-const isNewer=_0x106f(remoteVer,currentVer)>0;
+const isNewer=_0x1070(remoteVer,currentVer)>0;
 const topBanner=document.getElementById('\x74\x6f\x70\x55\x70\x64\x61\x74\x65\x42\x61\x6e\x6e\x65\x72');
 const topVer=document.getElementById('\x74\x6f\x70\x42\x61\x6e\x6e\x65\x72\x52\x65\x6d\x6f\x74\x65\x56\x65\x72');
 const topTitle=document.getElementById('\x74\x6f\x70\x42\x61\x6e\x6e\x65\x72\x54\x69\x74\x6c\x65\x53\x75\x6d\x6d\x61\x72\x79');
@@ -12211,7 +12386,7 @@ const dismissedVer=sessionStorage.getItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\
 if(!isManual&&dismissedVer===remoteVer){
 return;
 }
-_0x1071(remoteData,currentVer);
+_0x1072(remoteData,currentVer);
 }else{
 if(topBanner)topBanner.style.display='\x6e\x6f\x6e\x65';
 if(isManual){
@@ -12235,11 +12410,51 @@ const modal=document.getElementById('\x6e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x4
 if(modal)modal.style.display='\x6e\x6f\x6e\x65';
 });
 document.getElementById('\x62\x74\x6e\x54\x6f\x70\x42\x61\x6e\x6e\x65\x72\x55\x70\x64\x61\x74\x65')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-_0x1072(true);
+_0x1073(true);
 });
+function _0x1074(){
+const curVer=_0x1066();
+const lastSeenVer=localStorage.getItem('\x76\x32\x5f\x6c\x61\x73\x74\x5f\x73\x65\x65\x6e\x5f\x76\x65\x72\x73\x69\x6f\x6e');
+if(lastSeenVer&&_0x1070(curVer,lastSeenVer)>0){
+const savedNotes=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x6e\x6f\x74\x65\x73')||'';
+const savedTitle=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65')||`v${curVer} \uc8fc\uc694 \uae30\ub2a5 \uc5c5\ub370\uc774\ud2b8`;
+const releasePayload={
+version:curVer,
+title:savedTitle,
+releaseNotes:savedNotes||[
+`\u2022 AutomaTee v${curVer} \ucd5c\uc2e0 \uae30\ub2a5 \uac1c\uc120 \ubc0f \uc548\uc815\ud654 \ud328\uce58\uac00 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
+'\u2022 \ud50c\ub7ab\ud3fc \ub3d9\uc2dc \ub4f1\ub85d \uac1c\ud3b8 (\uc6d0\ud558\ub294 \uc0ac\uc774\ud2b8 \uccb4\ud06c \uc2e4\ud589)',
+'\u2022 \uacf5\uc9c0 \ub3d9\uae30\ud654 \ubcf5\uad6c (\x33\uc911 \ubb34\uc7a5\uc560 \uc548\uc2ec \ub3d9\uae30\ud654)',
+'\u2022 \uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc790\ub3d9 \uc5c5\ub370\uc774\ud2b8 \uc2dc\uc2a4\ud15c \ud0d1\uc7ac'
+]
+};
+_0x1072(releasePayload,lastSeenVer,true);
+}
+localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x5f\x73\x65\x65\x6e\x5f\x76\x65\x72\x73\x69\x6f\x6e',curVer);
+}
+const linkViewReleaseNotes=document.getElementById('\x6c\x69\x6e\x6b\x56\x69\x65\x77\x52\x65\x6c\x65\x61\x73\x65\x4e\x6f\x74\x65\x73');
+if(linkViewReleaseNotes){
+linkViewReleaseNotes.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+const curVer=_0x1066();
+const savedNotes=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x6e\x6f\x74\x65\x73')||'';
+const savedTitle=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65')||`v${curVer} \uc8fc\uc694 \uae30\ub2a5 \uc5c5\ub370\uc774\ud2b8`;
+_0x1072({
+version:curVer,
+title:savedTitle,
+releaseNotes:savedNotes||[
+`\u2022 AutomaTee v${curVer} \ucd5c\uc2e0 \uae30\ub2a5 \uac1c\uc120 \ubc0f \uc548\uc815\ud654 \ud328\uce58\uac00 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
+'\u2022 \ud50c\ub7ab\ud3fc \ub3d9\uc2dc \ub4f1\ub85d \uac1c\ud3b8 (\uc6d0\ud558\ub294 \uc0ac\uc774\ud2b8 \uccb4\ud06c \uc2e4\ud589)',
+'\u2022 \uacf5\uc9c0 \ub3d9\uae30\ud654 \ubcf5\uad6c (\x33\uc911 \ubb34\uc7a5\uc560 \uc548\uc2ec \ub3d9\uae30\ud654)',
+'\u2022 \uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc790\ub3d9 \uc5c5\ub370\uc774\ud2b8 \uc2dc\uc2a4\ud15c \ud0d1\uc7ac'
+]
+},curVer,true);
+});
+}
 setTimeout(()=>{
-_0x1070();
-_0x1072(false);
+_0x1071();
+_0x1074();
+_0x1073(false);
 },800);
 if(btnSyncDictFromGitHub){
 btnSyncDictFromGitHub.addEventListener('\x63\x6c\x69\x63\x6b',async()=>{
@@ -13851,10 +14066,9 @@ return clean;
 function isLegacyAuthUrl(url){
 if(!url)return true;
 const clean=cleanGoogleWebAppUrl(url);
-const target=cleanGoogleWebAppUrl(DEFAULT_AUTH_API_URL);
-if(clean!==target)return true;
-return url.includes('\x41\x4b\x66\x79\x63\x62\x79\x65\x4e\x48\x4e\x54\x73\x48\x61\x50\x30\x47\x49\x71\x58\x45\x42\x71\x41\x44\x66\x33\x61\x46\x65\x47\x4f\x4f\x50\x65\x79\x67\x38\x4a\x45\x54\x74\x76\x30\x34\x70\x5f\x30\x38\x34\x54\x70\x51-\x39\x30\x6b\x39\x74\x55\x61\x31\x78\x34\x53\x36\x34\x52\x61\x51\x72\x57\x67')||
-url.includes('\x41\x4b\x66\x79\x63\x62\x78\x6b\x74\x57\x36\x51\x75\x52\x76\x71\x35\x69\x31\x72\x6c-\x42\x35\x79\x46\x6c\x79\x4f\x71\x44\x65\x5a\x5f\x34\x4f\x33\x58\x6b\x57\x30\x34\x4a\x4f\x6d\x4d\x51\x77\x61\x4d\x69-\x4f\x69\x65\x6a\x58\x4f\x59\x4b\x36\x34\x6c\x49\x59\x48\x32\x59\x5a\x47\x4d\x68\x45\x77');
+if(!clean.includes('\x2f\x6d\x61\x63\x72\x6f\x73\x2f\x73\x2f')||!clean.includes('\x73\x63\x72\x69\x70\x74\x2e\x67\x6f\x6f\x67\x6c\x65\x2e\x63\x6f\x6d'))return true;
+return clean.includes('\x41\x4b\x66\x79\x63\x62\x79\x65\x4e\x48\x4e\x54\x73\x48\x61\x50\x30\x47\x49\x71\x58\x45\x42\x71\x41\x44\x66\x33\x61\x46\x65\x47\x4f\x4f\x50\x65\x79\x67\x38\x4a\x45\x54\x74\x76\x30\x34\x70\x5f\x30\x38\x34\x54\x70\x51-\x39\x30\x6b\x39\x74\x55\x61\x31\x78\x34\x53\x36\x34\x52\x61\x51\x72\x57\x67')||
+clean.includes('\x41\x4b\x66\x79\x63\x62\x78\x6b\x74\x57\x36\x51\x75\x52\x76\x71\x35\x69\x31\x72\x6c-\x42\x35\x79\x46\x6c\x79\x4f\x71\x44\x65\x5a\x5f\x34\x4f\x33\x58\x6b\x57\x30\x34\x4a\x4f\x6d\x4d\x51\x77\x61\x4d\x69-\x4f\x69\x65\x6a\x58\x4f\x59\x4b\x36\x34\x6c\x49\x59\x48\x32\x59\x5a\x47\x4d\x68\x45\x77');
 }
 function getAuthApiUrl(){
 try{
@@ -15554,6 +15768,7 @@ if(typeof applyNoticeFromText==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 applyNoticeFromText(noticeFullText,false,new Date());
 playSuccessChime();
 _0x101b(`\ud83c\udf89 [${course}] (${cards.length}\uac1c \uad6c\uc5ed \uc694\uae08\ud45c)\uac00 \uc989\uc2dc \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
+try{syncNoticesWithCloud(false,true);}catch(e){}
 }else{
 _0x101b(`\ud83d\udce2 [${course}] \uacf5\uc9c0 \uc694\uae08\ud45c\uac00 \ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }
