@@ -49,7 +49,7 @@ if(chrome.storage&&chrome.storage.onChanged&&!window.__golftee82_storage_listene
 window.__golftee82_storage_listener_added=true;
 chrome.storage.onChanged.addListener(function(changes,areaName){
 if(areaName==='\x6c\x6f\x63\x61\x6c'){
-if(changes.golfmon_stop_requested_at!==undefined||(changes.isRegistrationRunning&&changes.isRegistrationRunning.newValue===false)){
+if(changes.golfmon_stop_requested_at!==undefined||(changes.golfmon_isRegistrationRunning&&changes.golfmon_isRegistrationRunning.newValue===false)){
 if(typeof _0x1002==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 _0x1002();
 }else{
@@ -1702,7 +1702,7 @@ if(isRegistrationRunning)return;
 isRegistrationRunning=true;
 shouldStopRegistration=false;
 try{
-await new Promise(r=>chrome.storage.local.set({completedItems:[],isRegistrationRunning:true},r));
+await new Promise(r=>chrome.storage.local.set({golfmon_isRegistrationRunning:true},r));
 }catch(e){}
 const modeLabel=mode==='\x74\x72\x61\x6e\x73\x66\x65\x72'?'\uc591\ub3c4\ub4f1\ub85d':(mode==='\x62\x6f\x74\x68'?'\uc870\uc778\u00b7\uc591\ub3c4 \ud1b5\ud569\ub4f1\ub85d':'\uc870\uc778\ub4f1\ub85d');
 console.log(`\ud83d\ude80 [\uace8\ud504\ubaac ${modeLabel} \ub9e4\ud06c\ub85c \uc2dc\uc791] \ucd1d ${items.length}\uac74 (\ub2e8\uacc4\ubcc4 \uc18d\ub3c4: ${stepPreset}, \ud0c0\uc784 \uac04 \ub300\uae30: ${delayPreset})`);
@@ -1820,11 +1820,15 @@ console.log(`\u2705 [${i+1}/${items.length}] ${item.golf} [${itemModeLabel}\ub4f
 try{
 const res=await new Promise(r=>chrome.storage.local.get(['\x63\x6f\x6d\x70\x6c\x65\x74\x65\x64\x49\x74\x65\x6d\x73'],r));
 const list=(res&&Array.isArray(res.completedItems))?res.completedItems:[];
-list.push({regId:item.regId,date:item.date,golf:item.golf,time:item.time});
+const entry={regId:item.regId,date:item.date,golf:item.golf,time:item.time};
+if(!list.some(it=>it.regId===item.regId)){
+list.push(entry);
+}
 await new Promise(r=>chrome.storage.local.set({completedItems:list},r));
 }catch(e){}
 chrome.runtime.sendMessage({
 type:'\x49\x54\x45\x4d\x5f\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x55\x43\x43\x45\x53\x53',
+platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e',
 regId:item.regId,
 item:item,
 current:i+1,
@@ -1858,13 +1862,15 @@ await _0x1003(3000);
 }
 isRegistrationRunning=false;
 try{
-chrome.storage.local.set({isRegistrationRunning:false});
+chrome.storage.local.set({golfmon_isRegistrationRunning:false});
 }catch(e){}
 if(shouldStopRegistration){
 console.log(`\ud83d\uded1 [\uace8\ud504\ubaac ${modeLabel} \ub9e4\ud06c\ub85c \uc911\ub2e8\ub428]`);
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44',total:items.length});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x53\x54\x4f\x50\x50\x45\x44',total:items.length});
+chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44',total:items.length,platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e'});
 }else{
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:items.length});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:items.length});
+chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:items.length,platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e'});
 console.log(`\ud83c\udf89 [\uace8\ud504\ubaac ${modeLabel} \ub9e4\ud06c\ub85c \uc885\ub8cc]`);
 }
 }

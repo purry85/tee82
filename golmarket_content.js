@@ -204,11 +204,11 @@ isStopped:true
 try{
 await new Promise(r=>chrome.storage.local.set({
 golmarket_task:null,
-isRegistrationRunning:false
+golmarket_isRegistrationRunning:false
 },r));
 }catch(err){}
 chrome.runtime.sendMessage({
-type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44',
+type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44',
 reason:alertText
 });
 }
@@ -279,10 +279,10 @@ isRegistrationRunning=false;
 try{
 await new Promise(r=>chrome.storage.local.set({
 golmarket_task:null,
-isRegistrationRunning:false
+golmarket_isRegistrationRunning:false
 },r));
 }catch(e){}
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44'});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44'});
 _0x1003({
 desc:'\ud83d\uded1 \uc0ac\uc6a9\uc790\uc5d0 \uc758\ud574 \uc790\ub3d9 \ub4f1\ub85d\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e',
 isStopped:true
@@ -1247,11 +1247,13 @@ console.log(`\u2705 [\uace8\ub9c8\ucf13] [${task.currentIndex+1}/${task.items.le
 try{
 const compRes=await new Promise(r=>chrome.storage.local.get(['\x63\x6f\x6d\x70\x6c\x65\x74\x65\x64\x49\x74\x65\x6d\x73'],r));
 const compList=(compRes&&Array.isArray(compRes.completedItems))?compRes.completedItems:[];
-compList.push({regId:finishedItem.regId,date:finishedItem.date,golf:finishedItem.golf,time:finishedItem.time});
+const entry={regId:finishedItem.regId,date:finishedItem.date,golf:finishedItem.golf,time:finishedItem.time};
+if(!compList.some(it=>it.regId===finishedItem.regId))compList.push(entry);
 await new Promise(r=>chrome.storage.local.set({completedItems:compList},r));
 }catch(e){}
 chrome.runtime.sendMessage({
 type:'\x49\x54\x45\x4d\x5f\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x55\x43\x43\x45\x53\x53',
+platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
 regId:finishedItem.regId,
 item:finishedItem,
 current:task.currentIndex+1,
@@ -1267,9 +1269,9 @@ total:task.items.length
 });
 await new Promise(r=>chrome.storage.local.set({
 golmarket_task:null,
-isRegistrationRunning:false
+golmarket_isRegistrationRunning:false
 },r));
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.items.length});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.items.length});
 return;
 }
 task.currentIndex=nextIdx;
@@ -1285,7 +1287,7 @@ current:nextIdx,
 total:task.items.length
 });
 chrome.runtime.sendMessage({
-type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x57\x41\x49\x54\x49\x4e\x47',
+type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x57\x41\x49\x54\x49\x4e\x47',
 current:nextIdx,
 total:task.items.length,
 waitSec:cooldownSec,
@@ -1336,11 +1338,13 @@ console.log(`\u2705 [\uace8\ub9c8\ucf13 \ub9ac\ub85c\ub4dc] [${task.currentIndex
 try{
 const compRes=await new Promise(r=>chrome.storage.local.get(['\x63\x6f\x6d\x70\x6c\x65\x74\x65\x64\x49\x74\x65\x6d\x73'],r));
 const compList=(compRes&&Array.isArray(compRes.completedItems))?compRes.completedItems:[];
-compList.push({regId:finishedItem.regId,date:finishedItem.date,golf:finishedItem.golf,time:finishedItem.time});
+const entry={regId:finishedItem.regId,date:finishedItem.date,golf:finishedItem.golf,time:finishedItem.time};
+if(!compList.some(it=>it.regId===finishedItem.regId))compList.push(entry);
 await new Promise(r=>chrome.storage.local.set({completedItems:compList},r));
 }catch(e){}
 chrome.runtime.sendMessage({
 type:'\x49\x54\x45\x4d\x5f\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x55\x43\x43\x45\x53\x53',
+platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
 regId:finishedItem.regId,
 item:finishedItem,
 current:task.currentIndex+1,
@@ -1356,9 +1360,9 @@ total:task.items.length
 });
 await new Promise(r=>chrome.storage.local.set({
 golmarket_task:null,
-isRegistrationRunning:false
+golmarket_isRegistrationRunning:false
 },r));
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.items.length});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.items.length});
 return;
 }
 task.currentIndex=nextIdx;
@@ -1394,7 +1398,7 @@ current:task.currentIndex+1,
 total:task.items.length
 });
 chrome.runtime.sendMessage({
-type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x50\x52\x4f\x47\x52\x45\x53\x53',
+type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x50\x52\x4f\x47\x52\x45\x53\x53',
 current:task.currentIndex+1,
 total:task.items.length,
 golf:curItem.golf,
@@ -1464,22 +1468,22 @@ startedAt:Date.now()
 };
 chrome.storage.local.set({
 golmarket_task:task,
-isRegistrationRunning:true
+golmarket_isRegistrationRunning:true
 },()=>{
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 _0x101c();
 });
 return true;
-}else if(request.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
+}else if(request.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'||request.action==='\x53\x54\x4f\x50\x5f\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
 shouldStopRegistration=true;
 isRegistrationRunning=false;
 _0x1004();
 chrome.storage.local.set({
 golmarket_task:null,
-isRegistrationRunning:false
+golmarket_isRegistrationRunning:false
 },()=>{
 sendResponse({status:'\x73\x74\x6f\x70\x70\x65\x64'});
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44'});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44'});
 });
 return true;
 }else if(request.action==='\x43\x48\x45\x43\x4b\x5f\x53\x54\x41\x54\x55\x53'){

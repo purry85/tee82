@@ -193,11 +193,11 @@ isStopped:true
 try{
 await new Promise(r=>chrome.storage.local.set({
 golfland_task:null,
-isRegistrationRunning:false
+golfland_isRegistrationRunning:false
 },r));
 }catch(err){}
 chrome.runtime.sendMessage({
-type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44',
+type:'\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x53\x54\x4f\x50\x50\x45\x44',
 reason:alertText
 });
 }
@@ -268,10 +268,10 @@ isRegistrationRunning=false;
 try{
 await new Promise(r=>chrome.storage.local.set({
 golfland_task:null,
-isRegistrationRunning:false
+golfland_isRegistrationRunning:false
 },r));
 }catch(e){}
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x54\x4f\x50\x50\x45\x44'});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x53\x54\x4f\x50\x50\x45\x44'});
 _0x1003({
 desc:'\ud83d\uded1 \uc0ac\uc6a9\uc790\uc5d0 \uc758\ud574 \uc790\ub3d9 \ub4f1\ub85d\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e',
 isStopped:true
@@ -1470,6 +1470,7 @@ if(curItem){
 console.log(`\u2705 [\uace8\ud504\ub79c\ub4dc] [${curIdx+1}/${task.totalCount}] ${curItem.golf} \ub4f1\ub85d \uc131\uacf5 \ud655\uc778 (${trigger})`);
 chrome.runtime.sendMessage({
 type:'\x49\x54\x45\x4d\x5f\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x53\x55\x43\x43\x45\x53\x53',
+platform:'\x67\x6f\x6c\x66\x6c\x61\x6e\x64',
 regId:curItem.regId,
 item:curItem,
 current:curIdx+1,
@@ -1495,11 +1496,10 @@ isCompleted:true
 try{
 await new Promise(r=>chrome.storage.local.set({
 golfland_task:null,
-isRegistrationRunning:false
+golfland_isRegistrationRunning:false
 },r));
 }catch(e){}
-chrome.runtime.sendMessage({type:'\x41\x4c\x4c\x5f\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.totalCount});
-chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.totalCount});
+chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',total:task.totalCount});
 const openModal=_0x101c();
 if(openModal){
 const closeBtn=_0x101d(openModal);
@@ -1523,7 +1523,7 @@ total:task.totalCount,
 desc:`\u23f3 \uc0ac\ub78c\ucc98\ub7fc \ub300\uae30 \uc911... [${nextItem.golf}] \uc900\ube44 (${cooldownSec}\ucd08 \uc9c0\uc5f0)`
 });
 chrome.runtime.sendMessage({
-type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x57\x41\x49\x54\x49\x4e\x47',
+type:'\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x57\x41\x49\x54\x49\x4e\x47',
 current:nextIdx,
 total:task.totalCount,
 waitSec:cooldownSec,
@@ -1616,7 +1616,7 @@ window.location.href='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6c\x61\x
 _0x102d();
 }
 sendResponse({success:true});
-}else if(msg.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
+}else if(msg.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'||msg.action==='\x53\x54\x4f\x50\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
 console.log("[\uace8\ud504\ub79c\ub4dc] \ub4f1\ub85d \uc911\ub2e8 \uba54\uc2dc\uc9c0 \uc218\uc2e0");
 shouldStopRegistration=true;
 isRegistrationRunning=false;

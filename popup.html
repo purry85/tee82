@@ -3802,7 +3802,7 @@
                 <img src="automatee_wordmark_light.png" alt="AutomaTee" class="brand-logo-wordmark">
             </a>
             <div class="header-notice-wrapper">
-                <div class="btn-header-notice-group" id="noticeHeaderBtnGroup" title="클릭 시 공지 설정 열기 / 새로고침(🔄) 클릭 시 클라우드 공지 동기화" style="display: none;">
+                <div class="btn-header-notice-group" id="noticeHeaderBtnGroup" title="클릭 시 공지 설정 열기 / 새로고침(🔄) 클릭 시 클라우드 공지 동기화" style="display: inline-flex;">
                     <button type="button" class="btn-header-notice-sync" id="btnHeaderNoticeSync" title="클릭 시 전체 사용자 공지 실시간 동기화 (취합 및 업데이트)">🔄</button>
                     <button type="button" class="btn-header-notice-content" id="btnOpenNoticeModal" title="구장별 금액 인하/할인 공지 텍스트를 붙여넣어 가격 자동 조정">
                         <span>공지적용</span>
@@ -3879,19 +3879,15 @@
             </div>
 
             <!-- 🌐 플랫폼 원클릭 동시 등록 배너 (부여기능 '동시등록' 회원에게만 노출) -->
-            <div class="multi-platform-banner" style="margin-top: 5px; display: none; gap: 4px;">
-                <button class="btn-hero-submit" id="btnRegisterMultiPlatform" style="flex: 1; height: 26px; background: linear-gradient(135deg, #4338CA, #6366F1); color: white; border: none; border-radius: 5px; font-weight: 700; font-size: 11px; cursor: pointer; box-shadow: 0 2px 4px rgba(67, 56, 202, 0.25); display: flex; align-items: center; justify-content: center; gap: 5px;" title="골프몬, 골마켓, 골프락, 골프탑, 골프랜드 등 선택한 플랫폼에 원클릭 동시 등록합니다">
+            <div class="multi-platform-banner" style="margin-top: 5px; display: none; width: 100%; box-sizing: border-box;">
+                <button class="btn-hero-submit" id="btnRegisterMultiPlatform" style="width: 100%; height: 27px; background: linear-gradient(135deg, #F97316, #EA580C); color: white; border: none; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.35); display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;" title="골프몬, 골마켓, 골프락, 골프탑, 골프랜드 등 원하는 플랫폼을 선택하여 원클릭 동시 등록합니다">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
                     <span>플랫폼 동시 등록</span>
                 </button>
-                <button type="button" id="btnToggleMultiSettings" style="display: none; width: 26px; height: 26px; background: #EEF2FF; border: 1px solid #C7D2FE; color: #4338CA; border-radius: 5px; cursor: pointer; font-size: 11px; align-items: center; justify-content: center;" title="동시 등록 대상 플랫폼 선택/설정"></button>
-            </div>
-            <div id="multiPlatformSelectBox" style="display: none; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 5px 8px; margin-top: 4px; font-size: 10.5px; flex-wrap: wrap; gap: 8px; align-items: center;">
-                <span style="font-weight: 700; color: #334155;">대상:</span>
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfmon" checked> 골프몬</label>
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolmarket" checked> 골마켓</label>
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfrock" checked> 골프락</label>
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolftop" checked> 골프탑</label>
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 2px;"><input type="checkbox" id="chkMultiGolfland" checked> 골프랜드</label>
             </div>
             <div class="reset-actions-bar" id="resetActionsBar" style="display: none;">
                 <div class="reset-inputs-row">
@@ -3989,14 +3985,6 @@
         <div class="tab-panel" id="tabSettings">
             <div class="settings-card">
                 <div class="settings-row">
-                    <label>2개 자동선택 우선:</label>
-                    <select id="selAutoSelectPrioritySettings" style="padding: 2px 4px; font-size: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; background: white; max-width: 155px;">
-                        <option value="none" selected>⚖️ 기본 (시간/조건순)</option>
-                        <option value="golftop">🎯 골프탑 타임 우선</option>
-                        <option value="golfrock">🪨 골프락 타임 우선</option>
-                    </select>
-                </div>
-                <div class="settings-row">
                     <label>시간 앞당김 (분):</label>
                     <input type="number" id="timeAdjust" value="0" style="width: 50px;">
                 </div>
@@ -4012,14 +4000,14 @@
                     <label>단계별 속도 (클릭/입력):</label>
                     <select id="selStepDelay" style="padding: 2px 4px; font-size: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; background: white; max-width: 155px;">
                         <option value="slow">🐢 신중한 사람 (0.8~1.8초 여유)</option>
-                        <option value="fast">⚡ 빠른 손 (0.2~0.5초 신속)</option>
+                        <option value="fast" selected>⚡ 빠른 손 (0.2~0.5초 신속)</option>
                     </select>
                 </div>
                 <div class="settings-row">
                     <label>타임 간 대기 (건별 쿨다운):</label>
                     <select id="selRandomDelay" style="padding: 2px 4px; font-size: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; background: white; max-width: 155px;">
                         <option value="stealth">🕶️ 특급 위장 (3.5~7.5초 불규칙)</option>
-                        <option value="fast">⚡ 빠른 진행 (1.2~2.6초 단축)</option>
+                        <option value="fast" selected>⚡ 빠른 진행 (1.2~2.6초 단축)</option>
                     </select>
                 </div>
                 <div class="settings-row">
@@ -4234,7 +4222,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.88</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.0.89</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -4639,7 +4627,7 @@
             <div class="notice-modal-footer">
                 <div style="display: flex; gap: 6px; align-items: center;">
                     <button type="button" id="btnRevertNotice" class="btn-notice-revert" title="적용된 모든 공지를 해제하고 원래 금액으로 되돌립니다">전체 공지 초기화</button>
-                    <button type="button" id="btnSyncNoticeCloud" class="btn-notice-sync" title="다른 사용자들이 등록한 공지와 내 공지를 상호 동기화(업로드 및 취합 다운로드)합니다">공지 동기화</button>
+                    <button type="button" id="btnSyncNoticeCloud" class="btn-notice-sync" title="다른 사용자들이 등록한 공지와 내 공지를 상호 동기화(업로드 및 취합 다운로드)합니다">🔄 공지 동기화</button>
                 </div>
                 <div style="display: flex; gap: 6px; margin-left: auto;">
                     <button type="button" id="btnCancelNoticeModal" class="btn-dict-cancel">닫기</button>
@@ -4714,7 +4702,7 @@
                 <div class="update-status-box">
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
-                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.88 (최신)</span>
+                        <span class="badge-ver" id="badgeCurrentVer">Ver 2.0.89 (최신)</span>
                     </div>
                     <div class="update-status-row">
                         <span class="update-label">GitHub 연동 저장소</span>
@@ -4858,10 +4846,10 @@
                 <div class="auth-footer" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
                     <!-- 1열: 회원가입 과 비밀번호 변경 -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 2px;">
-                        <button type="button" class="btn-auth-admin-gear" id="btnOpenRegisterModal" title="신규 회원가입 신청" style="font-size: 11px; color: #38BDF8; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
+                        <button type="button" class="btn-auth-admin-gear" id="btnOpenRegisterModal" title="신규 회원가입 신청" style="font-size: 11px; color: #FFFFFF; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
                             <span>✨</span> 회원가입
                         </button>
-                        <button type="button" class="btn-auth-admin-gear" id="btnOpenChangePwModal" title="비밀번호 변경" style="font-size: 11px; color: #94A3B8; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
+                        <button type="button" class="btn-auth-admin-gear" id="btnOpenChangePwModal" title="비밀번호 변경" style="font-size: 11px; color: #FFFFFF; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;">
                             <span>🔑</span> 비밀번호 변경
                         </button>
                     </div>
@@ -4878,75 +4866,75 @@
 
     <!-- 신규 회원가입 신청 모달 -->
     <div id="authRegisterModal" class="dict-modal-overlay" style="display: none; z-index: 100001;">
-        <div class="auth-admin-card" style="max-width: 330px; width: 90%; background: #0b1322; border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);">
-            <div class="auth-admin-header" style="background: radial-gradient(120% 70% at 50% 0%, #15324d 0%, #0d192c 100%); border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding: 12px 16px;">
-                <h3 style="font-size: 13px; font-weight: 800; color: #F8FAFC; margin: 0; display: flex; align-items: center; gap: 6px;">
-                    <span style="color: #38BDF8;">✨</span> AutomaTee 회원가입 신청
+        <div class="auth-admin-card" style="max-width: 320px; width: 90%;">
+            <div class="auth-admin-header">
+                <h3 style="font-size: 12px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 6px;">
+                    <span>✨</span> 회원가입 신청
                 </h3>
-                <button type="button" class="btn-auth-admin-close" id="btnCloseRegisterModal" style="color: #94A3B8;">&times;</button>
+                <button type="button" class="btn-auth-admin-close" id="btnCloseRegisterModal">&times;</button>
             </div>
-            <div class="auth-admin-body" style="padding: 14px 16px; background: #0b1322; color: #F1F5F9;">
-                <p class="auth-admin-desc" style="font-size: 10.5px; margin-bottom: 12px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); color: #BAE6FD; padding: 8px 10px; border-radius: 6px; line-height: 1.45;">
-                    💡 가입신청을 완료하시고, <strong style="color: #38BDF8;">관리자 승인 이후</strong> 사용이 가능합니다.
+            <div class="auth-admin-body" style="padding: 12px 14px;">
+                <p class="auth-admin-desc" style="font-size: 10.5px; margin-bottom: 10px;">
+                    가입신청을 완료하시고, 관리자 승인 이후 사용이 가능합니다.
                 </p>
                 <form id="formRegister">
                     <div class="auth-field-group">
-                        <label class="auth-label" for="inputRegisterId" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                        <label class="auth-label" for="inputRegisterId" style="display: flex; justify-content: space-between;">
                             <span>아이디 <span style="color: #F43F5E;">*</span></span>
                             <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">영문/숫자 3자 이상</span>
                         </label>
                         <div class="auth-input-wrap">
                             <span class="auth-input-icon">👤</span>
-                            <input type="text" id="inputRegisterId" class="auth-input" placeholder="사용할 아이디 입력" autocomplete="username" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <input type="text" id="inputRegisterId" class="auth-input" placeholder="사용할 아이디 입력" autocomplete="username">
                         </div>
                     </div>
                     <div class="auth-field-group" style="margin-top: 8px;">
-                        <label class="auth-label" for="inputRegisterPw" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                        <label class="auth-label" for="inputRegisterPw" style="display: flex; justify-content: space-between;">
                             <span>비밀번호 <span style="color: #F43F5E;">*</span></span>
                             <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">2자 이상</span>
                         </label>
                         <div class="auth-input-wrap">
                             <span class="auth-input-icon">🔒</span>
-                            <input type="password" id="inputRegisterPw" class="auth-input" placeholder="비밀번호 입력" autocomplete="new-password" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <input type="password" id="inputRegisterPw" class="auth-input" placeholder="비밀번호 입력" autocomplete="new-password">
                             <button type="button" class="btn-toggle-pw" id="btnToggleRegisterPw" title="비밀번호 보기/숨기기" style="opacity: 0.7;">👁️</button>
                         </div>
                     </div>
                     <div class="auth-field-group" style="margin-top: 8px;">
-                        <label class="auth-label" for="inputRegisterConfirm" style="display: block; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                        <label class="auth-label" for="inputRegisterConfirm" style="display: flex; justify-content: space-between;">
                             <span>비밀번호 확인 <span style="color: #F43F5E;">*</span></span>
+                            <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">일치 확인</span>
                         </label>
                         <div class="auth-input-wrap">
                             <span class="auth-input-icon">✅</span>
-                            <input type="password" id="inputRegisterConfirm" class="auth-input" placeholder="비밀번호 재입력" autocomplete="new-password" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <input type="password" id="inputRegisterConfirm" class="auth-input" placeholder="비밀번호 재입력" autocomplete="new-password">
                         </div>
                     </div>
                     <div class="auth-field-group" style="margin-top: 8px;">
-                        <label class="auth-label" for="inputRegisterName" style="display: block; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                        <label class="auth-label" for="inputRegisterName" style="display: flex; justify-content: space-between;">
                             <span>이름 <span style="color: #F43F5E;">*</span></span>
+                            <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">필수 입력</span>
                         </label>
                         <div class="auth-input-wrap">
                             <span class="auth-input-icon">🏷️</span>
-                            <input type="text" id="inputRegisterName" class="auth-input" placeholder="성함 (예: 홍길동)" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <input type="text" id="inputRegisterName" class="auth-input" placeholder="성함 (예: 홍길동)">
                         </div>
                     </div>
                     <div class="auth-field-group" style="margin-top: 8px;">
-                        <label class="auth-label" for="inputRegisterPhone" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94A3B8; font-weight: 700; margin-bottom: 2px;">
+                        <label class="auth-label" for="inputRegisterPhone" style="display: flex; justify-content: space-between;">
                             <span>연락처</span>
                             <span style="font-size: 9.5px; color: #64748B; font-weight: 400;">선택 사항</span>
                         </label>
                         <div class="auth-input-wrap">
                             <span class="auth-input-icon">📞</span>
-                            <input type="text" id="inputRegisterPhone" class="auth-input" placeholder="휴대폰 번호 (예: 010-1234-5678)" style="height: 36px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #F1F5F9;">
+                            <input type="text" id="inputRegisterPhone" class="auth-input" placeholder="휴대폰 번호 (예: 010-1234-5678)">
                         </div>
                     </div>
 
-                    <div id="registerStatusBox" class="auth-admin-status" style="display: none; margin-top: 10px;"></div>
+                    <div id="registerStatusBox" class="auth-admin-status" style="display: none; margin-top: 8px;"></div>
 
-                    <div class="auth-admin-footer" style="padding: 12px 0 0 0; margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.10); display: flex; justify-content: flex-end; gap: 8px;">
-                        <button type="button" class="btn-modal-cancel" id="btnCancelRegister" style="height: 36px; background: rgba(255, 255, 255, 0.08); color: #CBD5E1; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; padding: 0 14px;">취소</button>
-                        <button type="button" id="btnSubmitRegister" style="height: 36px; background: linear-gradient(90deg, #0284C7, #0EA5E9 50%, #10B981); color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; padding: 0 16px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);">
-                            <span>🚀</span> 가입 신청하기
-                        </button>
+                    <div class="auth-admin-footer" style="padding: 10px 0 0 0; margin-top: 10px; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end; gap: 6px;">
+                        <button type="button" class="btn-auth-admin-test" id="btnCancelRegister">취소</button>
+                        <button type="button" class="btn-auth-admin-save" id="btnSubmitRegister">가입 신청하기</button>
                     </div>
                 </form>
             </div>
@@ -5198,6 +5186,61 @@
                     <button type="button" id="btnCopyDailyStatsText" style="background: #3B82F6; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);">📋 카톡 보고용 복사</button>
                     <button type="button" id="btnCloseDailyStatsModal" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; border-radius: 6px; padding: 6px 12px; font-size: 11px; cursor: pointer;">닫기</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌐 플랫폼 동시 등록 설정 및 실행 모달 -->
+    <div class="dict-modal-overlay" id="multiPlatformModal" style="display: none; z-index: 1096;">
+        <div class="unmapped-modal-card" style="max-width: 320px; width: 90%; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
+            <div class="unmapped-modal-header" style="background: linear-gradient(135deg, #FFF7ED, #FFEDD5); border-bottom: 1px solid #FED7AA; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div class="unmapped-modal-title" style="color: #EA580C; display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span style="font-weight: 800; font-size: 13px;">플랫폼 동시 등록 설정</span>
+                </div>
+                <button type="button" class="unmapped-modal-close" id="btnCloseMultiPlatformModalX" title="닫기" style="background: none; border: none; font-size: 18px; color: #9A3412; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+            <div style="padding: 12px 14px 4px 14px; font-size: 11.5px; color: #475569; line-height: 1.45;">
+                선택한 <b id="multiModalItemCount" style="color: #EA580C; font-size: 13px;">0</b>개 타임을 동시 등록할 사이트를 선택해 주세요.
+            </div>
+            <div style="padding: 6px 14px 10px 14px;">
+                <div style="display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px;">
+                    <button type="button" id="btnMultiSelectAll" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700; cursor: pointer;">전체 선택</button>
+                    <button type="button" id="btnMultiDeselectAll" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700; cursor: pointer;">전체 해제</button>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 10px 12px;">
+                    <label id="lblMultiGolfmon" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: #1E293B; padding: 3px 0;">
+                        <span style="display: flex; align-items: center; gap: 6px;">⛳ 골프몬 (Golfmon)</span>
+                        <input type="checkbox" id="chkModalMultiGolfmon" checked style="cursor: pointer; width: 15px; height: 15px;">
+                    </label>
+                    <label id="lblMultiGolftop" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: #1E293B; padding: 3px 0;">
+                        <span style="display: flex; align-items: center; gap: 6px;">🎯 골프탑 (Golftop)</span>
+                        <input type="checkbox" id="chkModalMultiGolftop" checked style="cursor: pointer; width: 15px; height: 15px;">
+                    </label>
+                    <label id="lblMultiGolmarket" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: #1E293B; padding: 3px 0;">
+                        <span style="display: flex; align-items: center; gap: 6px;">🛒 골마켓 (Golmarket)</span>
+                        <input type="checkbox" id="chkModalMultiGolmarket" checked style="cursor: pointer; width: 15px; height: 15px;">
+                    </label>
+                    <label id="lblMultiGolfrock" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: #1E293B; padding: 3px 0;">
+                        <span style="display: flex; align-items: center; gap: 6px;">🪨 골프락 (Golfrock)</span>
+                        <input type="checkbox" id="chkModalMultiGolfrock" checked style="cursor: pointer; width: 15px; height: 15px;">
+                    </label>
+                    <label id="lblMultiGolfland" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: #1E293B; padding: 3px 0;">
+                        <span style="display: flex; align-items: center; gap: 6px;">🌲 골프랜드 (Golfland)</span>
+                        <input type="checkbox" id="chkModalMultiGolfland" checked style="cursor: pointer; width: 15px; height: 15px;">
+                    </label>
+                </div>
+                <div style="margin-top: 7px; font-size: 10px; color: #94A3B8; text-align: center;">
+                    * 열려있지 않은 사이트 탭은 새 탭으로 자동 연결됩니다.
+                </div>
+            </div>
+            <div class="unmapped-modal-footer" style="padding: 10px 14px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-dict-cancel" id="btnCancelMultiPlatformModal">취소</button>
+                <button type="button" id="btnConfirmMultiPlatformStart" style="background: linear-gradient(135deg, #F97316, #EA580C); color: white; border: none; padding: 6px 16px; border-radius: 5px; font-size: 11.5px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);">🚀 동시 등록 시작</button>
             </div>
         </div>
     </div>
