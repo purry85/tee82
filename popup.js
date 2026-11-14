@@ -12268,8 +12268,16 @@ const savedVer=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x6
 const defaultVer=(typeof _0x1073==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1073(curVer,savedVer)>=0)?curVer:savedVer;
 const savedTitle=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x74\x69\x74\x6c\x65')||`v${defaultVer} \uc8fc\uc694 \uae30\ub2a5 \uac1c\uc120`;
 const savedNotes=localStorage.getItem('\x76\x32\x5f\x70\x75\x62\x6c\x69\x73\x68\x65\x64\x5f\x72\x65\x6c\x65\x61\x73\x65\x5f\x6e\x6f\x74\x65\x73')||"\u2022 \ud50c\ub7ab\ud3fc \ub3d9\uc2dc \ub4f1\ub85d \uac1c\ud3b8 (\uc6d0\ud558\ub294 \uc0ac\uc774\ud2b8 \uccb4\ud06c \uc2e4\ud589)\n\u2022 \uacf5\uc9c0 \ub3d9\uae30\ud654 \ubcf5\uad6c (\x33\uc911 \ubb34\uc7a5\uc560 \uc548\uc2ec \ub3d9\uae30\ud654)\n\u2022 \uae30\ubcf8 \uc18d\ub3c4 '\ube60\ub978 \uc190 \x2f \ube60\ub978 \uc9c4\ud589' \ucd5c\uc801\ud654\n\u2022 \uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc790\ub3d9 \uc5c5\ub370\uc774\ud2b8 \uc2dc\uc2a4\ud15c \ud0d1\uc7ac";
-if(inputVer&&!inputVer.value)inputVer.value=defaultVer;
-if(inputTitle&&!inputTitle.value)inputTitle.value=savedTitle;
+if(inputVer){
+if(!inputVer.value||_0x1073(defaultVer,inputVer.value)>0){
+inputVer.value=defaultVer;
+}
+}
+if(inputTitle){
+if(!inputTitle.value||inputTitle.value.startsWith('\x76')){
+inputTitle.value=`v${inputVer?.value||defaultVer} \uc8fc\uc694 \uae30\ub2a5 \uac1c\uc120`;
+}
+}
 if(inputNotes&&!inputNotes.value)inputNotes.value=savedNotes;
 if(inputVer&&!inputVer.dataset.bound){
 inputVer.dataset.bound='\x74\x72\x75\x65';
