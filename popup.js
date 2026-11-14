@@ -14864,39 +14864,66 @@ const pw=inputPw?.value?.trim();
 const confirmPw=inputConfirm?.value?.trim();
 const name=inputName?.value?.trim();
 const phone=inputPhone?.value?.trim();
-const showStatus=(msg,isSuccess=false)=>{
+const showRegisterStatus=(msg,isSuccess=false)=>{
 if(!statusBox)return;
 statusBox.className='\x61\x75\x74\x68-\x61\x64\x6d\x69\x6e-\x73\x74\x61\x74\x75\x73 '+(isSuccess?'\x73\x75\x63\x63\x65\x73\x73':'\x65\x72\x72\x6f\x72');
+if(isSuccess){
+statusBox.innerHTML=`
+                <div style="font-size: 11.5px; font-weight: 800; color: #065F46; margin-bottom: 5px;">\ud83c\udf89 \uac00\uc785 \uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!</div>
+                <div style="font-size: 10.5px; line-height: 1.45; color: #047857; margin-bottom: 10px;">\uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4.<br>\uc544\ub798 \ub178\ub780\uc0c9 \ubc84\ud2bc\uc744 \ub204\ub974\uba74 \uad00\ub9ac\uc790\uc5d0\uac8c \ubc14\ub85c \uc2b9\uc778\uc744 \uc694\uccad\ud569\ub2c8\ub2e4.</div>
+                <button type="button" id="btnStatusBoxKakao" style="width: 100%; box-sizing: border-box; background: #FEE500; color: #191919; border: 1px solid #E5C700; border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#191919" style="flex-shrink: 0;"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.25 4.54 6.62-.2.74-.72 2.68-.83 3.09-.13.5.18.5.38.36.16-.11 2.53-1.72 3.56-2.42.76.11 1.54.17 2.35.17 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
+                    <span>\ud83d\udcac \uce74\uce74\uc624\ud1a1\uc73c\ub85c \ube60\ub978 \uc2b9\uc778 \uc694\uccad\ud558\uae30</span>
+                </button>
+            `;
+const btnKakao=document.getElementById('\x62\x74\x6e\x53\x74\x61\x74\x75\x73\x42\x6f\x78\x4b\x61\x6b\x61\x6f');
+if(btnKakao){
+btnKakao.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+const KAKAO_URL='\x68\x74\x74\x70\x3a\x2f\x2f\x70\x66\x2e\x6b\x61\x6b\x61\x6f\x2e\x63\x6f\x6d\x2f\x5f\x52\x78\x62\x53\x4e\x58\x2f\x63\x68\x61\x74';
+try{
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.tabs&&chrome.tabs.create){
+chrome.tabs.create({url:KAKAO_URL});
+}else{
+window.open(KAKAO_URL,'\x5f\x62\x6c\x61\x6e\x6b');
+}
+}catch(err){
+window.open(KAKAO_URL,'\x5f\x62\x6c\x61\x6e\x6b');
+}
+});
+}
+}else{
 statusBox.innerText=msg;
+}
 statusBox.style.display='\x62\x6c\x6f\x63\x6b';
 };
 if(!id){
-showStatus('\uc544\uc774\ub514\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+showRegisterStatus('\uc544\uc774\ub514\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputId?.focus();
 return;
 }
 if(id.length<3){
-showStatus('\uc544\uc774\ub514\ub97c \x33\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+showRegisterStatus('\uc544\uc774\ub514\ub97c \x33\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputId?.focus();
 return;
 }
 if(!pw){
-showStatus('\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+showRegisterStatus('\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputPw?.focus();
 return;
 }
 if(pw.length<2){
-showStatus('\ube44\ubc00\ubc88\ud638\ub97c \x32\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+showRegisterStatus('\ube44\ubc00\ubc88\ud638\ub97c \x32\uc790 \uc774\uc0c1 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputPw?.focus();
 return;
 }
 if(pw!==confirmPw){
-showStatus('\ube44\ubc00\ubc88\ud638 \ud655\uc778\uc774 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e');
+showRegisterStatus('\ube44\ubc00\ubc88\ud638 \ud655\uc778\uc774 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e');
 inputConfirm?.focus();
 return;
 }
 if(!name){
-showStatus('\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+showRegisterStatus('\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputName?.focus();
 return;
 }
@@ -14909,7 +14936,7 @@ if(btnKakaoSuccess)btnKakaoSuccess.style.display='\x6e\x6f\x6e\x65';
 try{
 const result=await registerUserWithServer(id,pw,name,phone);
 if(result&&result.success){
-showStatus('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \uc0ac\uc6a9 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e\n\uc544\ub798 \ub178\ub780\uc0c9 [\uce74\uce74\uc624\ud1a1 \ube60\ub978 \uc2b9\uc778 \uc694\uccad] \ubc84\ud2bc\uc744 \ub204\ub974\uc2dc\uba74 \uad00\ub9ac\uc790\uc5d0\uac8c \ubc14\ub85c \uc804\ub2ec\ub429\ub2c8\ub2e4\x2e',true);
+showRegisterStatus('',true);
 _0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! \uce74\uce74\uc624\ud1a1\uc73c\ub85c \ube60\ub978 \uc2b9\uc778\uc744 \uc694\uccad\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
 if(btnKakaoSuccess){
 btnKakaoSuccess.style.display='\x66\x6c\x65\x78';
@@ -14923,14 +14950,14 @@ btnSubmit.disabled=true;
 btnSubmit.innerText='\uc2e0\uccad \uc644\ub8cc\ub428';
 }
 }else{
-showStatus(result?.message||'\ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e');
+showRegisterStatus(result?.message||'\ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e');
 if(btnSubmit){
 btnSubmit.disabled=false;
 btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
 }
 }
 }catch(err){
-showStatus('\uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x3a '+(err.message||err));
+showRegisterStatus('\uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x3a '+(err.message||err));
 if(btnSubmit){
 btnSubmit.disabled=false;
 btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
