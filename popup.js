@@ -12526,9 +12526,12 @@ async function _0x1076(isManual=false){
 try{
 const currentVer=_0x1068();
 let remoteData=null;
+if(window.__latestRemoteRelease&&window.__latestRemoteRelease.version){
+remoteData=window.__latestRemoteRelease;
+}
 const rawApiUrl=(typeof getAuthApiUrl==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?getAuthApiUrl():'')||currentAuthApiUrl||DEFAULT_AUTH_API_URL;
 const apiUrl=cleanGoogleWebAppUrl(rawApiUrl);
-if(apiUrl){
+if(!remoteData&&apiUrl){
 try{
 const controller=new AbortController();
 const timeoutId=setTimeout(()=>controller.abort(),4000);
@@ -12583,6 +12586,7 @@ _0x101b(`\u2705 \ud604\uc7ac \ucd5c\uc2e0 \ubc84\uc804(Ver ${currentVer})\uc744 
 console.log('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65 \x55\x70\x64\x61\x74\x65] \ubc84\uc804 \ud655\uc778 \uc0dd\ub7b5\x3a',err);
 }
 }
+window.checkForRemoteAppUpdate=_0x1076;
 document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x4e\x65\x77\x56\x65\x72\x73\x69\x6f\x6e\x4d\x6f\x64\x61\x6c\x58')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const remoteVer=document.getElementById('\x6c\x62\x6c\x52\x65\x6d\x6f\x74\x65\x56\x65\x72\x54\x65\x78\x74')?.textContent?.replace(/^v/i,'')||'';
 if(remoteVer)sessionStorage.setItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x5f\x64\x69\x73\x6d\x69\x73\x73\x65\x64',remoteVer);
@@ -14305,6 +14309,47 @@ function hideAuthAlert(){
 const alertBox=document.getElementById('\x61\x75\x74\x68\x41\x6c\x65\x72\x74\x42\x6f\x78');
 if(alertBox)alertBox.style.display='\x6e\x6f\x6e\x65';
 }
+function getSavedCredentials(){
+try{
+const raw=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73');
+if(raw){
+const parsed=JSON.parse(raw);
+if(parsed&&parsed.id&&parsed.pw)return parsed;
+}
+}catch(e){}
+return null;
+}
+function saveSavedCredentials(id,pw){
+try{
+const data={id:(id||'').trim(),pw:(pw||'').trim(),savedAt:Date.now()};
+localStorage.setItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73',JSON.stringify(data));
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
+chrome.storage.local.set({v2_auth_saved_credentials:data});
+}
+}catch(e){}
+}
+function clearSavedCredentials(){
+try{
+localStorage.removeItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73');
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
+chrome.storage.local.remove(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73']);
+}
+}catch(e){}
+}
+function applySavedCredentialsToInputs(){
+const creds=getSavedCredentials();
+const idInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
+const pwInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
+const chkSave=document.getElementById('\x63\x68\x6b\x41\x75\x74\x68\x41\x75\x74\x6f\x4c\x6f\x67\x69\x6e');
+if(creds&&creds.id&&creds.pw){
+if(idInput)idInput.value=creds.id;
+if(pwInput)pwInput.value=creds.pw;
+if(chkSave)chkSave.checked=true;
+}else if(creds&&creds.id){
+if(idInput)idInput.value=creds.id;
+if(chkSave)chkSave.checked=false;
+}
+}
 function showAuthOverlay(msg='',type='\x65\x72\x72\x6f\x72'){
 const overlay=document.getElementById('\x61\x75\x74\x68\x4f\x76\x65\x72\x6c\x61\x79');
 if(overlay){
@@ -14312,6 +14357,7 @@ overlay.style.display='\x66\x6c\x65\x78';
 }
 const pill=document.getElementById('\x75\x73\x65\x72\x4d\x65\x6d\x62\x65\x72\x73\x68\x69\x70\x50\x69\x6c\x6c');
 if(pill)pill.style.display='\x6e\x6f\x6e\x65';
+applySavedCredentialsToInputs();
 if(msg){
 showAuthAlert(msg,type);
 }else{
@@ -14495,6 +14541,9 @@ showAuthOverlay('\u26a0\ufe0f \ub3d9\uc2dc \uc811\uc18d \uac10\uc9c0\x3a \ub2e4\
 return{success:false,code:'\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e',message:data.message};
 }
 if(data&&data.success){
+if(data.latestRelease&&data.latestRelease.version){
+window.__latestRemoteRelease=data.latestRelease;
+}
 const newSessionToken=data.sessionToken||currentToken||('\x47\x54\x5f'+Date.now()+'\x5f'+Math.random().toString(36).substring(2,8));
 currentAuthUser={
 id:data.id||id,
@@ -14526,6 +14575,11 @@ saveAuthUserSession(currentAuthUser);
 updateAuthUI(currentAuthUser);
 _0x104d();
 hideAuthOverlay();
+if(typeof window.checkForRemoteAppUpdate==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+setTimeout(()=>{
+window.checkForRemoteAppUpdate(false);
+},300);
+}
 return{success:true,user:currentAuthUser};
 }else{
 const errMsg=data?.message||'\uc778\uc99d\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e';
@@ -14569,7 +14623,9 @@ try{
 const curAppVer=getCurrentAuthAppVersion();
 if(user&&typeof user==='\x6f\x62\x6a\x65\x63\x74'){
 if(curAppVer)user.appVersion=curAppVer;
-user.savedAt=Date.now();
+const now=Date.now();
+if(!user.loggedInAt)user.loggedInAt=now;
+user.savedAt=now;
 user._sig=_0x1040(user);
 }
 localStorage.setItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72',JSON.stringify(user));
@@ -14580,7 +14636,7 @@ chrome.storage.local.remove(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x69\x6e\x76\x61\x
 }
 }catch(e){}
 }
-function logoutUser(notify=true){
+function logoutUser(notify=true,preserveSavedPassword=true){
 currentAuthUser=null;
 try{
 localStorage.removeItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72');
@@ -14594,7 +14650,16 @@ chrome.storage.local.remove(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72',
 }
 }catch(e){}
 const pwInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
+const idInput=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
+const saved=getSavedCredentials();
+if(preserveSavedPassword&&saved&&saved.id&&saved.pw){
+if(idInput)idInput.value=saved.id;
+if(pwInput)pwInput.value=saved.pw;
+const chkSave=document.getElementById('\x63\x68\x6b\x41\x75\x74\x68\x41\x75\x74\x6f\x4c\x6f\x67\x69\x6e');
+if(chkSave)chkSave.checked=true;
+}else{
 if(pwInput)pwInput.value='';
+}
 const pill=document.getElementById('\x75\x73\x65\x72\x4d\x65\x6d\x62\x65\x72\x73\x68\x69\x70\x50\x69\x6c\x6c');
 if(pill)pill.style.display='\x6e\x6f\x6e\x65';
 _0x104d();
@@ -14965,7 +15030,21 @@ try{
 const result=await verifyAuthWithServer(id,pw,false,true);
 if(result&&result.success){
 _0x103e('\x6c\x6f\x67\x69\x6e');
+const chkSave=document.getElementById('\x63\x68\x6b\x41\x75\x74\x68\x41\x75\x74\x6f\x4c\x6f\x67\x69\x6e');
+if(chkSave&&chkSave.checked){
+saveSavedCredentials(id,pw);
+}else{
+clearSavedCredentials();
+}
 _0x101b(`\ud83d\udfe2 \ub85c\uadf8\uc778 \uc644\ub8cc! (${result.user.name||result.user.id}\ub2d8 / \ub9cc\ub8cc\uc77c: ${result.user.expireDate})`);
+try{
+sessionStorage.removeItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x5f\x64\x69\x73\x6d\x69\x73\x73\x65\x64');
+if(typeof window.checkForRemoteAppUpdate==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+setTimeout(()=>{
+window.checkForRemoteAppUpdate(false);
+},400);
+}
+}catch(e){}
 }else{
 _0x103d('\x6c\x6f\x67\x69\x6e');
 if(_0x103b('\x6c\x6f\x67\x69\x6e')){
@@ -14982,6 +15061,7 @@ if(btnText)btnText.innerText='\ub85c\uadf8\uc778';
 function initAuth(){
 _0x1046();
 _0x1047();
+applySavedCredentialsToInputs();
 try{
 const savedVer=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x76\x65\x72\x73\x69\x6f\x6e');
 const savedUrl=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x75\x72\x6c');
@@ -14991,7 +15071,15 @@ setAuthApiUrl(DEFAULT_AUTH_API_URL);
 currentAuthApiUrl=savedUrl.trim();
 }
 if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
-chrome.storage.local.get(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x75\x72\x6c','\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x76\x65\x72\x73\x69\x6f\x6e','\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72','\x76\x32\x5f\x61\x75\x74\x68\x5f\x69\x6e\x76\x61\x6c\x69\x64\x61\x74\x65\x64\x5f\x61\x74'],(res)=>{
+chrome.storage.local.get(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x75\x72\x6c','\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x69\x5f\x76\x65\x72\x73\x69\x6f\x6e','\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72','\x76\x32\x5f\x61\x75\x74\x68\x5f\x69\x6e\x76\x61\x6c\x69\x64\x61\x74\x65\x64\x5f\x61\x74','\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73'],(res)=>{
+if(res&&res.v2_auth_saved_credentials){
+const sc=res.v2_auth_saved_credentials;
+if(sc&&sc.id&&sc.pw){
+try{localStorage.setItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x73\x61\x76\x65\x64\x5f\x63\x72\x65\x64\x65\x6e\x74\x69\x61\x6c\x73',JSON.stringify(sc));}catch(e){}
+applySavedCredentialsToInputs();
+}
+}
+if(!res||res.v2_auth_api_version!==CURRENT_AUTH_API_VERSION||!res.v2_auth_api_url||isLegacyAuthUrl(res.v2_auth_api_url)){
 if(!res||res.v2_auth_api_version!==CURRENT_AUTH_API_VERSION||!res.v2_auth_api_url||isLegacyAuthUrl(res.v2_auth_api_url)){
 setAuthApiUrl(DEFAULT_AUTH_API_URL);
 }else{
@@ -15347,6 +15435,7 @@ btnTestAdmin.innerText='\uc5f0\uacb0 \ud14c\uc2a4\ud2b8';
 }
 function processLoadedAuthUser(user){
 if(!user||!user.isLoggedIn){
+applySavedCredentialsToInputs();
 showAuthOverlay();
 _0x104d();
 return;
@@ -15354,14 +15443,26 @@ return;
 const curManifestVer=getCurrentAuthAppVersion();
 if(curManifestVer&&user.appVersion!==curManifestVer){
 console.log(`[AutomaTee Auth] \uc5c5\ub370\uc774\ud2b8\ub85c \uc778\ud55c \ubc84\uc804 \ubcc0\uacbd \uac10\uc9c0 (${user.appVersion||'\uad6c\ubc84\uc804'} -> ${curManifestVer}) -> \uc7ac\ub85c\uadf8\uc778 \uc694\uccad`);
-logoutUser(false);
+logoutUser(false,true);
 try{localStorage.setItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e',curManifestVer);}catch(e){}
+applySavedCredentialsToInputs();
 showAuthOverlay();
+return;
+}
+const ONE_DAY_MS=24*60*60*1000;
+const loginTs=Number(user.loggedInAt)||Number(user.savedAt)||Number(user.lastVerifiedAt)||0;
+const sessionAge=Date.now()-loginTs;
+if(!user.isAdmin&&loginTs>0&&sessionAge>ONE_DAY_MS){
+console.log(`[AutomaTee Auth] 24\uc2dc\uac04 \uc138\uc158 \uc720\ud6a8\uae30\uac04 \ub9cc\ub8cc (${Math.round(sessionAge/3600000)}\uc2dc\uac04 \uacbd\uacfc) -> \ub85c\uadf8\uc544\uc6c3 \ubc0f \uc7ac\ub85c\uadf8\uc778 \uc720\ub3c4`);
+logoutUser(false,true);
+applySavedCredentialsToInputs();
+showAuthOverlay('\u23f0 \ubcf4\uc548\uc744 \uc704\ud574 \ub85c\uadf8\uc778 \ud6c4 \x32\x34\uc2dc\uac04\uc774 \uacbd\uacfc\ud558\uc5ec \uc138\uc158\uc774 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e\n[\ub85c\uadf8\uc778] \ubc84\ud2bc\uc744 \ub204\ub974\uc2dc\uba74 \ubc14\ub85c \uc2dc\uc791\ub429\ub2c8\ub2e4\x2e','\x69\x6e\x66\x6f');
 return;
 }
 if(!_0x1041(user)){
 console.warn('[\x54\x65\x65\x38\x32 \x53\x65\x63\x75\x72\x69\x74\x79] \uc138\uc158 \ubb34\uacb0\uc131 \ud6fc\uc190 \ub610\ub294 \uc704\ubcc0\uc870 \uac10\uc9c0! \uc138\uc158\uc744 \ucd08\uae30\ud654\ud569\ub2c8\ub2e4\x2e');
-logoutUser(false);
+logoutUser(false,true);
+applySavedCredentialsToInputs();
 showAuthOverlay('\uc778\uc99d \uc815\ubcf4\uac00 \ubcc0\uc870\ub418\uc5c8\uac70\ub098 \uc720\ud6a8\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4\x2e \ub2e4\uc2dc \ub85c\uadf8\uc778\ud574\uc8fc\uc138\uc694\x2e','\x65\x72\x72\x6f\x72');
 return;
 }
@@ -15374,7 +15475,8 @@ chrome.storage.local.set({v2_isAdmin:_0x104a()});
 if(user.authType==='\x6c\x69\x63\x65\x6e\x73\x65'&&user.licenseKey){
 const verify=verifyLicenseKey(user.name||user.id,user.licenseKey);
 if(!verify.valid){
-logoutUser(false);
+logoutUser(false,true);
+applySavedCredentialsToInputs();
 showAuthOverlay(verify.message,'\x65\x72\x72\x6f\x72');
 return;
 }
@@ -15393,7 +15495,8 @@ if(user.expireDate){
 const now=new Date();
 const exp=new Date(user.expireDate+'\x54\x32\x33\x3a\x35\x39\x3a\x35\x39');
 if(now.getTime()>exp.getTime()){
-logoutUser(false);
+logoutUser(false,true);
+applySavedCredentialsToInputs();
 showAuthOverlay(`\uc0ac\uc6a9 \uae30\uac04\uc774 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4. (${user.expireDate} \ub9cc\ub8cc)\n\uad00\ub9ac\uc790\uc5d0\uac8c \uc5f0\uc7a5\uc744 \uc694\uccad\ud558\uc138\uc694.`,'\x65\x72\x72\x6f\x72');
 return;
 }
@@ -15402,7 +15505,11 @@ updateAuthUI(user);
 _0x104d();
 hideAuthOverlay();
 if(user.id&&user.pw){
-verifyAuthWithServer(user.id,user.pw,true);
+verifyAuthWithServer(user.id,user.pw,true).then(()=>{
+if(typeof window.checkForRemoteAppUpdate==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+window.checkForRemoteAppUpdate(false);
+}
+});
 }
 }
 try{
