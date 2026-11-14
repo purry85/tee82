@@ -7248,7 +7248,10 @@ card.innerHTML=`
                     ${sizenum?`<span class="card-tag pax">\ud83d\udc65 ${sizenum}</span>`:''}
                 </div>
             </div>
-            <button class="card-del-btn" title="\uc0ad\uc81c">&times;</button>
+            <div class="card-right-actions">
+                <button type="button" class="card-close-btn" data-index="${idx}" title="\uc774 \ud0c0\uc784 \ub9c8\uac10 \ucc98\ub9ac (\ud14c\uc774\ube14\uc5d0\uc11c \uc81c\uac70 \ubc0f \ub9c8\uac10\uc548\ub0b4 \ubb38\uad6c \ubcf5\uc0ac)">\ub9c8\uac10</button>
+                <button class="card-del-btn" title="\uc0ad\uc81c">&times;</button>
+            </div>
         `;
 function applySelection(targetState){
 card.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',targetState);
@@ -7257,7 +7260,7 @@ if(chk)chk.checked=targetState;
 tr.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',targetState);
 }
 card.addEventListener('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',(e)=>{
-if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65'))return;
+if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||e.target.classList.contains('\x63\x61\x72\x64-\x63\x6c\x6f\x73\x65-\x62\x74\x6e')||e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65'))return;
 e.preventDefault();
 isCardDragging=true;
 dragTargetState=!card.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64');
@@ -7302,6 +7305,12 @@ const c=noticeTag.dataset.course||golf;
 showNoticeDetailModal(c);
 return;
 }
+if(e.target.classList.contains('\x63\x61\x72\x64-\x63\x6c\x6f\x73\x65-\x62\x74\x6e')){
+e.stopPropagation();
+e.preventDefault();
+handleSingleCardSoldOut(tr,card,golf,date,time,roomType);
+return;
+}
 if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')){
 tr.remove();
 card.remove();
@@ -7343,6 +7352,69 @@ _0x1021();
 }
 };
 _0x1021();
+}
+function copyNoticeTextToClipboard(text){
+if(!text)return;
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).catch(()=>{
+const ta=document.createElement('\x74\x65\x78\x74\x61\x72\x65\x61');
+ta.value=text;
+ta.style.position='\x66\x69\x78\x65\x64';
+ta.style.opacity='\x30';
+document.body.appendChild(ta);
+ta.select();
+try{document.execCommand('\x63\x6f\x70\x79');}catch(e){}
+ta.remove();
+});
+}else{
+const ta=document.createElement('\x74\x65\x78\x74\x61\x72\x65\x61');
+ta.value=text;
+ta.style.position='\x66\x69\x78\x65\x64';
+ta.style.opacity='\x30';
+document.body.appendChild(ta);
+ta.select();
+try{document.execCommand('\x63\x6f\x70\x79');}catch(e){}
+ta.remove();
+}
+}
+function handleSingleCardSoldOut(tr,card,golf,date,time,roomType){
+const formattedDate=date?`${date} `:'';
+const typeLabel=roomType||'\uc870\uc778';
+const noticeText=`\ud83d\udeab [\uc608\uc57d \ub9c8\uac10 \uc548\ub0b4]\n\u2022 ${golf} ${formattedDate}${time} (${typeLabel}) \uc608\uc57d \ub9c8\uac10\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\n\uc131\uc6d0\uc5d0 \uac10\uc0ac\ub4dc\ub9bd\ub2c8\ub2e4!`;
+copyNoticeTextToClipboard(noticeText);
+if(tr)tr.remove();
+if(card)card.remove();
+_0x1021();
+_0x1008();
+if(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72').length===0){
+renderCardList();
+}
+_0x101b(`\ud83d\udeab [${golf} ${time}] \ub9c8\uac10 \ucc98\ub9ac \uc644\ub8cc! (\uce74\ud1a1 \uacf5\uc9c0\uc6a9 \ubb38\uad6c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4)`);
+}
+function handleBatchSoldOut(){
+const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+if(selectedTrs.length===0){
+_0x101b('\u26a0\ufe0f \ub9c8\uac10 \ucc98\ub9ac\ud560 \ud2f0\ud0c0\uc784\uc744 \x31\uac1c \uc774\uc0c1 \uc120\ud0dd(\uccb4\ud06c)\ud574\uc8fc\uc138\uc694\x2e');
+return;
+}
+const items=[];
+selectedTrs.forEach(tr=>{
+const cells=tr.querySelectorAll('\x74\x64');
+const date=cells[0]?.textContent?.trim()||'';
+const golf=cells[2]?.textContent?.trim()||'';
+const time=cells[3]?.textContent?.trim()||'';
+const roomType=tr.dataset.roomType||'\uc870\uc778';
+const formattedDate=date?`${date} `:'';
+items.push(`\u2022 ${golf} ${formattedDate}${time} (${roomType})`);
+});
+const count=selectedTrs.length;
+const noticeText=`\ud83d\udeab [\uc608\uc57d \ub9c8\uac10 \uc548\ub0b4]\n`+items.join('\n')+`\n\uc704 \ud2f0\ud0c0\uc784 \uc608\uc57d \ub9c8\uac10\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\n\uc131\uc6d0\uc5d0 \uac10\uc0ac\ub4dc\ub9bd\ub2c8\ub2e4!`;
+copyNoticeTextToClipboard(noticeText);
+selectedTrs.forEach(tr=>tr.remove());
+renderCardList();
+_0x1021();
+_0x1008();
+_0x101b(`\ud83d\udeab \uc120\ud0dd\ub41c ${count}\uac1c \ud2f0\ud0c0\uc784 \ub9c8\uac10 \uc644\ub8cc! (\uce74\ud1a1 \uacf5\uc9c0\uc6a9 \ubb38\uad6c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4)`);
 }
 window.addEventListener('\x6d\x6f\x75\x73\x65\x75\x70',()=>{
 if(isCardDragging){
@@ -11801,6 +11873,13 @@ e.preventDefault();
 handleBatchToggleSeonti(true);
 });
 }
+const btnBatchSoldOut=document.getElementById('\x62\x74\x6e\x42\x61\x74\x63\x68\x53\x6f\x6c\x64\x4f\x75\x74');
+if(btnBatchSoldOut){
+btnBatchSoldOut.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+handleBatchSoldOut();
+});
+}
 const btnDeleteSelected=document.getElementById('\x62\x74\x6e\x44\x65\x6c\x65\x74\x65\x53\x65\x6c\x65\x63\x74\x65\x64');
 if(btnDeleteSelected){
 btnDeleteSelected.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
@@ -14833,7 +14912,7 @@ btnSubmit.innerText='\ubcc0\uacbd\ud558\uae30';
 }
 }
 }
-async function registerUserWithServer(id,pw,name,phone){
+async function registerUserWithServer(id,pw,name,phone,referral=''){
 let apiUrl=getAuthApiUrl();
 if(!apiUrl){
 return{success:false,message:'\uc778\uc99d\uc11c\ubc84 \x55\x52\x4c\uc774 \uc124\uc815\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e \uad00\ub9ac\uc790\uc5d0\uac8c \ubb38\uc758\ud574\uc8fc\uc138\uc694\x2e'};
@@ -14844,6 +14923,7 @@ const targetUrl=cleanUrl+'?\x61\x63\x74\x69\x6f\x6e=\x72\x65\x67\x69\x73\x74\x65
 '&\x70\x61\x73\x73\x77\x6f\x72\x64='+encodeURIComponent(pw)+
 '&\x6e\x61\x6d\x65='+encodeURIComponent(name||'')+
 '&\x70\x68\x6f\x6e\x65='+encodeURIComponent(phone||'')+
+'&\x72\x65\x66\x65\x72\x72\x61\x6c='+encodeURIComponent(referral||'')+
 '&\x5f\x74='+Date.now();
 const controller=new AbortController();
 const timeoutId=setTimeout(()=>controller.abort(),12000);
@@ -14859,7 +14939,7 @@ try{
 const postResponse=await fetch(cleanUrl,{
 method:'\x50\x4f\x53\x54',
 headers:{'\x43\x6f\x6e\x74\x65\x6e\x74-\x54\x79\x70\x65':'\x74\x65\x78\x74\x2f\x70\x6c\x61\x69\x6e;\x63\x68\x61\x72\x73\x65\x74=\x75\x74\x66-\x38'},
-body:JSON.stringify({action:'\x72\x65\x67\x69\x73\x74\x65\x72',id:id,password:pw,name:name,phone:phone}),
+body:JSON.stringify({action:'\x72\x65\x67\x69\x73\x74\x65\x72',id:id,password:pw,name:name,phone:phone,referral:referral}),
 redirect:'\x66\x6f\x6c\x6c\x6f\x77'
 });
 const postText=await postResponse.text();
@@ -14887,6 +14967,7 @@ const inputPw=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\
 const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x43\x6f\x6e\x66\x69\x72\x6d');
 const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
+const inputReferral=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x52\x65\x66\x65\x72\x72\x61\x6c');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
 const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
 if(!modal)return;
@@ -14899,6 +14980,7 @@ if(inputPw)inputPw.value='';
 if(inputConfirm)inputConfirm.value='';
 if(inputName)inputName.value='';
 if(inputPhone)inputPhone.value='';
+if(inputReferral)inputReferral.value='';
 const loginId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64')?.value?.trim();
 if(inputId){
 inputId.value=loginId||'';
@@ -14919,6 +15001,7 @@ const inputPw=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\
 const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x43\x6f\x6e\x66\x69\x72\x6d');
 const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
+const inputReferral=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x52\x65\x66\x65\x72\x72\x61\x6c');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
 const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
 const id=inputId?.value?.trim();
@@ -14926,6 +15009,7 @@ const pw=inputPw?.value?.trim();
 const confirmPw=inputConfirm?.value?.trim();
 const name=inputName?.value?.trim();
 const phone=inputPhone?.value?.trim();
+const referral=inputReferral?.value?.trim()||'';
 const showRegisterStatus=(msg,isSuccess=false)=>{
 if(!statusBox)return;
 statusBox.className='\x61\x75\x74\x68-\x61\x64\x6d\x69\x6e-\x73\x74\x61\x74\x75\x73 '+(isSuccess?'\x73\x75\x63\x63\x65\x73\x73':'\x65\x72\x72\x6f\x72');
@@ -14975,10 +15059,14 @@ btnSubmit.innerText='\uc2e0\uccad \uc911\x2e\x2e\x2e';
 }
 if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
 try{
-const result=await registerUserWithServer(id,pw,name,phone);
+const result=await registerUserWithServer(id,pw,name,phone,referral);
 if(result&&result.success){
 showRegisterStatus('',true);
+if(referral){
+_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! (\ucd94\ucc9c\uc778 \ud61c\ud0dd +\x31\x35\uc77c\uc774 \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4)');
+}else{
 _0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc0ac\uc6a9\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
+}
 const authInputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 const authInputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
 if(authInputId)authInputId.value=id;
@@ -15246,6 +15334,8 @@ const btnAuthKakaoInquiry=document.getElementById('\x62\x74\x6e\x41\x75\x74\x68\
 if(btnAuthKakaoInquiry)btnAuthKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnFooterKakao=document.getElementById('\x62\x74\x6e\x46\x6f\x6f\x74\x65\x72\x4b\x61\x6b\x61\x6f');
 if(btnFooterKakao)btnFooterKakao.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
+const btnMainRemoteSupport=document.getElementById('\x62\x74\x6e\x4d\x61\x69\x6e\x52\x65\x6d\x6f\x74\x65\x53\x75\x70\x70\x6f\x72\x74');
+if(btnMainRemoteSupport)btnMainRemoteSupport.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnOpenAdmin=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const adminModal=document.getElementById('\x61\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const btnCloseAdmin=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
@@ -15508,6 +15598,229 @@ verifyAuthWithServer(user.id,user.pw,true).then(()=>{
 if(typeof window.checkForRemoteAppUpdate==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 window.checkForRemoteAppUpdate(false);
 }
+});
+}
+try{
+initBumpTimer();
+initReferralModal();
+}catch(e){
+console.warn('\ud0c0\uc774\uba38\x2f\ucd94\ucc9c\uc778 \ubaa8\ub4c8 \ucd08\uae30\ud654 \uc5d0\ub7ec\x3a',e);
+}
+}
+let bumpTimerIntervalId=null;
+let bumpTimerSecondsLeft=30*60;
+let bumpTimerConfig={
+enabled:false,
+intervalMin:30,
+mode:'\x73\x6d\x61\x72\x74'
+};
+function loadBumpTimerConfig(){
+try{
+const saved=localStorage.getItem('\x76\x32\x5f\x62\x75\x6d\x70\x5f\x74\x69\x6d\x65\x72\x5f\x63\x6f\x6e\x66\x69\x67');
+if(saved){
+const parsed=JSON.parse(saved);
+bumpTimerConfig=Object.assign(bumpTimerConfig,parsed);
+}
+}catch(e){}
+}
+function saveBumpTimerConfig(){
+try{
+localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x5f\x74\x69\x6d\x65\x72\x5f\x63\x6f\x6e\x66\x69\x67',JSON.stringify(bumpTimerConfig));
+}catch(e){}
+}
+function formatTimerSeconds(sec){
+const m=Math.floor(sec/60);
+const s=sec%60;
+return`${String(m).padStart(2,'\x30')}:${String(s).padStart(2,'\x30')}`;
+}
+function updateBumpTimerBannerUI(){
+const banner=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x41\x63\x74\x69\x76\x65\x42\x61\x72');
+const countdownEl=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x43\x6f\x75\x6e\x74\x64\x6f\x77\x6e');
+const modeBadgeEl=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x4d\x6f\x64\x65\x42\x61\x64\x67\x65');
+if(!banner)return;
+if(!bumpTimerConfig.enabled){
+banner.style.display='\x6e\x6f\x6e\x65';
+return;
+}
+banner.style.display='\x66\x6c\x65\x78';
+if(countdownEl)countdownEl.textContent=formatTimerSeconds(bumpTimerSecondsLeft);
+if(modeBadgeEl){
+if(bumpTimerConfig.mode==='\x66\x75\x6c\x6c')modeBadgeEl.textContent='[\uc804\uccb4\uc218\uc815]';
+else if(bumpTimerConfig.mode==='\x6d\x75\x6c\x74\x69')modeBadgeEl.textContent='[\x36\ub300\ub3d9\uc2dc]';
+else modeBadgeEl.textContent='[\uc2a4\ub9c8\ud2b8\uc218\uc815]';
+}
+}
+function startBumpTimer(){
+stopBumpTimer(false);
+bumpTimerConfig.enabled=true;
+saveBumpTimerConfig();
+const intervalMinutes=parseInt(bumpTimerConfig.intervalMin,10)||30;
+bumpTimerSecondsLeft=intervalMinutes*60;
+updateBumpTimerBannerUI();
+bumpTimerIntervalId=setInterval(()=>{
+bumpTimerSecondsLeft--;
+if(bumpTimerSecondsLeft<=0){
+executeBumpAction();
+const resetMinutes=parseInt(bumpTimerConfig.intervalMin,10)||30;
+bumpTimerSecondsLeft=resetMinutes*60;
+}
+updateBumpTimerBannerUI();
+},1000);
+}
+function stopBumpTimer(disable=true){
+if(bumpTimerIntervalId){
+clearInterval(bumpTimerIntervalId);
+bumpTimerIntervalId=null;
+}
+if(disable){
+bumpTimerConfig.enabled=false;
+saveBumpTimerConfig();
+const banner=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x41\x63\x74\x69\x76\x65\x42\x61\x72');
+if(banner)banner.style.display='\x6e\x6f\x6e\x65';
+}
+}
+function executeBumpAction(){
+const trs=document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72');
+if(trs.length===0){
+_0x101b('\u23f1\ufe0f [\uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30] \ub300\uae30 \uc911\uc778 \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc5b4 \uc2e4\ud589\uc744 \uac74\ub108\ub701\ub2c8\ub2e4\x2e');
+return;
+}
+const mode=bumpTimerConfig.mode||'\x73\x6d\x61\x72\x74';
+if(mode==='\x73\x6d\x61\x72\x74'){
+_0x101b('\u23f1\ufe0f [\uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30] \uace8\ud504\ubaac \uc2a4\ub9c8\ud2b8\uc218\uc815\uc73c\ub85c \ucd5c\uc0c1\ub2e8 \uac31\uc2e0\uc744 \uc2dc\uc791\ud569\ub2c8\ub2e4\x2e');
+if(typeof startGolfmonPostReplacement==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+startGolfmonPostReplacement(false);
+}
+}else if(mode==='\x66\x75\x6c\x6c'){
+_0x101b('\u23f1\ufe0f [\uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30] \uace8\ud504\ubaac \uc804\uccb4\uc218\uc815(\uac15\uc81c\uac31\uc2e0)\uc744 \uc2dc\uc791\ud569\ub2c8\ub2e4\x2e');
+if(typeof startGolfmonPostReplacement==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+startGolfmonPostReplacement(true);
+}
+}else if(mode==='\x6d\x75\x6c\x74\x69'){
+_0x101b('\u23f1\ufe0f [\uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30] \x36\ub300 \ud50c\ub7ab\ud3fc \ub3d9\uc2dc\ub4f1\ub85d\uc744 \uc2dc\uc791\ud569\ub2c8\ub2e4\x2e');
+const btnMulti=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4d\x75\x6c\x74\x69\x50\x6c\x61\x74\x66\x6f\x72\x6d');
+if(btnMulti)btnMulti.click();
+}
+}
+function openBumpTimerModal(){
+loadBumpTimerConfig();
+const modal=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c');
+const chkEnable=document.getElementById('\x63\x68\x6b\x54\x69\x6d\x65\x72\x45\x6e\x61\x62\x6c\x65');
+const selInterval=document.getElementById('\x73\x65\x6c\x65\x63\x74\x54\x69\x6d\x65\x72\x49\x6e\x74\x65\x72\x76\x61\x6c');
+const selAction=document.getElementById('\x73\x65\x6c\x65\x63\x74\x54\x69\x6d\x65\x72\x41\x63\x74\x69\x6f\x6e');
+const textStatus=document.getElementById('\x74\x65\x78\x74\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c\x53\x74\x61\x74\x75\x73');
+if(chkEnable)chkEnable.checked=bumpTimerConfig.enabled;
+if(selInterval)selInterval.value=String(bumpTimerConfig.intervalMin||30);
+if(selAction)selAction.value=bumpTimerConfig.mode||'\x73\x6d\x61\x72\x74';
+if(textStatus){
+if(bumpTimerConfig.enabled){
+textStatus.textContent=`\ub3d9\uc791 \uc911 (${bumpTimerConfig.intervalMin}\ubd84 \uc8fc\uae30)`;
+textStatus.style.color='\x23\x31\x30\x42\x39\x38\x31';
+}else{
+textStatus.textContent='\uc815\uc9c0\ub428';
+textStatus.style.color='\x23\x36\x34\x37\x34\x38\x42';
+}
+}
+if(modal)modal.style.display='\x66\x6c\x65\x78';
+}
+function closeBumpTimerModal(){
+const modal=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c');
+if(modal)modal.style.display='\x6e\x6f\x6e\x65';
+}
+function handleSaveBumpTimerModal(){
+const chkEnable=document.getElementById('\x63\x68\x6b\x54\x69\x6d\x65\x72\x45\x6e\x61\x62\x6c\x65');
+const selInterval=document.getElementById('\x73\x65\x6c\x65\x63\x74\x54\x69\x6d\x65\x72\x49\x6e\x74\x65\x72\x76\x61\x6c');
+const selAction=document.getElementById('\x73\x65\x6c\x65\x63\x74\x54\x69\x6d\x65\x72\x41\x63\x74\x69\x6f\x6e');
+bumpTimerConfig.intervalMin=parseInt(selInterval?.value,10)||30;
+bumpTimerConfig.mode=selAction?.value||'\x73\x6d\x61\x72\x74';
+if(chkEnable&&chkEnable.checked){
+startBumpTimer();
+_0x101b(`\u23f1\ufe0f \uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30 \ud0c0\uc774\uba38\uac00 \uc2dc\uc791\ub418\uc5c8\uc2b5\ub2c8\ub2e4! (${bumpTimerConfig.intervalMin}\ubd84 \uc8fc\uae30)`);
+}else{
+stopBumpTimer(true);
+_0x101b('\u23f1\ufe0f \uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30 \ud0c0\uc774\uba38\uac00 \uc911\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+}
+closeBumpTimerModal();
+}
+function initBumpTimer(){
+loadBumpTimerConfig();
+if(bumpTimerConfig.enabled){
+startBumpTimer();
+}
+document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x52\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72')?.addEventListener('\x63\x6c\x69\x63\x6b',openBumpTimerModal);
+document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x52\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeBumpTimerModal);
+document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeBumpTimerModal);
+document.getElementById('\x62\x74\x6e\x53\x61\x76\x65\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',handleSaveBumpTimerModal);
+document.getElementById('\x62\x74\x6e\x54\x69\x6d\x65\x72\x52\x75\x6e\x4e\x6f\x77')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+executeBumpAction();
+bumpTimerSecondsLeft=(parseInt(bumpTimerConfig.intervalMin,10)||30)*60;
+updateBumpTimerBannerUI();
+});
+document.getElementById('\x62\x74\x6e\x54\x69\x6d\x65\x72\x53\x74\x6f\x70\x42\x61\x72')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+stopBumpTimer(true);
+_0x101b('\u23f1\ufe0f \uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30 \ud0c0\uc774\uba38\uac00 \uc911\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+});
+const modal=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72\x4d\x6f\x64\x61\x6c');
+if(modal){
+modal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+if(e.target===modal)closeBumpTimerModal();
+});
+}
+}
+function openReferralModal(){
+const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
+const codeInput=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x4d\x79\x43\x6f\x64\x65');
+const shareText=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74');
+let curId='\x67\x75\x65\x73\x74';
+try{
+if(typeof currentAuthUser!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&currentAuthUser?.id){
+curId=currentAuthUser.id;
+}else{
+const saved=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72');
+if(saved){
+const u=JSON.parse(saved);
+if(u&&u.id)curId=u.id;
+}
+}
+}catch(e){}
+if(codeInput)codeInput.value=curId;
+const inviteMsg=
+`\ud83c\udfcc\ufe0f [\uc624\ud1a0\ub9e4\ud2f0] \uace8\ud504 \ud2f0\ud0c0\uc784 \uc790\ub3d9\ub4f1\ub85d \uc194\ub8e8\uc158 15\uc77c \ubb34\ub8cc \ucd08\ub300\uc7a5
+
+\ub2e8 \ud55c \ubc88\uc758 \uacf5\uc9c0 \ubcf5\uc0ac\ub85c 6\ub300 \uace8\ud504 \ud50c\ub7ab\ud3fc(\uace8\ud504\ubaac, \uace8\ud321, \uace8\ub9c8\ucf13, \uace8\ud504\ub77d, \uace8\ud504\ud0d1, \uace8\ud504\ub79c\ub4dc) \uc6d0\ud074\ub9ad \ub3d9\uc2dc \ub4f1\ub85d!
+0\ucd08 \uc9c0\ub2a5\ud615 \uc2a4\ub9c8\ud2b8\uc218\uc815 & \uc6d0\ud074\ub9ad \ub9c8\uac10\uae4c\uc9c0 \uc644\ubcbd \uc9c0\uc6d0!
+
+\ud83c\udf81 \uac00\uc785 \uc2dc \uc544\ub798 \ucd94\ucc9c\uc778 \uc544\uc774\ub514\ub97c \uc785\ub825\ud558\uc2dc\uba74 15\uc77c \ubb34\ub8cc \uc5f0\uc7a5 \ud61c\ud0dd\uc774 \uc989\uc2dc \uc801\uc6a9\ub429\ub2c8\ub2e4.
+\u2022 \ucd94\ucc9c\uc778 \uc544\uc774\ub514: ${curId}
+\u2022 \ub2e4\uc6b4\ub85c\ub4dc \ubc0f 1:1 \uc0c1\ub2f4: http://pf.kakao.com/_RxbSNX/chat`;
+if(shareText)shareText.value=inviteMsg;
+if(modal)modal.style.display='\x66\x6c\x65\x78';
+}
+function closeReferralModal(){
+const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
+if(modal)modal.style.display='\x6e\x6f\x6e\x65';
+}
+function initReferralModal(){
+document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x52\x65\x66\x65\x72\x72\x61\x6c\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',openReferralModal);
+document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x52\x65\x66\x65\x72\x72\x61\x6c\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeReferralModal);
+document.getElementById('\x62\x74\x6e\x43\x6f\x70\x79\x52\x65\x66\x65\x72\x72\x61\x6c\x43\x6f\x64\x65')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const codeInput=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x4d\x79\x43\x6f\x64\x65');
+if(codeInput&&codeInput.value){
+copyNoticeTextToClipboard(codeInput.value);
+_0x101b(`\ud83c\udf81 \ucd94\ucc9c\uc778 \ucf54\ub4dc [${codeInput.value}]\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
+}
+});
+document.getElementById('\x62\x74\x6e\x43\x6f\x70\x79\x52\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const shareText=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74');
+if(shareText&&shareText.value){
+copyNoticeTextToClipboard(shareText.value);
+_0x101b('\ud83d\udccb \uce74\uce74\uc624\ud1a1 \ucd08\ub300 \ubb38\uad6c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uce74\ud1a1 \ub300\ud654\ubc29\uc5d0 \ubd99\uc5ec\ub123\uc5b4 \uce5c\uad6c\ub97c \ucd08\ub300\ud558\uc138\uc694\x2e');
+}
+});
+const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
+if(modal){
+modal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+if(e.target===modal)closeReferralModal();
 });
 }
 }
