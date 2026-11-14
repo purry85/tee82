@@ -4691,7 +4691,15 @@ await _0x103e('\uc804\uccb4');
 await _0x1003(200);
 }
 if(shouldStopRegistration)break;
-const normalizeTimeDigits=(t)=>(t||'').toString().replace(/[^\d]/g,'');
+const normalizeTimeDigits=(t)=>{
+if(!t)return'';
+const tm=t.toString().match(/\b([01]?\d|2[0-3])\s*[:시]?\s*([0-5]\d)\b/);
+if(tm){
+return`${tm[1].padStart(2,'\x30')}${tm[2]}`;
+}
+const d=t.toString().replace(/[^\d]/g,'');
+return d.length===3?'\x30'+d:(d.length>=4?d.slice(0,4):d);
+};
 const formatColonTime=(t)=>{
 const d=normalizeTimeDigits(t);
 return(d.length===4)?`${d.slice(0,2)}:${d.slice(2)}`:(d.length===3?`0${d[0]}:${d.slice(1)}`:t);
@@ -4700,6 +4708,20 @@ const parseFeeMan=(f)=>{
 const num=parseFloat((f||'').toString().replace(/[^\d.]/g,''));
 if(isNaN(num))return null;
 return num>=1000?Math.round((num/10000)*10)/10:num;
+};
+const isPostIdentical=(it,cd)=>{
+if(!it||!cd)return false;
+const itemDigits=normalizeTimeDigits(it.time);
+const cardDigits=normalizeTimeDigits(cd.timeStr||cd.timeDigits);
+if(!itemDigits||!cardDigits||itemDigits!==cardDigits)return false;
+const itemFeeMan=parseFeeMan(it.fee);
+const cardFeeMan=cd.feeManVal;
+if(itemFeeMan===null||cardFeeMan===null)return false;
+if(Math.abs(itemFeeMan-cardFeeMan)>=0.05)return false;
+const cardPeopleNum=(cd.peopleStr||'').replace(/[^\d]/g,'');
+const itemPeopleNum=(it.sizenum||'').replace(/[^\d]/g,'');
+if(cardPeopleNum&&itemPeopleNum&&cardPeopleNum!==itemPeopleNum)return false;
+return true;
 };
 let initialCards=[];
 for(let r=0;r<6;r++){
@@ -4816,7 +4838,12 @@ const itemDigits=normalizeTimeDigits(itemsToModify[idx].time);
 const exactCardIdx=unusedCards.findIndex(c=>normalizeTimeDigits(c.timeStr)===itemDigits);
 if(exactCardIdx!==-1){
 const matchedCard=unusedCards.splice(exactCardIdx,1)[0];
-assignedPairs[idx]={item:itemsToModify[idx],action:'\x6d\x6f\x64\x69\x66\x79',targetCard:matchedCard};
+const isSame=!forceAllEdit&&isPostIdentical(itemsToModify[idx],matchedCard);
+assignedPairs[idx]={
+item:itemsToModify[idx],
+action:isSame?'\x73\x6b\x69\x70':'\x6d\x6f\x64\x69\x66\x79',
+targetCard:matchedCard
+};
 }
 }
 for(let idx=0;idx<itemsToModify.length;idx++){
@@ -4824,7 +4851,12 @@ if(assignedPairs[idx]){
 plan.push(assignedPairs[idx]);
 }else if(unusedCards.length>0){
 const nextCard=unusedCards.shift();
-plan.push({item:itemsToModify[idx],action:'\x6d\x6f\x64\x69\x66\x79',targetCard:nextCard});
+const isSame=!forceAllEdit&&isPostIdentical(itemsToModify[idx],nextCard);
+plan.push({
+item:itemsToModify[idx],
+action:isSame?'\x73\x6b\x69\x70':'\x6d\x6f\x64\x69\x66\x79',
+targetCard:nextCard
+});
 }
 }
 }else if(existingCount===1){
@@ -4833,7 +4865,12 @@ const cardDigits=normalizeTimeDigits(card.timeStr);
 const sameTimeIdx=targetItems.findIndex(it=>normalizeTimeDigits(it.time)===cardDigits);
 if(sameTimeIdx!==-1){
 const sameItem=targetItems[sameTimeIdx];
-plan.push({item:sameItem,action:'\x6d\x6f\x64\x69\x66\x79',targetCard:card});
+const isSame=!forceAllEdit&&isPostIdentical(sameItem,card);
+plan.push({
+item:sameItem,
+action:isSame?'\x73\x6b\x69\x70':'\x6d\x6f\x64\x69\x66\x79',
+targetCard:card
+});
 unusedCards.splice(0,1);
 for(let i=0;i<targetItems.length;i++){
 if(i===sameTimeIdx)continue;
@@ -4842,7 +4879,12 @@ break;
 }
 }else{
 console.log(`[${logTag}] ${group.golf}: \uae30\uc874 \uae00 1\uac1c(${card.timeStr}) \u2794 \uc0c8 \ud0c0\uc784(${targetItems[0].time})\uc73c\ub85c \uc218\uc815 \uc2e4\ud589${targetItems.length>=2?` + 2\ubc88\uc9f8 \uc0c8 \ud0c0\uc784(${targetItems[1].time}) \ucd94\uac00 \ub4f1\ub85d`:''}!`);
-plan.push({item:targetItems[0],action:'\x6d\x6f\x64\x69\x66\x79',targetCard:card});
+const isSame=!forceAllEdit&&isPostIdentical(targetItems[0],card);
+plan.push({
+item:targetItems[0],
+action:isSame?'\x73\x6b\x69\x70':'\x6d\x6f\x64\x69\x66\x79',
+targetCard:card
+});
 unusedCards.splice(0,1);
 if(targetItems.length>=2){
 plan.push({item:targetItems[1],action:'\x72\x65\x67\x69\x73\x74\x65\x72',targetCard:null});
@@ -4870,7 +4912,39 @@ date:item.date,
 time:item.time,
 fee:item.fee
 });
-if(action==='\x72\x65\x67\x69\x73\x74\x65\x72'){
+if(action==='\x73\x6b\x69\x70'){
+console.log(`[${logTag}] \u26a1 [${pIdx+1}/${plan.length}] ${item.golf} (${item.time}, ${item.fee}\ub9cc): \uace8\ud504\ubaac \uae30\uc874 \ub4f1\ub85d\uae00\uacfc \uc2dc\uac04\u00b7\uae08\uc561\u00b7\uc778\uc6d0\uc774 100% \ub3d9\uc77c\ud558\uc5ec \uc2a4\ub9c8\ud2b8 \uac74\ub108\ub6f0\uae30(0\ucd08 \ud1b5\uacfc)!`);
+successCount++;
+if(targetCard&&targetCard.el)_replacedCardsSet.add(targetCard.el);
+if(targetCard&&targetCard.postId)processedPostIds.add(targetCard.postId);
+const newDigits=normalizeTimeDigits(item.time);
+const newColon=formatColonTime(item.time);
+groupUpdatedNewTimes.add(newDigits);
+groupUpdatedNewTimes.add(newColon);
+groupUpdatedNewTimes.add(item.time);
+if(targetCard&&targetCard.timeStr){
+const oldDigits=normalizeTimeDigits(targetCard.timeStr);
+const oldColon=formatColonTime(targetCard.timeStr);
+groupProcessedOldTimes.add(oldDigits);
+groupProcessedOldTimes.add(oldColon);
+groupProcessedOldTimes.add(targetCard.timeStr);
+}
+chrome.runtime.sendMessage({
+type:itemSuccessMsgType,
+regId:item.regId,
+item:item,
+newTime:item.time,
+newFee:item.fee,
+isSkipped:true
+});
+_0x1005({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ub3d9\uc77c \ub0b4\uc6a9 \uc720\uc9c0 (0\ucd08 \ud1b5\uacfc)`,
+current:globalIndex,
+total:items.length
+});
+await _0x1003(80);
+}else if(action==='\x72\x65\x67\x69\x73\x74\x65\x72'){
 console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf} (${item.time}): [${groupCategory}] \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud589...`);
 const regSuccess=await registerSingleNewPost(item,item.memo||customMemo,stepPreset,groupCategory);
 if(regSuccess){
@@ -5131,7 +5205,7 @@ await _0x1003(350);
 }
 if(shouldStopRegistration)break;
 if(globalIndex<items.length){
-const cooldownMs=_0x1009(delayPreset||'\x73\x61\x66\x65');
+const cooldownMs=(action==='\x73\x6b\x69\x70')?50:_0x1009(delayPreset||'\x73\x61\x66\x65');
 await _0x1003(cooldownMs);
 if(shouldStopRegistration)break;
 }
