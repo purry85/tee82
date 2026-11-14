@@ -14823,11 +14823,9 @@ const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69
 const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
-const btnKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
 const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
 if(!modal)return;
 if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
-if(btnKakaoSuccess)btnKakaoSuccess.style.display='\x6e\x6f\x6e\x65';
 if(btnSubmit){
 btnSubmit.disabled=false;
 btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
@@ -14858,7 +14856,6 @@ const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x7
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
 const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
-const btnKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
 const id=inputId?.value?.trim();
 const pw=inputPw?.value?.trim();
 const confirmPw=inputConfirm?.value?.trim();
@@ -14869,29 +14866,9 @@ if(!statusBox)return;
 statusBox.className='\x61\x75\x74\x68-\x61\x64\x6d\x69\x6e-\x73\x74\x61\x74\x75\x73 '+(isSuccess?'\x73\x75\x63\x63\x65\x73\x73':'\x65\x72\x72\x6f\x72');
 if(isSuccess){
 statusBox.innerHTML=`
-                <div style="font-size: 11.5px; font-weight: 800; color: #065F46; margin-bottom: 5px;">\ud83c\udf89 \uac00\uc785 \uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!</div>
-                <div style="font-size: 10.5px; line-height: 1.45; color: #047857; margin-bottom: 10px;">\uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4.<br>\uc544\ub798 \ub178\ub780\uc0c9 \ubc84\ud2bc\uc744 \ub204\ub974\uba74 \uad00\ub9ac\uc790\uc5d0\uac8c \ubc14\ub85c \uc2b9\uc778\uc744 \uc694\uccad\ud569\ub2c8\ub2e4.</div>
-                <button type="button" id="btnStatusBoxKakao" style="width: 100%; box-sizing: border-box; background: #FEE500; color: #191919; border: 1px solid #E5C700; border-radius: 8px; padding: 10px 12px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#191919" style="flex-shrink: 0;"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.25 4.54 6.62-.2.74-.72 2.68-.83 3.09-.13.5.18.5.38.36.16-.11 2.53-1.72 3.56-2.42.76.11 1.54.17 2.35.17 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
-                    <span>\ud83d\udcac \uce74\uce74\uc624\ud1a1\uc73c\ub85c \ube60\ub978 \uc2b9\uc778 \uc694\uccad\ud558\uae30</span>
-                </button>
+                <div style="font-size: 12px; font-weight: 800; color: #065F46; margin-bottom: 6px;">\ud83c\udf89 \uac00\uc785 \uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!</div>
+                <div style="font-size: 11px; line-height: 1.5; color: #047857;">\uad00\ub9ac\uc790\uc5d0\uac8c \uc2e0\uccad \ub0b4\uc5ed\uc774 \uc989\uc2dc \uc804\ub2ec\ub418\uc5c8\uc2b5\ub2c8\ub2e4.<br>\uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \ubc14\ub85c \uc774\uc6a9\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4.</div>
             `;
-const btnKakao=document.getElementById('\x62\x74\x6e\x53\x74\x61\x74\x75\x73\x42\x6f\x78\x4b\x61\x6b\x61\x6f');
-if(btnKakao){
-btnKakao.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-e.preventDefault();
-const KAKAO_URL='\x68\x74\x74\x70\x3a\x2f\x2f\x70\x66\x2e\x6b\x61\x6b\x61\x6f\x2e\x63\x6f\x6d\x2f\x5f\x52\x78\x62\x53\x4e\x58\x2f\x63\x68\x61\x74';
-try{
-if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.tabs&&chrome.tabs.create){
-chrome.tabs.create({url:KAKAO_URL});
-}else{
-window.open(KAKAO_URL,'\x5f\x62\x6c\x61\x6e\x6b');
-}
-}catch(err){
-window.open(KAKAO_URL,'\x5f\x62\x6c\x61\x6e\x6b');
-}
-});
-}
 }else{
 statusBox.innerText=msg;
 }
@@ -14932,23 +14909,22 @@ btnSubmit.disabled=true;
 btnSubmit.innerText='\uc2e0\uccad \uc911\x2e\x2e\x2e';
 }
 if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
-if(btnKakaoSuccess)btnKakaoSuccess.style.display='\x6e\x6f\x6e\x65';
 try{
 const result=await registerUserWithServer(id,pw,name,phone);
 if(result&&result.success){
 showRegisterStatus('',true);
-_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! \uce74\uce74\uc624\ud1a1\uc73c\ub85c \ube60\ub978 \uc2b9\uc778\uc744 \uc694\uccad\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
-if(btnKakaoSuccess){
-btnKakaoSuccess.style.display='\x66\x6c\x65\x78';
-}
+_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! \uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc0ac\uc6a9\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
 const authInputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 const authInputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
 if(authInputId)authInputId.value=id;
 if(authInputPw)authInputPw.value=pw;
 if(btnSubmit){
 btnSubmit.disabled=true;
-btnSubmit.innerText='\uc2e0\uccad \uc644\ub8cc\ub428';
+btnSubmit.innerText='\uc2e0\uccad \uc644\ub8cc';
 }
+setTimeout(()=>{
+closeRegisterModal();
+},3000);
 }else{
 showRegisterStatus(result?.message||'\ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e');
 if(btnSubmit){
@@ -15181,10 +15157,6 @@ window.open(KAKAO_CHAT_URL,'\x5f\x62\x6c\x61\x6e\x6b');
 };
 const btnAuthKakaoInquiry=document.getElementById('\x62\x74\x6e\x41\x75\x74\x68\x4b\x61\x6b\x61\x6f\x49\x6e\x71\x75\x69\x72\x79');
 if(btnAuthKakaoInquiry)btnAuthKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
-const btnRegisterKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
-if(btnRegisterKakaoSuccess)btnRegisterKakaoSuccess.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
-const btnRegisterKakaoInquiry=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x49\x6e\x71\x75\x69\x72\x79');
-if(btnRegisterKakaoInquiry)btnRegisterKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnFooterKakao=document.getElementById('\x62\x74\x6e\x46\x6f\x6f\x74\x65\x72\x4b\x61\x6b\x61\x6f');
 if(btnFooterKakao)btnFooterKakao.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnOpenAdmin=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
