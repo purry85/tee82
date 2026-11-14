@@ -47,7 +47,7 @@ const html1 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
         document.getElementById('authInputId').value = 'admin';
         document.getElementById('authInputPw').value = '••••••••';
     </script>`;
-capture(html1, 'preview_login_support.png', 450, 720);
+capture(html1, 'preview_login_support.png', 450, 620);
 
 // 2. Preview: Main screen clean (bottom banner and header referral icon removed)
 const html2 = sidepanelHtml.replace('<script src="popup.js"></script>', '')

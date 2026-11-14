@@ -15149,6 +15149,17 @@ showRegisterStatus('\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e'
 inputName?.focus();
 return;
 }
+if(!phone){
+showRegisterStatus('\uc5f0\ub77d\ucc98(\ud734\ub300\ud3f0 \ubc88\ud638)\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputPhone?.focus();
+return;
+}
+const cleanPhone=phone.replace(/[^0-9]/g,'');
+if(cleanPhone.length<9){
+showRegisterStatus('\uc62c\ubc14\ub978 \uc5f0\ub77d\ucc98 \ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
+inputPhone?.focus();
+return;
+}
 if(btnSubmit){
 btnSubmit.disabled=true;
 btnSubmit.innerText='\uc2e0\uccad \uc911\x2e\x2e\x2e';
@@ -15426,8 +15437,6 @@ window.open(KAKAO_CHAT_URL,'\x5f\x62\x6c\x61\x6e\x6b');
 window.open(KAKAO_CHAT_URL,'\x5f\x62\x6c\x61\x6e\x6b');
 }
 };
-const btnAuthKakaoInquiry=document.getElementById('\x62\x74\x6e\x41\x75\x74\x68\x4b\x61\x6b\x61\x6f\x49\x6e\x71\x75\x69\x72\x79');
-if(btnAuthKakaoInquiry)btnAuthKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnFooterKakao=document.getElementById('\x62\x74\x6e\x46\x6f\x6f\x74\x65\x72\x4b\x61\x6b\x61\x6f');
 if(btnFooterKakao)btnFooterKakao.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnOpenAdmin=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
