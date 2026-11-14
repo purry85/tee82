@@ -14823,8 +14823,15 @@ const inputConfirm=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69
 const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x4e\x61\x6d\x65');
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
+const btnKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
+const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
 if(!modal)return;
 if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
+if(btnKakaoSuccess)btnKakaoSuccess.style.display='\x6e\x6f\x6e\x65';
+if(btnSubmit){
+btnSubmit.disabled=false;
+btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
+}
 if(inputPw)inputPw.value='';
 if(inputConfirm)inputConfirm.value='';
 if(inputName)inputName.value='';
@@ -14851,6 +14858,7 @@ const inputName=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x7
 const inputPhone=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x67\x69\x73\x74\x65\x72\x50\x68\x6f\x6e\x65');
 const statusBox=document.getElementById('\x72\x65\x67\x69\x73\x74\x65\x72\x53\x74\x61\x74\x75\x73\x42\x6f\x78');
 const btnSubmit=document.getElementById('\x62\x74\x6e\x53\x75\x62\x6d\x69\x74\x52\x65\x67\x69\x73\x74\x65\x72');
+const btnKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
 const id=inputId?.value?.trim();
 const pw=inputPw?.value?.trim();
 const confirmPw=inputConfirm?.value?.trim();
@@ -14897,24 +14905,32 @@ btnSubmit.disabled=true;
 btnSubmit.innerText='\uc2e0\uccad \uc911\x2e\x2e\x2e';
 }
 if(statusBox)statusBox.style.display='\x6e\x6f\x6e\x65';
+if(btnKakaoSuccess)btnKakaoSuccess.style.display='\x6e\x6f\x6e\x65';
 try{
 const result=await registerUserWithServer(id,pw,name,phone);
 if(result&&result.success){
-showStatus('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc744 \uc644\ub8cc\ud558\uc2dc\uace0, \uad00\ub9ac\uc790 \uc2b9\uc778 \uc774\ud6c4 \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e',true);
-_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc744 \uc644\ub8cc\ud558\uc2dc\uace0, \uad00\ub9ac\uc790 \uc2b9\uc778 \uc774\ud6c4 \uc0ac\uc6a9\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e');
+showStatus('\ud83c\udf89 \uac00\uc785\uc2e0\uccad\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!\n\uad00\ub9ac\uc790 \uc2b9\uc778 \ud6c4 \uc989\uc2dc \uc0ac\uc6a9 \uac00\ub2a5\ud569\ub2c8\ub2e4\x2e\n\uc544\ub798 \ub178\ub780\uc0c9 [\uce74\uce74\uc624\ud1a1 \ube60\ub978 \uc2b9\uc778 \uc694\uccad] \ubc84\ud2bc\uc744 \ub204\ub974\uc2dc\uba74 \uad00\ub9ac\uc790\uc5d0\uac8c \ubc14\ub85c \uc804\ub2ec\ub429\ub2c8\ub2e4\x2e',true);
+_0x101b('\ud83c\udf89 \uac00\uc785\uc2e0\uccad \uc644\ub8cc! \uce74\uce74\uc624\ud1a1\uc73c\ub85c \ube60\ub978 \uc2b9\uc778\uc744 \uc694\uccad\ud558\uc2e4 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
+if(btnKakaoSuccess){
+btnKakaoSuccess.style.display='\x66\x6c\x65\x78';
+}
 const authInputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 const authInputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
 if(authInputId)authInputId.value=id;
 if(authInputPw)authInputPw.value=pw;
-setTimeout(()=>{
-closeRegisterModal();
-},2500);
+if(btnSubmit){
+btnSubmit.disabled=true;
+btnSubmit.innerText='\uc2e0\uccad \uc644\ub8cc\ub428';
+}
 }else{
 showStatus(result?.message||'\ud68c\uc6d0\uac00\uc785 \uc2e0\uccad\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4\x2e');
+if(btnSubmit){
+btnSubmit.disabled=false;
+btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
+}
 }
 }catch(err){
 showStatus('\uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x3a '+(err.message||err));
-}finally{
 if(btnSubmit){
 btnSubmit.disabled=false;
 btnSubmit.innerText='\uac00\uc785 \uc2e0\uccad\ud558\uae30';
@@ -15123,6 +15139,27 @@ inputPw.type=isPw?'\x74\x65\x78\x74':'\x70\x61\x73\x73\x77\x6f\x72\x64';
 btnTogglePw.innerText=isPw?'\ud83d\ude48':'\ud83d\udc41\ufe0f';
 });
 }
+const KAKAO_CHAT_URL='\x68\x74\x74\x70\x3a\x2f\x2f\x70\x66\x2e\x6b\x61\x6b\x61\x6f\x2e\x63\x6f\x6d\x2f\x5f\x52\x78\x62\x53\x4e\x58\x2f\x63\x68\x61\x74';
+const handleOpenKakao=(e)=>{
+if(e&&e.preventDefault)e.preventDefault();
+try{
+if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.tabs&&chrome.tabs.create){
+chrome.tabs.create({url:KAKAO_CHAT_URL});
+}else{
+window.open(KAKAO_CHAT_URL,'\x5f\x62\x6c\x61\x6e\x6b');
+}
+}catch(err){
+window.open(KAKAO_CHAT_URL,'\x5f\x62\x6c\x61\x6e\x6b');
+}
+};
+const btnAuthKakaoInquiry=document.getElementById('\x62\x74\x6e\x41\x75\x74\x68\x4b\x61\x6b\x61\x6f\x49\x6e\x71\x75\x69\x72\x79');
+if(btnAuthKakaoInquiry)btnAuthKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
+const btnRegisterKakaoSuccess=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x53\x75\x63\x63\x65\x73\x73');
+if(btnRegisterKakaoSuccess)btnRegisterKakaoSuccess.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
+const btnRegisterKakaoInquiry=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x4b\x61\x6b\x61\x6f\x49\x6e\x71\x75\x69\x72\x79');
+if(btnRegisterKakaoInquiry)btnRegisterKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
+const btnFooterKakao=document.getElementById('\x62\x74\x6e\x46\x6f\x6f\x74\x65\x72\x4b\x61\x6b\x61\x6f');
+if(btnFooterKakao)btnFooterKakao.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnOpenAdmin=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const adminModal=document.getElementById('\x61\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const btnCloseAdmin=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
