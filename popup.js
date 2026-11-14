@@ -15080,7 +15080,6 @@ applySavedCredentialsToInputs();
 }
 }
 if(!res||res.v2_auth_api_version!==CURRENT_AUTH_API_VERSION||!res.v2_auth_api_url||isLegacyAuthUrl(res.v2_auth_api_url)){
-if(!res||res.v2_auth_api_version!==CURRENT_AUTH_API_VERSION||!res.v2_auth_api_url||isLegacyAuthUrl(res.v2_auth_api_url)){
 setAuthApiUrl(DEFAULT_AUTH_API_URL);
 }else{
 currentAuthApiUrl=res.v2_auth_api_url.trim();
