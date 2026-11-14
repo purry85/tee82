@@ -11990,20 +11990,24 @@ return;
 }catch(e){}
 const INITIAL_APP_VERSION="\x32\x2e\x30\x2e\x30";
 function _0x1068(){
-let customVer=null;
-try{
-customVer=localStorage.getItem('\x76\x32\x5f\x63\x75\x73\x74\x6f\x6d\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e');
-}catch(e){}
-if(customVer&&/^\d+(\.\d+)+$/.test(customVer.trim())){
-return customVer.trim();
-}
 let manifestVer=null;
 try{
 if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.runtime?.getManifest?.()?.version){
 manifestVer=chrome.runtime.getManifest().version;
 }
 }catch(e){}
-return manifestVer||INITIAL_APP_VERSION;
+let customVer=null;
+try{
+customVer=localStorage.getItem('\x76\x32\x5f\x63\x75\x73\x74\x6f\x6d\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e');
+}catch(e){}
+if(customVer&&manifestVer){
+return _0x1073(manifestVer,customVer)>=0?manifestVer:customVer.trim();
+}
+if(manifestVer)return manifestVer;
+if(customVer&&/^\d+(\.\d+)+$/.test(customVer.trim())){
+return customVer.trim();
+}
+return INITIAL_APP_VERSION;
 }
 function _0x1069(ver){
 const v=ver||_0x1068();
@@ -12459,6 +12463,11 @@ btnText.textContent='\uc6d0\ud074\ub9ad \ud504\ub85c\uadf8\ub7a8 \uc5c5\ub370\uc
 btnExecute.style.background='\x6c\x69\x6e\x65\x61\x72-\x67\x72\x61\x64\x69\x65\x6e\x74(\x31\x33\x35\x64\x65\x67, \x23\x34\x46\x34\x36\x45\x35, \x23\x34\x33\x33\x38\x43\x41)';
 btnExecute.onclick=()=>{
 _0x106c();
+try{
+localStorage.setItem('\x76\x32\x5f\x63\x75\x73\x74\x6f\x6d\x5f\x61\x70\x70\x5f\x76\x65\x72\x73\x69\x6f\x6e',remoteVer);
+localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x5f\x73\x65\x65\x6e\x5f\x76\x65\x72\x73\x69\x6f\x6e',remoteVer);
+sessionStorage.setItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x5f\x64\x69\x73\x6d\x69\x73\x73\x65\x64',remoteVer);
+}catch(e){}
 _0x106e();
 btnText.textContent='\u23f3 \uc5c5\ub370\uc774\ud2b8 \uc9c4\ud589 \uc911\x2e\x2e\x2e (\x33\ucd08 \uc18c\uc694)';
 btnExecute.style.opacity='\x30\x2e\x38\x35';
