@@ -1221,6 +1221,27 @@ mapped:true
 };
 }
 }
+if(normOrigSimple.includes('\ub5bc\uc81c\ubca0')||normOrigSimple.includes('\uc11c\ub0a8')||normOrigSimple.includes('\ub3d9\ubd81')||normOrigSimple.includes('\ub204\ub9ac\uac00\ub78c')||normOrigSimple.includes('\ud55c\uc6b8\ub9c8\ub8e8')){
+let tjKey=null;
+if(normOrigSimple.includes('\uc11c\ub0a8')||normOrigSimple.includes('\ub204\ub9ac')||normOrigSimple.includes('\uac00\ub78c')){
+tjKey='\ub5bc\uc81c\ubca0(\uc11c\ub0a8)';
+}else if(normOrigSimple.includes('\ub3d9\ubd81')||normOrigSimple.includes('\ud55c\uc6b8')||normOrigSimple.includes('\ub9c8\ub8e8')){
+tjKey='\ub5bc\uc81c\ubca0(\ub3d9\ubd81)';
+}
+if(tjKey){
+return{
+name:tjKey,
+region:'\ucda9\uccad',
+golfmon:tjKey,
+golfpang:'\ub5bc\uc81c\ubca0',
+golmarket:tjKey,
+golfrock:tjKey,
+golfland:tjKey,
+golftop:tjKey,
+mapped:true
+};
+}
+}
 let matchedKey=null;
 if(dictionary&&dictionary[cleanOrig]){
 matchedKey=cleanOrig;

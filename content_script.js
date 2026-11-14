@@ -907,6 +907,16 @@ const cLakeClassic=c.includes('\ub808\uc774\ud06c')||c.includes('\ud074\ub798\uc
 if(tLakeClassic&&(cOcean||cSky))return true;
 if(!tLakeClassic&&!tOcean&&!tSky&&(cOcean||cSky))return true;
 }
+if(t.includes('\ub5bc\uc81c\ubca0')||c.includes('\ub5bc\uc81c\ubca0')){
+const tSeonam=t.includes('\uc11c\ub0a8')||t.includes('\ub204\ub9ac')||t.includes('\uac00\ub78c');
+const cSeonam=c.includes('\uc11c\ub0a8')||c.includes('\ub204\ub9ac')||c.includes('\uac00\ub78c');
+const tDongbuk=t.includes('\ub3d9\ubd81')||t.includes('\ud55c\uc6b8')||t.includes('\ub9c8\ub8e8');
+const cDongbuk=c.includes('\ub3d9\ubd81')||c.includes('\ud55c\uc6b8')||c.includes('\ub9c8\ub8e8');
+if(tSeonam&&cDongbuk)return true;
+if(tDongbuk&&cSeonam)return true;
+if(tSeonam&&!cSeonam&&cDongbuk)return true;
+if(tDongbuk&&!cDongbuk&&cSeonam)return true;
+}
 return false;
 }
 function _0x1018(targetText,container){
@@ -2614,7 +2624,9 @@ function _0x1041(str){
 let s=(str||'').toLowerCase();
 s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
 .replace(/비에이\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
-.replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70');
+.replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
+.replace(/떼제베\s*[\(\[]?\s*(?:서남(?:서)?|누리\/?가람)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\uc11c\ub0a8')
+.replace(/떼제베\s*[\(\[]?\s*(?:동북(?:동)?|한울\/?마루)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\ub3d9\ubd81');
 s=s.replace(/\(?\s*p?\d+\s*홀(?:\s*[x*]\s*\d+)?\s*\)?/gi,'')
 .replace(/\(?\s*p\d+\s*\)?/gi,'')
 .replace(/\(\s*p\s*\)/gi,'');
@@ -2729,6 +2741,16 @@ const targetIsPublic=(normG1&&/비에이비스타p|비에이비스타퍼블릭/i
 (normG2&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG2));
 const cardIsPublic=/비에이비스타p|비에이비스타퍼블릭/i.test(normCard);
 if(targetIsPublic!==cardIsPublic)return 0;
+}
+const targetHasTj=(normG1&&normG1.includes('\ub5bc\uc81c\ubca0'))||(normG2&&normG2.includes('\ub5bc\uc81c\ubca0'));
+const cardHasTj=normCard.includes('\ub5bc\uc81c\ubca0');
+if(targetHasTj||cardHasTj){
+const targetIsSeonam=(normG1&&normG1.includes('\uc11c\ub0a8'))||(normG2&&normG2.includes('\uc11c\ub0a8'));
+const cardIsSeonam=normCard.includes('\uc11c\ub0a8');
+const targetIsDongbuk=(normG1&&normG1.includes('\ub3d9\ubd81'))||(normG2&&normG2.includes('\ub3d9\ubd81'));
+const cardIsDongbuk=normCard.includes('\ub3d9\ubd81');
+if(targetIsSeonam&&cardIsDongbuk)return 0;
+if(targetIsDongbuk&&cardIsSeonam)return 0;
 }
 if(normG1&&(normCard.includes(normG1)||(normG1.includes(normCard)&&normCard.length>=2)))return 100;
 if(normG2&&(normCard.includes(normG2)||(normG2.includes(normCard)&&normCard.length>=2)))return 95;
@@ -4315,6 +4337,14 @@ const targetIsPublic=(normG1&&/비에이비스타p|비에이비스타퍼블릭/i
 (normG2&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG2));
 const nodeIsPublic=/비에이비스타p|비에이비스타퍼블릭/i.test(norm)||/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)/i.test(tTxt);
 if(targetIsPublic!==nodeIsPublic)continue;
+}
+if((normG1&&normG1.includes('\ub5bc\uc81c\ubca0'))||(normG2&&normG2.includes('\ub5bc\uc81c\ubca0'))||norm.includes('\ub5bc\uc81c\ubca0')){
+const targetIsSeonam=(normG1&&normG1.includes('\uc11c\ub0a8'))||(normG2&&normG2.includes('\uc11c\ub0a8'));
+const nodeIsSeonam=norm.includes('\uc11c\ub0a8')||tTxt.includes('\uc11c\ub0a8');
+const targetIsDongbuk=(normG1&&normG1.includes('\ub3d9\ubd81'))||(normG2&&normG2.includes('\ub3d9\ubd81'));
+const nodeIsDongbuk=norm.includes('\ub3d9\ubd81')||tTxt.includes('\ub3d9\ubd81');
+if(targetIsSeonam&&nodeIsDongbuk)continue;
+if(targetIsDongbuk&&nodeIsSeonam)continue;
 }
 const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)||(normG1.includes(norm)&&norm.length>=2)))||
 (normG2&&(norm===normG2||norm.includes(normG2)||(normG2.includes(norm)&&norm.length>=2)));
