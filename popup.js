@@ -15430,8 +15430,6 @@ const btnAuthKakaoInquiry=document.getElementById('\x62\x74\x6e\x41\x75\x74\x68\
 if(btnAuthKakaoInquiry)btnAuthKakaoInquiry.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnFooterKakao=document.getElementById('\x62\x74\x6e\x46\x6f\x6f\x74\x65\x72\x4b\x61\x6b\x61\x6f');
 if(btnFooterKakao)btnFooterKakao.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
-const btnMainRemoteSupport=document.getElementById('\x62\x74\x6e\x4d\x61\x69\x6e\x52\x65\x6d\x6f\x74\x65\x53\x75\x70\x70\x6f\x72\x74');
-if(btnMainRemoteSupport)btnMainRemoteSupport.addEventListener('\x63\x6c\x69\x63\x6b',handleOpenKakao);
 const btnOpenAdmin=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const adminModal=document.getElementById('\x61\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
 const btnCloseAdmin=document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x41\x75\x74\x68\x41\x64\x6d\x69\x6e\x4d\x6f\x64\x61\x6c');
@@ -15698,9 +15696,8 @@ window.checkForRemoteAppUpdate(false);
 }
 try{
 initBumpTimer();
-initReferralModal();
 }catch(e){
-console.warn('\ud0c0\uc774\uba38\x2f\ucd94\ucc9c\uc778 \ubaa8\ub4c8 \ucd08\uae30\ud654 \uc5d0\ub7ec\x3a',e);
+console.warn('\ud0c0\uc774\uba38 \ubaa8\ub4c8 \ucd08\uae30\ud654 \uc5d0\ub7ec\x3a',e);
 }
 }
 let bumpTimerIntervalId=null;
@@ -15861,63 +15858,6 @@ const modal=document.getElementById('\x72\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x6
 if(modal){
 modal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 if(e.target===modal)closeBumpTimerModal();
-});
-}
-}
-function openReferralModal(){
-const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
-const codeInput=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x4d\x79\x43\x6f\x64\x65');
-const shareText=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74');
-let curId='\x67\x75\x65\x73\x74';
-try{
-if(typeof currentAuthUser!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&currentAuthUser?.id){
-curId=currentAuthUser.id;
-}else{
-const saved=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72');
-if(saved){
-const u=JSON.parse(saved);
-if(u&&u.id)curId=u.id;
-}
-}
-}catch(e){}
-if(codeInput)codeInput.value=curId;
-const inviteMsg=
-`\ud83c\udfcc\ufe0f [\uc624\ud1a0\ub9e4\ud2f0] \uace8\ud504 \ud2f0\ud0c0\uc784 \uc790\ub3d9\ub4f1\ub85d \uc194\ub8e8\uc158 15\uc77c \ubb34\ub8cc \ucd08\ub300\uc7a5
-
-\ub2e8 \ud55c \ubc88\uc758 \uacf5\uc9c0 \ubcf5\uc0ac\ub85c 6\ub300 \uace8\ud504 \ud50c\ub7ab\ud3fc(\uace8\ud504\ubaac, \uace8\ud321, \uace8\ub9c8\ucf13, \uace8\ud504\ub77d, \uace8\ud504\ud0d1, \uace8\ud504\ub79c\ub4dc) \uc6d0\ud074\ub9ad \ub3d9\uc2dc \ub4f1\ub85d!
-0\ucd08 \uc9c0\ub2a5\ud615 \uc2a4\ub9c8\ud2b8\uc218\uc815 & \uc6d0\ud074\ub9ad \ub9c8\uac10\uae4c\uc9c0 \uc644\ubcbd \uc9c0\uc6d0!
-
-\ud83c\udf81 \uac00\uc785 \uc2dc \uc544\ub798 \ucd94\ucc9c\uc778 \uc544\uc774\ub514\ub97c \uc785\ub825\ud558\uc2dc\uba74 15\uc77c \ubb34\ub8cc \uc5f0\uc7a5 \ud61c\ud0dd\uc774 \uc989\uc2dc \uc801\uc6a9\ub429\ub2c8\ub2e4.
-\u2022 \ucd94\ucc9c\uc778 \uc544\uc774\ub514: ${curId}
-\u2022 \ub2e4\uc6b4\ub85c\ub4dc \ubc0f 1:1 \uc0c1\ub2f4: http://pf.kakao.com/_RxbSNX/chat`;
-if(shareText)shareText.value=inviteMsg;
-if(modal)modal.style.display='\x66\x6c\x65\x78';
-}
-function closeReferralModal(){
-const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
-if(modal)modal.style.display='\x6e\x6f\x6e\x65';
-}
-function initReferralModal(){
-document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x52\x65\x66\x65\x72\x72\x61\x6c\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',openReferralModal);
-document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x52\x65\x66\x65\x72\x72\x61\x6c\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeReferralModal);
-document.getElementById('\x62\x74\x6e\x43\x6f\x70\x79\x52\x65\x66\x65\x72\x72\x61\x6c\x43\x6f\x64\x65')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-const codeInput=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x4d\x79\x43\x6f\x64\x65');
-if(codeInput&&codeInput.value){
-copyNoticeTextToClipboard(codeInput.value);
-_0x101b(`\ud83c\udf81 \ucd94\ucc9c\uc778 \ucf54\ub4dc [${codeInput.value}]\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`);
-}
-});
-document.getElementById('\x62\x74\x6e\x43\x6f\x70\x79\x52\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-const shareText=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x53\x68\x61\x72\x65\x54\x65\x78\x74');
-if(shareText&&shareText.value){
-copyNoticeTextToClipboard(shareText.value);
-_0x101b('\ud83d\udccb \uce74\uce74\uc624\ud1a1 \ucd08\ub300 \ubb38\uad6c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \uce74\ud1a1 \ub300\ud654\ubc29\uc5d0 \ubd99\uc5ec\ub123\uc5b4 \uce5c\uad6c\ub97c \ucd08\ub300\ud558\uc138\uc694\x2e');
-}
-});
-const modal=document.getElementById('\x72\x65\x66\x65\x72\x72\x61\x6c\x50\x72\x6f\x6d\x6f\x4d\x6f\x64\x61\x6c');
-if(modal){
-modal.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-if(e.target===modal)closeReferralModal();
 });
 }
 }

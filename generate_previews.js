@@ -49,7 +49,7 @@ const html1 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     </script>`;
 capture(html1, 'preview_login_support.png', 450, 720);
 
-// 2. Preview: Main screen with remote support banner above footer and referral button in header
+// 2. Preview: Main screen clean (bottom banner and header referral icon removed)
 const html2 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     + `<style>
         * { animation: none !important; transition: none !important; }
@@ -101,28 +101,8 @@ const html3 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     </script>`;
 capture(html3, 'preview_register_referral.png', 450, 720);
 
-// 4. Preview: Referral Share & Promo Modal
+// 4. Preview: Lab Settings Panel
 const html4 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
-    + `<style>
-        * { animation: none !important; transition: none !important; }
-        .app-wrapper { display: none !important; }
-        #referralPromoModal { display: flex !important; opacity: 1 !important; background: #0A111D !important; }
-    </style>
-    <script>
-        document.getElementById('referralMyCode').value = 'admin';
-        document.getElementById('referralShareText').value = 
-\`[AutomaTee] 골프 매니저 업무 10초 컷 솔루션!
-골프몬·골팡·골마켓·골프락·골프랜드·골프탑 6개사 동시 등록!
-
-가입 시 추천인 코드 [admin] 을 입력하시면
-추천인과 가입자 모두에게 +15일 무료 연장 혜택을 드립니다 🎁
-
-다운로드: https://automatee.netlify.app\`;
-    </script>`;
-capture(html4, 'preview_referral_promo_modal.png', 450, 680);
-
-// 5. Preview: Lab Settings Panel with the new 2 experimental features
-const html5 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     + `<style>
         * { animation: none !important; transition: none !important; }
         #authOverlay { display: none !important; }
@@ -136,5 +116,4 @@ const html5 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
         document.getElementById('chkOpenSoldOutFeature').checked = false;
         document.getElementById('chkOpenBumpTimerFeature').checked = false;
     </script>`;
-capture(html5, 'preview_lab_settings.png', 485, 900);
-
+capture(html4, 'preview_lab_settings.png', 485, 900);
