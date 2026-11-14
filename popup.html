@@ -1396,6 +1396,7 @@
         }
 
         .card-close-btn {
+            display: none;
             background: #FEF2F2;
             border: 1px solid #FECACA;
             color: #DC2626;
@@ -1407,6 +1408,10 @@
             flex-shrink: 0;
             line-height: 1.2;
             transition: all 0.15s ease;
+        }
+
+        body.lab-soldout-active .card-close-btn {
+            display: inline-block !important;
         }
 
         .card-close-btn:hover {
@@ -3896,7 +3901,7 @@
             <div class="nav-actions">
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="즉시중단" aria-label="즉시중단">🛑</button>
-                <button class="nav-icon-btn" id="btnOpenRefreshTimer" title="⏱️ 자동 끌어올리기 타이머 설정">⏱️</button>
+                <button class="nav-icon-btn" id="btnOpenRefreshTimer" title="⏱️ 자동 끌어올리기 타이머 설정" style="display: none;">⏱️</button>
                 <button class="nav-icon-btn" id="btnOpenReferralModal" title="🎁 친구 초대 & 15일 무료 받기">🎁</button>
                 <button class="nav-icon-btn" id="btnPopoutWindow" title="화면 절반 크기 독립창으로 분리">🗗</button>
                 <button class="nav-icon-btn" id="btnOpenSidePanel" title="사이드패널로 열기 (화면 전체 높이)">📌</button>
@@ -4072,7 +4077,7 @@
                     <input type="checkbox" id="chkBatchSeontiAll">
                     <span id="textBatchSeonti">선택 선티지정</span>
                 </label>
-                <button type="button" class="btn-soldout-batch" id="btnBatchSoldOut" title="체크된 티타임을 즉시 마감/삭제하고 마감안내 문구를 복사합니다">
+                <button type="button" class="btn-soldout-batch" id="btnBatchSoldOut" title="체크된 티타임을 즉시 마감/삭제하고 마감안내 문구를 복사합니다" style="display: none;">
                     <span>🚫 선택마감</span>
                 </button>
             </div>
@@ -4187,6 +4192,20 @@
                     </label>
                     <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
                         * 부여기능에 [f12]가 등록되어 있거나 체크 시 모든 웹페이지 및 팝업창에서 F12 키와 우클릭 개발자 도구 검사가 정상 동작합니다.
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
+                        <input type="checkbox" id="chkOpenSoldOutFeature">
+                        <span>🚫 원클릭 마감/삭제 기능 오픈 (카드별 마감✕ 및 선택마감 버튼 노출)</span>
+                    </label>
+                    <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
+                        * 체크 시 티타임 카드별 즉시 마감(✕) 버튼과 [선택마감] 버튼이 활성화됩니다.
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
+                        <input type="checkbox" id="chkOpenBumpTimerFeature">
+                        <span>⏱️ 끌어올리기 / 자동 재등록 타이머 오픈 (헤더 타이머 아이콘 노출)</span>
+                    </label>
+                    <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
+                        * 체크 시 상단 헤더에 [⏱️ 자동 끌어올리기 타이머] 설정 아이콘이 노출됩니다.
                     </div>
                 </div>
             </div>
