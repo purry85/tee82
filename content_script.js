@@ -891,8 +891,8 @@ if(!target||!candidate)return false;
 const t=String(target).toLowerCase();
 const c=String(candidate).toLowerCase();
 if(t.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')||c.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')){
-const tPublic=/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(t)||/비에이비스타\s*[\(\[]?\s*p/i.test(t);
-const cPublic=/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(c)||/비에이비스타\s*[\(\[]?\s*p/i.test(c);
+const tPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에이비스타p|퍼블릭.*비에이비스타/i.test(t);
+const cPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에이비스타p|퍼블릭.*비에이비스타/i.test(c);
 if(tPublic!==cPublic)return true;
 }
 if(t.includes('\ud074\ub7fd\x37\x32')||c.includes('\ud074\ub7fd\x37\x32')){
@@ -2612,7 +2612,9 @@ return false;
 }
 function _0x1041(str){
 let s=(str||'').toLowerCase();
-const isBaVistaPublic=(/비에이비스타/i.test(s)||/ba\s*vista/i.test(s))&&(/[\(\[]?\s*p/i.test(s)||/퍼블릭/i.test(s));
+s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
+.replace(/비에이\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
+.replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70');
 s=s.replace(/\(?\s*p?\d+\s*홀(?:\s*[x*]\s*\d+)?\s*\)?/gi,'')
 .replace(/\(?\s*p\d+\s*\)?/gi,'')
 .replace(/\(\s*p\s*\)/gi,'');
@@ -2635,11 +2637,6 @@ s=s.replace(/club\s*d/gi,'\ud074\ub7fd\ub514')
 .replace(/안성큐/g,'\uc548\uc131')
 .replace(/q/gi,'\ud050');
 s=s.replace(/[^a-z0-9가-힣]/g,'');
-if(isBaVistaPublic){
-if(!s.includes('\x70')&&!s.includes('\ud37c\ube14\ub9ad')){
-s+='\x70';
-}
-}
 return s;
 }
 async function _0x1042(el,customX=null,customY=null){
@@ -2728,9 +2725,9 @@ if(cardIsOcean||cardIsSky)return 0;
 const targetHasBaVista=(normG1&&normG1.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'))||(normG2&&normG2.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'));
 const cardHasBaVista=normCard.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0');
 if(targetHasBaVista||cardHasBaVista){
-const targetIsPublic=(normG1&&/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(normG1))||
-(normG2&&/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(normG2));
-const cardIsPublic=/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(normCard);
+const targetIsPublic=(normG1&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG1))||
+(normG2&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG2));
+const cardIsPublic=/비에이비스타p|비에이비스타퍼블릭/i.test(normCard);
 if(targetIsPublic!==cardIsPublic)return 0;
 }
 if(normG1&&(normCard.includes(normG1)||(normG1.includes(normCard)&&normCard.length>=2)))return 100;
@@ -4314,9 +4311,9 @@ if(targetIsLakeClassic&&(nodeIsOcean||nodeIsSky))continue;
 if(!targetIsLakeClassic&&!targetIsOcean&&!targetIsSky&&(nodeIsOcean||nodeIsSky))continue;
 }
 if((normG1&&normG1.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'))||(normG2&&normG2.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'))||norm.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')){
-const targetIsPublic=(normG1&&/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(normG1))||
-(normG2&&/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(normG2));
-const nodeIsPublic=/비에이비스타.*p|p.*비에이비스타|퍼블릭/i.test(norm)||/비에이비스타\s*[\(\[]?\s*p/i.test(tTxt);
+const targetIsPublic=(normG1&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG1))||
+(normG2&&/비에이비스타p|비에이비스타퍼블릭/i.test(normG2));
+const nodeIsPublic=/비에이비스타p|비에이비스타퍼블릭/i.test(norm)||/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)/i.test(tTxt);
 if(targetIsPublic!==nodeIsPublic)continue;
 }
 const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)||(normG1.includes(norm)&&norm.length>=2)))||
