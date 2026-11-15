@@ -4364,7 +4364,6 @@
                 </div>
             </div>
             <div class="nav-actions">
-                <button class="nav-icon-btn" id="btnNavSoldOutText" title="🚫 문자/알림톡 붙여넣기 원클릭 글마감/삭제" style="color: #EF4444; font-weight: bold; font-size: 13px;">🚫</button>
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="즉시중단" aria-label="즉시중단">🛑</button>
                 <button class="nav-icon-btn" id="btnNavBump" title="🚀 골프몬 내 글 최상단 1등 끌어올리기 (BUMP)" style="font-size: 13px; display: none;">🚀</button>
@@ -4588,9 +4587,6 @@
                 <button type="button" class="btn-soldout-open-modal" id="btnOpenSoldOutTextModal" title="예약/조인 문자 내용을 붙여넣어 해당 사이트 글을 즉시 마감/삭제합니다">
                     <span>🚫 글마감/삭제</span>
                 </button>
-                <button type="button" class="btn-soldout-batch" id="btnBatchSoldOut" title="체크된 티타임을 즉시 마감/삭제하고 마감안내 문구를 복사합니다" style="display: none;">
-                    <span>🚫 선택마감</span>
-                </button>
             </div>
             <div class="card-list-wrapper" id="cardList">
                 <div class="empty-state">
@@ -4706,10 +4702,10 @@
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
                         <input type="checkbox" id="chkOpenSoldOutFeature">
-                        <span>🚫 원클릭 마감/삭제 기능 오픈 (카드별 마감✕ 및 선택마감 버튼 노출)</span>
+                        <span>🚫 티타임 카드별 즉시 마감(✕) 버튼 오픈</span>
                     </label>
                     <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
-                        * 체크 시 티타임 카드별 즉시 마감(✕) 버튼과 [선택마감] 버튼이 활성화됩니다.
+                        * 체크 시 변환된 각 티타임 카드 우측 상단에 즉시 마감(✕) 버튼이 노출됩니다.
                     </div>
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
                         <input type="checkbox" id="chkOpenBumpFeature">
