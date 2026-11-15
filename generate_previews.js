@@ -117,3 +117,33 @@ const html4 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
         document.getElementById('chkOpenBumpTimerFeature').checked = false;
     </script>`;
 capture(html4, 'preview_lab_settings.png', 485, 900);
+
+// 5. Preview: Bump Bar fresh (마지막 갱신: 방금 전 - 1등 유지)
+const html5 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
+    + `<style>
+        * { animation: none !important; transition: none !important; }
+        #authOverlay { display: none !important; }
+    </style>
+    <script>
+        document.getElementById('bumpActionCard').style.display = 'flex';
+        document.getElementById('bumpStatusPill').className = 'bump-status-pill status-fresh';
+        document.getElementById('bumpStatusDot').className = 'bump-status-dot green';
+        document.getElementById('bumpStatusText').innerText = '마지막 갱신: 방금 전';
+        document.getElementById('inputResetTargetDate').value = '2026-11-15';
+    </script>`;
+capture(html5, 'preview_bump_bar.png', 485, 750);
+
+// 6. Preview: Bump Bar warning/pulse (마지막 갱신: 35분 전 🚨 - 순위 밀림 경고)
+const html6 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
+    + `<style>
+        #authOverlay { display: none !important; }
+    </style>
+    <script>
+        document.getElementById('bumpActionCard').style.display = 'flex';
+        document.getElementById('bumpStatusPill').className = 'bump-status-pill status-danger';
+        document.getElementById('bumpStatusDot').className = 'bump-status-dot red';
+        document.getElementById('bumpStatusText').innerText = '마지막 갱신: 35분 전 🚨';
+        document.getElementById('btnExecuteBump').classList.add('bump-pulsing');
+        document.getElementById('inputResetTargetDate').value = '2026-11-15';
+    </script>`;
+capture(html6, 'preview_bump_warning.png', 485, 750);

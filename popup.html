@@ -1387,6 +1387,164 @@
             color: #B91C1C;
         }
 
+        /* 🚀 골프몬 내글 전체 1등 끌어올리기 (BUMP) 바 */
+        .bump-action-card {
+            margin-top: 5px;
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 5px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .bump-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bump-title-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .bump-main-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #1E293B;
+            letter-spacing: -0.3px;
+        }
+
+        .bump-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 1.5px 6px;
+            border-radius: 12px;
+            font-size: 9.5px;
+            font-weight: 700;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .bump-status-pill.status-fresh {
+            background: #DCFCE7;
+            color: #15803D;
+            border-color: #86EFAC;
+        }
+
+        .bump-status-pill.status-warning {
+            background: #FEF3C7;
+            color: #B45309;
+            border-color: #FCD34D;
+        }
+
+        .bump-status-pill.status-danger {
+            background: #FEE2E2;
+            color: #B91C1C;
+            border-color: #FCA5A5;
+        }
+
+        .bump-status-pill.status-idle {
+            background: #F1F5F9;
+            color: #64748B;
+            border-color: #CBD5E1;
+        }
+
+        .bump-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .bump-status-dot.green { background: #16A34A; }
+        .bump-status-dot.yellow { background: #D97706; }
+        .bump-status-dot.red { background: #DC2626; }
+        .bump-status-dot.gray { background: #94A3B8; }
+
+        .bump-controls-wrap {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .input-bump-date {
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            padding: 1px 4px;
+            font-size: 10px;
+            color: #334155;
+            outline: none;
+            background: #FFFFFF;
+            font-family: inherit;
+            height: 22px;
+        }
+
+        .sel-bump-filter {
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            padding: 1px 4px;
+            font-size: 10px;
+            color: #334155;
+            outline: none;
+            background: #FFFFFF;
+            font-family: inherit;
+            height: 22px;
+            font-weight: 600;
+        }
+
+        .btn-bump-action {
+            width: 100%;
+            height: 28px;
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .btn-bump-action:hover {
+            background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+            box-shadow: 0 4px 10px rgba(30, 64, 175, 0.45);
+            transform: translateY(-0.5px);
+        }
+
+        .btn-bump-action:active {
+            transform: translateY(0);
+        }
+
+        .btn-bump-action.bump-pulsing {
+            animation: bumpPulseGlow 1.8s infinite;
+        }
+
+        @keyframes bumpPulseGlow {
+            0%, 100% { box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35); }
+            50% { box-shadow: 0 0 14px rgba(239, 68, 68, 0.7); background: linear-gradient(135deg, #EA580C, #DC2626); }
+        }
+
+        .bump-btn-sub {
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.88;
+        }
+
         /* 🚫 문자 붙여넣기 원클릭 글마감/삭제 버튼 */
         .btn-soldout-open-modal {
             background: #FEF2F2;
@@ -4200,7 +4358,7 @@
                 <button class="nav-icon-btn" id="btnNavSoldOutText" title="🚫 문자/알림톡 붙여넣기 원클릭 글마감/삭제" style="color: #EF4444; font-weight: bold; font-size: 13px;">🚫</button>
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="즉시중단" aria-label="즉시중단">🛑</button>
-                <button class="nav-icon-btn" id="btnOpenRefreshTimer" title="⏱️ 자동 끌어올리기 타이머 설정" style="display: none;">⏱️</button>
+                <button class="nav-icon-btn" id="btnNavBump" title="🚀 골프몬 내 글 최상단 1등 끌어올리기 (BUMP)" style="font-size: 13px;">🚀</button>
                 <button class="nav-icon-btn" id="btnPopoutWindow" title="화면 절반 크기 독립창으로 분리">🗗</button>
                 <button class="nav-icon-btn" id="btnOpenSidePanel" title="사이드패널로 열기 (화면 전체 높이)">📌</button>
                 <button class="nav-icon-btn" id="btnOpenStats" title="오늘의 작업 통계 대시보드 리포트">📊</button>
@@ -4292,29 +4450,38 @@
                     <span>플랫폼 동시 등록</span>
                 </button>
             </div>
-            <div class="reset-actions-bar" id="resetActionsBar" style="display: none;">
-                <div class="reset-inputs-row">
-                    <input type="date" id="inputResetTargetDate" class="input-reset-date" title="전체리셋 시작 날짜를 지정하세요">
-                    <span class="reset-date-tilde">~</span>
-                    <input type="date" id="inputResetEndDate" class="input-reset-date" title="전체리셋 종료 날짜를 지정하세요 (시작 날짜부터 종료 날짜까지 차례대로 리셋합니다)">
-                    <select id="selResetFilterType" class="sel-reset-filter" title="전체리셋 대상 구분 (전체 / 조인 / 양도)">
-                        <option value="전체" selected>전체</option>
-                        <option value="조인">조인</option>
-                        <option value="양도">양도</option>
-                    </select>
-                </div>
-                <div class="reset-btns-row">
-                    <button type="button" class="btn-hero-submit btn-full-reset-action" id="btnResetGolfmonDatePosts" title="지정한 시작 날짜부터 종료 날짜까지 등록된 골프몬 글을 내용 변경 없이 차례대로 모두 수정(리셋)합니다">
-                        <span>전체리셋</span>
-                    </button>
-                    <div class="reset-repeat-group" id="resetRepeatGroup" title="전체리셋 반복 횟수 선택 (1회, 3회, 5회, 무제한)">
-                        <span class="reset-repeat-title">반복:</span>
-                        <label class="reset-repeat-label" title="1회만 실행하고 종료"><input type="radio" name="resetRepeatCount" value="1" checked> 1</label>
-                        <label class="reset-repeat-label" title="3회 반복 실행"><input type="radio" name="resetRepeatCount" value="3"> 3</label>
-                        <label class="reset-repeat-label" title="5회 반복 실행"><input type="radio" name="resetRepeatCount" value="5"> 5</label>
-                        <label class="reset-repeat-label" title="중단할 때까지 계속 무제한 반복"><input type="radio" name="resetRepeatCount" value="infinite"> 무제한</label>
+            <!-- 🚀 골프몬 내 글 전체 1등 끌어올리기 (BUMP) 바 -->
+            <div class="bump-action-card" id="bumpActionCard">
+                <div class="bump-card-header">
+                    <div class="bump-title-group">
+                        <span style="font-size: 13px;">🚀</span>
+                        <span class="bump-main-title">골프몬 내글 끌어올리기</span>
+                        <div class="bump-status-pill status-idle" id="bumpStatusPill" title="마지막 끌어올리기 경과 시간">
+                            <span class="bump-status-dot gray" id="bumpStatusDot"></span>
+                            <span id="bumpStatusText">마지막 갱신: 확인 중...</span>
+                        </div>
+                    </div>
+                    <div class="bump-controls-wrap">
+                        <input type="date" id="inputResetTargetDate" class="input-bump-date" title="끌어올릴 대상 시작 날짜를 지정하세요">
+                        <input type="date" id="inputResetEndDate" class="input-bump-date" style="display: none;" title="끌어올릴 대상 종료 날짜">
+                        <select id="selResetFilterType" class="sel-bump-filter" title="끌어올릴 대상 구분 (전체 / 조인 / 양도)">
+                            <option value="전체" selected>전체</option>
+                            <option value="조인">조인</option>
+                            <option value="양도">양도</option>
+                        </select>
+                        <select id="selBumpRepeat" class="sel-bump-filter" title="끌어올리기 반복 횟수 선택">
+                            <option value="1" selected>1회</option>
+                            <option value="3">3회</option>
+                            <option value="5">5회</option>
+                            <option value="infinite">무제한</option>
+                        </select>
                     </div>
                 </div>
+                <button type="button" class="btn-bump-action" id="btnExecuteBump" title="골프몬에 등록된 내 글들을 차례대로 [수정 완료]하여 게시판 맨 위 1등으로 즉시 끌어올립니다">
+                    <span style="font-size: 13px;">🚀</span>
+                    <span>내 글 전체 1등 끌어올리기</span>
+                    <span class="bump-btn-sub">(골프몬 최상단 갱신)</span>
+                </button>
             </div>
         </section>
 
