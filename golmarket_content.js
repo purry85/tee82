@@ -1450,37 +1450,58 @@ el.click();
 }catch(e){}
 }
 function _0x101e(){
-const all=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x73\x70\x61\x6e, \x64\x69\x76'));
-return all.find(el=>{
-const txt=(el.innerText||'').trim();
-return(txt==='\ub0b4\uac00\uc4f4\uae00'||txt.includes('\ub0b4\uac00\uc4f4\uae00'))&&el.offsetHeight>0;
+const aByHref=document.querySelector('\x61[\x68\x72\x65\x66*="\x74\x6d\x5f\x6d\x62\x5f\x69\x64"]');
+if(aByHref)return aByHref;
+const allLinks=Array.from(document.querySelectorAll('\x61'));
+const exactA=allLinks.find(a=>(a.innerText||'').trim()==='\ub0b4\uac00\uc4f4\uae00');
+if(exactA)return exactA;
+const incA=allLinks.find(a=>(a.innerText||'').trim().includes('\ub0b4\uac00\uc4f4\uae00'));
+if(incA)return incA;
+const allBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]'));
+const btn=allBtns.find(b=>(b.innerText||b.value||'').trim().includes('\ub0b4\uac00\uc4f4\uae00'));
+if(btn)return btn;
+const allSpans=Array.from(document.querySelectorAll('\x73\x70\x61\x6e, \x73\x74\x72\x6f\x6e\x67, \x62, \x66\x6f\x6e\x74'));
+const span=allSpans.find(s=>(s.innerText||'').trim()==='\ub0b4\uac00\uc4f4\uae00');
+if(span){
+return span.closest('\x61')||span.closest('\x62\x75\x74\x74\x6f\x6e')||span;
+}
+const allDivs=Array.from(document.querySelectorAll('\x64\x69\x76, \x6c\x69'));
+const divWithClick=allDivs.find(d=>{
+const t=(d.innerText||'').trim();
+return t==='\ub0b4\uac00\uc4f4\uae00'&&(d.getAttribute('\x6f\x6e\x63\x6c\x69\x63\x6b')||d.style.cursor==='\x70\x6f\x69\x6e\x74\x65\x72');
 });
+if(divWithClick)return divWithClick;
+return null;
 }
 function _0x101f(row,btnName){
 if(!row)return null;
-let btn=Array.from(row.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76')).find(el=>{
-const t=(el.innerText||el.value||'').trim();
-return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
-});
-if(btn)return btn;
 let sibling=row.nextElementSibling;
 for(let s=0;s<3&&sibling;s++){
 if(sibling.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]')&&s>0)break;
-btn=Array.from(sibling.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76')).find(el=>{
+const actionEl=Array.from(sibling.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]')).find(el=>{
 const t=(el.innerText||el.value||'').trim();
-return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
+return t===btnName||t.includes(btnName);
 });
-if(btn)return btn;
+if(actionEl)return actionEl;
+const otherEl=Array.from(sibling.querySelectorAll('\x73\x70\x61\x6e, \x73\x74\x72\x6f\x6e\x67, \x62')).find(el=>{
+const t=(el.innerText||'').trim();
+return t===btnName||t.includes(btnName);
+});
+if(otherEl){
+return otherEl.closest('\x61')||otherEl.closest('\x62\x75\x74\x74\x6f\x6e')||otherEl;
+}
 sibling=sibling.nextElementSibling;
 }
-const allDocBtns=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e')).filter(el=>{
+const inRow=Array.from(row.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]')).find(el=>{
+const t=(el.innerText||el.value||'').trim();
+return t===btnName||t.includes(btnName);
+});
+if(inRow)return inRow;
+const allDoc=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]')).filter(el=>{
 const t=(el.innerText||el.value||'').trim();
 return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
 });
-if(allDocBtns.length===1)return allDocBtns[0];
-if(allDocBtns.length>1){
-return allDocBtns[0];
-}
+if(allDoc.length>0)return allDoc[0];
 return null;
 }
 function _0x1020(row,targetPost){
@@ -1537,6 +1558,8 @@ const matched=[];
 for(const row of allRows){
 if(row.offsetHeight===0)continue;
 if(row.querySelector('\x74\x68'))continue;
+const hasCheckbox=Boolean(row.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]'));
+if(!hasCheckbox)continue;
 const rowText=row.innerText||'';
 if(rowText.includes('\uc870\uc778\uc77c\uc790')||rowText.includes('\ub4f1\ub85d\uc77c'))continue;
 if(_0x1020(row,targetPost)){
@@ -1620,8 +1643,10 @@ let actionBtn=_0x101f(row,targetBtnName);
 if(!actionBtn){
 console.log(`[\uace8\ub9c8\ucf13] \ud589 \uc0c1\uc138 \ud3bc\uce58\uae30 \uc2dc\ub3c4 (\ub300\uc0c1: ${targetBtnName})`);
 const clickable=row.querySelector('\x74\x64\x3a\x6e\x74\x68-\x63\x68\x69\x6c\x64(\x32), \x74\x64\x3a\x6e\x74\x68-\x63\x68\x69\x6c\x64(\x34), \x61')||row;
+clickable.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',{bubbles:true,cancelable:true}));
+clickable.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',{bubbles:true,cancelable:true}));
 clickable.click();
-await _0x1005(500);
+await _0x1005(600);
 actionBtn=_0x101f(row,targetBtnName);
 }
 if(!actionBtn&&isSoldOut){
@@ -1631,15 +1656,34 @@ if(!actionBtn){
 console.warn(`[\uace8\ub9c8\ucf13] '${targetBtnName}' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`);
 return false;
 }
-console.log(`[\uace8\ub9c8\ucf13] '${targetBtnName}' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589!`);
+console.log(`[\uace8\ub9c8\ucf13] '${targetBtnName}' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589!`,actionBtn);
+const hrefAttr=actionBtn.getAttribute('\x68\x72\x65\x66')||'';
+if(hrefAttr.toLowerCase().startsWith('\x6a\x61\x76\x61\x73\x63\x72\x69\x70\x74\x3a')){
+const jsCode=hrefAttr.replace(/^javascript:/i,'').trim();
+console.log("[\uace8\ub9c8\ucf13] \x6a\x61\x76\x61\x73\x63\x72\x69\x70\x74\x3a \x68\x72\x65\x66 \ucf54\ub4dc \uc2e4\ud589 \uc694\uccad\x3a",jsCode);
+window.postMessage({type:'\x5f\x5f\x45\x58\x45\x43\x5f\x4d\x41\x49\x4e\x5f\x53\x43\x52\x49\x50\x54\x5f\x5f',code:jsCode},'*');
+}
+actionBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',{bubbles:true,cancelable:true}));
+actionBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',{bubbles:true,cancelable:true}));
 actionBtn.click();
-await _0x1005(1000);
+await _0x1005(1200);
 _0x101d();
 return true;
 }
-async function _0x1024(targetPost,initialDeletedCount=0){
+function _0x1024(resultObj){
+try{
+console.log("[\uace8\ub9c8\ucf13] \uacb0\uacfc \ube0c\ub85c\ub4dc\uce90\uc2a4\ud2b8 \uc804\uc1a1\x3a",resultObj);
+chrome.runtime.sendMessage({
+type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45\x5f\x52\x45\x53\x55\x4c\x54',
+result:resultObj
+});
+}catch(e){}
+}
+async function _0x1025(targetPost,initialDeletedCount=0,currentStep=''){
 if(!targetPost){
-return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
+const errObj={platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
+_0x1024(errObj);
+return errObj;
 }
 const golfName=targetPost.golf||'';
 const rawGolfName=targetPost.rawGolf||golfName;
@@ -1648,7 +1692,7 @@ const targetTime=targetPost.time||'';
 const actionMode=targetPost.mode||'\x64\x65\x6c\x65\x74\x65';
 const isSoldOut=(actionMode==='\x73\x6f\x6c\x64\x6f\x75\x74');
 const actionLabel=isSoldOut?'\ub9c8\uac10':'\uc0ad\uc81c';
-console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uc2dc\uc791: \uad6c\uc7a5=${golfName}(${rawGolfName}), \ub0a0\uc9dc=${targetDate}, \uc2dc\uac04=${targetTime}, \ubaa8\ub4dc=${actionMode}`);
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uc2dc\uc791: \uad6c\uc7a5=${golfName}(${rawGolfName}), \ub0a0\uc9dc=${targetDate}, \uc2dc\uac04=${targetTime}, \ubaa8\ub4dc=${actionMode}, \ub2e8\uacc4=${currentStep}`);
 isRegistrationRunning=true;
 shouldStopRegistration=false;
 window.shouldStopRegistration=false;
@@ -1665,6 +1709,7 @@ _0x1003({desc:'\uace8\ud504\uc7a5 \uc870\uc778 \ubaa9\ub85d(\x6a\x6f\x69\x6e\x5f
 sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
 targetPost,
 deletedCount:initialDeletedCount,
+step:'\x6e\x61\x76\x69\x67\x61\x74\x69\x6e\x67\x5f\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74',
 timestamp:Date.now()
 }));
 window.location.href='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70';
@@ -1675,24 +1720,43 @@ const hasMyIdInUrl=window.location.search.includes('\x74\x6d\x5f\x6d\x62\x5f\x69
 if(!hasMyIdInUrl){
 const myPostBtn=_0x101e();
 if(myPostBtn){
-console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] '\ub0b4\uac00\uc4f4\uae00' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589");
-_0x1003({desc:"'\ub0b4\uac00\uc4f4\uae00' \ud0ed\uc73c\ub85c \uc804\ud658 \uc911\x2e\x2e\x2e"});
 sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
 targetPost,
 deletedCount:initialDeletedCount,
-step:'\x6d\x79\x5f\x70\x6f\x73\x74\x73\x5f\x63\x6c\x69\x63\x6b\x65\x64',
+step:'\x6d\x79\x5f\x70\x6f\x73\x74\x73\x5f\x6e\x61\x76\x69\x67\x61\x74\x65\x64',
 timestamp:Date.now()
 }));
+const link=myPostBtn.closest('\x61')||(myPostBtn.tagName==='\x41'?myPostBtn:null);
+if(link&&link.href&&!link.href.toLowerCase().startsWith('\x6a\x61\x76\x61\x73\x63\x72\x69\x70\x74\x3a')){
+console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] '\ub0b4\uac00\uc4f4\uae00' \x55\x52\x4c\ub85c \uc9c1\uc811 \uc774\ub3d9\x3a",link.href);
+_0x1003({desc:"'\ub0b4\uac00\uc4f4\uae00' \ubaa9\ub85d\uc73c\ub85c \uc774\ub3d9 \uc911\x2e\x2e\x2e"});
+window.location.href=link.href;
+return{success:true,pendingNavigation:true};
+}
+console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] '\ub0b4\uac00\uc4f4\uae00' \uc694\uc18c \ud074\ub9ad \uc2e4\ud589\x3a",myPostBtn);
+_0x1003({desc:"'\ub0b4\uac00\uc4f4\uae00' \ubaa9\ub85d\uc73c\ub85c \uc804\ud658 \uc911\x2e\x2e\x2e"});
+myPostBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',{bubbles:true}));
+myPostBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',{bubbles:true}));
 myPostBtn.click();
-await _0x1005(1000);
+return{success:true,pendingNavigation:true};
+}else{
+const isLoggedOut=Array.from(document.querySelectorAll('\x61')).some(a=>(a.innerText||'').trim()==='\ub85c\uadf8\uc778');
+const errMsg=isLoggedOut
+?'\uace8\ub9c8\ucf13 \ub85c\uadf8\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4\x2e \uba3c\uc800 \ub85c\uadf8\uc778\ud574\uc8fc\uc138\uc694\x2e'
+:'\uace8\ub9c8\ucf13 [\ub0b4\uac00\uc4f4\uae00] \ubc84\ud2bc\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e';
+console.warn(errMsg);
+_0x1003({desc:errMsg,isStopped:true});
+const errObj={platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:false,message:errMsg};
+_0x1024(errObj);
+return errObj;
 }
 }
 await _0x1005(400);
 _0x101d();
 let matchingRows=_0x1021(targetPost);
-console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] 1\ucc28 \ud14c\uc774\ube14 \ud0d0\uc0c9 \uacb0\uacfc: ${matchingRows.length}\uac74 \uc77c\uce58`);
-if(matchingRows.length===0){
-_0x1003({desc:`[${golfName} ${targetDate}] \uc0c1\ub2e8 \uac80\uc0c9 \ud544\ud130 \uc801\uc6a9 \uc911...`});
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] 1\ucc28 \ub0b4\uac00\uc4f4\uae00 \ud14c\uc774\ube14 \ud0d0\uc0c9 \uacb0\uacfc: ${matchingRows.length}\uac74 \uc77c\uce58`);
+if(matchingRows.length===0&&currentStep!=='\x73\x65\x61\x72\x63\x68\x5f\x73\x75\x62\x6d\x69\x74\x74\x65\x64'){
+_0x1003({desc:`[${golfName} ${targetDate}] \ub0b4\uac00\uc4f4\uae00 \uac80\uc0c9 \ud544\ud130 \uc801\uc6a9 \uc911...`});
 const appliedFilter=await _0x1022(targetPost);
 if(appliedFilter){
 console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] \uac80\uc0c9 \ud544\ud130 \uc801\uc6a9 \ubc0f '\uac80\uc0c9\ud558\uae30' \ud074\ub9ad \uc644\ub8cc");
@@ -1703,7 +1767,7 @@ deletedCount:initialDeletedCount,
 step:'\x73\x65\x61\x72\x63\x68\x5f\x73\x75\x62\x6d\x69\x74\x74\x65\x64',
 timestamp:Date.now()
 }));
-await _0x1005(1200);
+await _0x1005(1500);
 _0x101d();
 matchingRows=_0x1021(targetPost);
 console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uac80\uc0c9 \ud6c4 2\ucc28 \ud14c\uc774\ube14 \ud0d0\uc0c9 \uacb0\uacfc: ${matchingRows.length}\uac74 \uc77c\uce58`);
@@ -1711,16 +1775,18 @@ console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uac80\uc0c9 \ud6c4 2\ucc28 \ud
 }
 if(matchingRows.length===0){
 sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
-const msg=`[${golfName} ${targetDate} ${targetTime}] \uc77c\uce58\ud558\ub294 \uace8\ub9c8\ucf13 \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`;
+const msg=`[${golfName} ${targetDate} ${targetTime}] \ub0b4\uac00\uc4f4\uae00\uc5d0\uc11c \uc77c\uce58\ud558\ub294 \ud2f0\ud0c0\uc784\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`;
 console.warn(msg);
 _0x1003({desc:msg,isStopped:true});
 setTimeout(_0x1004,2500);
-return{
+const resultObj={
 platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
 success:initialDeletedCount>0,
 count:initialDeletedCount,
 message:initialDeletedCount>0?`\uace8\ub9c8\ucf13 \uc911\ubcf5 \uae00 ${initialDeletedCount}\uac74 ${actionLabel} \uc644\ub8cc`:msg
 };
+_0x1024(resultObj);
+return resultObj;
 }
 let deletedThisTurn=0;
 for(let i=0;i<matchingRows.length;i++){
@@ -1751,22 +1817,26 @@ isCompleted:true,
 total:totalDeleted,
 current:totalDeleted
 });
-return{
+const resultObj={
 platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
 success:totalDeleted>0,
 count:totalDeleted,
 message:`\uace8\ub9c8\ucf13 \uae00 ${totalDeleted}\uac74 ${actionLabel} \uc644\ub8cc`
 };
+_0x1024(resultObj);
+return resultObj;
 }catch(err){
 console.error(`[\uace8\ub9c8\ucf13 ${actionLabel} \uc5d0\ub7ec]:`,err);
 sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
 _0x1003({desc:`\u274c \uc5d0\ub7ec: ${err.message}`,isStopped:true});
 setTimeout(_0x1004,3000);
-return{
+const errObj={
 platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
 success:false,
 message:err.message||'\uace8\ub9c8\ucf13 \ucc98\ub9ac \uc911 \uc5d0\ub7ec'
 };
+_0x1024(errObj);
+return errObj;
 }
 }
 chrome.runtime.onMessage.addListener((request,sender,sendResponse)=>{
@@ -1821,7 +1891,7 @@ chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x53\x
 });
 return true;
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-_0x1024(request.targetPost).then(result=>{
+_0x1025(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 console.error("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c \uc5d0\ub7ec]\x3a",err);
@@ -1833,7 +1903,7 @@ sendResponse({isRunning:isRegistrationRunning});
 return true;
 }
 });
-function _0x1025(){
+function _0x1026(){
 try{
 const pendingJson=sessionStorage.getItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
 if(pendingJson){
@@ -1842,7 +1912,7 @@ const age=Date.now()-(pending.timestamp||0);
 if(age<30000&&pending.targetPost){
 console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] \ud398\uc774\uc9c0 \uc774\ub3d9\x2f\uc0c8\ub85c\uace0\uce68 \ud6c4 \ub300\uae30 \uc911\uc778 \uc0ad\uc81c \uc791\uc5c5 \uc7ac\uac1c\x3a",pending);
 setTimeout(()=>{
-_0x1024(pending.targetPost,pending.deletedCount||0);
+_0x1025(pending.targetPost,pending.deletedCount||0,pending.step||'');
 },600);
 return;
 }else{
@@ -1853,7 +1923,7 @@ sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\
 setTimeout(_0x101c,400);
 }
 if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
-document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',_0x1025);
+document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',_0x1026);
 }else{
-_0x1025();
+_0x1026();
 }
