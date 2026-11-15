@@ -7274,7 +7274,6 @@ card.innerHTML=`
                 </div>
             </div>
             <div class="card-right-actions">
-                <button type="button" class="card-close-btn" data-index="${idx}" title="\uc774 \ud0c0\uc784 \ub9c8\uac10 \ucc98\ub9ac (\ud14c\uc774\ube14\uc5d0\uc11c \uc81c\uac70 \ubc0f \ub9c8\uac10\uc548\ub0b4 \ubb38\uad6c \ubcf5\uc0ac)">\ub9c8\uac10</button>
                 <button class="card-del-btn" title="\uc0ad\uc81c">&times;</button>
             </div>
         `;
@@ -7285,7 +7284,7 @@ if(chk)chk.checked=targetState;
 tr.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',targetState);
 }
 card.addEventListener('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',(e)=>{
-if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||e.target.classList.contains('\x63\x61\x72\x64-\x63\x6c\x6f\x73\x65-\x62\x74\x6e')||e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65'))return;
+if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65'))return;
 e.preventDefault();
 isCardDragging=true;
 dragTargetState=!card.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64');
@@ -7328,12 +7327,6 @@ if(noticeTag){
 e.stopPropagation();
 const c=noticeTag.dataset.course||golf;
 showNoticeDetailModal(c);
-return;
-}
-if(e.target.classList.contains('\x63\x61\x72\x64-\x63\x6c\x6f\x73\x65-\x62\x74\x6e')){
-e.stopPropagation();
-e.preventDefault();
-handleSingleCardSoldOut(tr,card,golf,date,time,roomType);
 return;
 }
 if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')){
@@ -11130,7 +11123,11 @@ try{chrome.storage.local.set({v2_randomDelayPreset:targetRandom});}catch(e){}
 function _0x104f(isLabActiveParam){
 try{
 const isAdmin=_0x104a();
-const isLabActive=isAdmin&&(isLabActiveParam===true||localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65');
+const isLabActive=isAdmin&&(typeof isLabActiveParam==='\x62\x6f\x6f\x6c\x65\x61\x6e'?isLabActiveParam:localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65');
+const labPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
+const chkLab=document.getElementById('\x63\x68\x6b\x4c\x61\x62\x4d\x6f\x64\x65');
+if(chkLab)chkLab.checked=isLabActive;
+if(labPanel)labPanel.style.display=isLabActive?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
 if(!isAdmin){
 try{
 localStorage.removeItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65');
@@ -11243,8 +11240,10 @@ function _0x1051(){
 const modal=document.getElementById('\x6c\x61\x62\x50\x61\x73\x73\x77\x6f\x72\x64\x4d\x6f\x64\x61\x6c');
 if(modal)modal.style.display='\x6e\x6f\x6e\x65';
 const chkLabMode=document.getElementById('\x63\x68\x6b\x4c\x61\x62\x4d\x6f\x64\x65');
+const labPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
 const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 if(chkLabMode)chkLabMode.checked=isLabActive;
+if(labPanel)labPanel.style.display=isLabActive?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
 }
 function _0x1052(){
 if(!_0x104a()){
@@ -11376,18 +11375,23 @@ _0x1021();
 _0x101b('\ub300\uae30 \uc911\uc778 \ud2f0\ud0c0\uc784 \ubaa9\ub85d\uc774 \ucd08\uae30\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e \uc0c8\ub85c \uc785\ub825\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4\x2e');
 });
 }
+const chkLabMode=document.getElementById('\x63\x68\x6b\x4c\x61\x62\x4d\x6f\x64\x65');
+const labPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
 if(chkLabMode){
 chkLabMode.addEventListener('\x63\x6c\x69\x63\x6b',function(){
+const currentLabPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
 if(!_0x104a()){
 this.checked=false;
+if(currentLabPanel)currentLabPanel.style.display='\x6e\x6f\x6e\x65';
 _0x101b('\uc2e4\ud5d8\uc2e4 \ubaa8\ub4dc\ub294 \uad00\ub9ac\uc790 \uc804\uc6a9 \uae30\ub2a5\uc785\ub2c8\ub2e4\x2e');
 return;
 }
 if(this.checked){
 this.checked=false;
+if(currentLabPanel)currentLabPanel.style.display='\x6e\x6f\x6e\x65';
 _0x1050();
 }else{
-if(labPanel)labPanel.style.display='\x6e\x6f\x6e\x65';
+if(currentLabPanel)currentLabPanel.style.display='\x6e\x6f\x6e\x65';
 const chkOpenUpdateActionsEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x55\x70\x64\x61\x74\x65\x41\x63\x74\x69\x6f\x6e\x73');
 if(chkOpenUpdateActionsEl)chkOpenUpdateActionsEl.checked=false;
 const chkOpenDateResetEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x44\x61\x74\x65\x52\x65\x73\x65\x74');
@@ -11413,7 +11417,17 @@ localStorage.setItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x
 localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 try{
-chrome.storage.local.set({v2_labModeActive:false,v2_updateActionsActive:false,v2_priceUpdateActive:false,v2_replacePostActive:false,v2_dateResetActive:true,v2_noticeFeatureActive:true,v2_soldOutFeatureActive:false,v2_bumpFeatureActive:false,v2_bumpTimerFeatureActive:false});
+chrome.storage.local.set({
+v2_labModeActive:false,
+v2_updateActionsActive:false,
+v2_priceUpdateActive:false,
+v2_replacePostActive:false,
+v2_dateResetActive:true,
+v2_noticeFeatureActive:true,
+v2_soldOutFeatureActive:false,
+v2_bumpFeatureActive:false,
+v2_bumpTimerFeatureActive:false
+});
 }catch(e){}
 _0x104f(false);
 updateLivePrepaidFees();
