@@ -8269,11 +8269,14 @@ if(mins<660)return 1;
 if(mins<960)return 2;
 return 3;
 }
-function pickBestOneFromPart(pool,partNumber){
-if(!pool||pool.length===0)return null;
-if(pool.length===1)return pool[0];
-const paxPool=pool.filter(tr=>hasJoinedPax(tr));
-const activePool=(paxPool.length>0)?paxPool:pool;
+function isRandomSelectEnabled(){
+if(typeof _0x104a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x104a()){
+return false;
+}
+return true;
+}
+function pickDeterministicFromPart(activePool,partNumber){
+if(!activePool||activePool.length===0)return null;
 if(activePool.length===1)return activePool[0];
 let targetMins=480;
 if(partNumber===1){
@@ -8314,6 +8317,22 @@ return cheaperCandidates[0];
 }
 return anchorTr;
 }
+function pickBestOneFromPart(pool,partNumber){
+if(!pool||pool.length===0)return null;
+if(pool.length===1)return pool[0];
+const paxPool=pool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isPriorityTagTr(tr))||hasJoinedPax(tr));
+if(paxPool.length>0){
+if(paxPool.length===1)return paxPool[0];
+if(isRandomSelectEnabled()){
+return paxPool[Math.floor(Math.random()*paxPool.length)];
+}
+return pickDeterministicFromPart(paxPool,partNumber);
+}
+if(isRandomSelectEnabled()){
+return pool[Math.floor(Math.random()*pool.length)];
+}
+return pickDeterministicFromPart(pool,partNumber);
+}
 function pickTwoFromSamePart(partList,partNumber){
 if(!partList||partList.length===0)return[];
 if(partList.length<=2)return partList;
@@ -8325,6 +8344,12 @@ const firstMins=getTrMinutes(first);
 const MIN_TIME_GAP=15;
 const spacedCandidates=remaining.filter(tr=>Math.abs(getTrMinutes(tr)-firstMins)>=MIN_TIME_GAP);
 const secondPool=(spacedCandidates.length>0)?spacedCandidates:remaining;
+if(isRandomSelectEnabled()&&secondPool.length>1){
+const secondPax=secondPool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isPriorityTagTr(tr))||hasJoinedPax(tr));
+const activeSecond=(secondPax.length>0)?secondPax:secondPool;
+const second=activeSecond[Math.floor(Math.random()*activeSecond.length)];
+return[first,second];
+}
 const second=pickBestOneFromPart(secondPool,partNumber);
 return second?[first,second]:[first];
 }
