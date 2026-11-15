@@ -9071,18 +9071,28 @@ let resetRepeatTarget=1;
 let currentResetCycle=1;
 let isResetRepeatingActive=false;
 let resetRepeatTimer=null;
-function getSelectedResetRepeatCount(){
+function getSelectedResetRepeatCount(isBumpTrigger=false){
+if(isBumpTrigger){
 const selBump=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x52\x65\x70\x65\x61\x74');
 if(selBump&&selBump.value){
 if(selBump.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
 const n=parseInt(selBump.value,10);
 return isNaN(n)?1:n;
 }
+}
 const checked=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74"]\x3a\x63\x68\x65\x63\x6b\x65\x64');
-const val=checked?checked.value:'\x31';
-if(val==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
-const n=parseInt(val,10);
+if(checked){
+if(checked.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
+const n=parseInt(checked.value,10);
 return isNaN(n)?1:n;
+}
+const selBump=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x52\x65\x70\x65\x61\x74');
+if(selBump&&selBump.value){
+if(selBump.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
+const n=parseInt(selBump.value,10);
+return isNaN(n)?1:n;
+}
+return 1;
 }
 function initResetRepeatRadios(){
 const savedVal=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74')||'\x31';
@@ -9178,7 +9188,7 @@ btnExecuteBump._hasBumpListener=true;
 btnExecuteBump.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 e.stopPropagation();
 e.preventDefault();
-startGolfmonDateReset(false);
+startGolfmonDateReset(false,true);
 });
 }
 const btnNavBump=document.getElementById('\x62\x74\x6e\x4e\x61\x76\x42\x75\x6d\x70');
@@ -9188,35 +9198,46 @@ btnNavBump.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 e.stopPropagation();
 e.preventDefault();
 const card=document.getElementById('\x62\x75\x6d\x70\x41\x63\x74\x69\x6f\x6e\x43\x61\x72\x64');
-if(card){
+if(card&&card.style.display!=='\x6e\x6f\x6e\x65'){
 card.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x6e\x65\x61\x72\x65\x73\x74'});
 card.style.transition='\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77 \x30\x2e\x33\x73 \x65\x61\x73\x65';
 card.style.boxShadow='\x30 \x30 \x31\x32\x70\x78 \x72\x67\x62\x61(\x33\x37, \x39\x39, \x32\x33\x35, \x30\x2e\x36)';
 setTimeout(()=>{card.style.boxShadow='';},1200);
 }
-startGolfmonDateReset(false);
+startGolfmonDateReset(false,true);
 });
 }
 }
-function startGolfmonDateReset(isSubsequentCycle=false){
+function startGolfmonDateReset(isSubsequentCycle=false,isBumpTrigger=false){
 if(!_0x1044('\ubaac'))return;
 if(isGolfmonDateResetting){
 console.warn("[\x54\x65\x65\x38\x32] \uc774\ubbf8 \uc804\uccb4\ub9ac\uc14b \uba85\ub839\uc774 \uc804\ub2ec \uc911\uc785\ub2c8\ub2e4\x2e \uc911\ubcf5 \ud074\ub9ad \ubb34\uc2dc\x2e");
 return;
 }
 if(!isSubsequentCycle){
-resetRepeatTarget=getSelectedResetRepeatCount();
+resetRepeatTarget=getSelectedResetRepeatCount(isBumpTrigger);
 currentResetCycle=1;
 isResetRepeatingActive=true;
 if(resetRepeatTimer){clearTimeout(resetRepeatTimer);resetRepeatTimer=null;}
 }
+const bumpDateInput=document.getElementById('\x69\x6e\x70\x75\x74\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
 const dateInput=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
 const endDateInput=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x45\x6e\x64\x44\x61\x74\x65');
-const rawStartVal=(dateInput?.value||'').trim();
-let rawEndVal=(endDateInput?.value||'').trim();
+let rawStartVal='';
+let rawEndVal='';
+let filterType='\uc804\uccb4';
+if(isBumpTrigger&&bumpDateInput&&bumpDateInput.value){
+rawStartVal=bumpDateInput.value.trim();
+rawEndVal=rawStartVal;
+filterType=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
+}else{
+rawStartVal=(dateInput?.value||bumpDateInput?.value||'').trim();
+rawEndVal=(endDateInput?.value||rawStartVal).trim();
+filterType=document.getElementById('\x73\x65\x6c\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
+}
 if(!rawStartVal){
-alert("\uc804\uccb4\ub9ac\uc14b\uc744 \uc2dc\uc791\ud560 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e");
-dateInput?.focus();
+alert(isBumpTrigger?"\ub04c\uc5b4\uc62c\ub9b4 \ub300\uc0c1 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e":"\uc804\uccb4\ub9ac\uc14b\uc744 \uc2dc\uc791\ud560 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e");
+(isBumpTrigger?bumpDateInput:dateInput)?.focus();
 return;
 }
 if(!rawEndVal){
@@ -9256,15 +9277,19 @@ targetDates.push(formatToMmDd(startStr));
 const formattedDate=targetDates.length>1
 ?`${targetDates[0]}~${targetDates[targetDates.length-1]}`
 :targetDates[0];
-const filterType=document.getElementById('\x73\x65\x6c\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
 const delayPreset=document.getElementById('\x73\x65\x6c\x52\x61\x6e\x64\x6f\x6d\x44\x65\x6c\x61\x79')?.value||localStorage.getItem('\x76\x32\x5f\x72\x61\x6e\x64\x6f\x6d\x44\x65\x6c\x61\x79\x50\x72\x65\x73\x65\x74')||'\x66\x61\x73\x74';
 const stepPreset=document.getElementById('\x73\x65\x6c\x53\x74\x65\x70\x44\x65\x6c\x61\x79')?.value||localStorage.getItem('\x76\x32\x5f\x73\x74\x65\x70\x44\x65\x6c\x61\x79\x50\x72\x65\x73\x65\x74')||'\x66\x61\x73\x74';
 isGolfmonDateResetting=true;
 setTimeout(()=>{isGolfmonDateResetting=false;},3000);
 try{
+if(isBumpTrigger){
+localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',startStr);
+localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',filterType);
+}else{
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',startStr);
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x45\x6e\x64\x44\x61\x74\x65',endStr);
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',filterType);
+}
 }catch(e){}
 const cycleLabel=(resetRepeatTarget>1||resetRepeatTarget===Infinity)
 ?` (${currentResetCycle}/${resetRepeatTarget===Infinity?'\ubb34\uc81c\ud55c':resetRepeatTarget}\ud68c\ucc28)`
@@ -10595,6 +10620,9 @@ return features.includes('\uacf5\uc9c0')||features.includes('\x6e\x6f\x74\x69\x6
 if(featureKey==='\x66\x31\x32'||featureKey==='\x64\x65\x76\x74\x6f\x6f\x6c\x73'||featureKey==='\x66\x31\x32\ud574\uc81c'||featureKey==='\uac1c\ubc1c\uc790'){
 return features.includes('\x66\x31\x32')||features.includes('\uac1c\ubc1c\uc790')||features.includes('\ub514\ubc84\uadf8')||features.includes('\uac80\uc0ac')||features.includes('\x64\x65\x76\x74\x6f\x6f\x6c\x73');
 }
+if(featureKey==='\x31\ub4f1'||featureKey==='\x62\x75\x6d\x70'||featureKey==='\ub04c\uc5b4\uc62c\ub9ac\uae30'||featureKey==='\x31\ub4f1\ub04c\uc5b4\uc62c\ub9ac\uae30'){
+return features.includes('\x31\ub4f1')||features.includes('\x62\x75\x6d\x70')||features.includes('\ub04c\uc5b4\uc62c\ub9ac\uae30')||tokens.includes('\x31\ub4f1');
+}
 return false;
 }
 function _0x104c(){
@@ -10793,10 +10821,11 @@ localStorage.removeItem('\x76\x32\x5f\x6d\x75\x6c\x74\x69\x46\x65\x61\x74\x75\x7
 }catch(e){}
 }
 const hasUpdate=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x104b('\uc218\uc815')||_0x104b('\x75\x70\x64\x61\x74\x65')):false;
-const hasReset=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x104b('\x72\x65\x73\x65\x74'):false;
+const hasReset=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x104b('\x72\x65\x73\x65\x74')||_0x104b('\ub9ac\uc14b')):false;
 const hasNotice=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x104b('\x6e\x6f\x74\x69\x63\x65')||_0x104b('\uacf5\uc9c0')||_0x104b('\uacf5\uc9c0\ub4f1\ub85d')):false;
 const hasF12=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x104b('\x66\x31\x32')||_0x104b('\x64\x65\x76\x74\x6f\x6f\x6c\x73')||_0x104b('\x66\x31\x32\ud574\uc81c')):false;
 const hasMulti=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x104b('\ub3d9\uc2dc\ub4f1\ub85d'):false;
+const hasBump=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x104b('\x31\ub4f1')||_0x104b('\x62\x75\x6d\x70')||_0x104b('\ub04c\uc5b4\uc62c\ub9ac\uae30')):false;
 const chkOpenUpdateActions=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x55\x70\x64\x61\x74\x65\x41\x63\x74\x69\x6f\x6e\x73');
 if(chkOpenUpdateActions){
 chkOpenUpdateActions.checked=hasUpdate;
@@ -10825,18 +10854,12 @@ const isF12Saved=isAdmin&&localStorage.getItem('\x76\x32\x5f\x61\x6c\x6c\x6f\x77
 if(chkAllowF12){
 chkAllowF12.checked=hasF12||(isLabActive&&isF12Saved);
 }
-const chkOpenSoldOutFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65');
-const isSoldOutSaved=isAdmin&&localStorage.getItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-if(chkOpenSoldOutFeature){
-chkOpenSoldOutFeature.checked=isLabActive&&isSoldOutSaved;
+const chkOpenBumpFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
+const isBumpSaved=isAdmin&&(localStorage.getItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65'||localStorage.getItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65');
+if(chkOpenBumpFeature){
+chkOpenBumpFeature.checked=hasBump||(isLabActive&&isBumpSaved);
 }
-const isSoldOutOpen=isLabActive&&isSoldOutSaved;
-const chkOpenBumpTimerFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-const isBumpTimerSaved=isAdmin&&localStorage.getItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-if(chkOpenBumpTimerFeature){
-chkOpenBumpTimerFeature.checked=isLabActive&&isBumpTimerSaved;
-}
-const isBumpTimerOpen=isLabActive&&isBumpTimerSaved;
+const isBumpOpen=hasBump||(isLabActive&&isBumpSaved);
 const btnReplace=document.getElementById('\x62\x74\x6e\x52\x65\x70\x6c\x61\x63\x65\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnFullEdit=document.getElementById('\x62\x74\x6e\x46\x75\x6c\x6c\x45\x64\x69\x74\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnRegisterGolfmon=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x54\x6f\x47\x6f\x6c\x66\x6d\x6f\x6e');
@@ -10851,7 +10874,11 @@ btnRegisterGolfmon.style.padding='\x30 \x36\x70\x78';
 }
 const bumpActionCard=document.getElementById('\x62\x75\x6d\x70\x41\x63\x74\x69\x6f\x6e\x43\x61\x72\x64');
 if(bumpActionCard){
-bumpActionCard.style.display='\x66\x6c\x65\x78';
+bumpActionCard.style.display=isBumpOpen?'\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
+}
+const btnNavBump=document.getElementById('\x62\x74\x6e\x4e\x61\x76\x42\x75\x6d\x70');
+if(btnNavBump){
+btnNavBump.style.display=isBumpOpen?'\x69\x6e\x6c\x69\x6e\x65-\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
 }
 const resetActionsBar=document.getElementById('\x72\x65\x73\x65\x74\x41\x63\x74\x69\x6f\x6e\x73\x42\x61\x72');
 if(resetActionsBar){
@@ -11057,8 +11084,8 @@ const chkOpenNoticeFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x
 if(chkOpenNoticeFeatureEl)chkOpenNoticeFeatureEl.checked=false;
 const chkOpenSoldOutFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65');
 if(chkOpenSoldOutFeatureEl)chkOpenSoldOutFeatureEl.checked=false;
-const chkOpenBumpTimerFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-if(chkOpenBumpTimerFeatureEl)chkOpenBumpTimerFeatureEl.checked=false;
+const chkOpenBumpFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
+if(chkOpenBumpFeatureEl)chkOpenBumpFeatureEl.checked=false;
 const chkAllowF12El=document.getElementById('\x63\x68\x6b\x41\x6c\x6c\x6f\x77\x46\x31\x32');
 const hasF12=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x104b('\x66\x31\x32'):false;
 if(chkAllowF12El)chkAllowF12El.checked=hasF12;
@@ -11074,9 +11101,10 @@ localStorage.setItem('\x76\x32\x5f\x72\x65\x70\x6c\x61\x63\x65\x50\x6f\x73\x74\x
 localStorage.setItem('\x76\x32\x5f\x64\x61\x74\x65\x52\x65\x73\x65\x74\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 localStorage.setItem('\x76\x32\x5f\x6e\x6f\x74\x69\x63\x65\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 localStorage.setItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
+localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
 try{
-chrome.storage.local.set({v2_labModeActive:false,v2_updateActionsActive:false,v2_priceUpdateActive:false,v2_replacePostActive:false,v2_dateResetActive:false,v2_noticeFeatureActive:false,v2_soldOutFeatureActive:false,v2_bumpTimerFeatureActive:false});
+chrome.storage.local.set({v2_labModeActive:false,v2_updateActionsActive:false,v2_priceUpdateActive:false,v2_replacePostActive:false,v2_dateResetActive:false,v2_noticeFeatureActive:false,v2_soldOutFeatureActive:false,v2_bumpFeatureActive:false,v2_bumpTimerFeatureActive:false});
 }catch(e){}
 updateLivePrepaidFees();
 _0x101b('\uc2e4\ud5d8\uc2e4 \ubaa8\ub4dc\uac00 \ube44\ud65c\uc131\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
@@ -11188,20 +11216,21 @@ _0x101b('\uc6d0\ud074\ub9ad \ub9c8\uac10\x2f\uc0ad\uc81c \uae30\ub2a5\uc774 \uc2
 }
 });
 }
-const chkOpenBumpTimerFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-if(chkOpenBumpTimerFeature){
-chkOpenBumpTimerFeature.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){
+const chkOpenBumpFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
+if(chkOpenBumpFeature){
+chkOpenBumpFeature.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){
 const isOpened=this.checked;
+localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isOpened?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
 localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isOpened?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
 try{
-chrome.storage.local.set({v2_bumpTimerFeatureActive:isOpened});
+chrome.storage.local.set({v2_bumpFeatureActive:isOpened,v2_bumpTimerFeatureActive:isOpened});
 }catch(e){}
 const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 _0x104f(isLabActive);
 if(isOpened){
-_0x101b('\u23f1\ufe0f \uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30 \ud0c0\uc774\uba38\uac00 \uc624\ud508\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+_0x101b('\ud83d\ude80 [\ub0b4 \uae00 \uc804\uccb4 \x31\ub4f1 \ub04c\uc5b4\uc62c\ub9ac\uae30] \ubc14\uac00 \uc624\ud508\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }else{
-_0x101b('\uc790\ub3d9 \ub04c\uc5b4\uc62c\ub9ac\uae30 \ud0c0\uc774\uba38\uac00 \uc228\uae40 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
+_0x101b('[\ub0b4 \uae00 \uc804\uccb4 \x31\ub4f1 \ub04c\uc5b4\uc62c\ub9ac\uae30] \ubc14\uac00 \uc228\uae40 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }
 });
 }
@@ -12517,6 +12546,29 @@ selResetFilterType.value=savedFilter;
 }
 selResetFilterType.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
 try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',selResetFilterType.value);}catch(e){}
+});
+}
+const inputBumpTargetDate=document.getElementById('\x69\x6e\x70\x75\x74\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
+if(inputBumpTargetDate){
+const now=new Date();
+const yyyy=now.getFullYear();
+const mm=String(now.getMonth()+1).padStart(2,'\x30');
+const dd=String(now.getDate()).padStart(2,'\x30');
+const todayStr=`${yyyy}-${mm}-${dd}`;
+const savedDate=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65')||localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65')||todayStr;
+inputBumpTargetDate.value=(savedDate&&savedDate>=todayStr)?savedDate:todayStr;
+inputBumpTargetDate.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
+try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',inputBumpTargetDate.value);}catch(e){}
+});
+}
+const selBumpFilterType=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65');
+if(selBumpFilterType){
+const savedFilter=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')||localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')||'\uc804\uccb4';
+if(['\uc804\uccb4','\uc870\uc778','\uc591\ub3c4'].includes(savedFilter)){
+selBumpFilterType.value=savedFilter;
+}
+selBumpFilterType.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
+try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',selBumpFilterType.value);}catch(e){}
 });
 }
 document.getElementById('\x62\x74\x6e\x53\x65\x6c\x65\x63\x74\x50\x72\x69\x63\x65\x44\x72\x6f\x70\x70\x65\x64')?.addEventListener('\x63\x6c\x69\x63\x6b',handleSelectPriceDropped);

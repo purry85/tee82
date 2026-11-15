@@ -114,36 +114,41 @@ const html4 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     <script>
         document.getElementById('chkLabMode').checked = true;
         document.getElementById('chkOpenSoldOutFeature').checked = false;
-        document.getElementById('chkOpenBumpTimerFeature').checked = false;
+        const chkBump = document.getElementById('chkOpenBumpFeature') || document.getElementById('chkOpenBumpTimerFeature');
+        if (chkBump) chkBump.checked = false;
     </script>`;
 capture(html4, 'preview_lab_settings.png', 485, 900);
 
-// 5. Preview: Bump Bar fresh (마지막 갱신: 방금 전 - 1등 유지)
+// 5. Preview: Main Screen Default (전체리셋 원래대로 복구 & BUMP 기본 숨김)
 const html5 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
     + `<style>
         * { animation: none !important; transition: none !important; }
         #authOverlay { display: none !important; }
     </style>
     <script>
+        document.getElementById('resetActionsBar').style.display = 'flex';
+        document.getElementById('bumpActionCard').style.display = 'none';
+        document.getElementById('btnNavBump').style.display = 'none';
+        document.getElementById('inputResetTargetDate').value = '2026-11-15';
+        document.getElementById('inputResetEndDate').value = '2026-11-15';
+    </script>`;
+capture(html5, 'preview_main_default_reset.png', 485, 750);
+
+// 6. Preview: Bump Bar When Enabled in Lab (실험실 기능 오픈 시)
+const html6 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
+    + `<style>
+        * { animation: none !important; transition: none !important; }
+        #authOverlay { display: none !important; }
+    </style>
+    <script>
+        document.getElementById('resetActionsBar').style.display = 'flex';
         document.getElementById('bumpActionCard').style.display = 'flex';
+        document.getElementById('btnNavBump').style.display = 'inline-flex';
         document.getElementById('bumpStatusPill').className = 'bump-status-pill status-fresh';
         document.getElementById('bumpStatusDot').className = 'bump-status-dot green';
         document.getElementById('bumpStatusText').innerText = '마지막 갱신: 방금 전';
         document.getElementById('inputResetTargetDate').value = '2026-11-15';
+        document.getElementById('inputResetEndDate').value = '2026-11-15';
+        document.getElementById('inputBumpTargetDate').value = '2026-11-15';
     </script>`;
-capture(html5, 'preview_bump_bar.png', 485, 750);
-
-// 6. Preview: Bump Bar warning/pulse (마지막 갱신: 35분 전 🚨 - 순위 밀림 경고)
-const html6 = sidepanelHtml.replace('<script src="popup.js"></script>', '')
-    + `<style>
-        #authOverlay { display: none !important; }
-    </style>
-    <script>
-        document.getElementById('bumpActionCard').style.display = 'flex';
-        document.getElementById('bumpStatusPill').className = 'bump-status-pill status-danger';
-        document.getElementById('bumpStatusDot').className = 'bump-status-dot red';
-        document.getElementById('bumpStatusText').innerText = '마지막 갱신: 35분 전 🚨';
-        document.getElementById('btnExecuteBump').classList.add('bump-pulsing');
-        document.getElementById('inputResetTargetDate').value = '2026-11-15';
-    </script>`;
-capture(html6, 'preview_bump_warning.png', 485, 750);
+capture(html6, 'preview_bump_lab_enabled.png', 485, 780);
