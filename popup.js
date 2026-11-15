@@ -7416,6 +7416,407 @@ _0x1021();
 _0x1008();
 _0x101b(`\ud83d\udeab \uc120\ud0dd\ub41c ${count}\uac1c \ud2f0\ud0c0\uc784 \ub9c8\uac10 \uc644\ub8cc! (\uce74\ud1a1 \uacf5\uc9c0\uc6a9 \ubb38\uad6c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4)`);
 }
+let lastParsedSoldOutData=null;
+function parseSoldOutBookingText(rawText){
+if(!rawText||typeof rawText!=='\x73\x74\x72\x69\x6e\x67'){
+return null;
+}
+const cleanText=rawText.trim();
+if(!cleanText)return null;
+let platform='';
+if(/골프몬|golfmon/i.test(cleanText))platform='\x67\x6f\x6c\x66\x6d\x6f\x6e';
+else if(/골팡|golfpang/i.test(cleanText))platform='\x67\x6f\x6c\x66\x70\x61\x6e\x67';
+else if(/골마켓|golmarket/i.test(cleanText))platform='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74';
+else if(/골프탑|golftop/i.test(cleanText))platform='\x67\x6f\x6c\x66\x74\x6f\x70';
+else if(/골프랜드|golfland/i.test(cleanText))platform='\x67\x6f\x6c\x66\x6c\x61\x6e\x64';
+else if(/골프락|golfrock/i.test(cleanText))platform='\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
+let roomType='\uc870\uc778';
+if(/양도/.test(cleanText)){
+roomType='\uc591\ub3c4';
+}else if(/조인/.test(cleanText)){
+roomType='\uc870\uc778';
+}
+let dateStr='';
+let dayOfWeek='';
+const dateLabeledMatch=cleanText.match(/(?:일정|일자|날짜|일시)\s*[:：]?\s*(\d{1,2})[.\/월\-](\d{1,2})(?:일)?(?:\s*\(([월화수목금토일])\))?/);
+if(dateLabeledMatch){
+const m=parseInt(dateLabeledMatch[1],10);
+const d=parseInt(dateLabeledMatch[2],10);
+dateStr=`${m}/${d}`;
+dayOfWeek=dateLabeledMatch[3]||'';
+}else{
+const dateMatch=cleanText.match(/\b(\d{1,2})[.\/](\d{1,2})(?:\(([월화수목금토일])\))?\b/);
+if(dateMatch){
+const m=parseInt(dateMatch[1],10);
+const d=parseInt(dateMatch[2],10);
+dateStr=`${m}/${d}`;
+dayOfWeek=dateMatch[3]||'';
+}
+}
+let timeStr='';
+const timeLabeledMatch=cleanText.match(/(?:티업|시간|타임)\s*[:：]?\s*([012]?\d)\s*[:：시]\s*([0-5]\d)/);
+if(timeLabeledMatch){
+timeStr=`${timeLabeledMatch[1].padStart(2,'\x30')}:${timeLabeledMatch[2]}`;
+}else{
+const timeMatch=cleanText.match(/\b([012]?\d):([0-5]\d)\b/);
+if(timeMatch){
+timeStr=`${timeMatch[1].padStart(2,'\x30')}:${timeMatch[2]}`;
+}
+}
+let rawCourse='';
+const firstLines=cleanText.split('\n').slice(0,3).join(' ');
+const headerCourseMatch=firstLines.match(/(?:골프몬|골팡|골마켓|골프락|골프탑|골프랜드)?\s*[\/\[\]:]*\s*([가-힣0-9a-zA-Z\s]+?)(?:cc|CC|골프장|클럽)?\s*(?:조인|양도)/i);
+if(headerCourseMatch&&headerCourseMatch[1]){
+rawCourse=headerCourseMatch[1].replace(/골프몬|골팡|골마켓|골프락|골프탑|골프랜드|[\/\[\]]/g,'').trim();
+}
+if(!rawCourse||rawCourse.length<2){
+if(typeof dictionary==='\x6f\x62\x6a\x65\x63\x74'){
+const sortedKeys=Object.keys(dictionary).sort((a,b)=>b.length-a.length);
+for(const dictKey of sortedKeys){
+if(dictKey.length>=2&&cleanText.includes(dictKey)){
+rawCourse=dictKey;
+break;
+}
+}
+}
+}
+let mappedCourse=rawCourse;
+let canonicalInfo=null;
+if(rawCourse){
+canonicalInfo=(typeof _0x101f==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x101f(rawCourse):{name:rawCourse};
+if(canonicalInfo&&canonicalInfo.name){
+mappedCourse=canonicalInfo.name;
+}
+}
+let priceStr='';
+const priceMatch=cleanText.match(/(?:금액|그린피|회비)\s*[:：]?\s*(?:[1-4]인)?\s*([0-9,]+(?:\s*원|\s*만\s*원?))/);
+if(priceMatch)priceStr=priceMatch[1].trim();
+let requesterStr='';
+const reqMatch=cleanText.match(/(?:요청자명|신청자명|신청자|예약자명|예약자|요청자)\s*[:：]?\s*([가-힣a-zA-Z]{2,10})/);
+if(reqMatch)requesterStr=reqMatch[1].trim();
+const isValid=Boolean(mappedCourse&&(dateStr||timeStr));
+return{
+platform:platform,
+rawCourse:rawCourse,
+courseName:mappedCourse,
+date:dateStr,
+dayOfWeek:dayOfWeek,
+dateDisplay:dateStr?(dateStr+(dayOfWeek?`(${dayOfWeek})`:'')):'',
+time:timeStr,
+roomType:roomType,
+price:priceStr,
+requester:requesterStr,
+canonicalInfo:canonicalInfo,
+isValid:isValid
+};
+}
+function updateSoldOutModalParsedUI(parsed){
+lastParsedSoldOutData=parsed;
+const badge=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x61\x72\x73\x65\x53\x74\x61\x74\x75\x73\x42\x61\x64\x67\x65');
+const valCourse=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x43\x6f\x75\x72\x73\x65');
+const valDate=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x44\x61\x74\x65');
+const valTime=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x54\x69\x6d\x65');
+const valType=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x54\x79\x70\x65');
+const extraBox=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x45\x78\x74\x72\x61\x49\x6e\x66\x6f');
+const valReq=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x52\x65\x71\x75\x65\x73\x74\x65\x72');
+const valPrice=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x50\x72\x69\x63\x65');
+const btnExecute=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x53\x6f\x6c\x64\x4f\x75\x74');
+if(!parsed||(!parsed.courseName&&!parsed.time)){
+if(badge){
+badge.className='\x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65 \x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65-\x77\x61\x69\x74\x69\x6e\x67';
+badge.textContent='\ubb38\uc790 \ub300\uae30\uc911';
+}
+if(valCourse)valCourse.textContent='-';
+if(valDate)valDate.textContent='-';
+if(valTime)valTime.textContent='-';
+if(valType)valType.textContent='-';
+if(extraBox)extraBox.style.display='\x6e\x6f\x6e\x65';
+if(btnExecute)btnExecute.disabled=true;
+return;
+}
+if(valCourse)valCourse.textContent=parsed.courseName||parsed.rawCourse||'\uad6c\uc7a5 \ubbf8\uc778\uc2dd';
+if(valDate)valDate.textContent=parsed.dateDisplay||parsed.date||'\ub0a0\uc9dc \ubbf8\uc778\uc2dd';
+if(valTime)valTime.textContent=parsed.time||'\uc2dc\uac04 \ubbf8\uc778\uc2dd';
+if(valType)valType.textContent=parsed.roomType||'\uc870\uc778';
+if(extraBox&&(parsed.requester||parsed.price)){
+extraBox.style.display='\x66\x6c\x65\x78';
+if(valReq)valReq.textContent=parsed.requester?`\uc694\uccad\uc790: ${parsed.requester}`:'';
+if(valPrice)valPrice.textContent=parsed.price?`\uae08\uc561: ${parsed.price}`:'';
+}else if(extraBox){
+extraBox.style.display='\x6e\x6f\x6e\x65';
+}
+if(parsed.isValid){
+if(badge){
+badge.className='\x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65 \x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65-\x73\x75\x63\x63\x65\x73\x73';
+badge.textContent='\ubd84\uc11d \uc644\ub8cc \u2705';
+}
+if(btnExecute)btnExecute.disabled=false;
+}else{
+if(badge){
+badge.className='\x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65 \x73\x6f\x6c\x64\x6f\x75\x74-\x62\x61\x64\x67\x65-\x77\x61\x72\x6e';
+badge.textContent='\uc815\ubcf4 \ubd80\uc871 \u26a0\ufe0f';
+}
+if(btnExecute)btnExecute.disabled=true;
+}
+if(parsed.platform){
+const pfMap={
+golfmon:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6d\x6f\x6e',
+golfpang:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x70\x61\x6e\x67',
+golmarket:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
+golftop:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x74\x6f\x70',
+golfland:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6c\x61\x6e\x64',
+golfrock:'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x72\x6f\x63\x6b'
+};
+const targetId=pfMap[parsed.platform];
+if(targetId){
+Object.values(pfMap).forEach(id=>{
+const chk=document.getElementById(id);
+if(chk){
+chk.checked=(id===targetId);
+chk.closest('\x6c\x61\x62\x65\x6c')?.classList.toggle('\x61\x63\x74\x69\x76\x65',chk.checked);
+}
+});
+}
+}
+}
+function openSoldOutTextModal(initialText=''){
+const modal=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c');
+if(!modal)return;
+modal.style.display='\x66\x6c\x65\x78';
+const txtArea=document.getElementById('\x74\x78\x74\x53\x6f\x6c\x64\x4f\x75\x74\x52\x61\x77');
+const progressBox=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x72\x6f\x67\x72\x65\x73\x73\x42\x6f\x78');
+if(progressBox)progressBox.style.display='\x6e\x6f\x6e\x65';
+if(txtArea){
+if(initialText){
+txtArea.value=initialText;
+const parsed=parseSoldOutBookingText(initialText);
+updateSoldOutModalParsedUI(parsed);
+}else if(!txtArea.value.trim()){
+updateSoldOutModalParsedUI(null);
+}else{
+const parsed=parseSoldOutBookingText(txtArea.value);
+updateSoldOutModalParsedUI(parsed);
+}
+setTimeout(()=>txtArea.focus(),100);
+}
+}
+function closeSoldOutTextModal(){
+const modal=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c');
+if(modal)modal.style.display='\x6e\x6f\x6e\x65';
+const progressBox=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x72\x6f\x67\x72\x65\x73\x73\x42\x6f\x78');
+if(progressBox)progressBox.style.display='\x6e\x6f\x6e\x65';
+}
+async function executeSoldOutPostDeletion(){
+const txtArea=document.getElementById('\x74\x78\x74\x53\x6f\x6c\x64\x4f\x75\x74\x52\x61\x77');
+const rawText=txtArea?txtArea.value.trim():'';
+const parsed=parseSoldOutBookingText(rawText);
+if(!parsed||!parsed.isValid){
+_0x101b('\u26a0\ufe0f \uad6c\uc7a5\uba85\uacfc \ub0a0\uc9dc\x2f\uc2dc\uac04 \uc815\ubcf4\ub97c \ubd84\uc11d\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e \ubb38\uc790 \ub0b4\uc6a9\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694\x2e');
+return;
+}
+const selectedPlatforms=[];
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6d\x6f\x6e')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x66\x6d\x6f\x6e');
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x70\x61\x6e\x67')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x66\x70\x61\x6e\x67');
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x6d\x61\x72\x6b\x65\x74')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74');
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x74\x6f\x70')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x66\x74\x6f\x70');
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6c\x61\x6e\x64')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x66\x6c\x61\x6e\x64');
+if(document.getElementById('\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x72\x6f\x63\x6b')?.checked)selectedPlatforms.push('\x67\x6f\x6c\x66\x72\x6f\x63\x6b');
+if(selectedPlatforms.length===0){
+_0x101b('\u26a0\ufe0f \uc0ad\uc81c\x2f\ub9c8\uac10\ud560 \ub300\uc0c1 \ud50c\ub7ab\ud3fc\uc744 \x31\uac1c \uc774\uc0c1 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e');
+return;
+}
+const modeRadio=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x73\x6f\x6c\x64\x4f\x75\x74\x41\x63\x74\x69\x6f\x6e\x4d\x6f\x64\x65"]\x3a\x63\x68\x65\x63\x6b\x65\x64');
+const actionMode=modeRadio?modeRadio.value:'\x64\x65\x6c\x65\x74\x65';
+const actionLabel=(actionMode==='\x73\x6f\x6c\x64\x6f\x75\x74'?'\ub9c8\uac10':'\uc0ad\uc81c');
+const progressBox=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x72\x6f\x67\x72\x65\x73\x73\x42\x6f\x78');
+const progressTitle=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x72\x6f\x67\x72\x65\x73\x73\x54\x69\x74\x6c\x65');
+const progressDesc=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x50\x72\x6f\x67\x72\x65\x73\x73\x44\x65\x73\x63');
+const btnExecute=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x53\x6f\x6c\x64\x4f\x75\x74');
+if(progressBox){
+progressBox.style.display='\x62\x6c\x6f\x63\x6b';
+progressBox.style.background='\x23\x45\x46\x46\x36\x46\x46';
+progressBox.style.borderColor='\x23\x42\x46\x44\x42\x46\x45';
+}
+if(progressTitle){
+progressTitle.innerHTML=`<span style="animation: spinNoticeSync 1s linear infinite; display: inline-block;">\u23f3</span> [${parsed.courseName} ${parsed.dateDisplay||parsed.date} ${parsed.time}] \uae00 ${actionLabel} \uc9c4\ud589 \uc911...`;
+}
+if(progressDesc){
+progressDesc.textContent=`\ub300\uc0c1 \ud50c\ub7ab\ud3fc: ${selectedPlatforms.map(p=>p.toUpperCase()).join(', ')}`;
+}
+if(btnExecute)btnExecute.disabled=true;
+if(selectedPlatforms.includes('\x67\x6f\x6c\x66\x6d\x6f\x6e')){
+chrome.tabs.query({url:["*\x3a\x2f\x2f*\x2e\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f*","*\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f*"]},(tabs)=>{
+if(!tabs||tabs.length===0){
+if(progressBox){
+progressBox.style.background='\x23\x46\x45\x46\x32\x46\x32';
+progressBox.style.borderColor='\x23\x46\x45\x43\x41\x43\x41';
+}
+if(progressTitle){
+progressTitle.innerHTML=`\u26a0\ufe0f \uc5f4\ub824 \uc788\ub294 \uace8\ud504\ubaac(golfmon.net) \ud0ed\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.`;
+}
+if(progressDesc){
+progressDesc.textContent='\uace8\ud504\ubaac \uc6f9\uc0ac\uc774\ud2b8\uc5d0 \ub85c\uadf8\uc778\ub41c \ud0ed\uc744 \uc5f4\uc5b4\ub454 \ud6c4 \ub2e4\uc2dc \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e';
+}
+if(btnExecute)btnExecute.disabled=false;
+if(confirm("\uc5f4\ub824 \uc788\ub294 \uace8\ud504\ubaac(\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74) \ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e\n\uace8\ud504\ubaac \uc0ac\uc774\ud2b8\ub97c \uc0c8 \ud0ed\uc73c\ub85c \uc5ec\uc2dc\uaca0\uc2b5\ub2c8\uae4c?")){
+chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f"});
+}
+return;
+}
+const golfmonTab=tabs[0];
+const payload={
+action:'\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45',
+isAdmin:(typeof _0x104a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x104a():false,
+targetPost:{
+golf:parsed.courseName,
+rawGolf:parsed.rawCourse,
+date:parsed.date,
+time:parsed.time,
+roomType:parsed.roomType,
+mode:actionMode
+}
+};
+sendGolfmonMacroCommand(golfmonTab,payload,(res)=>{
+if(btnExecute)btnExecute.disabled=false;
+if(res&&res.success){
+if(progressBox){
+progressBox.style.background='\x23\x44\x43\x46\x43\x45\x37';
+progressBox.style.borderColor='\x23\x38\x36\x45\x46\x41\x43';
+}
+if(progressTitle){
+progressTitle.innerHTML=`\u2705 [\uace8\ud504\ubaac] \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`;
+}
+if(progressDesc){
+progressDesc.textContent=`${parsed.courseName} | ${parsed.dateDisplay||parsed.date} | ${parsed.time} (${parsed.roomType})`;
+}
+_0x101b(`\u2705 [${parsed.courseName} ${parsed.time}] \uace8\ud504\ubaac \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+setTimeout(()=>{
+if(txtArea)txtArea.value='';
+updateSoldOutModalParsedUI(null);
+},2000);
+}else{
+if(progressBox){
+progressBox.style.background='\x23\x46\x45\x46\x32\x46\x32';
+progressBox.style.borderColor='\x23\x46\x45\x43\x41\x43\x41';
+}
+const errReason=(res&&res.message)?res.message:'\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e';
+if(progressTitle){
+progressTitle.innerHTML=`\u274c [\uace8\ud504\ubaac] \uae00 ${actionLabel} \uc2e4\ud328`;
+}
+if(progressDesc){
+progressDesc.textContent=errReason;
+}
+_0x101b(`\u26a0\ufe0f \uace8\ud504\ubaac: ${errReason}`);
+}
+});
+});
+}
+const otherPlatforms=selectedPlatforms.filter(p=>p!=='\x67\x6f\x6c\x66\x6d\x6f\x6e');
+if(otherPlatforms.length>0){
+console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] \uae30\ud0c0 \ud50c\ub7ab\ud3fc(${otherPlatforms.join(', ')}) \ucc98\ub9ac \uc694\uccad`);
+}
+}
+function initSoldOutTextModal(){
+document.getElementById('\x62\x74\x6e\x4e\x61\x76\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+openSoldOutTextModal();
+});
+document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+openSoldOutTextModal();
+});
+document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c\x58')?.addEventListener('\x63\x6c\x69\x63\x6b',closeSoldOutTextModal);
+document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeSoldOutTextModal);
+document.getElementById('\x62\x74\x6e\x50\x61\x73\x74\x65\x53\x6f\x6c\x64\x4f\x75\x74\x43\x6c\x69\x70\x62\x6f\x61\x72\x64')?.addEventListener('\x63\x6c\x69\x63\x6b',async()=>{
+try{
+const clipText=await navigator.clipboard.readText();
+if(clipText){
+const txtArea=document.getElementById('\x74\x78\x74\x53\x6f\x6c\x64\x4f\x75\x74\x52\x61\x77');
+if(txtArea){
+txtArea.value=clipText;
+const parsed=parseSoldOutBookingText(clipText);
+updateSoldOutModalParsedUI(parsed);
+}
+}else{
+_0x101b('\ud074\ub9bd\ubcf4\ub4dc\uac00 \ube44\uc5b4\uc788\uc2b5\ub2c8\ub2e4\x2e');
+}
+}catch(err){
+_0x101b('\ud074\ub9bd\ubcf4\ub4dc \uc811\uadfc \uad8c\ud55c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e \ud14d\uc2a4\ud2b8\ucc3d\uc5d0 \uc9c1\uc811 \ubd99\uc5ec\ub123\uc5b4\uc8fc\uc138\uc694\x2e');
+}
+});
+const txtArea=document.getElementById('\x74\x78\x74\x53\x6f\x6c\x64\x4f\x75\x74\x52\x61\x77');
+if(txtArea){
+['\x69\x6e\x70\x75\x74','\x63\x68\x61\x6e\x67\x65','\x70\x61\x73\x74\x65','\x6b\x65\x79\x75\x70'].forEach(ev=>{
+txtArea.addEventListener(ev,()=>{
+setTimeout(()=>{
+const parsed=parseSoldOutBookingText(txtArea.value);
+updateSoldOutModalParsedUI(parsed);
+},10);
+});
+});
+}
+const pfCheckboxes=[
+'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6d\x6f\x6e','\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x70\x61\x6e\x67','\x63\x68\x6b\x50\x66\x47\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
+'\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x74\x6f\x70','\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x6c\x61\x6e\x64','\x63\x68\x6b\x50\x66\x47\x6f\x6c\x66\x72\x6f\x63\x6b'
+];
+pfCheckboxes.forEach(id=>{
+const chk=document.getElementById(id);
+if(chk){
+chk.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){
+this.closest('\x6c\x61\x62\x65\x6c')?.classList.toggle('\x61\x63\x74\x69\x76\x65',this.checked);
+});
+}
+});
+document.getElementById('\x62\x74\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x53\x65\x6c\x65\x63\x74\x41\x6c\x6c\x50\x6c\x61\x74\x66\x6f\x72\x6d\x73')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+pfCheckboxes.forEach(id=>{
+const chk=document.getElementById(id);
+if(chk){
+chk.checked=true;
+chk.closest('\x6c\x61\x62\x65\x6c')?.classList.add('\x61\x63\x74\x69\x76\x65');
+}
+});
+});
+document.getElementById('\x62\x74\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x43\x6c\x65\x61\x72\x50\x6c\x61\x74\x66\x6f\x72\x6d\x73')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+pfCheckboxes.forEach(id=>{
+const chk=document.getElementById(id);
+if(chk){
+chk.checked=false;
+chk.closest('\x6c\x61\x62\x65\x6c')?.classList.remove('\x61\x63\x74\x69\x76\x65');
+}
+});
+});
+document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x53\x6f\x6c\x64\x4f\x75\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+executeSoldOutPostDeletion();
+});
+const mainInput=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74');
+const detectBanner=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x53\x6d\x61\x72\x74\x44\x65\x74\x65\x63\x74\x42\x61\x6e\x6e\x65\x72');
+const detectPreview=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x44\x65\x74\x65\x63\x74\x50\x72\x65\x76\x69\x65\x77');
+const btnFromDetect=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x46\x72\x6f\x6d\x44\x65\x74\x65\x63\x74');
+if(mainInput&&detectBanner){
+mainInput.addEventListener('\x69\x6e\x70\x75\x74',()=>{
+const val=mainInput.value;
+if(val&&/골프몬|옥스필드|신청자|요청자명|무관\s*\d명|조인\s*희망|문자\s*발송/s.test(val)&&
+/(?:일정|일자|날짜)\s*:/s.test(val)&&/(?:티업|시간)\s*:/s.test(val)){
+const parsed=parseSoldOutBookingText(val);
+if(parsed&&parsed.isValid){
+detectBanner.style.display='\x66\x6c\x65\x78';
+if(detectPreview){
+detectPreview.textContent=`[${parsed.courseName} ${parsed.dateDisplay||parsed.date} ${parsed.time}]`;
+}
+return;
+}
+}
+detectBanner.style.display='\x6e\x6f\x6e\x65';
+});
+btnFromDetect?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+const textToPass=mainInput.value;
+detectBanner.style.display='\x6e\x6f\x6e\x65';
+openSoldOutTextModal(textToPass);
+});
+}
+}
 window.addEventListener('\x6d\x6f\x75\x73\x65\x75\x70',()=>{
 if(isCardDragging){
 isCardDragging=false;
@@ -13939,6 +14340,7 @@ updateLivePrepaidFees();
 }
 updateSortBarUI();
 initPreferredPartsUI();
+initSoldOutTextModal();
 checkAndUncheckCompletedFromStorage();
 setTimeout(applyToolbarIconFromPopup,1200);
 _0x1069();

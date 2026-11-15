@@ -1285,17 +1285,18 @@
             background: #FFF1F2;
             border: 1px solid #FECDD3;
             color: #E11D48;
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 700;
-            padding: 2.5px 7px;
+            padding: 2px 5px;
             border-radius: 4px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             transition: all 0.15s ease;
             user-select: none;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .btn-seonti-batch:hover {
@@ -1384,6 +1385,303 @@
             background: #FEE2E2;
             border-color: #F87171;
             color: #B91C1C;
+        }
+
+        /* 🚫 문자 붙여넣기 원클릭 글마감/삭제 버튼 */
+        .btn-soldout-open-modal {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            transition: all 0.15s ease;
+            user-select: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-soldout-open-modal:hover {
+            background: #FEE2E2;
+            border-color: #F87171;
+            color: #B91C1C;
+            transform: translateY(-0.5px);
+            box-shadow: 0 1px 3px rgba(220, 38, 38, 0.15);
+        }
+
+        /* 🚫 문자 붙여넣기 마감/삭제 모달 카드 */
+        .soldout-modal-card {
+            background: white;
+            border-radius: 12px;
+            width: 92%;
+            max-width: 440px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.18s ease-out;
+            border: 1px solid #E2E8F0;
+            max-height: 94vh;
+        }
+
+        .soldout-modal-header {
+            background: #F8FAFC;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .soldout-modal-body {
+            padding: 12px 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .soldout-textarea {
+            width: 100%;
+            height: 90px;
+            padding: 8px 10px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: inherit;
+            line-height: 1.45;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.15s;
+            background: #FAFAFA;
+        }
+
+        .soldout-textarea:focus {
+            border-color: #EF4444;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+        }
+
+        .soldout-btn-paste-clip {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #334155;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .soldout-btn-paste-clip:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+
+        .soldout-parsed-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .soldout-parsed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .soldout-badge {
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 1.5px 6px;
+            border-radius: 10px;
+        }
+
+        .soldout-badge-waiting {
+            background: #F1F5F9;
+            color: #64748B;
+            border: 1px solid #CBD5E1;
+        }
+
+        .soldout-badge-success {
+            background: #DCFCE7;
+            color: #15803D;
+            border: 1px solid #86EFAC;
+        }
+
+        .soldout-badge-warn {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+
+        .soldout-parsed-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            background: #FFFFFF;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .soldout-grid-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .soldout-item-label {
+            font-size: 9.5px;
+            font-weight: 600;
+            color: #64748B;
+        }
+
+        .soldout-item-val {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0F172A;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .soldout-extra-info {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+            font-size: 10px;
+            color: #475569;
+            background: #F1F5F9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .soldout-platform-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .soldout-platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        .soldout-pf-chk {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 5px 6px;
+            border-radius: 6px;
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .soldout-pf-chk.active {
+            background: #EFF6FF;
+            border-color: #3B82F6;
+            color: #1D4ED8;
+            font-weight: 700;
+        }
+
+        .soldout-pf-chk input {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .soldout-btn-sub {
+            background: none;
+            border: none;
+            font-size: 9.5px;
+            color: #2563EB;
+            cursor: pointer;
+            padding: 0 3px;
+            text-decoration: underline;
+        }
+
+        .soldout-btn-sub:hover {
+            color: #1D4ED8;
+        }
+
+        .soldout-mode-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 10px;
+            background: #F8FAFC;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+            font-size: 10.5px;
+        }
+
+        .soldout-radio-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .soldout-radio-label input {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .soldout-modal-footer {
+            padding: 9px 14px;
+            background: #F8FAFC;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .btn-soldout-execute {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-soldout-execute:hover {
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.45);
+            transform: translateY(-0.5px);
+        }
+
+        .btn-soldout-execute:disabled {
+            background: #94A3B8;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            opacity: 0.65;
         }
 
         /* 개별 카드 마감 버튼 & 우측 액션 그룹 */
@@ -3899,6 +4197,7 @@
                 </div>
             </div>
             <div class="nav-actions">
+                <button class="nav-icon-btn" id="btnNavSoldOutText" title="🚫 문자/알림톡 붙여넣기 원클릭 글마감/삭제" style="color: #EF4444; font-weight: bold; font-size: 13px;">🚫</button>
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="즉시중단" aria-label="즉시중단">🛑</button>
                 <button class="nav-icon-btn" id="btnOpenRefreshTimer" title="⏱️ 자동 끌어올리기 타이머 설정" style="display: none;">⏱️</button>
@@ -4038,6 +4337,15 @@
                     <input type="checkbox" id="chkPrefPart3" checked> 3부
                 </label>
             </div>
+            <!-- 📱 예약/조인 알림 문자 실시간 감지 배너 -->
+            <div id="soldOutSmartDetectBanner" style="display: none; background: linear-gradient(135deg, #FEF2F2, #FEE2E2); border: 1px solid #FECACA; border-radius: 6px; padding: 4px 8px; margin-bottom: 5px; align-items: center; justify-content: space-between; font-size: 10.5px; color: #991B1B;">
+                <div style="display: flex; align-items: center; gap: 5px; font-weight: 700;">
+                    <span>📱</span>
+                    <span>예약/조인 문자가 감지되었습니다!</span>
+                    <span id="soldOutDetectPreview" style="font-weight: 600; color: #DC2626; font-size: 9.5px;"></span>
+                </div>
+                <button type="button" id="btnOpenSoldOutFromDetect" style="background: linear-gradient(135deg, #EF4444, #DC2626); color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);">글마감/삭제</button>
+            </div>
             <textarea id="inputText" placeholder="카톡/밴드 티타임 텍스트 붙여넣기..."></textarea>
             <div class="macro-row">
                 <button class="btn-macro-action join" id="btnMacroJoin">조인용 원클릭</button>
@@ -4076,6 +4384,9 @@
                     <input type="checkbox" id="chkBatchSeontiAll">
                     <span id="textBatchSeonti">선택 선티지정</span>
                 </label>
+                <button type="button" class="btn-soldout-open-modal" id="btnOpenSoldOutTextModal" title="예약/조인 문자 내용을 붙여넣어 해당 사이트 글을 즉시 마감/삭제합니다">
+                    <span>🚫 글마감/삭제</span>
+                </button>
                 <button type="button" class="btn-soldout-batch" id="btnBatchSoldOut" title="체크된 티타임을 즉시 마감/삭제하고 마감안내 문구를 복사합니다" style="display: none;">
                     <span>🚫 선택마감</span>
                 </button>
@@ -5522,6 +5833,146 @@
             <div class="unmapped-modal-footer" style="padding: 10px 14px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end; gap: 8px;">
                 <button type="button" class="btn-dict-cancel" id="btnCancelMultiPlatformModal">취소</button>
                 <button type="button" id="btnConfirmMultiPlatformStart" style="background: linear-gradient(135deg, #F97316, #EA580C); color: white; border: none; padding: 6px 16px; border-radius: 5px; font-size: 11.5px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);">🚀 동시 등록 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🚫 문자/알림톡 붙여넣기 원클릭 글마감/삭제 모달 -->
+    <div class="dict-modal-overlay" id="soldOutTextModal" style="display: none; z-index: 1080;">
+        <div class="soldout-modal-card">
+            <!-- 헤더 -->
+            <div class="soldout-modal-header">
+                <div style="display: flex; align-items: center; gap: 7px;">
+                    <span style="font-size: 16px;">🚫</span>
+                    <div>
+                        <h3 style="margin: 0; font-size: 13px; font-weight: 800; color: #1E293B;">문자 붙여넣기 원클릭 글마감·삭제</h3>
+                        <div style="font-size: 10px; color: #64748B;">문자/알림톡을 붙여넣으면 해당 티타임 글을 찾아 즉시 삭제/마감합니다</div>
+                    </div>
+                </div>
+                <button type="button" class="unmapped-modal-close" id="btnCloseSoldOutTextModalX" title="닫기">&times;</button>
+            </div>
+
+            <!-- 본문 -->
+            <div class="soldout-modal-body">
+                <!-- 1. 문자 내용 붙여넣기 영역 -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <label for="txtSoldOutRaw" style="font-size: 11px; font-weight: 700; color: #334155;">
+                            📱 예약 / 조인 알림 문자 내용 붙여넣기
+                        </label>
+                        <button type="button" id="btnPasteSoldOutClipboard" class="soldout-btn-paste-clip" title="클립보드 내용 바로 붙여넣기">
+                            📋 클립보드 붙여넣기
+                        </button>
+                    </div>
+                    <textarea id="txtSoldOutRaw" class="soldout-textarea" placeholder="예시)
+골프몬 / 옥스필드cc 조인
+
+일정 : 11/15(일)
+티업 : 17:52
+금액 : 1인 45,000원
+요청자명 : 박진호..."></textarea>
+                </div>
+
+                <!-- 2. 실시간 자동 분석 결과 카드 -->
+                <div class="soldout-parsed-box" id="soldOutParsedBox">
+                    <div class="soldout-parsed-header">
+                        <span style="font-size: 11px; font-weight: 700; color: #0F172A;">🔍 자동 분석된 티타임 정보</span>
+                        <span id="soldOutParseStatusBadge" class="soldout-badge soldout-badge-waiting">문자 대기중</span>
+                    </div>
+                    
+                    <div class="soldout-parsed-grid" id="soldOutParsedGrid">
+                        <div class="soldout-grid-item">
+                            <span class="soldout-item-label">골프장</span>
+                            <span class="soldout-item-val" id="soldOutValCourse">-</span>
+                        </div>
+                        <div class="soldout-grid-item">
+                            <span class="soldout-item-label">일정(날짜)</span>
+                            <span class="soldout-item-val" id="soldOutValDate">-</span>
+                        </div>
+                        <div class="soldout-grid-item">
+                            <span class="soldout-item-label">티업 시간</span>
+                            <span class="soldout-item-val" id="soldOutValTime" style="color: #EF4444; font-weight: 800;">-</span>
+                        </div>
+                        <div class="soldout-grid-item">
+                            <span class="soldout-item-label">구분</span>
+                            <span class="soldout-item-val" id="soldOutValType">-</span>
+                        </div>
+                    </div>
+
+                    <!-- 부가 정보 (요청자, 금액) -->
+                    <div class="soldout-extra-info" id="soldOutExtraInfo" style="display: none;">
+                        <span id="soldOutValRequester"></span>
+                        <span id="soldOutValPrice"></span>
+                    </div>
+                </div>
+
+                <!-- 3. 삭제/마감 대상 사이트 선택 -->
+                <div class="soldout-platform-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #334155;">🌐 삭제/마감 대상 사이트 선택</span>
+                        <div style="display: flex; gap: 4px;">
+                            <button type="button" id="btnSoldOutSelectAllPlatforms" class="soldout-btn-sub">전체선택</button>
+                            <button type="button" id="btnSoldOutClearPlatforms" class="soldout-btn-sub">해제</button>
+                        </div>
+                    </div>
+                    
+                    <div class="soldout-platform-grid">
+                        <label class="soldout-pf-chk active" id="lblPfGolfmon">
+                            <input type="checkbox" id="chkPfGolfmon" checked>
+                            <span>⛳ 골프몬</span>
+                        </label>
+                        <label class="soldout-pf-chk" id="lblPfGolfpang">
+                            <input type="checkbox" id="chkPfGolfpang">
+                            <span>⛳ 골팡</span>
+                        </label>
+                        <label class="soldout-pf-chk" id="lblPfGolmarket">
+                            <input type="checkbox" id="chkPfGolmarket">
+                            <span>⛳ 골마켓</span>
+                        </label>
+                        <label class="soldout-pf-chk" id="lblPfGolftop">
+                            <input type="checkbox" id="chkPfGolftop">
+                            <span>⛳ 골프탑</span>
+                        </label>
+                        <label class="soldout-pf-chk" id="lblPfGolfland">
+                            <input type="checkbox" id="chkPfGolfland">
+                            <span>⛳ 골프랜드</span>
+                        </label>
+                        <label class="soldout-pf-chk" id="lblPfGolfrock">
+                            <input type="checkbox" id="chkPfGolfrock">
+                            <span>⛳ 골프락</span>
+                        </label>
+                    </div>
+                    <div style="font-size: 9.5px; color: #64748B; margin-top: 2px;">
+                        💡 문자에 사이트명(예: 골프몬)이 적혀있으면 자동 선택됩니다. 다른 곳에도 함께 올리셨다면 추가 선택하세요!
+                    </div>
+                </div>
+
+                <!-- 4. 삭제 모드 선택 -->
+                <div class="soldout-mode-row">
+                    <span style="font-size: 10.5px; font-weight: 700; color: #334155;">처리 방식:</span>
+                    <label class="soldout-radio-label" title="게시글을 목록에서 완전히 삭제합니다 (가장 안전)">
+                        <input type="radio" name="soldOutActionMode" value="delete" checked>
+                        <span>🗑️ 게시글 완전 삭제</span>
+                    </label>
+                    <label class="soldout-radio-label" title="글을 지우지 않고 마감 처리합니다">
+                        <input type="radio" name="soldOutActionMode" value="soldout">
+                        <span>🔒 마감(완료) 처리</span>
+                    </label>
+                </div>
+
+                <!-- 5. 실행 진행 상태 및 결과 피드백 -->
+                <div id="soldOutProgressBox" style="display: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; line-height: 1.4; border: 1px solid #CBD5E1; background: #F8FAFC;">
+                    <div id="soldOutProgressTitle" style="font-weight: 700; display: flex; align-items: center; gap: 5px;"></div>
+                    <div id="soldOutProgressDesc" style="color: #475569; font-size: 10px; margin-top: 2px;"></div>
+                </div>
+            </div>
+
+            <!-- 푸터 액션 버튼 -->
+            <div class="soldout-modal-footer">
+                <button type="button" class="btn-dict-cancel" id="btnCancelSoldOutModal">취소</button>
+                <button type="button" class="btn-soldout-execute" id="btnExecuteSoldOut">
+                    <span>🚫 해당 글 즉시 삭제/마감 실행</span>
+                </button>
             </div>
         </div>
     </div>
