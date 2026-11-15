@@ -1842,7 +1842,7 @@ month,
 day
 };
 }
-m=line.match(/(?:^|[^\d])(?:(\d{4}|\d{2})\s*[./\-]\s*)?(\d{1,2})[./\-](\d{1,2})(?!\s*(?:만|만원|원))(?:$|[^\d])/);
+m=line.match(/(?:^|[^\d])(?:(\d{4}|\d{2})\s*[./\-]\s*)?(\d{1,2})[./\-](\d{1,2})(?!\d)(?!\s*(?:시대|시\s*대|시타임|시\b|분\b|만|만원|원))(?:$|[^\d])/);
 if(m){
 const y=m[1]?(m[1].length===2?2000+parseInt(m[1],10):parseInt(m[1],10)):null;
 const month=parseInt(m[2],10);
@@ -2675,9 +2675,10 @@ pendingParts=null;
 pendingCaddyType=null;
 continue;
 }
-const inlineDatePrefixMatch=line.match(
-/^(?:[-*•▶▷□■▣★☆◆◇▲▼✅●]\s*)*((?:(?:\d{4}|\d{2})\s*(?:년|[./\-])\s*)?\d{1,2}\s*(?:월\s*\d{1,2}\s*일?|[./\-]\s*\d{1,2}(?!\s*(?:시대|시\b|분\b|만|만원|원|부)))(?:\s*일)?(?:\s*(?:\([월화수목금토일]\)|[월화수목금토일]요일|[월화수목금토일](?=\s)))?)\s*(?:[:=\-→▶⇒]\s*)?(.+)$/
-);
+const isMultiHourLine=/^[-*•▶▷□■▣★☆◆◇▲▼✅●\s]*\d{1,2}\s*(?:시대|시\s*대|시타임|시)?\s*[-~]\s*\d{1,2}\s*(?:시대|시\s*대|시타임|시)/i.test(line);
+const inlineDatePrefixMatch=!isMultiHourLine?line.match(
+/^(?:[-*•▶▷□■▣★☆◆◇▲▼✅●]\s*)*((?:(?:\d{4}|\d{2})\s*(?:년|[./\-])\s*)?\d{1,2}\s*(?:월\s*\d{1,2}(?!\d)\s*일?|[./\-]\s*\d{1,2}(?!\d)(?!\s*(?:시대|시\s*대|시타임|시\b|분\b|만|만원|원|부)))(?:\s*일)?(?:\s*(?:\([월화수목금토일]\)|[월화수목금토일]요일|[월화수목금토일](?=\s)))?)\s*(?:[:=\-→▶⇒]\s*)?(.+)$/
+):null;
 if(inlineDatePrefixMatch){
 const dateTokenStr=inlineDatePrefixMatch[1].trim();
 const restAfterDate=inlineDatePrefixMatch[2].trim();
@@ -7455,7 +7456,7 @@ dayOfWeek=dateMatch[3]||'';
 }
 }
 let timeStr='';
-const timeLabeledMatch=cleanText.match(/(?:티업|시간|타임)\s*[:：]?\s*([012]?\d)\s*[:：시]\s*([0-5]\d)/);
+const timeLabeledMatch=cleanText.match(/(?:티업|시간|타임)\s*[:：]?\s*([012]?\d)\s*[:：시]?\s*([0-5]\d)/);
 if(timeLabeledMatch){
 timeStr=`${timeLabeledMatch[1].padStart(2,'\x30')}:${timeLabeledMatch[2]}`;
 }else{
@@ -7464,20 +7465,65 @@ if(timeMatch){
 timeStr=`${timeMatch[1].padStart(2,'\x30')}:${timeMatch[2]}`;
 }
 }
-let rawCourse='';
-const firstLines=cleanText.split('\n').slice(0,3).join(' ');
-const headerCourseMatch=firstLines.match(/(?:골프몬|골팡|골마켓|골프락|골프탑|골프랜드)?\s*[\/\[\]:]*\s*([가-힣0-9a-zA-Z\s]+?)(?:cc|CC|골프장|클럽)?\s*(?:조인|양도)/i);
-if(headerCourseMatch&&headerCourseMatch[1]){
-rawCourse=headerCourseMatch[1].replace(/골프몬|골팡|골마켓|골프락|골프탑|골프랜드|[\/\[\]]/g,'').trim();
+if(!timeStr){
+const numTokens=cleanText.match(/\b\d{3,4}\b/g);
+if(numTokens){
+for(const tok of numTokens){
+if(tok.length===4){
+const h=parseInt(tok.substring(0,2),10);
+const m=parseInt(tok.substring(2,4),10);
+if(h===20&&m>=24&&m<=30)continue;
+if(h>=5&&h<=23&&m>=0&&m<=59){
+timeStr=`${String(h).padStart(2,'\x30')}:${String(m).padStart(2,'\x30')}`;
+break;
 }
-if(!rawCourse||rawCourse.length<2){
-if(typeof dictionary==='\x6f\x62\x6a\x65\x63\x74'){
+}else if(tok.length===3){
+const h=parseInt(tok.substring(0,1),10);
+const m=parseInt(tok.substring(1,3),10);
+if(h>=5&&h<=9&&m>=0&&m<=59){
+timeStr=`${String(h).padStart(2,'\x30')}:${String(m).padStart(2,'\x30')}`;
+break;
+}
+}
+}
+}
+}
+let rawCourse='';
+if(typeof dictionary==='\x6f\x62\x6a\x65\x63\x74'&&Object.keys(dictionary).length>0){
 const sortedKeys=Object.keys(dictionary).sort((a,b)=>b.length-a.length);
 for(const dictKey of sortedKeys){
 if(dictKey.length>=2&&cleanText.includes(dictKey)){
 rawCourse=dictKey;
 break;
 }
+}
+}
+if(!rawCourse||rawCourse.length<2||/^\d+$/.test(rawCourse)){
+const labeledMatch=cleanText.match(/(?:골프장|구장명|구장|클럽)\s*[:：]?\s*([가-힣a-zA-Z0-9]+(?:\([가-힣a-zA-Z0-9]+\))?)/);
+if(labeledMatch&&labeledMatch[1]){
+const cand=labeledMatch[1].replace(/골프장|클럽|cc|gc/gi,'').trim();
+if(cand&&cand.length>=2&&!/^\d+$/.test(cand)){
+rawCourse=cand;
+}
+}
+}
+if(!rawCourse||rawCourse.length<2||/^\d+$/.test(rawCourse)){
+const firstLines=cleanText.split('\n').slice(0,3).join(' ');
+const headerCourseMatch=firstLines.match(/(?:골프몬|골팡|골마켓|골프락|골프탑|골프랜드)?\s*[\/\[\]:]*\s*([가-힣a-zA-Z\s]{2,15})(?:cc|CC|골프장|클럽)?\s*(?:조인|양도)/i);
+if(headerCourseMatch&&headerCourseMatch[1]){
+const cand=headerCourseMatch[1].replace(/골프몬|골팡|골마켓|골프락|골프탑|골프랜드|[\/\[\]]/g,'').trim();
+if(cand&&cand.length>=2&&!/^\d+$/.test(cand)){
+rawCourse=cand;
+}
+}
+}
+if(!rawCourse||rawCourse.length<2||/^\d+$/.test(rawCourse)){
+const cleanNoPlatform=cleanText.replace(/^[\[\(]?(?:골프몬|골팡|골마켓|골프락|골프탑|골프랜드)[\]\)]?\s*[\/:\-]?\s*/i,'').trim();
+const firstTokenMatch=cleanNoPlatform.match(/^([가-힣a-zA-Z0-9]{2,15})/);
+if(firstTokenMatch&&firstTokenMatch[1]){
+const token=firstTokenMatch[1].trim();
+if(token&&!/^\d+$/.test(token)&&!/^(?:골프몬|골팡|골마켓|골프탑|골프랜드|골프락|양도|조인|예약|일정|일자|날짜|시간|티업)$/.test(token)){
+rawCourse=token;
 }
 }
 }
@@ -7654,24 +7700,13 @@ if(progressDesc){
 progressDesc.textContent=`\ub300\uc0c1 \ud50c\ub7ab\ud3fc: ${selectedPlatforms.map(p=>p.toUpperCase()).join(', ')}`;
 }
 if(btnExecute)btnExecute.disabled=true;
-if(selectedPlatforms.includes('\x67\x6f\x6c\x66\x6d\x6f\x6e')){
+const runGolfmon=()=>new Promise((resolve)=>{
 chrome.tabs.query({url:["*\x3a\x2f\x2f*\x2e\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f*","*\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f*"]},(tabs)=>{
 if(!tabs||tabs.length===0){
-if(progressBox){
-progressBox.style.background='\x23\x46\x45\x46\x32\x46\x32';
-progressBox.style.borderColor='\x23\x46\x45\x43\x41\x43\x41';
-}
-if(progressTitle){
-progressTitle.innerHTML=`\u26a0\ufe0f \uc5f4\ub824 \uc788\ub294 \uace8\ud504\ubaac(golfmon.net) \ud0ed\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.`;
-}
-if(progressDesc){
-progressDesc.textContent='\uace8\ud504\ubaac \uc6f9\uc0ac\uc774\ud2b8\uc5d0 \ub85c\uadf8\uc778\ub41c \ud0ed\uc744 \uc5f4\uc5b4\ub454 \ud6c4 \ub2e4\uc2dc \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e';
-}
-if(btnExecute)btnExecute.disabled=false;
 if(confirm("\uc5f4\ub824 \uc788\ub294 \uace8\ud504\ubaac(\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74) \ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e\n\uace8\ud504\ubaac \uc0ac\uc774\ud2b8\ub97c \uc0c8 \ud0ed\uc73c\ub85c \uc5ec\uc2dc\uaca0\uc2b5\ub2c8\uae4c?")){
 chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6f\x6e\x2e\x6e\x65\x74\x2f"});
 }
-return;
+return resolve({platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e',success:false,message:'\uace8\ud504\ubaac \ud0ed\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'});
 }
 const selRoomType=document.getElementById('\x73\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x52\x6f\x6f\x6d\x54\x79\x70\x65')?.value||parsed.roomType||'\uc804\uccb4';
 const golfmonTab=tabs[0];
@@ -7688,43 +7723,166 @@ mode:actionMode
 }
 };
 sendGolfmonMacroCommand(golfmonTab,payload,(res)=>{
-if(btnExecute)btnExecute.disabled=false;
 if(res&&res.success){
+resolve({platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e',success:true,count:res.count||1,message:'\uace8\ud504\ubaac \uae00 \ucc98\ub9ac \uc644\ub8cc'});
+}else{
+resolve({platform:'\x67\x6f\x6c\x66\x6d\x6f\x6e',success:false,message:(res&&res.message)||'\uace8\ud504\ubaac \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e'});
+}
+});
+});
+});
+const runGolftop=()=>new Promise((resolve)=>{
+chrome.tabs.query({
+url:[
+"*\x3a\x2f\x2f*\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x3a\x2f\x2f\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*",
+"*\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*"
+]
+},(tabs)=>{
+if(!tabs||tabs.length===0){
+if(confirm("\uc5f4\ub824 \uc788\ub294 \uace8\ud504\ud0d1(\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72) \ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e\n\uace8\ud504\ud0d1 \x4d\x59 \ud64d\ubcf4\ub97c \uc0c8 \ud0ed\uc73c\ub85c \uc5ec\uc2dc\uaca0\uc2b5\ub2c8\uae4c?")){
+chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f\x4d\x61\x6e\x61\x67\x65\x2f\x50\x72\x6f\x6d\x6f\x74\x69\x6f\x6e"});
+}
+return resolve({platform:'\x67\x6f\x6c\x66\x74\x6f\x70',success:false,message:'\uace8\ud504\ud0d1 \ud0ed\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'});
+}
+const golftopTab=tabs[0];
+const currentTabUrl=golftopTab.url||'';
+const targetUrl='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f\x4d\x61\x6e\x61\x67\x65\x2f\x50\x72\x6f\x6d\x6f\x74\x69\x6f\x6e';
+const payload={
+action:'\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45',
+isAdmin:(typeof _0x104a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x104a():false,
+targetPost:{
+golf:(parsed.canonicalInfo&&parsed.canonicalInfo.golftop)||parsed.courseName,
+rawGolf:parsed.rawCourse,
+date:parsed.date,
+time:parsed.time,
+mode:actionMode
+}
+};
+const sendGolftopMsg=()=>{
+chrome.tabs.sendMessage(golftopTab.id,payload,(res)=>{
+if(chrome.runtime.lastError){
+console.warn("[\x54\x65\x65\x38\x32] \uace8\ud504\ud0d1 \ud1b5\uc2e0 \uc5d0\ub7ec, \uc7ac\uc8fc\uc785 \uc2dc\ub3c4\x3a",chrome.runtime.lastError.message);
+if(chrome.scripting&&chrome.scripting.executeScript){
+chrome.scripting.executeScript({
+target:{tabId:golftopTab.id},
+files:['\x67\x6f\x6c\x66\x74\x6f\x70\x5f\x69\x6e\x74\x65\x72\x63\x65\x70\x74\x6f\x72\x2e\x6a\x73','\x67\x6f\x6c\x66\x74\x6f\x70\x5f\x63\x6f\x6e\x74\x65\x6e\x74\x2e\x6a\x73']
+},()=>{
+void chrome.runtime.lastError;
+setTimeout(()=>{
+chrome.tabs.sendMessage(golftopTab.id,payload,(res2)=>{
+if(chrome.runtime.lastError){
+resolve({platform:'\x67\x6f\x6c\x66\x74\x6f\x70',success:false,message:'\uace8\ud504\ud0d1 \ud398\uc774\uc9c0 \uc751\ub2f5 \uc5c6\uc74c'});
+}else{
+resolve({platform:'\x67\x6f\x6c\x66\x74\x6f\x70',success:res2?.success!==false,count:res2?.count||1,message:res2?.message||'\uace8\ud504\ud0d1 \ucc98\ub9ac \uc644\ub8cc'});
+}
+});
+},300);
+});
+}else{
+resolve({platform:'\x67\x6f\x6c\x66\x74\x6f\x70',success:false,message:'\uace8\ud504\ud0d1 \ud398\uc774\uc9c0 \uc751\ub2f5 \uc5c6\uc74c'});
+}
+}else{
+resolve({platform:'\x67\x6f\x6c\x66\x74\x6f\x70',success:res?.success!==false,count:res?.count||1,message:res?.message||'\uace8\ud504\ud0d1 \ucc98\ub9ac \uc644\ub8cc'});
+}
+});
+};
+if(!currentTabUrl.includes('\x2f\x4d\x61\x6e\x61\x67\x65\x2f\x50\x72\x6f\x6d\x6f\x74\x69\x6f\x6e')){
+chrome.tabs.update(golftopTab.id,{url:targetUrl,active:true},()=>{
+const onUpdated=(tabId,info)=>{
+if(tabId===golftopTab.id&&info.status==='\x63\x6f\x6d\x70\x6c\x65\x74\x65'){
+chrome.tabs.onUpdated.removeListener(onUpdated);
+setTimeout(sendGolftopMsg,600);
+}
+};
+chrome.tabs.onUpdated.addListener(onUpdated);
+setTimeout(()=>{
+try{chrome.tabs.onUpdated.removeListener(onUpdated);}catch(e){}
+},10000);
+});
+}else{
+chrome.tabs.update(golftopTab.id,{active:true},()=>{
+sendGolftopMsg();
+});
+}
+});
+});
+const results=[];
+try{
+if(selectedPlatforms.includes('\x67\x6f\x6c\x66\x6d\x6f\x6e')){
+if(progressDesc)progressDesc.textContent=`[\uace8\ud504\ubaac] \uae00 ${actionLabel} \uc9c4\ud589 \uc911...`;
+const gmRes=await runGolfmon();
+results.push(gmRes);
+}
+if(selectedPlatforms.includes('\x67\x6f\x6c\x66\x74\x6f\x70')){
+if(progressDesc)progressDesc.textContent=`[\uace8\ud504\ud0d1] MY \ud64d\ubcf4 \uae00 ${actionLabel} \uc9c4\ud589 \uc911...`;
+const gtRes=await runGolftop();
+results.push(gtRes);
+}
+const otherPlatforms=selectedPlatforms.filter(p=>p!=='\x67\x6f\x6c\x66\x6d\x6f\x6e'&&p!=='\x67\x6f\x6c\x66\x74\x6f\x70');
+if(otherPlatforms.length>0){
+results.push({
+platform:otherPlatforms.join(', '),
+success:false,
+message:`${otherPlatforms.map(p=>p.toUpperCase()).join(', ')}\ub294 \uc21c\ucc28 \uc5c5\ub370\uc774\ud2b8 \uc608\uc815\uc785\ub2c8\ub2e4.`
+});
+}
+}finally{
+if(btnExecute)btnExecute.disabled=false;
+}
+const successes=results.filter(r=>r.success);
+const failures=results.filter(r=>!r.success);
+if(successes.length>0&&failures.length===0){
 if(progressBox){
 progressBox.style.background='\x23\x44\x43\x46\x43\x45\x37';
 progressBox.style.borderColor='\x23\x38\x36\x45\x46\x41\x43';
 }
+const summaryText=successes.map(s=>{
+const name=s.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(s.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':s.platform);
+const countStr=(s.count&&s.count>1)?` ${s.count}\uac74`:'';
+return`[${name}]${countStr}`;
+}).join(', ');
 if(progressTitle){
-progressTitle.innerHTML=`\u2705 [\uace8\ud504\ubaac] \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`;
+progressTitle.innerHTML=`\u2705 ${summaryText} \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`;
 }
 if(progressDesc){
-progressDesc.textContent=`${parsed.courseName} | ${parsed.dateDisplay||parsed.date} | ${parsed.time} (${selRoomType})`;
+progressDesc.textContent=`${parsed.courseName} | ${parsed.dateDisplay||parsed.date} | ${parsed.time}`;
 }
-_0x101b(`\u2705 [${parsed.courseName} ${parsed.time}] \uace8\ud504\ubaac \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+_0x101b(`\u2705 [${parsed.courseName} ${parsed.time}] ${summaryText} \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 setTimeout(()=>{
 if(txtArea)txtArea.value='';
 updateSoldOutModalParsedUI(null);
-},2000);
+},2500);
+}else if(successes.length>0&&failures.length>0){
+if(progressBox){
+progressBox.style.background='\x23\x46\x45\x46\x39\x43\x33';
+progressBox.style.borderColor='\x23\x46\x44\x45\x30\x34\x37';
+}
+const succStr=successes.map(s=>s.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':'\uace8\ud504\ud0d1').join(', ');
+const failMsgs=failures.map(f=>`${f.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(f.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':f.platform)}: ${f.message}`).join(' \x2f ');
+if(progressTitle){
+progressTitle.innerHTML=`\u26a0\ufe0f \uc77c\ubd80 \ud50c\ub7ab\ud3fc ${actionLabel} \uc644\ub8cc (${succStr} \uc131\uacf5)`;
+}
+if(progressDesc){
+progressDesc.textContent=`\uc2e4\ud328: ${failMsgs}`;
+}
+_0x101b(`\u26a0\ufe0f ${succStr} \uc131\uacf5, \uc2e4\ud328: ${failMsgs}`);
 }else{
 if(progressBox){
 progressBox.style.background='\x23\x46\x45\x46\x32\x46\x32';
 progressBox.style.borderColor='\x23\x46\x45\x43\x41\x43\x41';
 }
-const errReason=(res&&res.message)?res.message:'\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e';
+const failMsgs=failures.map(f=>`${f.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(f.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':f.platform)}: ${f.message}`).join(' \x2f ');
 if(progressTitle){
-progressTitle.innerHTML=`\u274c [\uace8\ud504\ubaac] \uae00 ${actionLabel} \uc2e4\ud328`;
+progressTitle.innerHTML=`\u274c \uae00 ${actionLabel} \uc2e4\ud328`;
 }
 if(progressDesc){
-progressDesc.textContent=errReason;
+progressDesc.textContent=failMsgs||'\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e';
 }
-_0x101b(`\u26a0\ufe0f \uace8\ud504\ubaac: ${errReason}`);
-}
-});
-});
-}
-const otherPlatforms=selectedPlatforms.filter(p=>p!=='\x67\x6f\x6c\x66\x6d\x6f\x6e');
-if(otherPlatforms.length>0){
-console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] \uae30\ud0c0 \ud50c\ub7ab\ud3fc(${otherPlatforms.join(', ')}) \ucc98\ub9ac \uc694\uccad`);
+_0x101b(`\u26a0\ufe0f ${failMsgs||'\uae00 \ub9c8\uac10\x2f\uc0ad\uc81c \uc2e4\ud328'}`);
 }
 }
 function initSoldOutTextModal(){
