@@ -1320,7 +1320,90 @@ return txt.includes('\uc0ad\uc81c')&&(cls.includes('\x64\x61\x6e\x67\x65\x72')||
 }
 return btn;
 }
-async function _0x1021(targetPost,initialDeletedCount=0){
+async function _0x1021(maxWaitMs=5000){
+console.log("[\uace8\ud504\ud0d1] \u23f3 '\uc774 \ud64d\ubcf4\uae00\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?' \ud655\uc778 \ud31d\uc5c5 \ub300\uae30 \ubc0f \uc790\ub3d9 \uc2b9\uc778\x2e\x2e\x2e");
+const startTime=Date.now();
+while(Date.now()-startTime<maxWaitMs){
+if(shouldStopRegistration)return false;
+const swalConfirmBtn=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x62\x75\x74\x74\x6f\x6e\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x2e\x73\x77\x61\x6c\x32-\x61\x63\x74\x69\x6f\x6e\x73 \x62\x75\x74\x74\x6f\x6e\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x2e\x73\x77\x61\x6c\x32-\x61\x63\x74\x69\x6f\x6e\x73 \x62\x75\x74\x74\x6f\x6e\x3a\x6e\x6f\x74(\x2e\x73\x77\x61\x6c\x32-\x63\x61\x6e\x63\x65\x6c)');
+let targetBtn=swalConfirmBtn;
+if(!targetBtn){
+const modalContainer=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x77\x61\x6c\x32-\x70\x6f\x70\x75\x70, \x2e\x6d\x6f\x64\x61\x6c\x2e\x73\x68\x6f\x77, \x2e\x73\x77\x65\x65\x74-\x61\x6c\x65\x72\x74');
+if(modalContainer){
+const buttons=Array.from(modalContainer.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61\x2e\x62\x74\x6e, \x2e\x62\x74\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]'));
+targetBtn=buttons.find(b=>(b.innerText||b.textContent||b.value||'').trim()==='\ud655\uc778');
+}
+}
+if(!targetBtn){
+const allElements=Array.from(document.querySelectorAll('\x64\x69\x76, \x70, \x68\x32, \x73\x70\x61\x6e, \x68\x33'));
+const deleteMsgEl=allElements.find(el=>{
+if(el.children.length>2)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+return txt.includes('\uc774 \ud64d\ubcf4\uae00\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c')||txt.includes('\uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c');
+});
+if(deleteMsgEl){
+const dialog=deleteMsgEl.closest('\x2e\x73\x77\x61\x6c\x32-\x70\x6f\x70\x75\x70, \x2e\x6d\x6f\x64\x61\x6c-\x63\x6f\x6e\x74\x65\x6e\x74, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x64\x69\x76')||deleteMsgEl.parentElement;
+if(dialog){
+const btns=Array.from(dialog.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61\x2e\x62\x74\x6e, \x2e\x62\x74\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]'));
+targetBtn=btns.find(b=>(b.innerText||b.textContent||b.value||'').trim()==='\ud655\uc778');
+}
+}
+}
+if(targetBtn&&(targetBtn.offsetWidth>0||targetBtn.offsetHeight>0)){
+console.log("[\uace8\ud504\ud0d1] \ud83c\udfaf \uc0ad\uc81c \ud655\uc778 \ud31d\uc5c5 [\ud655\uc778] \ubc84\ud2bc \uac10\uc9c0! \ud074\ub9ad \uc2e4\ud589");
+targetBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x31\x30\x42\x39\x38\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+targetBtn.click();
+try{
+if(window.Swal&&typeof window.Swal.clickConfirm==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+window.Swal.clickConfirm();
+}
+}catch(e){}
+await sleep(300);
+for(let i=0;i<20;i++){
+await sleep(150);
+const followupConfirm=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x62\x75\x74\x74\x6f\x6e\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d');
+const followupText=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x74\x69\x74\x6c\x65, \x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x73\x77\x61\x6c\x32-\x68\x74\x6d\x6c-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
+if(followupConfirm&&followupText&&(followupText.innerText.includes('\uc0ad\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4')||followupText.innerText.includes('\uc644\ub8cc'))){
+console.log("[\uace8\ud504\ud0d1] \ud83c\udfaf '\uc0ad\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4' \ud6c4\uc18d \ud31d\uc5c5 \uac10\uc9c0 -> [\ud655\uc778] \ud074\ub9ad");
+followupConfirm.click();
+try{if(window.Swal&&typeof window.Swal.close==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')window.Swal.close();}catch(e){}
+await sleep(250);
+break;
+}
+const swalContainer=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
+if(!swalContainer||window.getComputedStyle(swalContainer).display==='\x6e\x6f\x6e\x65'){
+console.log("[\uace8\ud504\ud0d1] \u2705 \uc0ad\uc81c \ud655\uc778 \ud31d\uc5c5 \ub2eb\ud798 \uc644\ub8cc!");
+return true;
+}
+}
+return true;
+}
+await sleep(100);
+}
+console.warn("[\uace8\ud504\ud0d1] \u26a0\ufe0f \uc0ad\uc81c \ud655\uc778 \ud31d\uc5c5 \ubbf8\ubc1c\uc0dd \ub610\ub294 \ub300\uae30 \uc2dc\uac04 \ucd08\uacfc");
+return false;
+}
+if(!window.__golftop_swal_observer_registered){
+window.__golftop_swal_observer_registered=true;
+const autoClickSwalConfirm=()=>{
+const container=document.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x77\x61\x6c\x32-\x70\x6f\x70\x75\x70');
+if(!container||container.style.display==='\x6e\x6f\x6e\x65')return;
+const text=(container.innerText||container.textContent||'');
+if(text.includes('\uc774 \ud64d\ubcf4\uae00\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c')||text.includes('\uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c')||text.includes('\uc0ad\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4')){
+const confirmBtn=container.querySelector('\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d, \x62\x75\x74\x74\x6f\x6e\x2e\x73\x77\x61\x6c\x32-\x63\x6f\x6e\x66\x69\x72\x6d')||
+Array.from(container.querySelectorAll('\x62\x75\x74\x74\x6f\x6e')).find(b=>(b.innerText||'').trim()==='\ud655\uc778');
+if(confirmBtn&&(confirmBtn.offsetWidth>0||confirmBtn.offsetHeight>0)){
+console.log("[\uace8\ud504\ud0d1 \uc635\uc800\ubc84] \ud83c\udfaf \uc0ad\uc81c \ud655\uc778 \ud31d\uc5c5 [\ud655\uc778] \uc989\uc2dc \ud074\ub9ad!");
+try{confirmBtn.click();}catch(e){}
+}
+}
+};
+try{
+const observer=new MutationObserver(autoClickSwalConfirm);
+observer.observe(document.body||document.documentElement,{childList:true,subtree:true});
+}catch(e){}
+}
+async function _0x1022(targetPost,initialDeletedCount=0){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -1385,6 +1468,14 @@ const formattedDate=useSlash?`${yyyy}/${mm}/${dd}`:`${yyyy}-${mm}-${dd}`;
 console.log(`[\uace8\ud504\ud0d1 \ub9c8\uac10/\uc0ad\uc81c] \uc608\uc57d\uc77c \uac80\uc0c9 \ud544\ud130 \uc124\uc815: ${formattedDate}`);
 await _0x101e(filters.dateInputs[0],formattedDate);
 await _0x101e(filters.dateInputs[1],formattedDate);
+document.querySelectorAll('\x2e\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72, \x2e\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x64\x72\x6f\x70\x64\x6f\x77\x6e, \x2e\x62\x6f\x6f\x74\x73\x74\x72\x61\x70-\x64\x61\x74\x65\x74\x69\x6d\x65\x70\x69\x63\x6b\x65\x72-\x77\x69\x64\x67\x65\x74').forEach(dp=>{
+dp.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+});
+try{
+if(document.activeElement&&typeof document.activeElement.blur==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+document.activeElement.blur();
+}
+}catch(e){}
 }
 const searchCourseName=(golfName||rawGolfName||'')
 .replace(/\(.*?\)/g,'')
@@ -1456,12 +1547,14 @@ sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x66\x74\x6f\x70\x5f\x70\x65\x6e\x64
 targetPost,
 deletedCount:deletedCount+1
 }));
+console.log(`[\uace8\ud504\ud0d1 \ub9c8\uac10/\uc0ad\uc81c] [\uc0ad\uc81c] \ubc84\ud2bc \ud074\ub9ad -> \ud655\uc778 \ud31d\uc5c5 \uc2b9\uc778 \ub300\uae30...`);
 delBtn.click();
+await _0x1021(5000);
 deletedCount++;
 _0x1005({
 desc:`[${golfName} ${targetTime}] \uc911\ubcf5 \uae00 \uc0ad\uc81c \uc911... (${deletedCount}\uac74 \uc0ad\uc81c \uc644\ub8cc)`
 });
-await sleep(1000);
+await sleep(800);
 if(document.body.contains(targetRow)){
 if(filters.searchBtn){
 filters.searchBtn.click();
@@ -1511,7 +1604,7 @@ message:`\uace8\ud504\ud0d1 \uae00 ${actionLabel} \uc911 \uc624\ub958 \ubc1c\uc0
 };
 }
 }
-(async function _0x1022(){
+(async function _0x1023(){
 try{
 if(!window.location.pathname.toLowerCase().includes('\x2f\x6d\x61\x6e\x61\x67\x65\x2f\x70\x72\x6f\x6d\x6f\x74\x69\x6f\x6e'))return;
 const rawPending=sessionStorage.getItem('\x5f\x5f\x67\x6f\x6c\x66\x74\x6f\x70\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
@@ -1520,7 +1613,7 @@ const pending=JSON.parse(rawPending);
 if(pending&&pending.targetPost){
 console.log("[\uace8\ud504\ud0d1] \ud398\uc774\uc9c0 \ub9ac\ub85c\ub4dc \ud6c4 \ub300\uae30 \uc911\uc778 \uae00 \ub9c8\uac10\x2f\uc0ad\uc81c \uc790\ub3d9 \uc7ac\uac1c\x3a",pending);
 await sleep(1000);
-_0x1021(pending.targetPost,pending.deletedCount||0);
+_0x1022(pending.targetPost,pending.deletedCount||0);
 }
 }catch(e){
 try{sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x66\x74\x6f\x70\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');}catch(err){}
@@ -1540,7 +1633,7 @@ sendResponse({success:true,version:'\x32\x2e\x30\x2e\x35\x33'});
 return true;
 }else if(msg.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
 console.log("[\uace8\ud504\ud0d1] \ud2f0\ud0c0\uc784 \uae00 \ub9c8\uac10\x2f\uc0ad\uc81c \uc694\uccad \uc218\uc2e0\x3a",msg);
-_0x1021(msg.targetPost).then(result=>{
+_0x1022(msg.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uace8\ud504\ud0d1 \uae00 \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});

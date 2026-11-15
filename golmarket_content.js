@@ -1435,6 +1435,340 @@ window.location.href='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x67\x6f\x
 console.error("[\uace8\ub9c8\ucf13 \ud050 \ucc98\ub9ac \uc5d0\ub7ec]\x3a",err);
 }
 }
+function _0x101d(){
+try{
+const closeEls=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x73\x70\x61\x6e, \x64\x69\x76')).filter(el=>{
+const txt=(el.innerText||'').trim();
+return(txt==='\ub2eb\uae30'||txt.includes('\ud31d\uc5c5 \ubcf4\uc774\uc9c0 \uc54a\uae30')||txt==='\x58'||txt==='\u00d7')&&el.offsetHeight>0;
+});
+for(const el of closeEls){
+const popupParent=el.closest('[\x69\x64*="\x70\x6f\x70"], [\x63\x6c\x61\x73\x73*="\x70\x6f\x70"], [\x69\x64*="\x6c\x61\x79\x65\x72"], [\x63\x6c\x61\x73\x73*="\x6c\x61\x79\x65\x72"], [\x69\x64*="\x6d\x6f\x64\x61\x6c"], [\x63\x6c\x61\x73\x73*="\x6d\x6f\x64\x61\x6c"]');
+if(popupParent){
+el.click();
+}
+}
+}catch(e){}
+}
+function _0x101e(){
+const all=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x73\x70\x61\x6e, \x64\x69\x76'));
+return all.find(el=>{
+const txt=(el.innerText||'').trim();
+return(txt==='\ub0b4\uac00\uc4f4\uae00'||txt.includes('\ub0b4\uac00\uc4f4\uae00'))&&el.offsetHeight>0;
+});
+}
+function _0x101f(row,btnName){
+if(!row)return null;
+let btn=Array.from(row.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76')).find(el=>{
+const t=(el.innerText||el.value||'').trim();
+return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
+});
+if(btn)return btn;
+let sibling=row.nextElementSibling;
+for(let s=0;s<3&&sibling;s++){
+if(sibling.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]')&&s>0)break;
+btn=Array.from(sibling.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76')).find(el=>{
+const t=(el.innerText||el.value||'').trim();
+return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
+});
+if(btn)return btn;
+sibling=sibling.nextElementSibling;
+}
+const allDocBtns=Array.from(document.querySelectorAll('\x61, \x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e')).filter(el=>{
+const t=(el.innerText||el.value||'').trim();
+return(t===btnName||t.includes(btnName))&&el.offsetHeight>0;
+});
+if(allDocBtns.length===1)return allDocBtns[0];
+if(allDocBtns.length>1){
+return allDocBtns[0];
+}
+return null;
+}
+function _0x1020(row,targetPost){
+if(!row||!targetPost)return false;
+const rowText=row.innerText||'';
+const targetGolf=(targetPost.golf||'').replace(/[\s\(\)CC|cc|Cc|골프클럽|컨트리클럽]/g,'');
+const rawGolf=(targetPost.rawGolf||'').replace(/[\s\(\)CC|cc|Cc|골프클럽|컨트리클럽]/g,'');
+const cleanRowText=rowText.replace(/[\s\(\)CC|cc|Cc|골프클럽|컨트리클럽]/g,'');
+const golfMatched=(targetGolf&&cleanRowText.includes(targetGolf))||
+(rawGolf&&cleanRowText.includes(rawGolf));
+if(!golfMatched)return false;
+if(targetPost.date){
+const mMatch=targetPost.date.match(/(\d{1,2})[.\/\-](\d{1,2})/);
+if(mMatch){
+const mm=mMatch[1].padStart(2,'\x30');
+const dd=mMatch[2].padStart(2,'\x30');
+const singleM=String(parseInt(mMatch[1],10));
+const singleD=String(parseInt(mMatch[2],10));
+const datePatterns=[
+`${mm}/${dd}`,`${singleM}/${singleD}`,`${singleM}/${dd}`,`${mm}/${singleD}`,
+`${mm}-${dd}`,`${singleM}-${singleD}`,
+`${mm}.${dd}`,`${singleM}.${singleD}`
+];
+const hasDate=datePatterns.some(p=>rowText.includes(p));
+if(!hasDate)return false;
+}
+}
+if(targetPost.time){
+const digits=targetPost.time.replace(/\D/g,'');
+if(digits.length>=3){
+let hh='';
+let mi='';
+if(digits.length===4){
+hh=digits.substring(0,2);
+mi=digits.substring(2,4);
+}else if(digits.length===3){
+hh=digits.substring(0,1).padStart(2,'\x30');
+mi=digits.substring(1,3);
+}
+const colonTime=`${hh}:${mi}`;
+const bareTime=`${hh}${mi}`;
+const singleHColonTime=`${parseInt(hh,10)}:${mi}`;
+const hasTime=rowText.includes(colonTime)||
+rowText.includes(bareTime)||
+rowText.includes(singleHColonTime);
+if(!hasTime)return false;
+}
+}
+return true;
+}
+function _0x1021(targetPost){
+const allRows=Array.from(document.querySelectorAll('\x74\x61\x62\x6c\x65 \x74\x72'));
+const matched=[];
+for(const row of allRows){
+if(row.offsetHeight===0)continue;
+if(row.querySelector('\x74\x68'))continue;
+const rowText=row.innerText||'';
+if(rowText.includes('\uc870\uc778\uc77c\uc790')||rowText.includes('\ub4f1\ub85d\uc77c'))continue;
+if(_0x1020(row,targetPost)){
+matched.push(row);
+}
+}
+return matched;
+}
+async function _0x1022(targetPost){
+const allInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"], \x69\x6e\x70\x75\x74\x3a\x6e\x6f\x74([\x74\x79\x70\x65])'));
+let formattedDate='';
+if(targetPost.date){
+formattedDate=_0x100c(targetPost.date);
+}
+const dateInput=allInputs.find(inp=>{
+const name=(inp.name||'').toLowerCase();
+const id=(inp.id||'').toLowerCase();
+const cls=(inp.className||'').toLowerCase();
+const ph=(inp.placeholder||'').toLowerCase();
+return name.includes('\x64\x61\x74\x65')||id.includes('\x64\x61\x74\x65')||cls.includes('\x64\x61\x74\x65')||
+cls.includes('\x68\x61\x73\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72')||ph.includes('\ub0a0\uc9dc')||ph.includes('\uc77c\uc790');
+});
+if(dateInput&&formattedDate){
+dateInput.value=formattedDate;
+dateInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
+dateInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
+try{
+if(window.$&&$(dateInput).datepicker){
+$(dateInput).datepicker('\x73\x65\x74\x44\x61\x74\x65',formattedDate);
+}
+}catch(e){}
+const dp=document.getElementById('\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x64\x69\x76');
+if(dp)dp.style.display='\x6e\x6f\x6e\x65';
+}
+const targetGolf=targetPost.golf||targetPost.rawGolf||'';
+const cleanGolf=targetGolf.replace(/[\s\(\)CC|cc|Cc|골프클럽|컨트리클럽]/g,'');
+const selects=Array.from(document.querySelectorAll('\x73\x65\x6c\x65\x63\x74')).filter(s=>s.offsetHeight>0);
+let selectMatched=false;
+for(const sel of selects){
+const opts=Array.from(sel.options);
+const matchedOpt=opts.find(opt=>{
+const optText=(opt.text||'').replace(/[\s\(\)CC|cc|Cc|골프클럽|컨트리클럽]/g,'');
+return optText&&(optText.includes(cleanGolf)||cleanGolf.includes(optText));
+});
+if(matchedOpt){
+sel.value=matchedOpt.value;
+sel.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
+selectMatched=true;
+break;
+}
+}
+if(!selectMatched){
+const golfInput=allInputs.find(inp=>{
+if(inp===dateInput)return false;
+const name=(inp.name||'').toLowerCase();
+const id=(inp.id||'').toLowerCase();
+const ph=(inp.placeholder||'').toLowerCase();
+return name.includes('\x67\x6f\x6c\x66')||name.includes('\x67\x66')||name.includes('\x73\x74\x78')||
+id.includes('\x67\x6f\x6c\x66')||id.includes('\x67\x66')||ph.includes('\uace8\ud504\uc7a5')||ph.includes('\uad6c\uc7a5');
+});
+if(golfInput){
+golfInput.value=cleanGolf;
+golfInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
+golfInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
+}
+}
+const searchBtn=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"], \x61, \x73\x70\x61\x6e')).find(el=>{
+const t=(el.innerText||el.value||'').trim();
+return(t==='\uac80\uc0c9\ud558\uae30'||(t.includes('\uac80\uc0c9')&&!t.includes('\ucd08\uae30\ud654')))&&el.offsetHeight>0;
+});
+if(searchBtn){
+searchBtn.click();
+return true;
+}
+return false;
+}
+async function _0x1023(row,actionMode){
+const isSoldOut=(actionMode==='\x73\x6f\x6c\x64\x6f\x75\x74');
+const targetBtnName=isSoldOut?'\uc644\ub8cc\ucc98\ub9ac':'\uc0ad\uc81c';
+let actionBtn=_0x101f(row,targetBtnName);
+if(!actionBtn){
+console.log(`[\uace8\ub9c8\ucf13] \ud589 \uc0c1\uc138 \ud3bc\uce58\uae30 \uc2dc\ub3c4 (\ub300\uc0c1: ${targetBtnName})`);
+const clickable=row.querySelector('\x74\x64\x3a\x6e\x74\x68-\x63\x68\x69\x6c\x64(\x32), \x74\x64\x3a\x6e\x74\x68-\x63\x68\x69\x6c\x64(\x34), \x61')||row;
+clickable.click();
+await _0x1005(500);
+actionBtn=_0x101f(row,targetBtnName);
+}
+if(!actionBtn&&isSoldOut){
+actionBtn=_0x101f(row,'\uc644\ub8cc');
+}
+if(!actionBtn){
+console.warn(`[\uace8\ub9c8\ucf13] '${targetBtnName}' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`);
+return false;
+}
+console.log(`[\uace8\ub9c8\ucf13] '${targetBtnName}' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589!`);
+actionBtn.click();
+await _0x1005(1000);
+_0x101d();
+return true;
+}
+async function _0x1024(targetPost,initialDeletedCount=0){
+if(!targetPost){
+return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
+}
+const golfName=targetPost.golf||'';
+const rawGolfName=targetPost.rawGolf||golfName;
+const targetDate=targetPost.date||'';
+const targetTime=targetPost.time||'';
+const actionMode=targetPost.mode||'\x64\x65\x6c\x65\x74\x65';
+const isSoldOut=(actionMode==='\x73\x6f\x6c\x64\x6f\x75\x74');
+const actionLabel=isSoldOut?'\ub9c8\uac10':'\uc0ad\uc81c';
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uc2dc\uc791: \uad6c\uc7a5=${golfName}(${rawGolfName}), \ub0a0\uc9dc=${targetDate}, \uc2dc\uac04=${targetTime}, \ubaa8\ub4dc=${actionMode}`);
+isRegistrationRunning=true;
+shouldStopRegistration=false;
+window.shouldStopRegistration=false;
+_0x1003({
+title:`\uace8\ub9c8\ucf13 \uae00 ${actionLabel}`,
+desc:`[${golfName} ${targetDate} ${targetTime}] \ub0b4\uac00\uc4f4\uae00 \ud655\uc778 \uc911...`,
+current:1,
+total:1
+});
+try{
+const currentUrl=window.location.href.toLowerCase();
+if(!currentUrl.includes('\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70')){
+_0x1003({desc:'\uace8\ud504\uc7a5 \uc870\uc778 \ubaa9\ub85d(\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70)\uc73c\ub85c \uc774\ub3d9 \uc911\x2e\x2e\x2e'});
+sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
+targetPost,
+deletedCount:initialDeletedCount,
+timestamp:Date.now()
+}));
+window.location.href='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70';
+return{success:true,pendingNavigation:true};
+}
+_0x101d();
+const hasMyIdInUrl=window.location.search.includes('\x74\x6d\x5f\x6d\x62\x5f\x69\x64=');
+if(!hasMyIdInUrl){
+const myPostBtn=_0x101e();
+if(myPostBtn){
+console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] '\ub0b4\uac00\uc4f4\uae00' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589");
+_0x1003({desc:"'\ub0b4\uac00\uc4f4\uae00' \ud0ed\uc73c\ub85c \uc804\ud658 \uc911\x2e\x2e\x2e"});
+sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
+targetPost,
+deletedCount:initialDeletedCount,
+step:'\x6d\x79\x5f\x70\x6f\x73\x74\x73\x5f\x63\x6c\x69\x63\x6b\x65\x64',
+timestamp:Date.now()
+}));
+myPostBtn.click();
+await _0x1005(1000);
+}
+}
+await _0x1005(400);
+_0x101d();
+let matchingRows=_0x1021(targetPost);
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] 1\ucc28 \ud14c\uc774\ube14 \ud0d0\uc0c9 \uacb0\uacfc: ${matchingRows.length}\uac74 \uc77c\uce58`);
+if(matchingRows.length===0){
+_0x1003({desc:`[${golfName} ${targetDate}] \uc0c1\ub2e8 \uac80\uc0c9 \ud544\ud130 \uc801\uc6a9 \uc911...`});
+const appliedFilter=await _0x1022(targetPost);
+if(appliedFilter){
+console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] \uac80\uc0c9 \ud544\ud130 \uc801\uc6a9 \ubc0f '\uac80\uc0c9\ud558\uae30' \ud074\ub9ad \uc644\ub8cc");
+_0x1003({desc:'\uac80\uc0c9 \uacb0\uacfc \ub85c\ub529 \ub300\uae30 \uc911\x2e\x2e\x2e'});
+sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
+targetPost,
+deletedCount:initialDeletedCount,
+step:'\x73\x65\x61\x72\x63\x68\x5f\x73\x75\x62\x6d\x69\x74\x74\x65\x64',
+timestamp:Date.now()
+}));
+await _0x1005(1200);
+_0x101d();
+matchingRows=_0x1021(targetPost);
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] \uac80\uc0c9 \ud6c4 2\ucc28 \ud14c\uc774\ube14 \ud0d0\uc0c9 \uacb0\uacfc: ${matchingRows.length}\uac74 \uc77c\uce58`);
+}
+}
+if(matchingRows.length===0){
+sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
+const msg=`[${golfName} ${targetDate} ${targetTime}] \uc77c\uce58\ud558\ub294 \uace8\ub9c8\ucf13 \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`;
+console.warn(msg);
+_0x1003({desc:msg,isStopped:true});
+setTimeout(_0x1004,2500);
+return{
+platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
+success:initialDeletedCount>0,
+count:initialDeletedCount,
+message:initialDeletedCount>0?`\uace8\ub9c8\ucf13 \uc911\ubcf5 \uae00 ${initialDeletedCount}\uac74 ${actionLabel} \uc644\ub8cc`:msg
+};
+}
+let deletedThisTurn=0;
+for(let i=0;i<matchingRows.length;i++){
+if(shouldStopRegistration)break;
+const row=matchingRows[i];
+_0x1003({
+desc:`[${i+1}/${matchingRows.length}] ${golfName} ${targetTime} \uae00 ${actionLabel} \ucc98\ub9ac \uc911...`
+});
+sessionStorage.setItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f',JSON.stringify({
+targetPost,
+deletedCount:initialDeletedCount+deletedThisTurn+1,
+timestamp:Date.now()
+}));
+const success=await _0x1023(row,actionMode);
+if(success){
+deletedThisTurn++;
+console.log(`[\uace8\ub9c8\ucf13 ${actionLabel}] ${i+1}\ubc88\uc9f8 \ud589 \ucc98\ub9ac \uc131\uacf5!`);
+await _0x1005(1000);
+}
+}
+const totalDeleted=initialDeletedCount+deletedThisTurn;
+sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
+const successMsg=`\ud83c\udf89 \uace8\ub9c8\ucf13 [${golfName} ${targetDate} ${targetTime}] \uae00 ${totalDeleted}\uac74 ${actionLabel} \uc644\ub8cc!`;
+console.log(successMsg);
+_0x1003({
+desc:successMsg,
+isCompleted:true,
+total:totalDeleted,
+current:totalDeleted
+});
+return{
+platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
+success:totalDeleted>0,
+count:totalDeleted,
+message:`\uace8\ub9c8\ucf13 \uae00 ${totalDeleted}\uac74 ${actionLabel} \uc644\ub8cc`
+};
+}catch(err){
+console.error(`[\uace8\ub9c8\ucf13 ${actionLabel} \uc5d0\ub7ec]:`,err);
+sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
+_0x1003({desc:`\u274c \uc5d0\ub7ec: ${err.message}`,isStopped:true});
+setTimeout(_0x1004,3000);
+return{
+platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',
+success:false,
+message:err.message||'\uace8\ub9c8\ucf13 \ucc98\ub9ac \uc911 \uc5d0\ub7ec'
+};
+}
+}
 chrome.runtime.onMessage.addListener((request,sender,sendResponse)=>{
 if(request.isAdmin!==undefined){
 isDebugAdmin=!!request.isAdmin;
@@ -1486,15 +1820,40 @@ sendResponse({status:'\x73\x74\x6f\x70\x70\x65\x64'});
 chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44'});
 });
 return true;
+}else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
+_0x1024(request.targetPost).then(result=>{
+sendResponse(result);
+}).catch(err=>{
+console.error("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c \uc5d0\ub7ec]\x3a",err);
+sendResponse({success:false,message:err.message||'\uace8\ub9c8\ucf13 \uc0ad\uc81c \ucc98\ub9ac \uc911 \uc5d0\ub7ec\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});
+});
+return true;
 }else if(request.action==='\x43\x48\x45\x43\x4b\x5f\x53\x54\x41\x54\x55\x53'){
 sendResponse({isRunning:isRegistrationRunning});
 return true;
 }
 });
-if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
-document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',()=>{
-setTimeout(_0x101c,400);
-});
+function _0x1025(){
+try{
+const pendingJson=sessionStorage.getItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
+if(pendingJson){
+const pending=JSON.parse(pendingJson);
+const age=Date.now()-(pending.timestamp||0);
+if(age<30000&&pending.targetPost){
+console.log("[\uace8\ub9c8\ucf13 \ub9c8\uac10\x2f\uc0ad\uc81c] \ud398\uc774\uc9c0 \uc774\ub3d9\x2f\uc0c8\ub85c\uace0\uce68 \ud6c4 \ub300\uae30 \uc911\uc778 \uc0ad\uc81c \uc791\uc5c5 \uc7ac\uac1c\x3a",pending);
+setTimeout(()=>{
+_0x1024(pending.targetPost,pending.deletedCount||0);
+},600);
+return;
 }else{
+sessionStorage.removeItem('\x5f\x5f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x70\x65\x6e\x64\x69\x6e\x67\x5f\x64\x65\x6c\x65\x74\x65\x5f\x5f');
+}
+}
+}catch(e){}
 setTimeout(_0x101c,400);
+}
+if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
+document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',_0x1025);
+}else{
+_0x1025();
 }

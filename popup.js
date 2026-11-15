@@ -2455,7 +2455,7 @@ return`[${c}]\n`+blockText;
 }
 return blockText;
 }
-function parseSingleNoticeBlock(text){
+function parseSingleNoticeBlock(text,fallbackDate='',fallbackYear=null){
 if(!text||!text.trim())return[];
 if(isNonGreenFeeEventNotice(text))return[];
 const rawLines=text.split('\n');
@@ -2506,8 +2506,8 @@ break;
 }
 }
 let currentCourse=primaryCourse;
-let currentDate='';
-let currentYear=null;
+let currentDate=fallbackDate||'';
+let currentYear=fallbackYear||null;
 let currentDateRange=null;
 let currentDateDesc='';
 let pendingDiscount=null;
@@ -2873,7 +2873,11 @@ timePartStr=timePartStr.slice(0,trailingPriceMatch.index);
 }
 }
 }
-timePartStr=timePartStr.replace(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|캐디타임|셀프|캐디|노캐디)\s*[:=\-]?\s*/i,'').trim();
+timePartStr=timePartStr
+.replace(/[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|노캐디타임|캐디타임|셀프|노캐디|캐디|현장|특가|그린피|선결제|선입금)[\s:=~-]*$/i,'')
+.replace(/[-=~:>]+$/,'')
+.replace(/^[-*•▶▷□■▣★☆◆◇▲▼\s]*(?:셀프타임|캐디타임|셀프|캐디|노캐디)\s*[:=\-]?\s*/i,'')
+.trim();
 if(linePrice!==null&&/\d{1,2}:\d{2}/.test(timePartStr)){
 const timeTokens=timePartStr.split(/[\s,+/~]+/);
 let curH=null;
@@ -2881,17 +2885,20 @@ const parsedTimes=[];
 for(const tok of timeTokens){
 const t=tok.trim().replace(/[()\[\]]/g,'');
 if(!t)continue;
-const hhmm=t.match(/^(\d{1,2}):(\d{2})$/);
+const hhmm=t.match(/^(\d{1,2}):(\d{2})/);
 if(hhmm){
 curH=parseInt(hhmm[1],10);
 const m=parseInt(hhmm[2],10);
 if(curH>=0&&curH<=23&&m>=0&&m<60){
 parsedTimes.push({h:curH,m:m,tMins:curH*60+m});
 }
-}else if(curH!==null&&/^\d{2}$/.test(t)){
-const m=parseInt(t,10);
+}else if(curH!==null){
+const minMatch=t.match(/^(\d{2})/);
+if(minMatch){
+const m=parseInt(minMatch[1],10);
 if(m>=0&&m<60){
 parsedTimes.push({h:curH,m:m,tMins:curH*60+m});
+}
 }
 }
 }
@@ -3335,18 +3342,34 @@ return rules.filter(r=>r.course&&!isNonCourseWord(r.course));
 function parseNoticeText(text){
 if(!text||!text.trim())return[];
 if(isNonGreenFeeEventNotice(text))return[];
+let messageDefaultDate='';
+let messageDefaultYear=null;
+const topDateDetail=parseNoticeDateDetail(text);
+if(topDateDetail){
+messageDefaultDate=topDateDetail.dateStr;
+messageDefaultYear=topDateDetail.year;
+}
 const blocks=splitMultiNoticeBlocks(text);
 if(blocks.length>1){
 const allRules=[];
+let curInheritedDate=messageDefaultDate;
+let curInheritedYear=messageDefaultYear;
 for(const block of blocks){
 const normalizedBlock=normalizeNoticeBlockCourse(block);
-const blockRules=parseSingleNoticeBlock(normalizedBlock);
+const blockRules=parseSingleNoticeBlock(normalizedBlock,curInheritedDate,curInheritedYear);
+if(blockRules&&blockRules.length>0){
+const foundDate=blockRules.find(r=>r.date&&r.date!=='\uc804\uccb4');
+if(foundDate){
+curInheritedDate=foundDate.date;
+curInheritedYear=foundDate.year;
+}
+}
 allRules.push(...blockRules);
 }
 return allRules;
 }
 const normalizedSingle=normalizeNoticeBlockCourse(blocks[0]||text);
-return parseSingleNoticeBlock(normalizedSingle);
+return parseSingleNoticeBlock(normalizedSingle,messageDefaultDate,messageDefaultYear);
 }
 let activeNoticeRules=[];
 function formatNoticeReceivedTime(val,timestamp){
@@ -7810,6 +7833,84 @@ sendGolftopMsg();
 }
 });
 });
+const runGolmarket=()=>new Promise((resolve)=>{
+chrome.tabs.query({
+url:[
+"*\x3a\x2f\x2f*\x2e\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x3a\x2f\x2f\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f*",
+"\x68\x74\x74\x70\x3a\x2f\x2f\x77\x77\x77\x2e\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f*"
+]
+},(tabs)=>{
+if(!tabs||tabs.length===0){
+if(confirm("\uc5f4\ub824 \uc788\ub294 \uace8\ub9c8\ucf13(\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72) \ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e\n\uace8\ub9c8\ucf13 \uc870\uc778 \uac8c\uc2dc\ud310\uc744 \uc0c8 \ud0ed\uc73c\ub85c \uc5ec\uc2dc\uaca0\uc2b5\ub2c8\uae4c?")){
+chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70"});
+}
+return resolve({platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:false,message:'\uace8\ub9c8\ucf13 \ud0ed\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'});
+}
+const golmarketTab=tabs[0];
+const currentTabUrl=golmarketTab.url||'';
+const targetUrl='\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x2e\x63\x6f\x2e\x6b\x72\x2f\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70';
+const payload={
+action:'\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x4d\x41\x52\x4b\x45\x54\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45',
+isAdmin:(typeof _0x104a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x104a():false,
+targetPost:{
+golf:(parsed.canonicalInfo&&parsed.canonicalInfo.golmarket)||parsed.courseName,
+rawGolf:parsed.rawCourse,
+date:parsed.date,
+time:parsed.time,
+mode:actionMode
+}
+};
+const sendGolmarketMsg=()=>{
+chrome.tabs.sendMessage(golmarketTab.id,payload,(res)=>{
+if(chrome.runtime.lastError){
+console.warn("[\x54\x65\x65\x38\x32] \uace8\ub9c8\ucf13 \ud1b5\uc2e0 \uc5d0\ub7ec, \uc7ac\uc8fc\uc785 \uc2dc\ub3c4\x3a",chrome.runtime.lastError.message);
+if(chrome.scripting&&chrome.scripting.executeScript){
+chrome.scripting.executeScript({
+target:{tabId:golmarketTab.id},
+files:['\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x69\x6e\x74\x65\x72\x63\x65\x70\x74\x6f\x72\x2e\x6a\x73','\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74\x5f\x63\x6f\x6e\x74\x65\x6e\x74\x2e\x6a\x73']
+},()=>{
+void chrome.runtime.lastError;
+setTimeout(()=>{
+chrome.tabs.sendMessage(golmarketTab.id,payload,(res2)=>{
+if(chrome.runtime.lastError){
+resolve({platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:false,message:'\uace8\ub9c8\ucf13 \ud398\uc774\uc9c0 \uc751\ub2f5 \uc5c6\uc74c'});
+}else{
+resolve({platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:res2?.success!==false,count:res2?.count||1,message:res2?.message||'\uace8\ub9c8\ucf13 \ucc98\ub9ac \uc644\ub8cc'});
+}
+});
+},300);
+});
+}else{
+resolve({platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:false,message:'\uace8\ub9c8\ucf13 \ud398\uc774\uc9c0 \uc751\ub2f5 \uc5c6\uc74c'});
+}
+}else{
+resolve({platform:'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74',success:res?.success!==false,count:res?.count||1,message:res?.message||'\uace8\ub9c8\ucf13 \ucc98\ub9ac \uc644\ub8cc'});
+}
+});
+};
+if(!currentTabUrl.includes('\x6a\x6f\x69\x6e\x5f\x6c\x69\x73\x74\x2e\x70\x68\x70')){
+chrome.tabs.update(golmarketTab.id,{url:targetUrl,active:true},()=>{
+const onUpdated=(tabId,info)=>{
+if(tabId===golmarketTab.id&&info.status==='\x63\x6f\x6d\x70\x6c\x65\x74\x65'){
+chrome.tabs.onUpdated.removeListener(onUpdated);
+setTimeout(sendGolmarketMsg,600);
+}
+};
+chrome.tabs.onUpdated.addListener(onUpdated);
+setTimeout(()=>{
+try{chrome.tabs.onUpdated.removeListener(onUpdated);}catch(e){}
+},10000);
+});
+}else{
+chrome.tabs.update(golmarketTab.id,{active:true},()=>{
+sendGolmarketMsg();
+});
+}
+});
+});
 const results=[];
 try{
 if(selectedPlatforms.includes('\x67\x6f\x6c\x66\x6d\x6f\x6e')){
@@ -7822,7 +7923,12 @@ if(progressDesc)progressDesc.textContent=`[\uace8\ud504\ud0d1] MY \ud64d\ubcf4 \
 const gtRes=await runGolftop();
 results.push(gtRes);
 }
-const otherPlatforms=selectedPlatforms.filter(p=>p!=='\x67\x6f\x6c\x66\x6d\x6f\x6e'&&p!=='\x67\x6f\x6c\x66\x74\x6f\x70');
+if(selectedPlatforms.includes('\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')){
+if(progressDesc)progressDesc.textContent=`[\uace8\ub9c8\ucf13] \ub0b4\uac00\uc4f4\uae00 ${actionLabel} \uc9c4\ud589 \uc911...`;
+const gmkRes=await runGolmarket();
+results.push(gmkRes);
+}
+const otherPlatforms=selectedPlatforms.filter(p=>p!=='\x67\x6f\x6c\x66\x6d\x6f\x6e'&&p!=='\x67\x6f\x6c\x66\x74\x6f\x70'&&p!=='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74');
 if(otherPlatforms.length>0){
 results.push({
 platform:otherPlatforms.join(', '),
@@ -7833,6 +7939,15 @@ message:`${otherPlatforms.map(p=>p.toUpperCase()).join(', ')}\ub294 \uc21c\ucc28
 }finally{
 if(btnExecute)btnExecute.disabled=false;
 }
+const getPlatformDisplayName=(p)=>{
+if(p==='\x67\x6f\x6c\x66\x6d\x6f\x6e')return'\uace8\ud504\ubaac';
+if(p==='\x67\x6f\x6c\x66\x74\x6f\x70')return'\uace8\ud504\ud0d1';
+if(p==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')return'\uace8\ub9c8\ucf13';
+if(p==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')return'\uace8\ud321';
+if(p==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')return'\uace8\ud504\ub79c\ub4dc';
+if(p==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')return'\uace8\ud504\ub77d';
+return p;
+};
 const successes=results.filter(r=>r.success);
 const failures=results.filter(r=>!r.success);
 if(successes.length>0&&failures.length===0){
@@ -7841,7 +7956,7 @@ progressBox.style.background='\x23\x44\x43\x46\x43\x45\x37';
 progressBox.style.borderColor='\x23\x38\x36\x45\x46\x41\x43';
 }
 const summaryText=successes.map(s=>{
-const name=s.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(s.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':s.platform);
+const name=getPlatformDisplayName(s.platform);
 const countStr=(s.count&&s.count>1)?` ${s.count}\uac74`:'';
 return`[${name}]${countStr}`;
 }).join(', ');
@@ -7861,8 +7976,8 @@ if(progressBox){
 progressBox.style.background='\x23\x46\x45\x46\x39\x43\x33';
 progressBox.style.borderColor='\x23\x46\x44\x45\x30\x34\x37';
 }
-const succStr=successes.map(s=>s.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':'\uace8\ud504\ud0d1').join(', ');
-const failMsgs=failures.map(f=>`${f.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(f.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':f.platform)}: ${f.message}`).join(' \x2f ');
+const succStr=successes.map(s=>getPlatformDisplayName(s.platform)).join(', ');
+const failMsgs=failures.map(f=>`${getPlatformDisplayName(f.platform)}: ${f.message}`).join(' \x2f ');
 if(progressTitle){
 progressTitle.innerHTML=`\u26a0\ufe0f \uc77c\ubd80 \ud50c\ub7ab\ud3fc ${actionLabel} \uc644\ub8cc (${succStr} \uc131\uacf5)`;
 }
@@ -7875,7 +7990,7 @@ if(progressBox){
 progressBox.style.background='\x23\x46\x45\x46\x32\x46\x32';
 progressBox.style.borderColor='\x23\x46\x45\x43\x41\x43\x41';
 }
-const failMsgs=failures.map(f=>`${f.platform==='\x67\x6f\x6c\x66\x6d\x6f\x6e'?'\uace8\ud504\ubaac':(f.platform==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1':f.platform)}: ${f.message}`).join(' \x2f ');
+const failMsgs=failures.map(f=>`${getPlatformDisplayName(f.platform)}: ${f.message}`).join(' \x2f ');
 if(progressTitle){
 progressTitle.innerHTML=`\u274c \uae00 ${actionLabel} \uc2e4\ud328`;
 }
