@@ -7431,7 +7431,7 @@ else if(/골마켓|golmarket/i.test(cleanText))platform='\x67\x6f\x6c\x6d\x61\x7
 else if(/골프탑|golftop/i.test(cleanText))platform='\x67\x6f\x6c\x66\x74\x6f\x70';
 else if(/골프랜드|golfland/i.test(cleanText))platform='\x67\x6f\x6c\x66\x6c\x61\x6e\x64';
 else if(/골프락|golfrock/i.test(cleanText))platform='\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
-let roomType='\uc870\uc778';
+let roomType='\uc804\uccb4';
 if(/양도/.test(cleanText)){
 roomType='\uc591\ub3c4';
 }else if(/조인/.test(cleanText)){
@@ -7518,6 +7518,7 @@ const valCourse=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6
 const valDate=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x44\x61\x74\x65');
 const valTime=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x54\x69\x6d\x65');
 const valType=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x54\x79\x70\x65');
+const selType=document.getElementById('\x73\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x52\x6f\x6f\x6d\x54\x79\x70\x65');
 const extraBox=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x45\x78\x74\x72\x61\x49\x6e\x66\x6f');
 const valReq=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x52\x65\x71\x75\x65\x73\x74\x65\x72');
 const valPrice=document.getElementById('\x73\x6f\x6c\x64\x4f\x75\x74\x56\x61\x6c\x50\x72\x69\x63\x65');
@@ -7531,6 +7532,7 @@ if(valCourse)valCourse.textContent='-';
 if(valDate)valDate.textContent='-';
 if(valTime)valTime.textContent='-';
 if(valType)valType.textContent='-';
+if(selType)selType.value='\uc804\uccb4';
 if(extraBox)extraBox.style.display='\x6e\x6f\x6e\x65';
 if(btnExecute)btnExecute.disabled=true;
 return;
@@ -7538,7 +7540,14 @@ return;
 if(valCourse)valCourse.textContent=parsed.courseName||parsed.rawCourse||'\uad6c\uc7a5 \ubbf8\uc778\uc2dd';
 if(valDate)valDate.textContent=parsed.dateDisplay||parsed.date||'\ub0a0\uc9dc \ubbf8\uc778\uc2dd';
 if(valTime)valTime.textContent=parsed.time||'\uc2dc\uac04 \ubbf8\uc778\uc2dd';
-if(valType)valType.textContent=parsed.roomType||'\uc870\uc778';
+if(selType){
+if(parsed.roomType==='\uc591\ub3c4'||parsed.roomType==='\uc870\uc778'){
+selType.value=parsed.roomType;
+}else{
+selType.value='\uc804\uccb4';
+}
+}
+if(valType)valType.textContent=parsed.roomType||'\uc804\uccb4';
 if(extraBox&&(parsed.requester||parsed.price)){
 extraBox.style.display='\x66\x6c\x65\x78';
 if(valReq)valReq.textContent=parsed.requester?`\uc694\uccad\uc790: ${parsed.requester}`:'';
@@ -7664,6 +7673,7 @@ chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6
 }
 return;
 }
+const selRoomType=document.getElementById('\x73\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x52\x6f\x6f\x6d\x54\x79\x70\x65')?.value||parsed.roomType||'\uc804\uccb4';
 const golfmonTab=tabs[0];
 const payload={
 action:'\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45',
@@ -7673,7 +7683,7 @@ golf:parsed.courseName,
 rawGolf:parsed.rawCourse,
 date:parsed.date,
 time:parsed.time,
-roomType:parsed.roomType,
+roomType:selRoomType,
 mode:actionMode
 }
 };
@@ -7688,7 +7698,7 @@ if(progressTitle){
 progressTitle.innerHTML=`\u2705 [\uace8\ud504\ubaac] \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`;
 }
 if(progressDesc){
-progressDesc.textContent=`${parsed.courseName} | ${parsed.dateDisplay||parsed.date} | ${parsed.time} (${parsed.roomType})`;
+progressDesc.textContent=`${parsed.courseName} | ${parsed.dateDisplay||parsed.date} | ${parsed.time} (${selRoomType})`;
 }
 _0x101b(`\u2705 [${parsed.courseName} ${parsed.time}] \uace8\ud504\ubaac \uae00\uc774 \uc131\uacf5\uc801\uc73c\ub85c ${actionLabel}\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 setTimeout(()=>{
@@ -7785,6 +7795,11 @@ chk.checked=false;
 chk.closest('\x6c\x61\x62\x65\x6c')?.classList.remove('\x61\x63\x74\x69\x76\x65');
 }
 });
+});
+document.getElementById('\x73\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x52\x6f\x6f\x6d\x54\x79\x70\x65')?.addEventListener('\x63\x68\x61\x6e\x67\x65',(e)=>{
+if(lastParsedSoldOutData){
+lastParsedSoldOutData.roomType=e.target.value;
+}
 });
 document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x53\x6f\x6c\x64\x4f\x75\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 e.preventDefault();
@@ -9068,45 +9083,22 @@ chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6
 });
 }
 let isGolfmonDateResetting=false;
-let resetRepeatTarget=1;
+let resetIntervalMinutes=0;
 let currentResetCycle=1;
 let isResetRepeatingActive=false;
-let resetRepeatTimer=null;
-function getSelectedResetRepeatCount(isBumpTrigger=false){
-if(isBumpTrigger){
-const selBump=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x52\x65\x70\x65\x61\x74');
-if(selBump&&selBump.value){
-if(selBump.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
-const n=parseInt(selBump.value,10);
-return isNaN(n)?1:n;
-}
-}
-const checked=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74"]\x3a\x63\x68\x65\x63\x6b\x65\x64');
+let resetCountdownTimerId=null;
+let resetNextRunTimestamp=0;
+function getSelectedResetIntervalMinutes(){
+const checked=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x4f\x70\x74\x69\x6f\x6e"]\x3a\x63\x68\x65\x63\x6b\x65\x64');
 if(checked){
-if(checked.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
 const n=parseInt(checked.value,10);
-return isNaN(n)?1:n;
+return isNaN(n)?0:n;
 }
-const selBump=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x52\x65\x70\x65\x61\x74');
-if(selBump&&selBump.value){
-if(selBump.value==='\x69\x6e\x66\x69\x6e\x69\x74\x65')return Infinity;
-const n=parseInt(selBump.value,10);
-return isNaN(n)?1:n;
+return 0;
 }
-return 1;
-}
-function initResetRepeatRadios(){
-const savedVal=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74')||'\x31';
-const selBump=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x52\x65\x70\x65\x61\x74');
-if(selBump){
-selBump.value=savedVal;
-selBump.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
-try{
-localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74',selBump.value);
-}catch(e){}
-});
-}
-const radios=document.querySelectorAll('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74"]');
+function initResetIntervalRadios(){
+const savedVal=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c')||'\x30';
+const radios=document.querySelectorAll('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x4f\x70\x74\x69\x6f\x6e"]');
 radios.forEach(r=>{
 if(r.value===savedVal){
 r.checked=true;
@@ -9114,131 +9106,148 @@ r.checked=true;
 r.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
 if(r.checked){
 try{
-localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x52\x65\x70\x65\x61\x74\x43\x6f\x75\x6e\x74',r.value);
+localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c',r.value);
 }catch(e){}
-if(selBump)selBump.value=r.value;
+const newInterval=parseInt(r.value,10)||0;
+resetIntervalMinutes=newInterval;
+if(newInterval===0&&isResetRepeatingActive){
+stopResetIntervalTimer(true);
+}
 }
 });
 });
+document.getElementById('\x62\x74\x6e\x53\x74\x6f\x70\x52\x65\x73\x65\x74\x54\x69\x6d\x65\x72')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.stopPropagation();
+e.preventDefault();
+stopResetIntervalTimer(true);
+});
 }
-function recordLastBumpTime(){
-const now=Date.now();
-try{
-localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x42\x75\x6d\x70\x54\x69\x6d\x65\x73\x74\x61\x6d\x70',now.toString());
-chrome.storage.local.set({v2_lastBumpTimestamp:now});
-}catch(e){}
-updateBumpStatusUI();
-}
-function updateBumpStatusUI(){
-const pill=document.getElementById('\x62\x75\x6d\x70\x53\x74\x61\x74\x75\x73\x50\x69\x6c\x6c');
-const dot=document.getElementById('\x62\x75\x6d\x70\x53\x74\x61\x74\x75\x73\x44\x6f\x74');
-const text=document.getElementById('\x62\x75\x6d\x70\x53\x74\x61\x74\x75\x73\x54\x65\x78\x74');
-const btnBump=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x42\x75\x6d\x70');
-if(!pill||!text)return;
-let lastTime=0;
-try{
-const raw=localStorage.getItem('\x76\x32\x5f\x6c\x61\x73\x74\x42\x75\x6d\x70\x54\x69\x6d\x65\x73\x74\x61\x6d\x70');
-if(raw)lastTime=parseInt(raw,10);
-}catch(e){}
-if(!lastTime||isNaN(lastTime)||lastTime<=0){
-pill.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x70\x69\x6c\x6c \x73\x74\x61\x74\x75\x73-\x69\x64\x6c\x65';
-if(dot)dot.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x64\x6f\x74 \x67\x72\x61\x79';
-text.innerText='\ub9c8\uc9c0\ub9c9 \uac31\uc2e0\x3a \uae30\ub85d \uc5c6\uc74c';
-pill.title='\ub04c\uc5b4\uc62c\ub9ac\uae30\ub97c \uc2e4\ud589\ud558\uba74 \ub9c8\uc9c0\ub9c9 \uac31\uc2e0 \uc2dc\uac01\uacfc \uc21c\uc704 \uc0c1\ud0dc\uac00 \uc2e4\uc2dc\uac04 \ud45c\uc2dc\ub429\ub2c8\ub2e4\x2e';
-btnBump?.classList.remove('\x62\x75\x6d\x70-\x70\x75\x6c\x73\x69\x6e\x67');
+function updateResetTimerBannerUI(remainingSec){
+const banner=document.getElementById('\x72\x65\x73\x65\x74\x54\x69\x6d\x65\x72\x53\x74\x61\x74\x75\x73\x42\x61\x6e\x6e\x65\x72');
+const text=document.getElementById('\x72\x65\x73\x65\x74\x54\x69\x6d\x65\x72\x53\x74\x61\x74\x75\x73\x54\x65\x78\x74');
+if(!banner||!text)return;
+if(!isResetRepeatingActive||remainingSec<=0){
+banner.style.display='\x6e\x6f\x6e\x65';
 return;
 }
-const elapsedMs=Math.max(0,Date.now()-lastTime);
-const elapsedMin=Math.floor(elapsedMs/(60*1000));
-if(elapsedMin<15){
-pill.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x70\x69\x6c\x6c \x73\x74\x61\x74\x75\x73-\x66\x72\x65\x73\x68';
-if(dot)dot.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x64\x6f\x74 \x67\x72\x65\x65\x6e';
-text.innerText=elapsedMin===0?'\ub9c8\uc9c0\ub9c9 \uac31\uc2e0\x3a \ubc29\uae08 \uc804':`\ub9c8\uc9c0\ub9c9 \uac31\uc2e0: ${elapsedMin}\ubd84 \uc804`;
-pill.title=`\ub9c8\uc9c0\ub9c9 \ub04c\uc5b4\uc62c\ub9ac\uae30: ${elapsedMin}\ubd84 \uc804 (\uace8\ud504\ubaac 1\ud398\uc774\uc9c0 \ucd5c\uc0c1\ub2e8 \uc720\uc9c0 \uc911)`;
-btnBump?.classList.remove('\x62\x75\x6d\x70-\x70\x75\x6c\x73\x69\x6e\x67');
-}else if(elapsedMin<30){
-pill.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x70\x69\x6c\x6c \x73\x74\x61\x74\x75\x73-\x77\x61\x72\x6e\x69\x6e\x67';
-if(dot)dot.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x64\x6f\x74 \x79\x65\x6c\x6c\x6f\x77';
-text.innerText=`\ub9c8\uc9c0\ub9c9 \uac31\uc2e0: ${elapsedMin}\ubd84 \uc804 \u26a0\ufe0f`;
-pill.title=`\ub9c8\uc9c0\ub9c9 \ub04c\uc5b4\uc62c\ub9ac\uae30: ${elapsedMin}\ubd84 \uc804 (\ub2e4\ub978 \ub9e4\ub2c8\uc800\ub4e4\uc758 \uc0c8 \uae00\ub85c \uc778\ud574 \uc21c\uc704\uac00 2~3\ud398\uc774\uc9c0\ub85c \ubc00\ub9ac\ub294 \uc911)`;
-btnBump?.classList.remove('\x62\x75\x6d\x70-\x70\x75\x6c\x73\x69\x6e\x67');
-}else{
-pill.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x70\x69\x6c\x6c \x73\x74\x61\x74\x75\x73-\x64\x61\x6e\x67\x65\x72';
-if(dot)dot.className='\x62\x75\x6d\x70-\x73\x74\x61\x74\x75\x73-\x64\x6f\x74 \x72\x65\x64';
-if(elapsedMin<60){
-text.innerText=`\ub9c8\uc9c0\ub9c9 \uac31\uc2e0: ${elapsedMin}\ubd84 \uc804 \ud83d\udea8`;
-}else if(elapsedMin<1440){
-const h=Math.floor(elapsedMin/60);
-text.innerText=`\ub9c8\uc9c0\ub9c9 \uac31\uc2e0: ${h}\uc2dc\uac04 \uc804 \ud83d\udea8`;
-}else{
-const d=Math.floor(elapsedMin/1440);
-text.innerText=`\ub9c8\uc9c0\ub9c9 \uac31\uc2e0: ${d}\uc77c \uc804 \ud83d\udea8`;
+banner.style.display='\x66\x6c\x65\x78';
+const min=Math.floor(remainingSec/60);
+const sec=remainingSec%60;
+const timeStr=min>0?`${min}\ubd84 ${sec}\ucd08`:`${sec}\ucd08`;
+const intervalLabel=resetIntervalMinutes>=60?`${resetIntervalMinutes/60}\uc2dc\uac04`:`${resetIntervalMinutes}\ubd84`;
+text.innerText=`\u23f1\ufe0f \uc804\uccb4\ub9ac\uc14b \uc790\ub3d9 \ubc18\ubcf5 \uc911 (${intervalLabel} \uc8fc\uae30, \ub2e4\uc74c \uc2e4\ud589: ${timeStr} \ud6c4) [${currentResetCycle}\ud68c\ucc28 \ub300\uae30]`;
 }
-pill.title=`\ub9c8\uc9c0\ub9c9 \ub04c\uc5b4\uc62c\ub9ac\uae30: ${elapsedMin}\ubd84 \uacbd\uacfc! (\uae00\uc774 3\ud398\uc774\uc9c0 \ubc16\uc73c\ub85c \ubc00\ub838\uc744 \uac00\ub2a5\uc131\uc774 \ub192\uc2b5\ub2c8\ub2e4. \ub04c\uc5b4\uc62c\ub9ac\uae30\ub97c \uad8c\uc7a5\ud569\ub2c8\ub2e4)`;
-btnBump?.classList.add('\x62\x75\x6d\x70-\x70\x75\x6c\x73\x69\x6e\x67');
+function scheduleNextResetRun(delayMs,intervalMin){
+if(resetCountdownTimerId){
+clearInterval(resetCountdownTimerId);
+resetCountdownTimerId=null;
 }
-}
-function initBumpCardUI(){
-updateBumpStatusUI();
-if(!window._bumpStatusInterval){
-window._bumpStatusInterval=setInterval(updateBumpStatusUI,30000);
-}
-const btnExecuteBump=document.getElementById('\x62\x74\x6e\x45\x78\x65\x63\x75\x74\x65\x42\x75\x6d\x70');
-if(btnExecuteBump&&!btnExecuteBump._hasBumpListener){
-btnExecuteBump._hasBumpListener=true;
-btnExecuteBump.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-e.stopPropagation();
-e.preventDefault();
-startGolfmonDateReset(false,true);
+resetIntervalMinutes=intervalMin;
+isResetRepeatingActive=true;
+resetNextRunTimestamp=Date.now()+delayMs;
+try{
+localStorage.setItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x4d\x69\x6e\x75\x74\x65\x73',String(intervalMin));
+localStorage.setItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x4e\x65\x78\x74\x52\x75\x6e\x54\x69\x6d\x65\x73\x74\x61\x6d\x70',String(resetNextRunTimestamp));
+localStorage.setItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x41\x63\x74\x69\x76\x65','\x74\x72\x75\x65');
+chrome.storage.local.set({
+v2_resetIntervalMinutes:intervalMin,
+v2_resetNextRunTimestamp:resetNextRunTimestamp,
+v2_resetIntervalActive:true
 });
+}catch(e){}
+const tick=()=>{
+const remainingMs=resetNextRunTimestamp-Date.now();
+const remainingSec=Math.max(0,Math.ceil(remainingMs/1000));
+updateResetTimerBannerUI(remainingSec);
+if(remainingSec<=0){
+if(resetCountdownTimerId){
+clearInterval(resetCountdownTimerId);
+resetCountdownTimerId=null;
 }
-const btnNavBump=document.getElementById('\x62\x74\x6e\x4e\x61\x76\x42\x75\x6d\x70');
-if(btnNavBump&&!btnNavBump._hasBumpListener){
-btnNavBump._hasBumpListener=true;
-btnNavBump.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
-e.stopPropagation();
-e.preventDefault();
-const card=document.getElementById('\x62\x75\x6d\x70\x41\x63\x74\x69\x6f\x6e\x43\x61\x72\x64');
-if(card&&card.style.display!=='\x6e\x6f\x6e\x65'){
-card.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x6e\x65\x61\x72\x65\x73\x74'});
-card.style.transition='\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77 \x30\x2e\x33\x73 \x65\x61\x73\x65';
-card.style.boxShadow='\x30 \x30 \x31\x32\x70\x78 \x72\x67\x62\x61(\x33\x37, \x39\x39, \x32\x33\x35, \x30\x2e\x36)';
-setTimeout(()=>{card.style.boxShadow='';},1200);
+if(isResetRepeatingActive){
+currentResetCycle++;
+startGolfmonDateReset(true);
 }
-startGolfmonDateReset(false,true);
+}
+};
+tick();
+resetCountdownTimerId=setInterval(tick,1000);
+}
+function stopResetIntervalTimer(showToastMsg=true){
+if(resetCountdownTimerId){
+clearInterval(resetCountdownTimerId);
+resetCountdownTimerId=null;
+}
+isResetRepeatingActive=false;
+resetNextRunTimestamp=0;
+resetIntervalMinutes=0;
+try{
+localStorage.removeItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x4e\x65\x78\x74\x52\x75\x6e\x54\x69\x6d\x65\x73\x74\x61\x6d\x70');
+localStorage.setItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x41\x63\x74\x69\x76\x65','\x66\x61\x6c\x73\x65');
+localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c','\x30');
+chrome.storage.local.set({
+v2_resetIntervalActive:false,
+v2_resetNextRunTimestamp:0
 });
+}catch(e){}
+const banner=document.getElementById('\x72\x65\x73\x65\x74\x54\x69\x6d\x65\x72\x53\x74\x61\x74\x75\x73\x42\x61\x6e\x6e\x65\x72');
+if(banner)banner.style.display='\x6e\x6f\x6e\x65';
+const rZero=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65="\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x4f\x70\x74\x69\x6f\x6e"][\x76\x61\x6c\x75\x65="\x30"]');
+if(rZero)rZero.checked=true;
+if(showToastMsg){
+_0x101b('\u23f1\ufe0f \uc804\uccb4\ub9ac\uc14b \uc790\ub3d9 \ubc18\ubcf5\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }
 }
-function startGolfmonDateReset(isSubsequentCycle=false,isBumpTrigger=false){
+function restoreActiveResetTimer(){
+try{
+const isActive=localStorage.getItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
+const nextTsRaw=localStorage.getItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x4e\x65\x78\x74\x52\x75\x6e\x54\x69\x6d\x65\x73\x74\x61\x6d\x70');
+const intervalRaw=localStorage.getItem('\x76\x32\x5f\x72\x65\x73\x65\x74\x49\x6e\x74\x65\x72\x76\x61\x6c\x4d\x69\x6e\x75\x74\x65\x73');
+if(isActive&&nextTsRaw){
+const nextTs=parseInt(nextTsRaw,10);
+const intervalMin=parseInt(intervalRaw,10)||30;
+const remainingMs=nextTs-Date.now();
+if(remainingMs>0){
+scheduleNextResetRun(remainingMs,intervalMin);
+}else if(remainingMs>-600000){
+startGolfmonDateReset(true);
+}else{
+stopResetIntervalTimer(false);
+}
+}
+}catch(e){}
+}
+function recordLastBumpTime(){
+try{
+const now=Date.now();
+localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x52\x65\x73\x65\x74\x54\x69\x6d\x65\x73\x74\x61\x6d\x70',now.toString());
+chrome.storage.local.set({v2_lastResetTimestamp:now});
+}catch(e){}
+}
+function startGolfmonDateReset(isSubsequentCycle=false){
 if(!_0x1044('\ubaac'))return;
 if(isGolfmonDateResetting){
 console.warn("[\x54\x65\x65\x38\x32] \uc774\ubbf8 \uc804\uccb4\ub9ac\uc14b \uba85\ub839\uc774 \uc804\ub2ec \uc911\uc785\ub2c8\ub2e4\x2e \uc911\ubcf5 \ud074\ub9ad \ubb34\uc2dc\x2e");
 return;
 }
+const intervalMinutes=getSelectedResetIntervalMinutes();
 if(!isSubsequentCycle){
-resetRepeatTarget=getSelectedResetRepeatCount(isBumpTrigger);
 currentResetCycle=1;
+if(intervalMinutes>0){
+resetIntervalMinutes=intervalMinutes;
 isResetRepeatingActive=true;
-if(resetRepeatTimer){clearTimeout(resetRepeatTimer);resetRepeatTimer=null;}
+}else{
+stopResetIntervalTimer(false);
 }
-const bumpDateInput=document.getElementById('\x69\x6e\x70\x75\x74\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
+}
 const dateInput=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
 const endDateInput=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x45\x6e\x64\x44\x61\x74\x65');
-let rawStartVal='';
-let rawEndVal='';
-let filterType='\uc804\uccb4';
-if(isBumpTrigger&&bumpDateInput&&bumpDateInput.value){
-rawStartVal=bumpDateInput.value.trim();
-rawEndVal=rawStartVal;
-filterType=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
-}else{
-rawStartVal=(dateInput?.value||bumpDateInput?.value||'').trim();
-rawEndVal=(endDateInput?.value||rawStartVal).trim();
-filterType=document.getElementById('\x73\x65\x6c\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
-}
+let rawStartVal=(dateInput?.value||'').trim();
+let rawEndVal=(endDateInput?.value||rawStartVal).trim();
+let filterType=document.getElementById('\x73\x65\x6c\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')?.value||'\uc804\uccb4';
 if(!rawStartVal){
-alert(isBumpTrigger?"\ub04c\uc5b4\uc62c\ub9b4 \ub300\uc0c1 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e":"\uc804\uccb4\ub9ac\uc14b\uc744 \uc2dc\uc791\ud560 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e");
-(isBumpTrigger?bumpDateInput:dateInput)?.focus();
+alert("\uc804\uccb4\ub9ac\uc14b\uc744 \uc2dc\uc791\ud560 \ub0a0\uc9dc\ub97c \uba3c\uc800 \uc120\ud0dd\ud574\uc8fc\uc138\uc694\x2e");
+dateInput?.focus();
 return;
 }
 if(!rawEndVal){
@@ -9283,17 +9292,13 @@ const stepPreset=document.getElementById('\x73\x65\x6c\x53\x74\x65\x70\x44\x65\x
 isGolfmonDateResetting=true;
 setTimeout(()=>{isGolfmonDateResetting=false;},3000);
 try{
-if(isBumpTrigger){
-localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',startStr);
-localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',filterType);
-}else{
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',startStr);
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x45\x6e\x64\x44\x61\x74\x65',endStr);
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',filterType);
-}
 }catch(e){}
-const cycleLabel=(resetRepeatTarget>1||resetRepeatTarget===Infinity)
-?` (${currentResetCycle}/${resetRepeatTarget===Infinity?'\ubb34\uc81c\ud55c':resetRepeatTarget}\ud68c\ucc28)`
+const intervalLabel=resetIntervalMinutes>=60?`${resetIntervalMinutes/60}\uc2dc\uac04`:`${resetIntervalMinutes}\ubd84`;
+const cycleLabel=(isResetRepeatingActive&&resetIntervalMinutes>0)
+?` (${currentResetCycle}\ud68c\ucc28 - ${intervalLabel} \uc8fc\uae30)`
 :'';
 findBestGolfmonTab((golfmonTab)=>{
 if(golfmonTab){
@@ -9310,7 +9315,7 @@ filterType:filterType,
 delayPreset:delayPreset,
 stepPreset:stepPreset,
 repeatCycle:currentResetCycle,
-totalRepeat:(resetRepeatTarget===Infinity?'\x69\x6e\x66\x69\x6e\x69\x74\x65':resetRepeatTarget),
+totalRepeat:(isResetRepeatingActive&&resetIntervalMinutes>0?`${intervalLabel} \uc8fc\uae30`:1),
 cycleLabel:cycleLabel
 };
 sendGolfmonMacroCommand(golfmonTab,payload,()=>{
@@ -9504,6 +9509,7 @@ uncheckItem(item.regId,item);
 }catch(e){}
 }
 function stopRegistration(){
+stopResetIntervalTimer(false);
 clearGolfmonMacroSupervision();
 activeConcurrentPlatforms.clear();
 isGolfmonPostReplacing=false;
@@ -10838,7 +10844,7 @@ chkOpenUpdateActions.checked=isUpdateActionsOpen;
 }
 const chkOpenDateReset=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x44\x61\x74\x65\x52\x65\x73\x65\x74');
 const isDateResetSaved=localStorage.getItem('\x76\x32\x5f\x64\x61\x74\x65\x52\x65\x73\x65\x74\x41\x63\x74\x69\x76\x65')!=='\x66\x61\x6c\x73\x65';
-const isDateResetOpen=isAdmin?isDateResetSaved:(hasReset&&isDateResetSaved);
+const isDateResetOpen=isDateResetSaved;
 if(chkOpenDateReset){
 chkOpenDateReset.checked=isDateResetOpen;
 }
@@ -10866,13 +10872,6 @@ const isSoldOutOpen=hasSoldOut||(isAdmin&&isLabActive&&isSoldOutSaved);
 if(chkOpenSoldOutFeature){
 chkOpenSoldOutFeature.checked=isSoldOutOpen;
 }
-const chkOpenBumpFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-const isBumpSaved=localStorage.getItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-const isBumpOpen=hasBump||(isAdmin&&isLabActive&&isBumpSaved);
-const isBumpTimerOpen=isBumpOpen;
-if(chkOpenBumpFeature){
-chkOpenBumpFeature.checked=isBumpOpen;
-}
 const btnReplace=document.getElementById('\x62\x74\x6e\x52\x65\x70\x6c\x61\x63\x65\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnFullEdit=document.getElementById('\x62\x74\x6e\x46\x75\x6c\x6c\x45\x64\x69\x74\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnRegisterGolfmon=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x54\x6f\x47\x6f\x6c\x66\x6d\x6f\x6e');
@@ -10888,14 +10887,6 @@ btnRegisterGolfmon.style.padding='\x30 \x36\x70\x78';
 const resetActionsBar=document.getElementById('\x72\x65\x73\x65\x74\x41\x63\x74\x69\x6f\x6e\x73\x42\x61\x72');
 if(resetActionsBar){
 resetActionsBar.style.display=isDateResetOpen?'\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
-}
-const bumpActionCard=document.getElementById('\x62\x75\x6d\x70\x41\x63\x74\x69\x6f\x6e\x43\x61\x72\x64');
-if(bumpActionCard){
-bumpActionCard.style.display=isBumpOpen?'\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
-}
-const btnNavBump=document.getElementById('\x62\x74\x6e\x4e\x61\x76\x42\x75\x6d\x70');
-if(btnNavBump){
-btnNavBump.style.display=isBumpOpen?'\x69\x6e\x6c\x69\x6e\x65-\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
 }
 const noticeHeaderGroup=document.getElementById('\x6e\x6f\x74\x69\x63\x65\x48\x65\x61\x64\x65\x72\x42\x74\x6e\x47\x72\x6f\x75\x70');
 if(noticeHeaderGroup){
@@ -10923,13 +10914,6 @@ btnBatchSoldOut.style.display=isSoldOutOpen?'\x69\x6e\x6c\x69\x6e\x65-\x66\x6c\x
 }
 if(document.body){
 document.body.classList.toggle('\x6c\x61\x62-\x73\x6f\x6c\x64\x6f\x75\x74-\x61\x63\x74\x69\x76\x65',isSoldOutOpen);
-}
-const btnOpenRefreshTimer=document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x52\x65\x66\x72\x65\x73\x68\x54\x69\x6d\x65\x72');
-if(btnOpenRefreshTimer){
-btnOpenRefreshTimer.style.display=isBumpTimerOpen?'\x69\x6e\x6c\x69\x6e\x65-\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
-}
-if(!isBumpTimerOpen&&typeof stopBumpTimer==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-stopBumpTimer();
 }
 }catch(err){
 console.error('[\x75\x70\x64\x61\x74\x65\x4c\x61\x62\x46\x65\x61\x74\x75\x72\x65\x73\x55\x49 \x65\x72\x72\x6f\x72]',err);
@@ -11104,8 +11088,6 @@ const chkOpenNoticeFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x
 if(chkOpenNoticeFeatureEl)chkOpenNoticeFeatureEl.checked=true;
 const chkOpenSoldOutFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65');
 if(chkOpenSoldOutFeatureEl)chkOpenSoldOutFeatureEl.checked=false;
-const chkOpenBumpFeatureEl=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-if(chkOpenBumpFeatureEl)chkOpenBumpFeatureEl.checked=false;
 const chkAllowF12El=document.getElementById('\x63\x68\x6b\x41\x6c\x6c\x6f\x77\x46\x31\x32');
 const hasF12=typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x104b('\x66\x31\x32'):false;
 if(chkAllowF12El)chkAllowF12El.checked=hasF12;
@@ -11233,24 +11215,6 @@ if(isOpened){
 _0x101b('\ud83d\udeab \uc6d0\ud074\ub9ad \ub9c8\uac10\x2f\uc0ad\uc81c \uae30\ub2a5\uc774 \uc624\ud508\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }else{
 _0x101b('\uc6d0\ud074\ub9ad \ub9c8\uac10\x2f\uc0ad\uc81c \uae30\ub2a5\uc774 \uc228\uae40 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
-}
-});
-}
-const chkOpenBumpFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-if(chkOpenBumpFeature){
-chkOpenBumpFeature.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){
-const isOpened=this.checked;
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isOpened?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isOpened?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-try{
-chrome.storage.local.set({v2_bumpFeatureActive:isOpened,v2_bumpTimerFeatureActive:isOpened});
-}catch(e){}
-const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-_0x104f(isLabActive);
-if(isOpened){
-_0x101b('\ud83d\ude80 [\ub0b4 \uae00 \uc804\uccb4 \x31\ub4f1 \ub04c\uc5b4\uc62c\ub9ac\uae30] \ubc14\uac00 \uc624\ud508\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
-}else{
-_0x101b('[\ub0b4 \uae00 \uc804\uccb4 \x31\ub4f1 \ub04c\uc5b4\uc62c\ub9ac\uae30] \ubc14\uac00 \uc228\uae40 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }
 });
 }
@@ -12525,8 +12489,8 @@ e.preventDefault();
 startGolfmonPostReplacement(false);
 });
 document.getElementById('\x62\x74\x6e\x52\x65\x73\x65\x74\x47\x6f\x6c\x66\x6d\x6f\x6e\x44\x61\x74\x65\x50\x6f\x73\x74\x73')?.addEventListener('\x63\x6c\x69\x63\x6b',()=>startGolfmonDateReset(false));
-initResetRepeatRadios();
-initBumpCardUI();
+initResetIntervalRadios();
+restoreActiveResetTimer();
 _0x1030();
 const inputResetTargetDate=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
 const inputResetEndDate=document.getElementById('\x69\x6e\x70\x75\x74\x52\x65\x73\x65\x74\x45\x6e\x64\x44\x61\x74\x65');
@@ -12566,29 +12530,6 @@ selResetFilterType.value=savedFilter;
 }
 selResetFilterType.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
 try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',selResetFilterType.value);}catch(e){}
-});
-}
-const inputBumpTargetDate=document.getElementById('\x69\x6e\x70\x75\x74\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65');
-if(inputBumpTargetDate){
-const now=new Date();
-const yyyy=now.getFullYear();
-const mm=String(now.getMonth()+1).padStart(2,'\x30');
-const dd=String(now.getDate()).padStart(2,'\x30');
-const todayStr=`${yyyy}-${mm}-${dd}`;
-const savedDate=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65')||localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65')||todayStr;
-inputBumpTargetDate.value=(savedDate&&savedDate>=todayStr)?savedDate:todayStr;
-inputBumpTargetDate.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
-try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x54\x61\x72\x67\x65\x74\x44\x61\x74\x65',inputBumpTargetDate.value);}catch(e){}
-});
-}
-const selBumpFilterType=document.getElementById('\x73\x65\x6c\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65');
-if(selBumpFilterType){
-const savedFilter=localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')||localStorage.getItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x52\x65\x73\x65\x74\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65')||'\uc804\uccb4';
-if(['\uc804\uccb4','\uc870\uc778','\uc591\ub3c4'].includes(savedFilter)){
-selBumpFilterType.value=savedFilter;
-}
-selBumpFilterType.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
-try{localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x42\x75\x6d\x70\x46\x69\x6c\x74\x65\x72\x54\x79\x70\x65',selBumpFilterType.value);}catch(e){}
 });
 }
 document.getElementById('\x62\x74\x6e\x53\x65\x6c\x65\x63\x74\x50\x72\x69\x63\x65\x44\x72\x6f\x70\x70\x65\x64')?.addEventListener('\x63\x6c\x69\x63\x6b',handleSelectPriceDropped);
@@ -14265,19 +14206,6 @@ try{localStorage.setItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x
 const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 _0x104f(isLabActive);
 }
-if(area==='\x6c\x6f\x63\x61\x6c'&&(typeof changes.v2_bumpFeatureActive!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'||typeof changes.v2_bumpTimerFeatureActive!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64')){
-const newBump=typeof changes.v2_bumpFeatureActive!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'
-?!!changes.v2_bumpFeatureActive.newValue
-:!!changes.v2_bumpTimerFeatureActive?.newValue;
-const chkBump=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-if(chkBump)chkBump.checked=newBump;
-try{
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',newBump?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',newBump?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-}catch(e){}
-const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-_0x104f(isLabActive);
-}
 if(area==='\x6c\x6f\x63\x61\x6c'&&changes.v2_specialTargetCourses){
 const newCourses=changes.v2_specialTargetCourses.newValue;
 if(Array.isArray(newCourses)){
@@ -14481,17 +14409,6 @@ const chkSoldOut=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x53\x6f\x
 const isLab=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 if(chkSoldOut)chkSoldOut.checked=res.v2_soldOutFeatureActive&&isLab;
 try{localStorage.setItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',res.v2_soldOutFeatureActive?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');}catch(e){}
-_0x104f(isLab);
-}
-if(typeof res?.v2_bumpFeatureActive==='\x62\x6f\x6f\x6c\x65\x61\x6e'||typeof res?.v2_bumpTimerFeatureActive==='\x62\x6f\x6f\x6c\x65\x61\x6e'){
-const isBumpSaved=res.v2_bumpFeatureActive??res.v2_bumpTimerFeatureActive;
-const chkBump=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65')||document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x42\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65');
-const isLab=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-if(chkBump)chkBump.checked=isBumpSaved&&isLab;
-try{
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isBumpSaved?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-localStorage.setItem('\x76\x32\x5f\x62\x75\x6d\x70\x54\x69\x6d\x65\x72\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',isBumpSaved?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
-}catch(e){}
 _0x104f(isLab);
 }
 if(Array.isArray(res?.v2_notice_custom_courses)){
@@ -14768,48 +14685,29 @@ try{chrome.storage.local.set({isRegistrationRunning:false});}catch(e){}
 _0x101b('\uad50\uccb4\uc218\uc815\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e (\uc644\ub8cc\ub41c \ud56d\ubaa9 \uccb4\ud06c \ud574\uc81c\ub428)');
 }else if(msg.type==='\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44'){
 const sc=typeof msg.successCount==='\x6e\x75\x6d\x62\x65\x72'?msg.successCount:msg.total;
-if(isResetRepeatingActive&&currentResetCycle<resetRepeatTarget){
+_0x1039(sc);
 recordDailyStat('\x67\x6f\x6c\x66\x6d\x6f\x6e','\ub9ac\uc14b',msg.targetDate||'\uc804\uccb4\ub9ac\uc14b',sc);
 recordLastBumpTime();
-const nextCycle=currentResetCycle+1;
-const targetLabel=(resetRepeatTarget===Infinity?'\ubb34\uc81c\ud55c':`${resetRepeatTarget}\ud68c`);
-_0x101b(`\ud83d\udd04 [\uc804\uccb4\ub9ac\uc14b] ${currentResetCycle}\ud68c\ucc28 \uc644\ub8cc! (${sc}\uac74)\n\uc7a0\uc2dc \ud6c4 ${nextCycle}/${targetLabel}\ucc28 \ub9ac\uc14b\uc744 \uc2dc\uc791\ud569\ub2c8\ub2e4... (3\ucd08 \ud6c4)`);
-const desc=document.getElementById('\x70\x72\x6f\x67\x72\x65\x73\x73\x44\x65\x73\x63');
-if(desc){
-desc.innerText=`\ud83d\udd04 [\uc804\uccb4\ub9ac\uc14b ${currentResetCycle}/${targetLabel} \uc644\ub8cc] 3\ucd08 \ud6c4 \ub2e4\uc74c \ud68c\ucc28 \uc2dc\uc791...`;
-}
-const pTitle=document.getElementById('\x70\x72\x6f\x67\x72\x65\x73\x73\x54\x69\x74\x6c\x65');
-if(pTitle){
-pTitle.innerText=`\ud83d\udd04 \uace8\ud504\ubaac \ub0a0\uc9dc\ubcc4 \uc804\uccb4\ub9ac\uc14b (${nextCycle}/${targetLabel}\ucc28 \uc900\ube44 \uc911)`;
-}
-if(resetRepeatTimer)clearTimeout(resetRepeatTimer);
-resetRepeatTimer=setTimeout(()=>{
-if(!isResetRepeatingActive)return;
-currentResetCycle=nextCycle;
-startGolfmonDateReset(true);
-},3000);
+document.getElementById('\x62\x74\x6e\x48\x65\x61\x64\x65\x72\x53\x74\x6f\x70')?.classList.remove('\x61\x63\x74\x69\x76\x65');
+try{chrome.storage.local.set({isRegistrationRunning:false});}catch(e){}
+if(isResetRepeatingActive&&resetIntervalMinutes>0){
+const intervalLabel=resetIntervalMinutes>=60?`${resetIntervalMinutes/60}\uc2dc\uac04`:`${resetIntervalMinutes}\ubd84`;
+const delayMs=resetIntervalMinutes*60*1000;
+scheduleNextResetRun(delayMs,resetIntervalMinutes);
+_0x101b(`\ud83c\udf89 [\uc804\uccb4\ub9ac\uc14b] ${currentResetCycle}\ud68c\ucc28 \uc644\ub8cc! (${sc}\uac74)\n\u23f1\ufe0f ${intervalLabel} \ud6c4 \uc790\ub3d9\uc73c\ub85c \ub2e4\uc74c \ub9ac\uc14b\uc744 \uc2e4\ud589\ud569\ub2c8\ub2e4.`);
 return;
 }
-isResetRepeatingActive=false;
-if(resetRepeatTimer){clearTimeout(resetRepeatTimer);resetRepeatTimer=null;}
+stopResetIntervalTimer(false);
 if(sc===0&&currentResetCycle===1){
 const overlay=document.getElementById('\x70\x72\x6f\x67\x72\x65\x73\x73\x4f\x76\x65\x72\x6c\x61\x79');
 if(overlay)overlay.style.display='\x6e\x6f\x6e\x65';
 _0x101b(msg.reason||'\u26a0\ufe0f \uc9c0\uc815\ud55c \ub0a0\uc9dc\uc5d0 \ub4f1\ub85d\ub41c \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ub9ac\uc14b\uc744 \uc644\ub8cc\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e');
 }else{
-_0x1039(sc);
-recordDailyStat('\x67\x6f\x6c\x66\x6d\x6f\x6e','\ub9ac\uc14b',msg.targetDate||'\uc804\uccb4\ub9ac\uc14b',sc);
-recordLastBumpTime();
-const totalNotice=(resetRepeatTarget>1||resetRepeatTarget===Infinity)
-?`\ud83c\udf89 [\uc804\uccb4\ub9ac\uc14b \ucd1d ${currentResetCycle}\ud68c \ubc18\ubcf5 \uc644\ub8cc!] (${msg.targetDate||''})`
-:`\ud83c\udf89 [${msg.targetDate||''}] \ucd1d ${sc}\uac74 \uc804\uccb4\ub9ac\uc14b(\ub0b4\uc6a9 \uc720\uc9c0 \uc218\uc815) \uc644\ub8cc!`;
+const totalNotice=`\ud83c\udf89 [${msg.targetDate||''}] \ucd1d ${sc}\uac74 \uc804\uccb4\ub9ac\uc14b(\ub0b4\uc6a9 \uc720\uc9c0 \uc218\uc815) \uc644\ub8cc!`;
 _0x101b(totalNotice);
 }
-document.getElementById('\x62\x74\x6e\x48\x65\x61\x64\x65\x72\x53\x74\x6f\x70')?.classList.remove('\x61\x63\x74\x69\x76\x65');
-try{chrome.storage.local.set({isRegistrationRunning:false});}catch(e){}
 }else if(msg.type==='\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44'){
-isResetRepeatingActive=false;
-if(resetRepeatTimer){clearTimeout(resetRepeatTimer);resetRepeatTimer=null;}
+stopResetIntervalTimer(false);
 const overlay=document.getElementById('\x70\x72\x6f\x67\x72\x65\x73\x73\x4f\x76\x65\x72\x6c\x61\x79');
 if(overlay)overlay.style.display='\x6e\x6f\x6e\x65';
 document.getElementById('\x62\x74\x6e\x48\x65\x61\x64\x65\x72\x53\x74\x6f\x70')?.classList.remove('\x61\x63\x74\x69\x76\x65');

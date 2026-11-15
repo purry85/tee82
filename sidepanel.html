@@ -808,11 +808,10 @@
         }
 
         .btn-full-reset-action {
-            flex: 1 1 auto;
-            min-width: 65px;
+            flex: 0 0 64px;
             height: 25px;
-            padding: 0 5px !important;
-            font-size: 10.5px !important;
+            padding: 0 4px !important;
+            font-size: 10px !important;
             font-weight: 800 !important;
             background: #6366F1 !important;
             color: #FFFFFF !important;
@@ -833,34 +832,35 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
         }
 
-        /* 전체리셋 반복 횟수 선택 그룹 */
+        /* 전체리셋 주기 선택 그룹 */
         .reset-repeat-group {
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            justify-content: space-between;
+            gap: 2px;
             height: 25px;
-            padding: 0 5px;
+            padding: 0 4px;
             background: #EEF2FF;
             border: 1px solid #C7D2FE;
             border-radius: 5px;
             box-sizing: border-box;
-            flex: 0 0 auto;
+            flex: 1 1 auto;
             user-select: none;
         }
 
         .reset-repeat-title {
-            font-size: 9.5px;
+            font-size: 8.5px;
             font-weight: 800;
             color: #4338CA;
-            margin-right: 1px;
+            margin-right: 0px;
             white-space: nowrap;
         }
 
         .reset-repeat-label {
             display: inline-flex;
             align-items: center;
-            gap: 1.5px;
-            font-size: 9.5px;
+            gap: 1px;
+            font-size: 8.5px;
             font-weight: 700;
             color: #312E81;
             cursor: pointer;
@@ -873,6 +873,10 @@
             margin: 0;
             cursor: pointer;
             accent-color: #4F46E5;
+            width: 9.5px;
+            height: 9.5px;
+            vertical-align: middle;
+        }
             width: 11px;
             height: 11px;
             vertical-align: middle;
@@ -1717,6 +1721,26 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .soldout-item-select {
+            width: 100%;
+            height: 20px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #0F172A;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            padding: 0 2px;
+            cursor: pointer;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .soldout-item-select:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 1.5px rgba(99, 102, 241, 0.2);
         }
 
         .soldout-extra-info {
@@ -4366,7 +4390,6 @@
             <div class="nav-actions">
                 <button class="nav-icon-btn" id="btnClearTable" title="입력창 및 표 초기화 / 비우기">🗑️</button>
                 <button class="nav-icon-btn nav-stop-btn" id="btnHeaderStop" title="즉시중단" aria-label="즉시중단">🛑</button>
-                <button class="nav-icon-btn" id="btnNavBump" title="🚀 골프몬 내 글 최상단 1등 끌어올리기 (BUMP)" style="font-size: 13px; display: none;">🚀</button>
                 <button class="nav-icon-btn" id="btnPopoutWindow" title="화면 절반 크기 독립창으로 분리">🗗</button>
                 <button class="nav-icon-btn" id="btnOpenSidePanel" title="사이드패널로 열기 (화면 전체 높이)">📌</button>
                 <button class="nav-icon-btn" id="btnOpenStats" title="오늘의 작업 통계 대시보드 리포트">📊</button>
@@ -4458,8 +4481,8 @@
                     <span>플랫폼 동시 등록</span>
                 </button>
             </div>
-            <!-- 🔄 골프몬 전체리셋 바 (원래대로 복구) -->
-            <div class="reset-actions-bar" id="resetActionsBar" style="display: none;">
+            <!-- 🔄 골프몬 전체리셋 바 -->
+            <div class="reset-actions-bar" id="resetActionsBar">
                 <div class="reset-inputs-row">
                     <input type="date" id="inputResetTargetDate" class="input-reset-date" title="전체리셋 시작 날짜를 지정하세요">
                     <span class="reset-date-tilde">~</span>
@@ -4474,47 +4497,22 @@
                     <button type="button" class="btn-hero-submit btn-full-reset-action" id="btnResetGolfmonDatePosts" title="지정한 시작 날짜부터 종료 날짜까지 등록된 골프몬 글을 내용 변경 없이 차례대로 모두 수정(리셋)합니다">
                         <span>전체리셋</span>
                     </button>
-                    <div class="reset-repeat-group" id="resetRepeatGroup" title="전체리셋 반복 횟수 선택 (1회, 3회, 5회, 무제한)">
-                        <span class="reset-repeat-title">반복:</span>
-                        <label class="reset-repeat-label" title="1회만 실행하고 종료"><input type="radio" name="resetRepeatCount" value="1" checked> 1</label>
-                        <label class="reset-repeat-label" title="3회 반복 실행"><input type="radio" name="resetRepeatCount" value="3"> 3</label>
-                        <label class="reset-repeat-label" title="5회 반복 실행"><input type="radio" name="resetRepeatCount" value="5"> 5</label>
-                        <label class="reset-repeat-label" title="중단할 때까지 계속 무제한 반복"><input type="radio" name="resetRepeatCount" value="infinite"> 무제한</label>
+                    <div class="reset-repeat-group" id="resetIntervalGroup" title="전체리셋 실행 주기 선택 (1회 실행, 30분마다, 1시간마다, 3시간마다 자동 반복)">
+                        <span class="reset-repeat-title">주기:</span>
+                        <label class="reset-repeat-label" title="1회만 실행하고 종료"><input type="radio" name="resetIntervalOption" value="0" checked> 1회</label>
+                        <label class="reset-repeat-label" title="30분마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="30"> 30분</label>
+                        <label class="reset-repeat-label" title="1시간마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="60"> 1시간</label>
+                        <label class="reset-repeat-label" title="3시간마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="180"> 3시간</label>
                     </div>
                 </div>
-            </div>
-
-            <!-- 🚀 골프몬 내 글 전체 1등 끌어올리기 (BUMP) 바 (실험실 기능: 기본 숨김) -->
-            <div class="bump-action-card" id="bumpActionCard" style="display: none;">
-                <div class="bump-card-header">
-                    <div class="bump-title-group">
-                        <span style="font-size: 13px;">🚀</span>
-                        <span class="bump-main-title">골프몬 내글 끌어올리기</span>
-                        <div class="bump-status-pill status-idle" id="bumpStatusPill" title="마지막 끌어올리기 경과 시간">
-                            <span class="bump-status-dot gray" id="bumpStatusDot"></span>
-                            <span id="bumpStatusText">마지막 갱신: 확인 중...</span>
-                        </div>
+                <!-- ⏱️ 자동 리셋 카운트다운 배너 -->
+                <div id="resetTimerStatusBanner" style="display: none; margin-top: 4px; padding: 4px 6px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 5px; font-size: 9.5px; color: #3730A3; align-items: center; justify-content: space-between; box-sizing: border-box; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span class="timer-live-dot" style="width: 7px; height: 7px; background: #10B981; border-radius: 50%; display: inline-block;"></span>
+                        <span id="resetTimerStatusText" style="font-weight: 700;">⏱️ 전체리셋 자동 반복 중 (다음 실행: 계산 중...)</span>
                     </div>
-                    <div class="bump-controls-wrap">
-                        <input type="date" id="inputBumpTargetDate" class="input-bump-date" title="끌어올릴 대상 날짜 선택">
-                        <select id="selBumpFilterType" class="sel-bump-filter" title="끌어올릴 대상 구분 (전체 / 조인 / 양도)">
-                            <option value="전체" selected>전체</option>
-                            <option value="조인">조인</option>
-                            <option value="양도">양도</option>
-                        </select>
-                        <select id="selBumpRepeat" class="sel-bump-filter" title="끌어올리기 반복 횟수 선택">
-                            <option value="1" selected>1회</option>
-                            <option value="3">3회</option>
-                            <option value="5">5회</option>
-                            <option value="infinite">무제한</option>
-                        </select>
-                    </div>
+                    <button type="button" id="btnStopResetTimer" style="background: #EF4444; color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 9.5px; font-weight: 700; cursor: pointer;">중단</button>
                 </div>
-                <button type="button" class="btn-bump-action" id="btnExecuteBump" title="골프몬에 등록된 내 글들을 차례대로 [수정 완료]하여 게시판 맨 위 1등으로 즉시 끌어올립니다">
-                    <span style="font-size: 13px;">🚀</span>
-                    <span>내 글 전체 1등 끌어올리기</span>
-                    <span class="bump-btn-sub">(골프몬 최상단 갱신)</span>
-                </button>
             </div>
         </section>
 
@@ -4707,13 +4705,7 @@
                     <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
                         * 체크 시 변환된 각 티타임 카드 우측 상단에 즉시 마감(✕) 버튼이 노출됩니다.
                     </div>
-                    <label style="display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; color: #1E1B4B; font-weight: 700; margin-top: 6px; border-top: 1px dashed #C7D2FE; padding-top: 5px;">
-                        <input type="checkbox" id="chkOpenBumpFeature">
-                        <span>🚀 내 글 전체 1등 끌어올리기(BUMP) 오픈 (메인 화면 BUMP 바 노출)</span>
-                    </label>
-                    <div style="font-size: 9px; color: #6366F1; margin-top: 3px; line-height: 1.35;">
-                        * 체크 시 메인 화면에 [🚀 내 글 전체 1등 끌어올리기] 바 및 실시간 순위 경고 배지가 노출됩니다. (기본: 숨김)
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -6092,7 +6084,12 @@
                         </div>
                         <div class="soldout-grid-item">
                             <span class="soldout-item-label">구분</span>
-                            <span class="soldout-item-val" id="soldOutValType">-</span>
+                            <select id="selSoldOutRoomType" class="soldout-item-select" title="조인 / 양도 / 전체 선택">
+                                <option value="전체" selected>전체 (자동)</option>
+                                <option value="조인">조인</option>
+                                <option value="양도">양도</option>
+                            </select>
+                            <span class="soldout-item-val" id="soldOutValType" style="display: none;">-</span>
                         </div>
                     </div>
 

@@ -1,3 +1,5 @@
-2026/11/15-10:26:47.024 b34 Reusing MANIFEST C:\Users\yebba\.gemini\antigravity\scratch\new_golftee82\chrome-temp-preview\Default\Local Storage\leveldb/MANIFEST-000001
-2026/11/15-10:26:47.024 b34 Recovering log #3
-2026/11/15-10:26:47.027 b34 Reusing old log C:\Users\yebba\.gemini\antigravity\scratch\new_golftee82\chrome-temp-preview\Default\Local Storage\leveldb/000003.log 
+2026/11/15-13:33:19.656 8d54 Reusing MANIFEST C:\Users\yebba\.gemini\antigravity\scratch\new_golftee82\chrome-temp-preview\Default\Local Storage\leveldb/MANIFEST-000001
+2026/11/15-13:33:19.657 8d54 Recovering log #3
+2026/11/15-13:33:19.657 8d54 Level-0 table #3: started
+2026/11/15-13:33:19.661 8d54 Level-0 table #3: 14214 bytes OK
+2026/11/15-13:33:19.665 8d54 Delete type=0 #3

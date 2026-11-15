@@ -4505,11 +4505,11 @@ continue;
 }
 if(targetRoomType==='\uc591\ub3c4'){
 const hasExplicitJoin=Array.from(el.querySelectorAll('\x2e\x71-\x62\x61\x64\x67\x65, [\x63\x6c\x61\x73\x73*="\x62\x61\x64\x67\x65"], \x2e\x71-\x63\x68\x69\x70'))
-.some(b=>/^조인\d*건?$/.test((b.innerText||'').trim()));
+.some(b=>/^조인\s*\d*건?$/.test((b.innerText||'').trim()));
 if(hasExplicitJoin)continue;
 }else if(targetRoomType==='\uc870\uc778'){
 const hasExplicitTransfer=Array.from(el.querySelectorAll('\x2e\x71-\x62\x61\x64\x67\x65, [\x63\x6c\x61\x73\x73*="\x62\x61\x64\x67\x65"], \x2e\x71-\x63\x68\x69\x70'))
-.some(b=>/^양도\d*건?$/.test((b.innerText||'').trim()));
+.some(b=>/^양도\s*\d*건?$/.test((b.innerText||'').trim()));
 if(hasExplicitTransfer)continue;
 }
 let cardPostId='';
@@ -4575,7 +4575,8 @@ const clickableEl=el.closest('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*=
 const rect=clickableEl.getBoundingClientRect();
 const topY=rect.top;
 const leftX=rect.left;
-matched.push({el:clickableEl,golfScore,timeMinutes,timeStr,timeDigits,feeManVal,feeStr,regStamp,peopleStr,topY,leftX,rawTxt,postId:cardPostId});
+const postType=(typeof _0x1043==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1043(clickableEl,rawTxt):'\x75\x6e\x6b\x6e\x6f\x77\x6e';
+matched.push({el:clickableEl,golfScore,timeMinutes,timeStr,timeDigits,feeManVal,feeStr,regStamp,peopleStr,topY,leftX,rawTxt,postId:cardPostId,postType});
 }
 if(matched.length===0){
 return[];
@@ -5722,7 +5723,8 @@ current:1,
 total:1
 });
 try{
-const navOk=await _0x1031(targetRoomType);
+const navFilter=(targetRoomType==='\uc804\uccb4'||!targetRoomType)?'\uc804\uccb4':targetRoomType;
+const navOk=await _0x1031(navFilter);
 if(!navOk){
 throw new Error("\uace8\ud504\ubaac '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d\uc73c\ub85c \uc9c4\uc785\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e");
 }
@@ -5738,6 +5740,17 @@ console.log("[\uc6d0\ud074\ub9ad\ub9c8\uac10\x2f\uc0ad\uc81c] \x31\ucc28 \uce74\
 window.scrollBy(0,300);
 await _0x1003(400);
 cards=findExistingCardsForCourse(golfName,rawGolfName,targetRoomType,targetDate);
+}
+if((!cards||cards.length===0)&&targetRoomType&&targetRoomType!=='\uc804\uccb4'){
+console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] '${targetRoomType}' \ud544\ud130\uc5d0\uc11c \uce74\ub4dc\ub97c \ucc3e\uc9c0 \ubabb\ud568 -> '\uc804\uccb4' \ud544\ud130\ub85c \uc804\ud658\ud558\uc5ec \uc7ac\ud0d0\uc0c9...`);
+await _0x1040('\uc804\uccb4');
+await _0x1003(500);
+cards=findExistingCardsForCourse(golfName,rawGolfName,'\uc804\uccb4',targetDate);
+if(!cards||cards.length===0){
+window.scrollBy(0,300);
+await _0x1003(400);
+cards=findExistingCardsForCourse(golfName,rawGolfName,'\uc804\uccb4',targetDate);
+}
 }
 if(!cards||cards.length===0){
 throw new Error(`\uace8\ud504\ubaac \ub0b4\uae00 \ubaa9\ub85d\uc5d0\uc11c [${golfName} / ${targetDate||'\uc9c0\uc815\uc77c'}] \ub4f1\ub85d\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`);
@@ -5770,27 +5783,29 @@ total:1
 matchedCard.el.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x73\x6d\x6f\x6f\x74\x68'});
 matchedCard.el.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x65\x66\x34\x34\x34\x34','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1003(250);
-let enteredDetail=false;
-await _0x1042(matchedCard.el);
-try{matchedCard.el.click();}catch(e){}
-const linkEl=matchedCard.el.querySelector('\x61')||matchedCard.el.closest('\x61');
-if(linkEl){
-try{linkEl.click();}catch(e){}
-}
-for(let w=0;w<30;w++){
-await _0x1003(150);
-if(isDetailPage()){
-enteredDetail=true;
-break;
-}
-}
+let enteredDetail=await clickPostCardReliably(matchedCard.el);
 if(!enteredDetail&&matchedCard.postId){
-window.location.hash=`#/join/detail/${matchedCard.postId}`;
-for(let w=0;w<25;w++){
+console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] clickPostCardReliably \ubbf8\uc9c4\uc785 -> \ud574\uc2dc \ub77c\uc6b0\ud305 \uc2dc\ub3c4 (postId: ${matchedCard.postId}, postType: ${matchedCard.postType})`);
+const isTransfer=(matchedCard.postType==='\uc591\ub3c4')||/양도/.test(matchedCard.rawTxt);
+const firstHash=isTransfer?`#/transfer/detail/${matchedCard.postId}`:`#/join/detail/${matchedCard.postId}`;
+const secondHash=isTransfer?`#/join/detail/${matchedCard.postId}`:`#/transfer/detail/${matchedCard.postId}`;
+window.location.hash=firstHash;
+for(let w=0;w<20;w++){
 await _0x1003(150);
 if(isDetailPage()){
 enteredDetail=true;
 break;
+}
+}
+if(!enteredDetail){
+console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] 1\ucc28 \ud574\uc2dc(${firstHash}) \uc2e4\ud328 -> 2\ucc28 \ud574\uc2dc(${secondHash}) \uc2dc\ub3c4...`);
+window.location.hash=secondHash;
+for(let w=0;w<20;w++){
+await _0x1003(150);
+if(isDetailPage()){
+enteredDetail=true;
+break;
+}
 }
 }
 }
