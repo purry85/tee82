@@ -4531,6 +4531,48 @@
                 <label class="part-chk-label active" id="lblPrefPart3" title="3부(오후 16시 이후) 우선 선택">
                     <input type="checkbox" id="chkPrefPart3" checked> 3부
                 </label>
+                <button type="button" class="btn-part-time-gear" id="btnTogglePartTargetTime" title="부제별 맞춤 기준시간 설정 (1부/2부/3부)" style="margin-left: auto; background: none; border: 1px solid #D1D5DB; border-radius: 4px; padding: 1.5px 6px; font-size: 10px; color: #4B5563; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 3px;">
+                    ⚙️ <span>기준시간</span>
+                </button>
+            </div>
+            <!-- 🕒 부제별 맞춤 기준시간 설정 박스 -->
+            <div id="boxPartTargetTime" style="display: none; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; font-size: 10px; align-items: center; justify-content: space-between; gap: 4px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <span style="font-weight: 800; color: #1E293B;">🕒 기준시간:</span>
+                    <label style="display: flex; align-items: center; gap: 2px; font-weight: 600; color: #334155;">
+                        1부
+                        <select id="selTargetTimePart1" style="font-size: 10px; padding: 1.5px 3px; border: 1px solid #CBD5E1; border-radius: 4px; font-weight: 700; color: #1E40AF;">
+                            <option value="07:00">07:00</option>
+                            <option value="07:30">07:30</option>
+                            <option value="08:00" selected>08:00 (기본)</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                        </select>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 2px; font-weight: 600; color: #334155;">
+                        2부
+                        <select id="selTargetTimePart2" style="font-size: 10px; padding: 1.5px 3px; border: 1px solid #CBD5E1; border-radius: 4px; font-weight: 700; color: #92400E;">
+                            <option value="10:30">10:30</option>
+                            <option value="11:00" selected>11:00 (기본)</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:00">13:00</option>
+                        </select>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 2px; font-weight: 600; color: #334155;">
+                        3부
+                        <select id="selTargetTimePart3" style="font-size: 10px; padding: 1.5px 3px; border: 1px solid #CBD5E1; border-radius: 4px; font-weight: 700; color: #6B21A8;">
+                            <option value="earliest" selected>가장 빠른 타임</option>
+                            <option value="16:30">16:30</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:30">17:30</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:30">18:30</option>
+                        </select>
+                    </label>
+                </div>
+                <button type="button" id="btnApplyPartTargetTimes" style="background: #4F46E5; color: white; border: none; border-radius: 4px; padding: 2.5px 7px; font-size: 9.5px; font-weight: 700; cursor: pointer; white-space: nowrap;">즉시 재선택</button>
             </div>
             <!-- 📱 예약/조인 알림 문자 실시간 감지 배너 -->
             <div id="soldOutSmartDetectBanner" style="display: none; background: linear-gradient(135deg, #FEF2F2, #FEE2E2); border: 1px solid #FECACA; border-radius: 6px; padding: 4px 8px; margin-bottom: 5px; align-items: center; justify-content: space-between; font-size: 10.5px; color: #991B1B;">
@@ -4794,7 +4836,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.4.5</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">💬 카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.4.6</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">💬 카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -5281,7 +5323,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.4.5 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.4.6 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[📋 업데이트 내용 보기]</a>
                         </div>
                     </div>

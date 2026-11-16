@@ -2563,6 +2563,26 @@ return el.closest('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x
 }
 }
 }
+const scrollContainers=Array.from(document.querySelectorAll('\x2e\x71-\x74\x61\x62\x73, \x2e\x71-\x74\x61\x62\x73\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x73\x63\x72\x6f\x6c\x6c, [\x63\x6c\x61\x73\x73*="\x73\x63\x72\x6f\x6c\x6c"], \x64\x69\x76'))
+.filter(c=>{
+if(c.offsetHeight<=0||c.offsetWidth<=0)return false;
+const r=c.getBoundingClientRect();
+return r.top>=0&&r.bottom<=maxBottom&&c.scrollWidth>c.clientWidth;
+});
+for(const sc of scrollContainers){
+sc.scrollLeft=0;
+for(const el of sc.querySelectorAll('*')){
+if(_0x1038(el,cleanDayNum)){
+return el.closest('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x6f\x6c')||el;
+}
+}
+sc.scrollLeft=sc.scrollWidth;
+for(const el of sc.querySelectorAll('*')){
+if(_0x1038(el,cleanDayNum)){
+return el.closest('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x6f\x6c')||el;
+}
+}
+}
 return null;
 }
 function _0x103b(){
@@ -5040,7 +5060,16 @@ courseGroups[key].items.push(it);
 }
 let successCount=0;
 let globalIndex=0;
-for(const groupKey in courseGroups){
+const sortedGroupKeys=Object.keys(courseGroups).sort((kA,kB)=>{
+const gA=courseGroups[kA],gB=courseGroups[kB];
+const dA=(gA.date||'').split(/[./\-]/),dB=(gB.date||'').split(/[./\-]/);
+const mA=parseInt(dA[0],10)||0,mB=parseInt(dB[0],10)||0;
+if(mA!==mB)return mA-mB;
+const dayA=parseInt(dA[1],10)||0,dayB=parseInt(dB[1],10)||0;
+if(dayA!==dayB)return dayA-dayB;
+return(gA.golf||'').localeCompare(gB.golf||'');
+});
+for(const groupKey of sortedGroupKeys){
 if(shouldStopRegistration)break;
 const group=courseGroups[groupKey];
 group.items.sort((a,b)=>{
@@ -5086,11 +5115,23 @@ const isWrongUrlDay=Boolean(finalUrlDay&&finalUrlDay!==targetDayNum);
 const isWrongDay=targetDayNum&&(isWrongScreenDay||isWrongUrlDay);
 if(isWrongDay){
 const detectedDay=finalScreenDay||finalUrlDay||'\ubbf8\ud655\uc778';
-console.error(`[${logTag}] \u274c \uce58\uba85\uc801 \uc624\ub958: \ud654\uba74 \ub0a0\uc9dc(${detectedDay}\uc77c)\uac00 \ubaa9\ud45c \ub0a0\uc9dc(${targetDayNum}\uc77c)\uc640 \uc77c\uce58\ud558\uc9c0 \uc54a\uc544 [${group.golf} ${group.date}] \uc218\uc815\uc744 \uac74\ub108\ub701\ub2c8\ub2e4! (\ub2e4\ub978 \ub0a0\uc9dc \uae00 \ub36e\uc5b4\uc4f0\uae30/\uc624\ub4f1\ub85d 100% \uc6d0\ucc9c \ubc29\uc9c0)`);
-chrome.runtime.sendMessage({
-type:'\x4c\x4f\x47\x5f\x4d\x45\x53\x53\x41\x47\x45',
-message:`[\uc624\ub958\ubc29\uc9c0] ${group.golf}(${group.date}) \ub0a0\uc9dc \ubd88\uc77c\uce58(\ud654\uba74:${detectedDay}\uc77c vs \ubaa9\ud45c:${targetDayNum}\uc77c)\ub85c \uc778\ud574 \uc548\uc804\ud558\uac8c \uac74\ub108\ub700`
+console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \ubd88\uc77c\uce58(\ud654\uba74:${detectedDay}\uc77c != \ubaa9\ud45c:${targetDayNum}\uc77c)\ub85c [${group.golf} ${group.date}] ${group.items.length}\uac74 \uc548\uc804 \uc2a4\ud0b5 \uc9c4\ud589`);
+for(const it of group.items){
+globalIndex++;
+_0x1006({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${it.golf} (${it.date}) \ub0a0\uc9dc \uc120\ud0dd \ubd88\uac00\ub85c \uac74\ub108\ub700`,
+current:globalIndex,
+total:items.length
 });
+chrome.runtime.sendMessage({
+type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
+golf:it.golf,
+date:it.date,
+time:it.time,
+reason:`\ud654\uba74 \ub0a0\uc9dc(${detectedDay}\uc77c)\uc640 \ubaa9\ud45c \ub0a0\uc9dc(${targetDayNum}\uc77c) \ubd88\uc77c\uce58\ub85c \uac74\ub108\ub700`
+});
+}
 continue;
 }
 if(group.region&&group.region!=='\uc804\uccb4'){

@@ -8643,17 +8643,33 @@ bestTr=tr;
 }
 return bestTr;
 }
+function getPartTargetMinutes(partNumber,activePool=null){
+if(partNumber===1){
+const saved=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x31')||'\x30\x38\x3a\x30\x30';
+return timeToMinutes(saved);
+}else if(partNumber===2){
+const saved=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x32')||'\x31\x31\x3a\x30\x30';
+return timeToMinutes(saved);
+}else if(partNumber===3){
+const saved=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x33')||'\x65\x61\x72\x6c\x69\x65\x73\x74';
+if(saved==='\x65\x61\x72\x6c\x69\x65\x73\x74'){
+if(activePool&&activePool.length>0){
+return Math.min(...activePool.map(tr=>getTrMinutes(tr)));
+}
+return 17*60;
+}
+return timeToMinutes(saved);
+}
+return 480;
+}
 function pickDeterministicFromPart(activePool,partNumber){
 if(!activePool||activePool.length===0)return null;
 if(activePool.length===1)return activePool[0];
-let targetMins=480;
-if(partNumber===1){
-targetMins=480;
-}else if(partNumber===2){
-targetMins=660;
-}else if(partNumber===3){
-targetMins=Math.min(...activePool.map(tr=>getTrMinutes(tr)));
-}
+const regMatches=activePool.filter(tr=>isPreviouslyRegisteredTr(tr));
+if(regMatches.length>0)return regMatches[0];
+const stickyMatches=activePool.filter(tr=>isStickySelectedTr(tr));
+if(stickyMatches.length>0)return stickyMatches[0];
+const targetMins=getPartTargetMinutes(partNumber,activePool);
 const sortedByTarget=activePool.slice().sort((a,b)=>{
 const distA=Math.abs(getTrMinutes(a)-targetMins);
 const distB=Math.abs(getTrMinutes(b)-targetMins);
@@ -8691,13 +8707,7 @@ if(pool.length===1)return pool[0];
 const paxPool=pool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isPriorityTagTr(tr))||hasJoinedPax(tr));
 if(paxPool.length>0){
 if(paxPool.length===1)return paxPool[0];
-if(isRandomSelectEnabled()){
-return pickUserConsistentOne(paxPool,'\x70\x61\x78\x5f'+partNumber,partNumber);
-}
 return pickDeterministicFromPart(paxPool,partNumber);
-}
-if(isRandomSelectEnabled()){
-return pickUserConsistentOne(pool,'\x67\x65\x6e\x5f'+partNumber,partNumber);
 }
 return pickDeterministicFromPart(pool,partNumber);
 }
@@ -9327,6 +9337,59 @@ showToast(`\ud83c\udfaf \ubd80\uc81c \uc6b0\uc120\uc120\ud0dd [${partStr}] \uc7a
 chk1.addEventListener('\x63\x68\x61\x6e\x67\x65',updatePrefPart);
 chk2.addEventListener('\x63\x68\x61\x6e\x67\x65',updatePrefPart);
 chk3.addEventListener('\x63\x68\x61\x6e\x67\x65',updatePrefPart);
+const btnToggle=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x50\x61\x72\x74\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65');
+const boxTime=document.getElementById('\x62\x6f\x78\x50\x61\x72\x74\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65');
+const selP1=document.getElementById('\x73\x65\x6c\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x31');
+const selP2=document.getElementById('\x73\x65\x6c\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x32');
+const selP3=document.getElementById('\x73\x65\x6c\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x33');
+const btnApplyTimes=document.getElementById('\x62\x74\x6e\x41\x70\x70\x6c\x79\x50\x61\x72\x74\x54\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x73');
+if(btnToggle&&boxTime){
+btnToggle.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const isHidden=boxTime.style.display==='\x6e\x6f\x6e\x65'||!boxTime.style.display;
+boxTime.style.display=isHidden?'\x66\x6c\x65\x78':'\x6e\x6f\x6e\x65';
+});
+}
+if(selP1){
+const saved1=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x31')||'\x30\x38\x3a\x30\x30';
+selP1.value=saved1;
+selP1.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
+try{localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x31',selP1.value);}catch(e){}
+});
+}
+if(selP2){
+const saved2=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x32')||'\x31\x31\x3a\x30\x30';
+selP2.value=saved2;
+selP2.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
+try{localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x32',selP2.value);}catch(e){}
+});
+}
+if(selP3){
+const saved3=localStorage.getItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x33')||'\x65\x61\x72\x6c\x69\x65\x73\x74';
+selP3.value=saved3;
+selP3.addEventListener('\x63\x68\x61\x6e\x67\x65',()=>{
+try{localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x33',selP3.value);}catch(e){}
+});
+}
+if(btnApplyTimes){
+btnApplyTimes.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const t1=selP1?selP1.value:'\x30\x38\x3a\x30\x30';
+const t2=selP2?selP2.value:'\x31\x31\x3a\x30\x30';
+const t3=selP3?selP3.value:'\x65\x61\x72\x6c\x69\x65\x73\x74';
+try{
+localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x31',t1);
+localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x32',t2);
+localStorage.setItem('\x76\x32\x5f\x74\x61\x72\x67\x65\x74\x54\x69\x6d\x65\x50\x61\x72\x74\x33',t3);
+}catch(e){}
+const trs=document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72');
+if(trs.length>0){
+autoSelectTwo();
+const p3Label=(t3==='\x65\x61\x72\x6c\x69\x65\x73\x74')?'\uccab\ud0c0\uc784':t3;
+showToast(`\ud83d\udd52 \uae30\uc900\uc2dc\uac04 [1\ubd80 ${t1} \u00b7 2\ubd80 ${t2} \u00b7 3\ubd80 ${p3Label}] \ub9de\ucda4 \uc7ac\uc120\ud0dd \uc644\ub8cc!`);
+}else{
+showToast(`\ud83d\udd52 \uae30\uc900\uc2dc\uac04 [1\ubd80 ${t1} \u00b7 2\ubd80 ${t2} \u00b7 3\ubd80 ${(t3==='\x65\x61\x72\x6c\x69\x65\x73\x74'?'\uccab\ud0c0\uc784':t3)}] \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+}
+});
+}
 }
 let registeredHistory={};
 function makeHistoryKey(dateStr,golfStr,timeStr){
