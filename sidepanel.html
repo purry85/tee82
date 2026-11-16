@@ -4540,7 +4540,12 @@
                 <label class="part-chk-label active" id="lblPrefPart3" title="3부(오후 16시 이후) 우선 선택">
                     <input type="checkbox" id="chkPrefPart3" checked> 3부
                 </label>
-                <button type="button" class="btn-part-time-gear" id="btnTogglePartTargetTime" title="부제별 맞춤 기준시간 설정 (1부/2부/3부)" style="margin-left: auto; background: none; border: 1px solid #D1D5DB; border-radius: 4px; padding: 1.5px 6px; font-size: 10px; color: #4B5563; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 3px;">
+                <div class="time-adjust-strip-item" title="티타임 파싱 시 시간을 몇 분 앞당겨 등록할지 설정 (기본: 0분)" style="margin-left: auto; display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 4px; padding: 1.5px 5px; font-size: 10px; color: #4B5563; font-weight: 700;">
+                    <span style="cursor: pointer;" id="lblTimeAdjustIcon">⏱️ 앞당김:</span>
+                    <input type="number" id="timeAdjust" value="0" min="0" max="180" step="5" style="width: 34px; height: 18px; border: 1px solid #CBD5E1; border-radius: 3px; font-size: 10px; font-weight: 700; text-align: center; color: #1E293B; background: #F8FAFC; padding: 0 1px;">
+                    <span style="font-size: 10px; color: #64748B;">분</span>
+                </div>
+                <button type="button" class="btn-part-time-gear" id="btnTogglePartTargetTime" title="부제별 맞춤 기준시간 설정 (1부/2부/3부)" style="background: none; border: 1px solid #D1D5DB; border-radius: 4px; padding: 1.5px 6px; font-size: 10px; color: #4B5563; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 3px;">
                     ⚙️ <span>기준시간</span>
                 </button>
             </div>
@@ -4645,10 +4650,6 @@
         <!-- 4-2. 탭 2: 세부 옵션 -->
         <div class="tab-panel" id="tabSettings">
             <div class="settings-card">
-                <div class="settings-row">
-                    <label>시간 앞당김 (분):</label>
-                    <input type="number" id="timeAdjust" value="0" style="width: 50px;">
-                </div>
                 <div class="settings-row">
                     <label>특정구장 필터:</label>
                     <input type="text" id="targetGolfs" placeholder="구장명" style="width: 75px;">

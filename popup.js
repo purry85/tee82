@@ -12248,6 +12248,13 @@ if(saved!==null)timeAdjustEl.value=saved;
 timeAdjustEl.addEventListener('\x69\x6e\x70\x75\x74',function(){
 localStorage.setItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x54\x69\x6d\x65\x41\x64\x6a\x75\x73\x74',this.value);
 });
+const lblTimeAdjustIcon=document.getElementById('\x6c\x62\x6c\x54\x69\x6d\x65\x41\x64\x6a\x75\x73\x74\x49\x63\x6f\x6e');
+if(lblTimeAdjustIcon){
+lblTimeAdjustIcon.addEventListener('\x63\x6c\x69\x63\x6b',function(){
+timeAdjustEl.focus();
+timeAdjustEl.select();
+});
+}
 }
 const targetGolfsEl=document.getElementById('\x74\x61\x72\x67\x65\x74\x47\x6f\x6c\x66\x73');
 if(targetGolfsEl){
