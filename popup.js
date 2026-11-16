@@ -8510,12 +8510,59 @@ const map=getStickyCourseMap();
 const arr=map[gKey];
 return Array.isArray(arr)&&arr.includes(timeDigits);
 }
-function pickUserConsistentOne(pool,salt=''){
+function getGoldenWindowCandidates(activePool,partNumber){
+if(!activePool||activePool.length===0)return[];
+if(activePool.length===1)return activePool;
+let targetMins=480;
+if(partNumber===1){
+targetMins=480;
+}else if(partNumber===2){
+targetMins=660;
+}else if(partNumber===3){
+targetMins=Math.min(...activePool.map(tr=>getTrMinutes(tr)));
+}
+const sortedByTarget=activePool.slice().sort((a,b)=>{
+const distA=Math.abs(getTrMinutes(a)-targetMins);
+const distB=Math.abs(getTrMinutes(b)-targetMins);
+if(distA!==distB)return distA-distB;
+const feeA=getTrFee(a);
+const feeB=getTrFee(b);
+if(feeA!==feeB)return feeA-feeB;
+return getTrMinutes(a)-getTrMinutes(b);
+});
+const anchorTr=sortedByTarget[0];
+const anchorMins=getTrMinutes(anchorTr);
+const anchorFee=getTrFee(anchorTr);
+const nearby=sortedByTarget.filter(tr=>{
+const mins=getTrMinutes(tr);
+return Math.abs(mins-anchorMins)<=20||Math.abs(mins-targetMins)<=25;
+});
+if(nearby.length<=1){
+if(sortedByTarget.length>=2){
+const secondTr=sortedByTarget[1];
+if(Math.abs(getTrMinutes(secondTr)-anchorMins)<=30&&(getTrFee(secondTr)-anchorFee)<=1.0){
+return[anchorTr,secondTr];
+}
+}
+return[anchorTr];
+}
+const minNearbyFee=Math.min(...nearby.map(tr=>getTrFee(tr)));
+const goodPricePool=nearby.filter(tr=>(getTrFee(tr)-minNearbyFee)<=1.0);
+const finalWindow=goodPricePool.length>0?goodPricePool:nearby;
+return finalWindow.slice(0,4);
+}
+function pickUserConsistentOne(pool,salt='',partNumber=null){
 if(!pool||pool.length===0)return null;
 if(pool.length===1)return pool[0];
+const effectivePart=partNumber||getTrPart(pool[0])||1;
+const goldenCandidates=getGoldenWindowCandidates(pool,effectivePart);
+const regInGolden=goldenCandidates.filter(tr=>isPreviouslyRegisteredTr(tr));
+if(regInGolden.length>0)return regInGolden[0];
 const regMatches=pool.filter(tr=>isPreviouslyRegisteredTr(tr));
-const stickyMatches=pool.filter(tr=>isStickySelectedTr(tr));
-const candidatePool=regMatches.length>0?regMatches:(stickyMatches.length>0?stickyMatches:pool);
+if(regMatches.length>0)return regMatches[0];
+const stickyInGolden=goldenCandidates.filter(tr=>isStickySelectedTr(tr));
+if(stickyInGolden.length>0)return stickyInGolden[0];
+const candidatePool=goldenCandidates.length>0?goldenCandidates:pool;
 if(candidatePool.length===1)return candidatePool[0];
 const userSeed=getUserDispersionSeed();
 let bestTr=candidatePool[0];
@@ -8583,12 +8630,12 @@ const paxPool=pool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x6
 if(paxPool.length>0){
 if(paxPool.length===1)return paxPool[0];
 if(isRandomSelectEnabled()){
-return pickUserConsistentOne(paxPool,'\x70\x61\x78\x5f'+partNumber);
+return pickUserConsistentOne(paxPool,'\x70\x61\x78\x5f'+partNumber,partNumber);
 }
 return pickDeterministicFromPart(paxPool,partNumber);
 }
 if(isRandomSelectEnabled()){
-return pickUserConsistentOne(pool,'\x67\x65\x6e\x5f'+partNumber);
+return pickUserConsistentOne(pool,'\x67\x65\x6e\x5f'+partNumber,partNumber);
 }
 return pickDeterministicFromPart(pool,partNumber);
 }
@@ -8606,7 +8653,7 @@ const secondPool=(spacedCandidates.length>0)?spacedCandidates:remaining;
 if(isRandomSelectEnabled()&&secondPool.length>1){
 const secondPax=secondPool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isPriorityTagTr(tr))||hasJoinedPax(tr));
 const activeSecond=(secondPax.length>0)?secondPax:secondPool;
-const second=pickUserConsistentOne(activeSecond,'\x73\x65\x63\x6f\x6e\x64\x5f'+partNumber);
+const second=pickUserConsistentOne(activeSecond,'\x73\x65\x63\x6f\x6e\x64\x5f'+partNumber,partNumber);
 return[first,second];
 }
 const second=pickBestOneFromPart(secondPool,partNumber);
@@ -8833,19 +8880,16 @@ const part1=priorityPool.filter(tr=>getTrPart(tr)===1);
 const part2=priorityPool.filter(tr=>getTrPart(tr)===2);
 const part3=priorityPool.filter(tr=>getTrPart(tr)===3);
 if(part1.length>0&&part2.length>0){
-return[part1[0],part2[0]];
+return[pickBestOneFromPart(part1,1),pickBestOneFromPart(part2,2)].filter(Boolean);
 }
 if(part1.length>0&&part3.length>0){
-return[part1[0],part3[0]];
+return[pickBestOneFromPart(part1,1),pickBestOneFromPart(part3,3)].filter(Boolean);
 }
 if(part2.length>0&&part3.length>0){
-return[part2[0],part3[0]];
+return[pickBestOneFromPart(part2,2),pickBestOneFromPart(part3,3)].filter(Boolean);
 }
-const first=priorityPool[0];
-const firstMins=getTrMinutes(first);
-const spaced=priorityPool.slice(1).filter(tr=>Math.abs(getTrMinutes(tr)-firstMins)>=15);
-const second=spaced.length>0?spaced[0]:priorityPool[1];
-return second?[first,second]:[first];
+const singlePartNum=getTrPart(priorityPool[0])||1;
+return pickTwoFromSamePart(priorityPool,singlePartNum);
 }
 function pickBestTwoWithPriority(list,priority='\x6e\x6f\x6e\x65'){
 if(!list||list.length===0)return[];
