@@ -18302,14 +18302,14 @@ if(msg.type==='\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x53\x45\x53\x53\x49\x4f\x4e\x5f\
 showToast('[\uace8\ud504\ubaac \uc138\uc158 \ub9cc\ub8cc] '+msg.message,10000);
 const desc=document.getElementById('\x70\x72\x6f\x67\x72\x65\x73\x73\x44\x65\x73\x63');
 if(desc){
-desc.innerHTML='<\x73\x70\x61\x6e \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a\x23\x44\x43\x32\x36\x32\x36; \x66\x6f\x6e\x74-\x77\x65\x69\x67\x68\x74\x3a\x38\x30\x30;">\u26a0\ufe0f [\uc77c\uc2dc\uc815\uc9c0] \uace8\ud504\ubaac \ub85c\uadf8\uc778\uc774 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e<\x62\x72>\uace8\ud504\ubaac \ud0ed\uc5d0\uc11c \ub85c\uadf8\uc778\ud558\uc2dc\uba74 \uc790\ub3d9\uc73c\ub85c \uc774\uc5b4\uc11c \uc9c4\ud589\ud569\ub2c8\ub2e4\x2e<\x2f\x73\x70\x61\x6e>';
+desc.innerHTML='<\x73\x70\x61\x6e \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a\x23\x44\x43\x32\x36\x32\x36; \x66\x6f\x6e\x74-\x77\x65\x69\x67\x68\x74\x3a\x38\x30\x30;">[\uc77c\uc2dc\uc815\uc9c0] \uace8\ud504\ubaac \ub85c\uadf8\uc778\uc774 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e<\x62\x72>\uace8\ud504\ubaac \ud0ed\uc5d0\uc11c \ub85c\uadf8\uc778\ud558\uc2dc\uba74 \uc790\ub3d9\uc73c\ub85c \uc774\uc5b4\uc11c \uc9c4\ud589\ud569\ub2c8\ub2e4\x2e<\x2f\x73\x70\x61\x6e>';
 }
 try{
 if(chrome.notifications&&chrome.notifications.create){
 chrome.notifications.create({
 type:'\x62\x61\x73\x69\x63',
 iconUrl:'\x69\x63\x6f\x6e\x31\x32\x38\x2e\x70\x6e\x67',
-title:'\u26a0\ufe0f [\x47\x6f\x6c\x66\x54\x65\x65\x38\x32] \uace8\ud504\ubaac \uc138\uc158 \ub9cc\ub8cc \uac10\uc9c0',
+title:'[\x47\x6f\x6c\x66\x54\x65\x65\x38\x32] \uace8\ud504\ubaac \uc138\uc158 \ub9cc\ub8cc \uac10\uc9c0',
 message:'\uace8\ud504\ubaac \ub85c\uadf8\uc778\uc774 \ub04a\uaca8 \ub9e4\ud06c\ub85c\uac00 \uc548\uc804\ud558\uac8c \uc77c\uc2dc\uc815\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e \ub85c\uadf8\uc778 \uc2dc \ubc14\ub85c \uc7ac\uac1c\ub429\ub2c8\ub2e4\x2e',
 priority:2
 });
