@@ -8434,6 +8434,106 @@ return false;
 }
 return true;
 }
+function getUserDispersionSeed(){
+try{
+if(typeof currentAuthUser==='\x6f\x62\x6a\x65\x63\x74'&&currentAuthUser&&currentAuthUser.id){
+return String(currentAuthUser.id);
+}
+const savedUser=localStorage.getItem('\x76\x32\x5f\x61\x75\x74\x68\x5f\x75\x73\x65\x72');
+if(savedUser){
+const parsed=JSON.parse(savedUser);
+if(parsed&&parsed.id)return String(parsed.id);
+}
+const mobId=localStorage.getItem('\x76\x32\x5f\x64\x65\x76\x69\x63\x65\x5f\x69\x64\x5f\x6d\x6f\x62');
+if(mobId)return mobId;
+let seed=localStorage.getItem('\x76\x32\x5f\x75\x73\x65\x72\x44\x69\x73\x70\x65\x72\x73\x69\x6f\x6e\x53\x65\x65\x64');
+if(!seed){
+seed='\x55\x53\x52\x5f'+Date.now().toString(36)+'\x5f'+Math.random().toString(36).substring(2,10);
+localStorage.setItem('\x76\x32\x5f\x75\x73\x65\x72\x44\x69\x73\x70\x65\x72\x73\x69\x6f\x6e\x53\x65\x65\x64',seed);
+}
+return seed;
+}catch(e){
+return'\x44\x45\x46\x41\x55\x4c\x54\x5f\x55\x53\x45\x52\x5f\x53\x45\x45\x44';
+}
+}
+function computeDeterministicHash(str){
+let h=2166136261>>>0;
+for(let i=0;i<str.length;i++){
+h^=str.charCodeAt(i);
+h=Math.imul(h,16777619);
+}
+h^=h>>>16;
+h=Math.imul(h,2246822507);
+h^=h>>>13;
+h=Math.imul(h,3266489909);
+h^=h>>>16;
+return h>>>0;
+}
+function getStickyCourseMap(){
+try{
+const raw=localStorage.getItem('\x76\x32\x5f\x73\x74\x69\x63\x6b\x79\x43\x6f\x75\x72\x73\x65\x54\x69\x6d\x65\x73');
+return raw?JSON.parse(raw):{};
+}catch(e){
+return{};
+}
+}
+function saveStickyCourseMap(map){
+try{
+localStorage.setItem('\x76\x32\x5f\x73\x74\x69\x63\x6b\x79\x43\x6f\x75\x72\x73\x65\x54\x69\x6d\x65\x73',JSON.stringify(map));
+}catch(e){}
+}
+function makeStickyGroupKeyFromTr(tr){
+if(!tr)return'';
+const date=(tr.cells[0]?.textContent||'').replace(/[^\d]/g,'');
+const golf=(tr.cells[2]?.textContent||'').replace(/\s+/g,'').replace(/cc|gc|골프장|골프클럽/gi,'').trim().toLowerCase();
+const isTransfer=(tr.dataset.roomType==='\uc591\ub3c4'||(tr.cells[4]?.textContent||'').includes('\uc591\ub3c4'));
+const typeCategory=isTransfer?'\uc591\ub3c4':'\uc870\uc778';
+return`${date}_${golf}_${typeCategory}`;
+}
+function isPreviouslyRegisteredTr(tr){
+if(!tr||typeof makeHistoryKey!=='\x66\x75\x6e\x63\x74\x69\x6f\x6e')return false;
+const dateStr=tr.cells[0]?.textContent||'';
+const timeStr=tr.cells[1]?.textContent||'';
+const golfStr=tr.cells[2]?.textContent||'';
+const rawGolfStr=tr.dataset.rawGolf||golfStr;
+const k1=makeHistoryKey(dateStr,golfStr,timeStr);
+const k2=makeHistoryKey(dateStr,rawGolfStr,timeStr);
+return Boolean((k1&&typeof registeredHistory==='\x6f\x62\x6a\x65\x63\x74'&&registeredHistory[k1])||
+(k2&&typeof registeredHistory==='\x6f\x62\x6a\x65\x63\x74'&&registeredHistory[k2]));
+}
+function isStickySelectedTr(tr){
+if(!tr)return false;
+const gKey=makeStickyGroupKeyFromTr(tr);
+const timeDigits=(tr.cells[1]?.textContent||'').replace(/[^\d]/g,'');
+if(!gKey||!timeDigits)return false;
+const map=getStickyCourseMap();
+const arr=map[gKey];
+return Array.isArray(arr)&&arr.includes(timeDigits);
+}
+function pickUserConsistentOne(pool,salt=''){
+if(!pool||pool.length===0)return null;
+if(pool.length===1)return pool[0];
+const regMatches=pool.filter(tr=>isPreviouslyRegisteredTr(tr));
+const stickyMatches=pool.filter(tr=>isStickySelectedTr(tr));
+const candidatePool=regMatches.length>0?regMatches:(stickyMatches.length>0?stickyMatches:pool);
+if(candidatePool.length===1)return candidatePool[0];
+const userSeed=getUserDispersionSeed();
+let bestTr=candidatePool[0];
+let bestScore=-1;
+for(const tr of candidatePool){
+const date=(tr.cells[0]?.textContent||'').replace(/[^\d]/g,'');
+const time=(tr.cells[1]?.textContent||'').replace(/[^\d]/g,'');
+const golf=(tr.cells[2]?.textContent||'').replace(/\s+/g,'').toLowerCase();
+const roomType=(tr.dataset.roomType==='\uc591\ub3c4'?'\uc591\ub3c4':'\uc870\uc778');
+const keyStr=`${userSeed}|${date}|${golf}|${roomType}|${time}|${salt}`;
+const score=computeDeterministicHash(keyStr);
+if(score>bestScore){
+bestScore=score;
+bestTr=tr;
+}
+}
+return bestTr;
+}
 function pickDeterministicFromPart(activePool,partNumber){
 if(!activePool||activePool.length===0)return null;
 if(activePool.length===1)return activePool[0];
@@ -8483,12 +8583,12 @@ const paxPool=pool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x6
 if(paxPool.length>0){
 if(paxPool.length===1)return paxPool[0];
 if(isRandomSelectEnabled()){
-return paxPool[Math.floor(Math.random()*paxPool.length)];
+return pickUserConsistentOne(paxPool,'\x70\x61\x78\x5f'+partNumber);
 }
 return pickDeterministicFromPart(paxPool,partNumber);
 }
 if(isRandomSelectEnabled()){
-return pool[Math.floor(Math.random()*pool.length)];
+return pickUserConsistentOne(pool,'\x67\x65\x6e\x5f'+partNumber);
 }
 return pickDeterministicFromPart(pool,partNumber);
 }
@@ -8506,7 +8606,7 @@ const secondPool=(spacedCandidates.length>0)?spacedCandidates:remaining;
 if(isRandomSelectEnabled()&&secondPool.length>1){
 const secondPax=secondPool.filter(tr=>(typeof isPriorityTagTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isPriorityTagTr(tr))||hasJoinedPax(tr));
 const activeSecond=(secondPax.length>0)?secondPax:secondPool;
-const second=activeSecond[Math.floor(Math.random()*activeSecond.length)];
+const second=pickUserConsistentOne(activeSecond,'\x73\x65\x63\x6f\x6e\x64\x5f'+partNumber);
 return[first,second];
 }
 const second=pickBestOneFromPart(secondPool,partNumber);
@@ -9019,6 +9119,7 @@ const key=`${date}_${golf}_${typeCategory}`;
 if(!groups[key])groups[key]=[];
 groups[key].push(tr);
 });
+const stickyMap=getStickyCourseMap();
 let count=0;
 for(const key in groups){
 const list=groups[key];
@@ -9027,7 +9128,14 @@ picked.forEach(tr=>{
 tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
 count++;
 });
+if(picked.length>0){
+const gKey=makeStickyGroupKeyFromTr(picked[0]);
+if(gKey){
+stickyMap[gKey]=picked.map(tr=>(tr.cells[1]?.textContent||'').replace(/[^\d]/g,'')).filter(Boolean);
 }
+}
+}
+saveStickyCourseMap(stickyMap);
 return count;
 }
 function autoSelectTwo(){
