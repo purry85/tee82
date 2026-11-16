@@ -913,18 +913,15 @@ break;
 if(golfField){
 const control=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c')||golfField;
 const append=golfField.querySelector('\x2e\x71-\x73\x65\x6c\x65\x63\x74\x5f\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e-\x69\x63\x6f\x6e, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69');
-const native=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x69\x6e\x70\x75\x74');
-const clickTarget=append||control;
+const clickTarget=(attempt%2===0)?(append||control):control;
 clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1045(clickTarget);
-try{clickTarget.click();}catch(e){}
-if(control&&control!==clickTarget){
-try{control.click();}catch(e){}
-}
-if(native&&native!==clickTarget){
-try{native.click();}catch(e){}
-try{native.focus();}catch(e){}
-}
+const rect=clickTarget.getBoundingClientRect();
+const cx=rect.left+rect.width/2;
+const cy=rect.top+rect.height/2;
+const opts={bubbles:true,cancelable:true,view:window,clientX:cx,clientY:cy};
+clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+clickTarget.click();
 await _0x1004(400);
 const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x6c\x61\x62\x65\x6c, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x72\x61\x64\x69\x6f, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
 .filter(el=>el.offsetHeight>0);
@@ -1197,17 +1194,26 @@ return exactFound||partialFound;
 async function _0x101a(foundEl){
 if(!foundEl)return false;
 const targetRow=foundEl.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]')||foundEl;
-targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 targetRow.scrollIntoView({block:"\x63\x65\x6e\x74\x65\x72",behavior:"\x69\x6e\x73\x74\x61\x6e\x74"});
+targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1004(150);
-const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]');
+const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x2e\x71-\x72\x61\x64\x69\x6f\x5f\x5f\x69\x6e\x6e\x65\x72');
 const label=targetRow.querySelector('\x2e\x71-\x69\x74\x65\x6d\x5f\x5f\x6c\x61\x62\x65\x6c, [\x63\x6c\x61\x73\x73*="\x6c\x61\x62\x65\x6c"], \x73\x70\x61\x6e')||foundEl;
-const opts={bubbles:true,cancelable:true,view:window};
+const rect=targetRow.getBoundingClientRect();
+const cx=rect.left+rect.width/2;
+const cy=rect.top+rect.height/2;
+const topEl=document.elementFromPoint(cx,cy)||targetRow;
+const opts={bubbles:true,cancelable:true,view:window,clientX:cx,clientY:cy};
+topEl.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+topEl.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+topEl.click();
+if(topEl!==targetRow){
 targetRow.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
 targetRow.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
 targetRow.click();
+}
 await _0x1004(200);
-let isModalStillOpen=!!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
+const isModalStillOpen=!!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
 if(isModalStillOpen){
 if(label&&label!==targetRow){
 label.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
@@ -1224,20 +1230,10 @@ if(inp)inp.click();
 await _0x1004(100);
 }
 }
-for(let wait=0;wait<6;wait++){
+for(let wait=0;wait<8;wait++){
 const modal=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
 if(!modal)break;
 await _0x1004(150);
-}
-const remainingModal=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
-if(remainingModal){
-const closeBtn=remainingModal.querySelector('\x62\x75\x74\x74\x6f\x6e[\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c="\x43\x6c\x6f\x73\x65"], \x62\x75\x74\x74\x6f\x6e\x2e\x71-\x62\x74\x6e, \x69\x2e\x71-\x69\x63\x6f\x6e');
-if(closeBtn&&((closeBtn.innerText||'').includes('\x63\x6c\x6f\x73\x65')||closeBtn.closest('\x62\x75\x74\x74\x6f\x6e'))){
-try{(closeBtn.closest('\x62\x75\x74\x74\x6f\x6e')||closeBtn).click();}catch(e){}
-}else{
-document.body.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x73\x63\x61\x70\x65',code:'\x45\x73\x63\x61\x70\x65',bubbles:true}));
-}
-await _0x1004(200);
 }
 return true;
 }
@@ -1267,9 +1263,10 @@ const found=_0x1019(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc989\uc2dc \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
 await _0x101a(found);
-await _0x1004(200);
+await _0x1004(250);
 const courseOnForm=_0x1027();
-if(courseOnForm||!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
+if(courseOnForm){
+console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ud3fc \ubc18\uc601 \ud655\uc778 \uc644\ub8cc: ${courseOnForm}`);
 return true;
 }
 }
@@ -1283,9 +1280,10 @@ const found=_0x1019(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc2a4\ud06c\ub864 \uc911 \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
 await _0x101a(found);
-await _0x1004(200);
+await _0x1004(250);
 const courseOnForm=_0x1027();
-if(courseOnForm||!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
+if(courseOnForm){
+console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ud3fc \ubc18\uc601 \ud655\uc778 \uc644\ub8cc: ${courseOnForm}`);
 return true;
 }
 }
@@ -1299,8 +1297,9 @@ const lastChance=_0x1019(targetText,document.body);
 if(lastChance){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ucd5c\uc885 \uac80\uc0c9\uc5d0\uc11c \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
 await _0x101a(lastChance);
-await _0x1004(200);
-return true;
+await _0x1004(250);
+const courseOnForm=_0x1027();
+if(courseOnForm)return true;
 }
 console.error(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ubaa9\ub85d \ub0b4 \ubbf8\ubc1c\uacac`);
 return false;
@@ -1908,19 +1907,31 @@ console.warn("[\ub9e4\ud06c\ub85c] \uc5d0\ub514\ud130\ub97c \ucc3e\uc9c0 \ubabb\
 return false;
 }
 function _0x1027(){
-const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
-.filter(el=>el.offsetHeight>0);
-for(const f of fields){
-const fTxt=(f.innerText||f.textContent||'').trim();
-if(!fTxt||fTxt.includes('\uc120\ud0dd\ud558\uc138\uc694')||fTxt==='\uace8\ud504\uc7a5'||fTxt.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd'))continue;
-if(/날짜|시간|그린피|캐디|식사|인원|조건|메모|내용/.test(fTxt))continue;
-const norm=_0x1044(fTxt);
-if(norm&&norm.length>=2)return fTxt;
-if(/남양주|알프스대영|알프스|대영|보령|더반|빅토리아|링크나인|한림|스프링|글렌로스|동서울|참밸리|코브스윙|모카|세일|아세코|화성|신안|파주|임페리얼|로얄포레|떼제베|대영베이스|올데이|플라밍고/.test(fTxt)){
-return fTxt;
-}
-}
+const qFields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
+.filter(el=>{
+if(el.offsetHeight<=0)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+const ph=el.querySelector('\x69\x6e\x70\x75\x74')?.placeholder||'';
+if(/^\d{4}[./-]\d{1,2}[./-]\d{1,2}$/.test(txt))return false;
+if(/날짜|일자|시간|타임|그린피|캐디|식사|인원|조건|메모|내용/.test(txt+' '+ph))return false;
+return true;
+});
+let golfField=qFields.find(f=>{
+const ph=f.querySelector('\x69\x6e\x70\x75\x74')?.placeholder||'';
+const txt=(f.innerText||f.textContent||'').trim();
+return ph.includes('\uace8\ud504\uc7a5')||txt.includes('\uace8\ud504\uc7a5');
+})||qFields[0];
+if(!golfField)return'';
+const rawTxt=(golfField.innerText||golfField.textContent||'').trim();
+const inputVal=(golfField.querySelector('\x69\x6e\x70\x75\x74')?.value||'').trim();
+const candidate=inputVal||rawTxt;
+if(!candidate||candidate.includes('\uc120\ud0dd\ud558\uc138\uc694')||candidate==='\uace8\ud504\uc7a5'||candidate.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd')){
 return'';
+}
+if(/^[\d./\-:\s]+$/.test(candidate)){
+return'';
+}
+return candidate;
 }
 async function _0x1028(maxAttempts=15,expectedCourse=null){
 console.log("[\ub9e4\ud06c\ub85c] \x31\x33\ub2e8\uacc4\x3a '\ub4f1\ub85d\ud558\uae30' \ubc84\ud2bc \ud0d0\uc0c9 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
