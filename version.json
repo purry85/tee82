@@ -1,11 +1,11 @@
 {
-  "version": "2.3.3",
+  "version": "2.3.4",
   "releaseDate": "2026-11-16",
-  "title": "v2.3.3 골프몬 신규등록 구장/날짜/시간 선택 로직 기존 정상 동작 원복",
+  "title": "v2.3.4 구장 선택 모달 items-center 오매칭 및 2열 그리드 타 구장 침범 원천 차단",
   "releaseNotes": [
-    "• 골프장 드롭다운 호출 및 구장 선택 로직을 이전에 정상 동작하던 원본 방식(좌표 + execCommand insertText + Enter)으로 완전 복원",
-    "• 날짜 선택(selectDate), 시간 입력(inputTime), 등록하기 제출(clickSubmitButton) 로직을 기존 정상 버전으로 원복",
-    "• '조인 등록/양도 등록' 액션 메뉴가 닫히는 도중 구장 팝업으로 오인식되던 현상만 안전하게 예외 처리"
+    "• 구장 선택 다이얼로그에서 div[class*=\"item\"] 셀렉터가 Quasar의 items-center(모달 전체 컨테이너)를 잡아 모달 정중앙(알프스대영cc)을 클릭하던 버그 원천 제거",
+    "• 등록 상품 목록의 2열 그리드 row 컨테이너가 단일 카드로 덮어써져 좌측 타 구장 카드(알프스대영cc)를 클릭·수정하던 버그 완전 차단",
+    "• 상세 페이지 진입 직후 본문 구장명이 목표 구장(옥스필드cc 등)과 일치하는지 2중 검증하여 타 구장 수정 100% 원천 방지"
   ],
   "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
   "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

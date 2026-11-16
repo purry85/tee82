@@ -1000,8 +1000,14 @@ function _0x1019(targetText,container){
 if(!targetText)return null;
 const root=container||document.body;
 const cleanTarget=targetText.replace(/\s+/g,'').toLowerCase();
-const items=Array.from(root.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]'))
-.filter(el=>el.offsetHeight>0);
+const items=Array.from(root.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetHeight>85)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+if(!txt||txt.length>40)return false;
+const lines=txt.split('\n').map(s=>s.trim()).filter(Boolean);
+return lines.length<=2;
+});
 for(const item of items){
 const itemText=(item.innerText||item.textContent||'').trim();
 const cleanItem=itemText.replace(/\s+/g,'').toLowerCase();
@@ -1131,9 +1137,11 @@ let exactFound=null;
 let partialFound=null;
 while(node=walker.nextNode()){
 const text=node.textContent.trim();
-if(!text)continue;
+if(!text||text.length>40||text.includes('\n'))continue;
 const parent=node.parentElement;
-if(!parent||parent.offsetHeight===0)continue;
+if(!parent||parent.offsetHeight===0||parent.offsetHeight>85)continue;
+if(parent.tagName==='\x53\x43\x52\x49\x50\x54'||parent.tagName==='\x53\x54\x59\x4c\x45')continue;
+if(parent.closest('\x23\x67\x6f\x6c\x66\x6d\x6f\x6e-\x6d\x61\x63\x72\x6f-\x68\x75\x64, [\x69\x64*="\x74\x65\x65\x38\x32"]'))continue;
 const cleanNode=text.replace(/\s+/g,'').toLowerCase();
 if(cleanNode===cleanTarget&&!_0x1018(cleanTarget,cleanNode)){
 exactFound=parent;
@@ -1160,7 +1168,17 @@ return exactFound||partialFound;
 }
 async function _0x101a(foundEl){
 if(!foundEl)return false;
-const targetRow=foundEl.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]')||foundEl;
+let targetRow=foundEl;
+let p=foundEl.parentElement;
+for(let d=0;d<4&&p&&p!==document.body;d++,p=p.parentElement){
+if(p.offsetHeight>85)break;
+const lines=(p.innerText||p.textContent||'').trim().split('\n').map(s=>s.trim()).filter(Boolean);
+if(lines.length>2)break;
+targetRow=p;
+if(p.matches('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x6c\x61\x62\x65\x6c, \x2e\x71-\x72\x61\x64\x69\x6f')||p.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]')){
+break;
+}
+}
 targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 targetRow.scrollIntoView({block:"\x63\x65\x6e\x74\x65\x72",behavior:"\x69\x6e\x73\x74\x61\x6e\x74"});
 await _0x1004(100);
@@ -1217,11 +1235,8 @@ const ok=await _0x101a(found);
 if(ok)return true;
 }
 if(scrollBox){
-scrollBox.scrollTop+=380;
-const firstItem=scrollBox.querySelector('\x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76');
-if(firstItem&&i>5){
-firstItem.style.marginTop="-"+((i-5)*380)+"\x70\x78";
-}
+scrollBox.scrollTop+=320;
+scrollBox.dispatchEvent(new Event('\x73\x63\x72\x6f\x6c\x6c',{bubbles:true}));
 }
 await _0x1004(250);
 }
@@ -3025,6 +3040,8 @@ if(el.closest('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e
 const txt=el.innerText||el.textContent||'';
 if(!/\d{1,2}:\d{2}/.test(txt)||!/원/.test(txt))return false;
 if(!/진행중|마감|조인|양도|\d+\s*홀/.test(txt))return false;
+if((txt.match(/\d[\d,]*\s*원/g)||[]).length>1)return false;
+if((txt.match(/진행중|마감/g)||[]).length>1)return false;
 return true;
 });
 const leafCards=allNodes.filter(item=>{
@@ -3770,9 +3787,10 @@ el.style.outline='';
 el.style.boxShadow='';
 delete el.dataset.tee82Outline;
 });
-const actualCard=cardEl.closest('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"], \x2e\x71-\x69\x74\x65\x6d')||
-cardEl.querySelector('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"], \x2e\x71-\x69\x74\x65\x6d')||
-cardEl;
+const closestCard=cardEl.closest('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"]');
+const actualCard=(closestCard&&((closestCard.innerText||'').match(/\d[\d,]*\s*원/g)||[]).length<=1)
+?closestCard
+:cardEl;
 actualCard.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 actualCard.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 actualCard.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \x31\x32\x70\x78 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -4693,19 +4711,17 @@ curr=curr.parentElement;
 if(!curr||curr===document.body)break;
 if(curr.offsetHeight>=65&&curr.offsetHeight<=550&&curr.offsetWidth>=120){
 const cTxt=curr.innerText||curr.textContent||'';
-if(/\d{1,2}:\d{2}/.test(cTxt)&&/원/.test(cTxt)){
+const priceCount=(cTxt.match(/\d[\d,]*\s*원/g)||[]).length;
+const statusCount=(cTxt.match(/진행중|마감/g)||[]).length;
+if(priceCount>1||statusCount>1)break;
+if(/\d{1,2}:\d{2}/.test(cTxt)&&priceCount===1){
 foundBox=curr;
 break;
 }
 }
 }
-if(foundBox){
-const childIdx=cardCandidates.findIndex(c=>foundBox.contains(c));
-if(childIdx>=0){
-cardCandidates[childIdx]=foundBox;
-}else if(!cardCandidates.some(c=>c===foundBox||c.contains(foundBox))){
+if(foundBox&&!cardCandidates.some(c=>c===foundBox||c.contains(foundBox)||foundBox.contains(c))){
 cardCandidates.push(foundBox);
-}
 }
 }
 }
@@ -4716,6 +4732,8 @@ const curScreenDay=(typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x103b
 const matched=[];
 for(const el of cardCandidates){
 const rawTxt=(el.innerText||el.textContent||'').toLowerCase();
+if((rawTxt.match(/\d[\d,]*\s*원/g)||[]).length>1)continue;
+if((rawTxt.match(/진행중|마감/g)||[]).length>1)continue;
 const normCard=_0x1043(rawTxt);
 const golfScore=_0x1046(normCard,normG1,normG2);
 if(golfScore===0)continue;
@@ -4807,7 +4825,8 @@ const regStampMatch=rawTxt.match(/(?:등록|수정)[.,\s]*\d{1,2}[./\-]\d{1,2}(?
 const regStamp=regStampMatch?regStampMatch[0].replace(/\s+/g,''):'';
 const peopleMatch=rawTxt.match(/(\d+)\s*명/);
 const peopleStr=peopleMatch?`${peopleMatch[1]}\uba85`:'';
-const clickableEl=el.closest('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"], \x2e\x71-\x69\x74\x65\x6d')||el;
+const parentCard=el.closest('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"]');
+const clickableEl=(parentCard&&((parentCard.innerText||'').match(/\d[\d,]*\s*원/g)||[]).length<=1)?parentCard:el;
 const rect=clickableEl.getBoundingClientRect();
 const topY=rect.top;
 const leftX=rect.left;
@@ -5543,6 +5562,20 @@ if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(!inDetail){
 console.warn(`[${logTag}] ${item.golf} (${originalPostTime}) \uce74\ub4dc \ud074\ub9ad \ud6c4 \uc0c1\uc138 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 await navigateBackToList(groupCategory);
+continue;
+}
+const detailBodyTxt=(document.body.innerText||'').toLowerCase();
+const normDetail=_0x1043(detailBodyTxt);
+const normTarget1=_0x1043(group.golf);
+const normTarget2=_0x1043(group.rawGolf);
+if(_0x1046(normDetail,normTarget1,normTarget2)===0){
+console.error(`[${logTag}] \u274c \uc0c1\uc138 \ud398\uc774\uc9c0 \uad6c\uc7a5 \ubd88\uc77c\uce58 \uac10\uc9c0! \ubaa9\ud45c \uad6c\uc7a5(${group.golf})\uc774 \uc544\ub2cc \ud0c0 \uad6c\uc7a5 \uc0c1\uc138 \ud398\uc774\uc9c0\uc774\ubbc0\ub85c \uc218\uc815\uc744 \uc989\uc2dc \ucde8\uc18c\ud558\uace0 \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
+_replacedCardsSet.add(targetCardEl);
+await navigateBackToList(itemTargetCategory);
+await _0x1042(itemTargetCategory);
+if(itemTargetDate)await _0x103f(itemTargetDate);
+if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1040(itemTargetRegion);
+await _0x1004(300);
 continue;
 }
 let curUrl=window.location.href;
