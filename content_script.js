@@ -871,27 +871,51 @@ async function _0x1017(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x34\ub2e8\uacc4\x3a '\uace8\ud504\uc7a5' \ub4dc\ub86d\ub2e4\uc6b4\x2f\uc120\ud0dd \ubaa8\ub2ec \ud638\ucd9c \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const visibleItems=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
+const visibleItems=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x6c\x61\x62\x65\x6c, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x72\x61\x64\x69\x6f, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
 .filter(el=>el.offsetHeight>0);
 if(visibleItems.length>0){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4\uc774 \uc774\ubbf8 \uc5f4\ub824\uc788\uc74c (\uc635\uc158 ${visibleItems.length}\uac1c \ubc1c\uacac)`);
 return true;
 }
 const qFields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
-.filter(el=>el.offsetHeight>0);
+.filter(el=>{
+if(el.offsetHeight<=0)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+const ph=el.querySelector('\x69\x6e\x70\x75\x74')?.placeholder||'';
+if(/날짜|일자|시간|타임|그린피|캐디|식사|인원|조건|메모|내용/.test(txt+' '+ph))return false;
+const iconTxt=Array.from(el.querySelectorAll('\x2e\x71-\x69\x63\x6f\x6e, \x69')).map(i=>i.innerText||'').join(' ');
+if(/event|calendar/i.test(iconTxt))return false;
+return true;
+});
 let golfField=qFields.find(f=>{
 const txt=(f.innerText||f.textContent||'').trim();
-return txt.includes('\uace8\ud504\uc7a5')||txt.includes('\uc120\ud0dd\ud558\uc138\uc694');
+const ph=f.querySelector('\x69\x6e\x70\x75\x74')?.placeholder||'';
+return txt.includes('\uace8\ud504\uc7a5')||ph.includes('\uace8\ud504\uc7a5');
 });
 if(!golfField&&qFields.length>0){
 golfField=qFields[0];
 }
+if(!golfField){
+const labels=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x6c\x61\x62\x65\x6c, \x70'))
+.filter(el=>{
+const t=(el.innerText||el.textContent||'').trim();
+return t==='\uace8\ud504\uc7a5\uc744 \uc120\ud0dd\ud558\uc138\uc694'||t==='\uace8\ud504\uc7a5 \uc120\ud0dd'||t==='\uace8\ud504\uc7a5';
+});
+for(const lbl of labels){
+const nextField=lbl.nextElementSibling?.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74')||
+lbl.parentElement?.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74');
+if(nextField&&nextField.offsetHeight>0){
+golfField=nextField;
+break;
+}
+}
+}
 if(golfField){
 const control=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c')||golfField;
-const append=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69, \x2e\x71-\x69\x63\x6f\x6e');
+const append=golfField.querySelector('\x2e\x71-\x73\x65\x6c\x65\x63\x74\x5f\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e-\x69\x63\x6f\x6e, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69');
 const native=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x69\x6e\x70\x75\x74');
 const clickTarget=append||control;
-clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1045(clickTarget);
 try{clickTarget.click();}catch(e){}
 if(control&&control!==clickTarget){
@@ -901,33 +925,15 @@ if(native&&native!==clickTarget){
 try{native.click();}catch(e){}
 try{native.focus();}catch(e){}
 }
-await _0x1004(350);
-const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
+await _0x1004(400);
+const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x6c\x61\x62\x65\x6c, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x72\x61\x64\x69\x6f, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
 .filter(el=>el.offsetHeight>0);
 if(opened.length>0){
-console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (.q-field \ubb3c\ub9ac \ud074\ub9ad, \uc635\uc158 ${opened.length}\uac1c)`);
+console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\uc635\uc158 ${opened.length}\uac1c \ubc1c\uacac)`);
 return true;
 }
 }
-const titleElements=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x6c\x61\x62\x65\x6c, \x70'))
-.filter(el=>{
-const txt=el.textContent.trim();
-return(txt==='\uace8\ud504\uc7a5\uc744 \uc120\ud0dd\ud558\uc138\uc694'||txt==='\uace8\ud504\uc7a5 \uc120\ud0dd'||txt.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd'))&&el.offsetHeight>0;
-});
-for(const targetEl of titleElements){
-const fieldParent=targetEl.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74')||targetEl.parentElement;
-const clickEl=fieldParent?.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69')||targetEl;
-await _0x1045(clickEl);
-try{clickEl.click();}catch(e){}
-await _0x1004(350);
-const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
-.filter(el=>el.offsetHeight>0);
-if(opened.length>0){
-console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\ud14d\uc2a4\ud2b8 \uc694\uc18c \ud074\ub9ad)");
-return true;
-}
-}
-await _0x1004(250);
+await _0x1004(300);
 }
 console.error("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \uc120\ud0dd \ub2e4\uc774\uc5bc\ub85c\uadf8\ub97c \uc5f4\uc9c0 \ubabb\ud568");
 return false;
@@ -1193,25 +1199,46 @@ if(!foundEl)return false;
 const targetRow=foundEl.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]')||foundEl;
 targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 targetRow.scrollIntoView({block:"\x63\x65\x6e\x74\x65\x72",behavior:"\x69\x6e\x73\x74\x61\x6e\x74"});
-await _0x1004(100);
-const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x2e\x71-\x72\x61\x64\x69\x6f\x5f\x5f\x69\x6e\x6e\x65\x72');
+await _0x1004(150);
+const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]');
 const label=targetRow.querySelector('\x2e\x71-\x69\x74\x65\x6d\x5f\x5f\x6c\x61\x62\x65\x6c, [\x63\x6c\x61\x73\x73*="\x6c\x61\x62\x65\x6c"], \x73\x70\x61\x6e')||foundEl;
-if(radio){
-await _0x1045(radio);
-try{radio.click();}catch(e){}
-const inp=radio.querySelector('\x69\x6e\x70\x75\x74');
-if(inp)try{inp.click();}catch(e){}
-await _0x1004(80);
-}
+const opts={bubbles:true,cancelable:true,view:window};
+targetRow.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+targetRow.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+targetRow.click();
+await _0x1004(200);
+let isModalStillOpen=!!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
+if(isModalStillOpen){
 if(label&&label!==targetRow){
-await _0x1045(label);
-try{label.click();}catch(e){}
-await _0x1004(80);
+label.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+label.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+label.click();
+await _0x1004(100);
 }
-await _0x1045(targetRow);
-try{targetRow.click();}catch(e){}
-try{foundEl.click();}catch(e){}
-await _0x1004(350);
+if(radio){
+radio.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+radio.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+radio.click();
+const inp=radio.querySelector('\x69\x6e\x70\x75\x74');
+if(inp)inp.click();
+await _0x1004(100);
+}
+}
+for(let wait=0;wait<6;wait++){
+const modal=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
+if(!modal)break;
+await _0x1004(150);
+}
+const remainingModal=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]');
+if(remainingModal){
+const closeBtn=remainingModal.querySelector('\x62\x75\x74\x74\x6f\x6e[\x61\x72\x69\x61-\x6c\x61\x62\x65\x6c="\x43\x6c\x6f\x73\x65"], \x62\x75\x74\x74\x6f\x6e\x2e\x71-\x62\x74\x6e, \x69\x2e\x71-\x69\x63\x6f\x6e');
+if(closeBtn&&((closeBtn.innerText||'').includes('\x63\x6c\x6f\x73\x65')||closeBtn.closest('\x62\x75\x74\x74\x6f\x6e'))){
+try{(closeBtn.closest('\x62\x75\x74\x74\x6f\x6e')||closeBtn).click();}catch(e){}
+}else{
+document.body.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x73\x63\x61\x70\x65',code:'\x45\x73\x63\x61\x70\x65',bubbles:true}));
+}
+await _0x1004(200);
+}
 return true;
 }
 async function _0x101b(targetText,maxAttempts=15){
@@ -1239,8 +1266,12 @@ if(shouldStopRegistration)return false;
 const found=_0x1019(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc989\uc2dc \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-const ok=await _0x101a(found);
-if(ok)return true;
+await _0x101a(found);
+await _0x1004(200);
+const courseOnForm=_0x1027();
+if(courseOnForm||!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
+return true;
+}
 }
 await _0x1004(150);
 }
@@ -1251,8 +1282,12 @@ if(shouldStopRegistration)return false;
 const found=_0x1019(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc2a4\ud06c\ub864 \uc911 \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-const ok=await _0x101a(found);
-if(ok)return true;
+await _0x101a(found);
+await _0x1004(200);
+const courseOnForm=_0x1027();
+if(courseOnForm||!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
+return true;
+}
 }
 if(scrollBox){
 scrollBox.scrollTop+=320;
@@ -1263,23 +1298,38 @@ await _0x1004(200);
 const lastChance=_0x1019(targetText,document.body);
 if(lastChance){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ucd5c\uc885 \uac80\uc0c9\uc5d0\uc11c \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-return await _0x101a(lastChance);
+await _0x101a(lastChance);
+await _0x1004(200);
+return true;
 }
 console.error(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ubaa9\ub85d \ub0b4 \ubbf8\ubc1c\uacac`);
 return false;
 }
 async function _0x101c(rawDate){
 if(!rawDate)return false;
-const parts=rawDate.split('\x2e');
-const targetMonth=parts[0];
-const targetDay=parts[1];
+const parts=String(rawDate).split(/[./-]/).filter(Boolean);
+let targetYear='\x32\x30\x32\x36';
+let targetMonth='';
+let targetDay='';
+if(parts.length===3){
+targetYear=parts[0];
+targetMonth=parts[1];
+targetDay=parts[2];
+}else if(parts.length===2){
+targetMonth=parts[0];
+targetDay=parts[1];
+}
 const targetMonthNum=parseInt(targetMonth,10);
 const targetDayNum=parseInt(targetDay,10);
-console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd \ud655\uc778 (${targetMonth}\uc6d4 ${targetDay}\uc77c)...`);
+const formattedDate=`${targetYear}-${String(targetMonthNum).padStart(2,'\x30')}-${String(targetDayNum).padStart(2,'\x30')}`;
+console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd \ud655\uc778 (${targetMonthNum}\uc6d4 ${targetDayNum}\uc77c -> ${formattedDate})...`);
 const allInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).filter(el=>el.offsetHeight>0);
 const dateInput=allInputs.find(el=>{
 const v=(el.value||'').trim();
 return/^\d{4}[./-]\d{1,2}[./-]\d{1,2}$/.test(v)||/^\d{1,2}[./-]\d{1,2}$/.test(v);
+})||allInputs.find(el=>{
+const ph=el.placeholder||'';
+return ph.includes('\ub0a0\uc9dc')||ph.includes('\uc77c\uc790');
 })||allInputs.find(el=>{
 const parentTxt=el.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x64\x69\x76\x2e\x72\x6f\x77, \x64\x69\x76')?.innerText||'';
 return/일자|날짜/i.test(parentTxt)&&!/시간|그린피/.test(parentTxt);
@@ -1295,6 +1345,22 @@ console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc \ud3fc\uc5d0 \uc774\ubbf8 \ubaa9\
 return true;
 }
 }
+try{
+const nativeSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'\x76\x61\x6c\x75\x65')?.set;
+if(nativeSetter){
+nativeSetter.call(dateInput,formattedDate);
+}else{
+dateInput.value=formattedDate;
+}
+dateInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true,composed:true}));
+dateInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true,composed:true}));
+dateInput.dispatchEvent(new Event('\x62\x6c\x75\x72',{bubbles:true,composed:true}));
+await _0x1004(100);
+if((dateInput.value||'').includes(String(targetDayNum))){
+console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc \ud544\ub4dc \uc9c1\uc811 \uc8fc\uc785 \uc131\uacf5 (${dateInput.value}) -> \ub2ec\ub825 \ud074\ub9ad \uc0dd\ub7b5`);
+return true;
+}
+}catch(e){}
 }
 const dateField=dateInput?dateInput.closest('\x2e\x71-\x66\x69\x65\x6c\x64'):null;
 const calBtn=dateField?.querySelector('\x2e\x71-\x69\x63\x6f\x6e, \x62\x75\x74\x74\x6f\x6e, \x69, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64')||
@@ -1305,37 +1371,46 @@ return txt==='\x65\x76\x65\x6e\x74'||txt==='\x63\x61\x6c\x65\x6e\x64\x61\x72\x5f
 });
 if(calBtn){
 calBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1045(calBtn);
-try{calBtn.click();}catch(e){}
-await _0x1004(400);
-const monthHeaderBtn=document.querySelector('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x76\x69\x65\x77 \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74 \x73\x70\x61\x6e')||
-document.querySelector('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x76\x69\x65\x77 \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74');
-const currentMonthNum=monthHeaderBtn?monthHeaderBtn.textContent.replace(/[^0-9]/g,'').trim():"";
-if(currentMonthNum&&parseInt(currentMonthNum,10)!==targetMonthNum&&monthHeaderBtn){
-console.log(`[\ub9e4\ud06c\ub85c] \ub2ec\ub825 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\ub85c \ubcc0\uacbd \uc9c4\ud589`);
-monthHeaderBtn.click();
-await _0x1004(400);
-const allMonthBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x6d\x6f\x6e\x74\x68\x73-\x69\x74\x65\x6d \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74 \x73\x70\x61\x6e'));
-const targetMonthBtn=allMonthBtns.find(el=>el.textContent.trim()===`${targetMonth}\uc6d4`);
-if(targetMonthBtn){
-targetMonthBtn.click();
-await _0x1004(400);
-}
-}
-const dayBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d \x62\x75\x74\x74\x6f\x6e'));
-const finalBtn=dayBtns.find(btn=>{
-const dayNum=parseInt(btn.textContent.trim(),10);
-return dayNum===targetDayNum&&!btn.closest('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d--\x6f\x75\x74');
-});
-if(finalBtn){
-await _0x1045(finalBtn);
-try{finalBtn.click();}catch(e){}
-console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${targetMonth}\uc6d4 ${targetDay}\uc77c) \ub2ec\ub825\uc5d0\uc11c \uc120\ud0dd \uc644\ub8cc`);
+const opts={bubbles:true,cancelable:true,view:window};
+calBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+calBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+calBtn.click();
+await _0x1004(350);
+const navBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x6e\x61\x76\x69\x67\x61\x74\x69\x6f\x6e \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x71-\x64\x61\x74\x65\x5f\x5f\x76\x69\x65\x77 \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x71-\x64\x61\x74\x65 \x62\x75\x74\x74\x6f\x6e'));
+const monthBtn=navBtns.find(b=>(b.innerText||b.textContent||'').includes('\uc6d4'));
+if(monthBtn){
+const curM=parseInt((monthBtn.innerText||monthBtn.textContent||'').replace(/[^\d]/g,''),10);
+if(curM&&curM!==targetMonthNum){
+const arrowBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x61\x72\x72\x6f\x77 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x64\x61\x74\x65\x5f\x5f\x6e\x61\x76\x69\x67\x61\x74\x69\x6f\x6e \x62\x75\x74\x74\x6f\x6e'));
+if(curM<targetMonthNum&&arrowBtns.length>=2){
+arrowBtns[arrowBtns.length-1].click();
 await _0x1004(250);
-return true;
+}else if(curM>targetMonthNum&&arrowBtns.length>=1){
+arrowBtns[0].click();
+await _0x1004(250);
 }
 }
-console.warn(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${rawDate}) \ud655\uc778/\uc120\ud0dd \uc644\ub8cc`);
+}
+const allDayBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x64\x61\x79\x73 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x64\x61\x74\x65 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x6d\x65\x6e\x75 \x62\x75\x74\x74\x6f\x6e'));
+const dayBtn=allDayBtns.find(btn=>{
+if(btn.closest('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d--\x6f\x75\x74'))return false;
+const t=(btn.innerText||btn.textContent||'').trim();
+return t===String(targetDayNum);
+});
+if(dayBtn){
+dayBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+dayBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+dayBtn.click();
+console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${targetMonthNum}\uc6d4 ${targetDayNum}\uc77c) \ub2ec\ub825\uc5d0\uc11c \uc120\ud0dd \uc644\ub8cc`);
+await _0x1004(200);
+}
+const openPopup=document.querySelector('\x2e\x71-\x64\x61\x74\x65, \x2e\x71-\x6d\x65\x6e\x75\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e)');
+if(openPopup){
+document.body.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x73\x63\x61\x70\x65',code:'\x45\x73\x63\x61\x70\x65',bubbles:true}));
+await _0x1004(150);
+}
+}
+console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${rawDate}) \ucc98\ub9ac \uc644\ub8cc`);
 return true;
 }
 async function _0x101d(selectedTime){
@@ -4991,7 +5066,7 @@ courseSelected=await _0x101b(item.golf);
 await _0x1004(300);
 currentSelected=_0x1027();
 }
-if(!courseSelected&&!currentSelected){
+if(!currentSelected){
 console.error(`[\uc624\ub4f1\ub85d \ucc28\ub2e8] \uace8\ud504\uc7a5(${item.golf}) \uc120\ud0dd \uc2e4\ud328! \ud0c0 \uad6c\uc7a5 \uc624\ub4f1\ub85d \ubc29\uc9c0\ub97c \uc704\ud574 [${item.golf}] \uc2e0\uaddc \ub4f1\ub85d \uc911\ub2e8`);
 await executeSingleBack();
 return false;
