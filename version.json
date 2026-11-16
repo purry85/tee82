@@ -1,11 +1,11 @@
 {
-  "version": "2.2.2",
+  "version": "2.2.3",
   "releaseDate": "2026-11-16",
-  "title": "v2.2.2 남양주cc(9홀x2) 기존글 인식 및 스마트 수정 통과 보장",
+  "title": "v2.2.3 골프몬 신규등록 구장 선택 물리 클릭 강화 및 실험실 UI 정리",
   "releaseNotes": [
-    "• 남양주cc(9홀x2 / P9 등) 정규화 토큰 분기 수정으로 골프몬 기존 등록카드 100% 자동 매칭 보장",
-    "• 시간·금액·인원 일치 시 불필요한 신규 등록 창(joinwrite) 진입 차단 및 동일 내용 스마트 통과(0초) 처리",
-    "• 사전 매핑에 남양주cc(9홀x2) -> 남양주cc(P9) 완벽 등록으로 신규 등록 시 구장 미선택 현상 방지"
+    "• 골프몬 신규 등록 시 Quasar select 드롭다운(.q-field, .q-field__control, .q-field__append) 물리 클릭 및 2차 검증 가드 강화",
+    "• 신규 등록 폼에서 구장 미선택 상태 제출 원천 차단 및 안정적인 구장 자동 선택 보장",
+    "• 설정 화면 내 '실험실' 섹션 완전 정리 및 스마트수정, 전체리셋, 공지적용, 동시등록, F12 차단해제 상시 기본 활성화"
   ],
   "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
   "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

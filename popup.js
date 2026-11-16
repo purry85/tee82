@@ -11166,19 +11166,9 @@ chrome.storage.local.set({v2_isAdmin:isAdmin,v2_allowF12:isF12});
 const rowLabMode=document.getElementById('\x72\x6f\x77\x4c\x61\x62\x4d\x6f\x64\x65');
 const labPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
 const chkLabMode=document.getElementById('\x63\x68\x6b\x4c\x61\x62\x4d\x6f\x64\x65');
-if(!isAdmin){
 if(rowLabMode)rowLabMode.style.display='\x6e\x6f\x6e\x65';
 if(labPanel)labPanel.style.display='\x6e\x6f\x6e\x65';
 if(chkLabMode)chkLabMode.checked=false;
-localStorage.removeItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65');
-localStorage.removeItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e');
-localStorage.removeItem('\x76\x32\x5f\x6d\x75\x6c\x74\x69\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65');
-}else{
-if(rowLabMode)rowLabMode.style.display='\x66\x6c\x65\x78';
-const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-if(chkLabMode)chkLabMode.checked=isLabActive;
-if(labPanel)labPanel.style.display=isLabActive?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
-}
 _0x106b(isAdmin);
 const isLabActive=isAdmin&&localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 _0x106c(isLabActive);
@@ -11269,60 +11259,30 @@ try{chrome.storage.local.set({v2_randomDelayPreset:targetRandom});}catch(e){}
 function _0x106c(isLabActiveParam){
 try{
 const isAdmin=_0x1067();
-const isLabActive=isAdmin&&(typeof isLabActiveParam==='\x62\x6f\x6f\x6c\x65\x61\x6e'?isLabActiveParam:localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65');
 const labPanel=document.getElementById('\x6c\x61\x62\x53\x65\x74\x74\x69\x6e\x67\x73\x50\x61\x6e\x65\x6c');
 const chkLab=document.getElementById('\x63\x68\x6b\x4c\x61\x62\x4d\x6f\x64\x65');
-if(chkLab)chkLab.checked=isLabActive;
-if(labPanel)labPanel.style.display=isLabActive?'\x62\x6c\x6f\x63\x6b':'\x6e\x6f\x6e\x65';
-if(!isAdmin){
-try{
-localStorage.removeItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65');
-localStorage.removeItem('\x76\x32\x5f\x6d\x75\x6c\x74\x69\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65');
-}catch(e){}
-}
-const hasUpdate=(typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&!isAdmin)?(_0x1068('\uc218\uc815')||_0x1068('\x75\x70\x64\x61\x74\x65')):false;
-const hasReset=typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x1068('\x72\x65\x73\x65\x74')||_0x1068('\ub9ac\uc14b')):false;
-const hasNotice=typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x1068('\x6e\x6f\x74\x69\x63\x65')||_0x1068('\uacf5\uc9c0')||_0x1068('\uacf5\uc9c0\ub4f1\ub85d')):false;
-const hasF12=typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?(_0x1068('\x66\x31\x32')||_0x1068('\x64\x65\x76\x74\x6f\x6f\x6c\x73')||_0x1068('\x66\x31\x32\ud574\uc81c')):false;
-const hasMulti=(typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&!isAdmin)?_0x1068('\ub3d9\uc2dc\ub4f1\ub85d'):false;
-const hasSoldOut=(typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&!isAdmin)?(_0x1068('\ub9c8\uac10')||_0x1068('\x73\x6f\x6c\x64\x6f\x75\x74')):false;
-const hasBump=(typeof _0x1068==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&!isAdmin)?(_0x1068('\x31\ub4f1')||_0x1068('\x62\x75\x6d\x70')||_0x1068('\ub04c\uc5b4\uc62c\ub9ac\uae30')):false;
+const rowLab=document.getElementById('\x72\x6f\x77\x4c\x61\x62\x4d\x6f\x64\x65');
+if(chkLab)chkLab.checked=false;
+if(labPanel)labPanel.style.display='\x6e\x6f\x6e\x65';
+if(rowLab)rowLab.style.display='\x6e\x6f\x6e\x65';
+const isUpdateActionsOpen=true;
+const isDateResetOpen=true;
+const isNoticeOpen=true;
+const isMultiOpen=true;
+const isF12Open=true;
+const isSoldOutOpen=true;
 const chkOpenUpdateActions=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x55\x70\x64\x61\x74\x65\x41\x63\x74\x69\x6f\x6e\x73');
-const isUpdateSaved=localStorage.getItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x41\x63\x74\x69\x6f\x6e\x73\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-const isUpdateActionsOpen=hasUpdate||(isAdmin&&isLabActive&&isUpdateSaved);
-if(chkOpenUpdateActions){
-chkOpenUpdateActions.checked=isUpdateActionsOpen;
-}
+if(chkOpenUpdateActions)chkOpenUpdateActions.checked=isUpdateActionsOpen;
 const chkOpenDateReset=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x44\x61\x74\x65\x52\x65\x73\x65\x74');
-const isDateResetSaved=localStorage.getItem('\x76\x32\x5f\x64\x61\x74\x65\x52\x65\x73\x65\x74\x41\x63\x74\x69\x76\x65')!=='\x66\x61\x6c\x73\x65';
-const isDateResetOpen=isDateResetSaved;
-if(chkOpenDateReset){
-chkOpenDateReset.checked=isDateResetOpen;
-}
+if(chkOpenDateReset)chkOpenDateReset.checked=isDateResetOpen;
 const chkOpenNoticeFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x4e\x6f\x74\x69\x63\x65\x46\x65\x61\x74\x75\x72\x65');
-const isNoticeSaved=localStorage.getItem('\x76\x32\x5f\x6e\x6f\x74\x69\x63\x65\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')!=='\x66\x61\x6c\x73\x65';
-const isNoticeOpen=isAdmin?isNoticeSaved:(hasNotice&&isNoticeSaved);
-if(chkOpenNoticeFeature){
-chkOpenNoticeFeature.checked=isNoticeOpen;
-}
+if(chkOpenNoticeFeature)chkOpenNoticeFeature.checked=isNoticeOpen;
 const chkOpenMultiFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x4d\x75\x6c\x74\x69\x46\x65\x61\x74\x75\x72\x65');
-const isMultiSaved=localStorage.getItem('\x76\x32\x5f\x6d\x75\x6c\x74\x69\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-const isMultiOpen=hasMulti||(isAdmin&&isLabActive&&isMultiSaved);
-if(chkOpenMultiFeature){
-chkOpenMultiFeature.checked=isMultiOpen;
-}
+if(chkOpenMultiFeature)chkOpenMultiFeature.checked=isMultiOpen;
 const chkAllowF12=document.getElementById('\x63\x68\x6b\x41\x6c\x6c\x6f\x77\x46\x31\x32');
-const isF12Saved=localStorage.getItem('\x76\x32\x5f\x61\x6c\x6c\x6f\x77\x46\x31\x32')==='\x74\x72\x75\x65';
-const isF12Open=hasF12||(isAdmin&&isF12Saved);
-if(chkAllowF12){
-chkAllowF12.checked=isF12Open;
-}
+if(chkAllowF12)chkAllowF12.checked=isF12Open;
 const chkOpenSoldOutFeature=document.getElementById('\x63\x68\x6b\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65');
-const isSoldOutSaved=localStorage.getItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
-const isSoldOutOpen=hasSoldOut||(isAdmin&&isLabActive&&isSoldOutSaved);
-if(chkOpenSoldOutFeature){
-chkOpenSoldOutFeature.checked=isSoldOutOpen;
-}
+if(chkOpenSoldOutFeature)chkOpenSoldOutFeature.checked=isSoldOutOpen;
 const btnReplace=document.getElementById('\x62\x74\x6e\x52\x65\x70\x6c\x61\x63\x65\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnFullEdit=document.getElementById('\x62\x74\x6e\x46\x75\x6c\x6c\x45\x64\x69\x74\x47\x6f\x6c\x66\x6d\x6f\x6e\x50\x6f\x73\x74\x73');
 const btnRegisterGolfmon=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x54\x6f\x47\x6f\x6c\x66\x6d\x6f\x6e');

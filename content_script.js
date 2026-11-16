@@ -871,62 +871,44 @@ async function _0x1017(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x34\ub2e8\uacc4\x3a '\uace8\ud504\uc7a5' \ub4dc\ub86d\ub2e4\uc6b4\x2f\uc120\ud0dd \ubaa8\ub2ec \ud638\ucd9c \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const existingDialog=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x5f\x5f\x69\x6e\x6e\x65\x72');
+const existingDialog=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x5f\x5f\x69\x6e\x6e\x65\x72, \x2e\x71-\x6d\x65\x6e\x75');
 if(existingDialog&&existingDialog.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub2e4\uc774\uc5bc\ub85c\uadf8\uac00 \uc774\ubbf8 \uc5f4\ub824\uc788\uc74c");
+console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub2e4\uc774\uc5bc\ub85c\uadf8\x2f\uba54\ub274\uac00 \uc774\ubbf8 \uc5f4\ub824\uc788\uc74c");
 return true;
+}
+const qFields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
+.filter(el=>el.offsetHeight>0);
+let golfField=qFields.find(f=>{
+const txt=(f.innerText||f.textContent||'').trim();
+return txt.includes('\uace8\ud504\uc7a5')||txt.includes('\uc120\ud0dd\ud558\uc138\uc694');
+});
+if(!golfField&&qFields.length>0){
+golfField=qFields[0];
+}
+if(golfField){
+const clickTarget=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x69, \x2e\x71-\x69\x63\x6f\x6e')||golfField;
+clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+await _0x1044(clickTarget);
+await _0x1004(350);
+const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]');
+if(dlg&&dlg.offsetHeight>0){
+console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\x2e\x71-\x66\x69\x65\x6c\x64 \ubb3c\ub9ac \ud074\ub9ad)");
+return true;
+}
 }
 const titleElements=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x6c\x61\x62\x65\x6c, \x70'))
 .filter(el=>{
 const txt=el.textContent.trim();
 return(txt==='\uace8\ud504\uc7a5\uc744 \uc120\ud0dd\ud558\uc138\uc694'||txt==='\uace8\ud504\uc7a5 \uc120\ud0dd'||txt.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd'))&&el.offsetHeight>0;
 });
-let targetEl=titleElements[0];
-if(targetEl){
-const rect=targetEl.getBoundingClientRect();
-const x=rect.left+20;
-const y=rect.bottom+25;
-const realInput=document.elementFromPoint(x,y)||targetEl;
-if(realInput){
-realInput.style.setProperty('\x62\x6f\x72\x64\x65\x72','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-realInput.focus();
-realInput.click();
-['\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e','\x6d\x6f\x75\x73\x65\x75\x70','\x63\x6c\x69\x63\x6b'].forEach(type=>{
-realInput.dispatchEvent(new MouseEvent(type,{bubbles:true,clientX:x,clientY:y}));
-});
-try{realInput.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x6e\x74\x65\x72',bubbles:true}));}catch(e){}
+for(const targetEl of titleElements){
+const fieldParent=targetEl.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74')||targetEl.parentElement;
+const clickEl=fieldParent?.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69')||targetEl;
+await _0x1044(clickEl);
 await _0x1004(350);
-const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75');
+const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]');
 if(dlg&&dlg.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5");
-return true;
-}
-}
-}
-const courseHeaders=Array.from(document.querySelectorAll('\x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e'))
-.filter(el=>el.offsetHeight>0&&/^(?:골프장\s*선택|골프장)$/.test(el.textContent.trim()));
-for(const ch of courseHeaders){
-const parentField=ch.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x64\x69\x76\x2e\x72\x6f\x77, \x64\x69\x76\x2e\x63\x6f\x6c')||ch.parentElement;
-if(parentField){
-const clickable=parentField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x69\x6e\x70\x75\x74, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x69\x74\x65\x6d')||parentField;
-clickable.click();
-await _0x1004(300);
-const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75');
-if(dlg&&dlg.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \uae30\uc874 \uc120\ud0dd \ud544\ub4dc \ud074\ub9ad\uc744 \ud1b5\ud55c \uace8\ud504\uc7a5 \ub2e4\uc774\uc5bc\ub85c\uadf8 \ud638\ucd9c \uc131\uacf5");
-return true;
-}
-}
-}
-const allFields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c'))
-.filter(f=>f.offsetHeight>0)
-.sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top);
-if(allFields.length>=2){
-allFields[0].click();
-await _0x1004(300);
-const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75');
-if(dlg&&dlg.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \ud3fc \uc0c1\ub2e8 \ud544\ub4dc \ud074\ub9ad\uc744 \ud1b5\ud55c \uace8\ud504\uc7a5 \ub2e4\uc774\uc5bc\ub85c\uadf8 \ud638\ucd9c \uc131\uacf5");
+console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\ud14d\uc2a4\ud2b8 \uc694\uc18c \ud074\ub9ad)");
 return true;
 }
 }
@@ -1109,24 +1091,17 @@ targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6
 targetRow.scrollIntoView({block:"\x63\x65\x6e\x74\x65\x72",behavior:"\x69\x6e\x73\x74\x61\x6e\x74"});
 await _0x1004(100);
 const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"], \x2e\x71-\x72\x61\x64\x69\x6f\x5f\x5f\x69\x6e\x6e\x65\x72');
-const clickTarget=radio||targetRow;
-const rect=clickTarget.getBoundingClientRect();
-const x=rect.left+rect.width/2;
-const y=rect.top+rect.height/2;
-const opts={bubbles:true,cancelable:true,view:window,clientX:x,clientY:y,buttons:1};
-clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x65\x6e\x74\x65\x72',opts));
-clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x6f\x76\x65\x72',opts));
-clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
-clickTarget.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
-clickTarget.click();
-if(radio&&radio!==clickTarget){
-radio.click();
+const label=targetRow.querySelector('\x2e\x71-\x69\x74\x65\x6d\x5f\x5f\x6c\x61\x62\x65\x6c, [\x63\x6c\x61\x73\x73*="\x6c\x61\x62\x65\x6c"], \x73\x70\x61\x6e')||foundEl;
+if(radio){
+await _0x1044(radio);
+await _0x1004(80);
 }
-if(targetRow!==clickTarget){
-targetRow.click();
+if(label&&label!==targetRow){
+await _0x1044(label);
+await _0x1004(80);
 }
-targetRow.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\x45\x6e\x74\x65\x72',bubbles:true}));
-await _0x1004(350);
+await _0x1044(targetRow);
+await _0x1004(250);
 return true;
 }
 async function _0x101b(targetText,maxAttempts=15){
@@ -1766,6 +1741,10 @@ async function _0x1028(maxAttempts=15,expectedCourse=null){
 console.log("[\ub9e4\ud06c\ub85c] \x31\x33\ub2e8\uacc4\x3a '\ub4f1\ub85d\ud558\uae30' \ubc84\ud2bc \ud0d0\uc0c9 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
 if(expectedCourse){
 const currentCourseOnForm=_0x1027();
+if(!currentCourseOnForm){
+console.error(`\u274c [\uc624\ub4f1\ub85d \uae34\uae09 \ucc28\ub2e8] \ud3fc\uc5d0 \uad6c\uc7a5\uba85\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4! \ube48 \uad6c\uc7a5 \ub4f1\ub85d \ubc29\uc9c0\ub97c \uc704\ud574 \ub4f1\ub85d\ud558\uae30 \ucc28\ub2e8.`);
+return false;
+}
 if(currentCourseOnForm){
 const normExpected=_0x1043(expectedCourse);
 const normForm=_0x1043(currentCourseOnForm);
@@ -4811,9 +4790,18 @@ await _0x1017();
 if(shouldStopRegistration)return false;
 await _0x1004(_0x1008('\x62\x72\x6f\x77\x73\x65\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e',stepPreset));
 if(shouldStopRegistration)return false;
-const courseSelected=await _0x101b(item.golf);
+let courseSelected=await _0x101b(item.golf);
 if(shouldStopRegistration)return false;
-if(!courseSelected){
+let currentSelected=_0x1027();
+if(!currentSelected){
+console.warn(`[\uace8\ud504\uc7a5 \uc120\ud0dd \ubcf4\uc815] \ud3fc\uc5d0 \uad6c\uc7a5(${item.golf}) \ubbf8\ubc18\uc601 \uac10\uc9c0 -> 2\ucc28 \uc7ac\uc120\ud0dd \uc2dc\ub3c4...`);
+await _0x1017();
+await _0x1004(300);
+courseSelected=await _0x101b(item.golf);
+await _0x1004(300);
+currentSelected=_0x1027();
+}
+if(!courseSelected&&!currentSelected){
 console.error(`[\uc624\ub4f1\ub85d \ucc28\ub2e8] \uace8\ud504\uc7a5(${item.golf}) \uc120\ud0dd \uc2e4\ud328! \ud0c0 \uad6c\uc7a5 \uc624\ub4f1\ub85d \ubc29\uc9c0\ub97c \uc704\ud574 [${item.golf}] \uc2e0\uaddc \ub4f1\ub85d \uc911\ub2e8`);
 await executeSingleBack();
 return false;
