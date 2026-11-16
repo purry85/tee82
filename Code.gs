@@ -32,6 +32,51 @@ function handleAuth(e) {
       return createJsonResponse({ success: true, message: 'pong' });
     }
 
+    // 1-1. 최신 배포 버전 및 업데이트 내용 조회/발행 (action: 'get_release' / 'publish_release')
+    if (action === 'get_release') {
+      const props = PropertiesService.getScriptProperties();
+      const relVer = props.getProperty('LATEST_RELEASE_VER') || '';
+      const relTitle = props.getProperty('LATEST_RELEASE_TITLE') || '';
+      const relNotes = props.getProperty('LATEST_RELEASE_NOTES') || '';
+      const relDate = props.getProperty('LATEST_RELEASE_DATE') || '';
+      if (relVer) {
+        return createJsonResponse({
+          success: true,
+          version: relVer,
+          title: relTitle || ('v' + relVer + ' 주요 기능 개선'),
+          releaseNotes: relNotes.split(/\r?\n/).filter(Boolean),
+          notes: relNotes,
+          releaseDate: relDate
+        });
+      }
+      return createJsonResponse({ success: false, message: '등록된 배포 정보가 없습니다.' });
+    }
+
+    if (action === 'publish_release') {
+      const relVer = String(data.version || params.version || '').trim();
+      const relTitle = String(data.title || params.title || '').trim();
+      const relNotes = String(data.notes || data.releaseNotes || params.notes || '').trim();
+      const nowStr = Utilities.formatDate(new Date(), "GMT+9", "yyyy-MM-dd HH:mm:ss");
+      if (relVer) {
+        const props = PropertiesService.getScriptProperties();
+        props.setProperties({
+          'LATEST_RELEASE_VER': relVer,
+          'LATEST_RELEASE_TITLE': relTitle || ('v' + relVer + ' 주요 기능 개선'),
+          'LATEST_RELEASE_NOTES': relNotes,
+          'LATEST_RELEASE_DATE': nowStr
+        });
+        return createJsonResponse({
+          success: true,
+          version: relVer,
+          title: relTitle,
+          notes: relNotes,
+          publishedAt: nowStr,
+          message: '최신 버전 배포 정보가 서버에 저장되었습니다.'
+        });
+      }
+      return createJsonResponse({ success: false, message: '버전 번호가 누락되었습니다.' });
+    }
+
     // ====================================================
     // 1-2. 애니데스크 원격 지원 요청 처리 (action: 'remote_support_request' or 'anydesk')
     // 웹 다운로드 페이지에서 회원이 보낸 성함 및 애니데스크 9자리 번호를
@@ -665,6 +710,21 @@ function handleAuth(e) {
         SpreadsheetApp.flush(); // 즉시 구글 스프레드시트에 영구 저장 강제
 
         const expStr = Utilities.formatDate(expDate, "GMT+9", "yyyy-MM-dd");
+        let latestRelease = null;
+        try {
+          const props = PropertiesService.getScriptProperties();
+          const relVer = props.getProperty('LATEST_RELEASE_VER') || '';
+          if (relVer) {
+            const relTitle = props.getProperty('LATEST_RELEASE_TITLE') || ('v' + relVer + ' 주요 기능 개선');
+            const relNotes = props.getProperty('LATEST_RELEASE_NOTES') || '';
+            latestRelease = {
+              version: relVer,
+              title: relTitle,
+              releaseNotes: relNotes.split(/\r?\n/).filter(Boolean),
+              notes: relNotes
+            };
+          }
+        } catch(e) {}
         return createJsonResponse({
           success: true,
           id: id,
@@ -676,6 +736,7 @@ function handleAuth(e) {
           features: rowFeatures,
           sites: rowSites,
           sessionToken: sessionToken,
+          latestRelease: latestRelease,
           message: '인증 성공! ' + daysLeft + '일 남았습니다.'
         });
       }
