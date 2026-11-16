@@ -1,13 +1,13 @@
 {
-  "version": "2.4.0",
-  "releaseDate": "2026-11-16",
-  "title": "v2.4.0 주요 기능 개선",
-  "releaseNotes": [
-    "- 구장 매칭 문제 오류 수정",
-    "- 공지 등록 예제 추가",
-    "- 마감 삭제 기능 추가 - 골프탑,골프몬,골마켓 가능",
-    "- 회원별 고유 시드 분산 + 기존 등록 타임 최우선 유지(스마트수정 최적화)"
-  ],
-  "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
-  "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
+    "version":  "2.4.0",
+    "releaseDate":  "2026-11-16",
+    "title":  "v2.4.0 주요 기능 개선",
+    "releaseNotes":  [
+                         "- 구장 매칭 문제 오류 수정",
+                         "- 공지 등록 예제 추가",
+                         "- 마감 삭제 기능 추가 - 골프탑,골프몬,골마켓 가능",
+                         "- 회원별 고유 시드 분산 + 기존 등록 타임 최우선 유지(스마트수정 최적화)"
+                     ],
+    "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
+    "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
 }
