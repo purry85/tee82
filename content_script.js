@@ -4799,7 +4799,9 @@ const tB=(b.time||'').replace(/[^\d]/g,'');
 return(parseInt(tA,10)||0)-(parseInt(tB,10)||0);
 });
 console.log(`\n================== [${logTag}] ${group.golf} (${group.date}) \uadf8\ub8f9 \ucc98\ub9ac \uc2dc\uc791 (\uc0c8 \ud0c0\uc784 ${group.items.length}\uac74) ==================`);
-const groupCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':((group.roomType==='\uc870\uc778')?'\uc870\uc778':(filterType==='\uc591\ub3c4'?'\uc591\ub3c4':'\uc870\uc778'));
+const groupCategory=(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778')
+?filterType
+:(group.roomType==='\uc591\ub3c4'?'\uc591\ub3c4':'\uc870\uc778');
 const courseTrackKey=`${group.date}_${group.golf}`;
 if(!updatedNewTimesByCourse.has(courseTrackKey))updatedNewTimesByCourse.set(courseTrackKey,new Set());
 if(!processedOldTimesByCourse.has(courseTrackKey))processedOldTimesByCourse.set(courseTrackKey,new Set());
