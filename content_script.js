@@ -871,9 +871,10 @@ async function _0x1017(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x34\ub2e8\uacc4\x3a '\uace8\ud504\uc7a5' \ub4dc\ub86d\ub2e4\uc6b4\x2f\uc120\ud0dd \ubaa8\ub2ec \ud638\ucd9c \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const existingDialog=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x5f\x5f\x69\x6e\x6e\x65\x72, \x2e\x71-\x6d\x65\x6e\x75');
-if(existingDialog&&existingDialog.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub2e4\uc774\uc5bc\ub85c\uadf8\x2f\uba54\ub274\uac00 \uc774\ubbf8 \uc5f4\ub824\uc788\uc74c");
+const visibleItems=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
+.filter(el=>el.offsetHeight>0);
+if(visibleItems.length>0){
+console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4\uc774 \uc774\ubbf8 \uc5f4\ub824\uc788\uc74c (\uc635\uc158 ${visibleItems.length}\uac1c \ubc1c\uacac)`);
 return true;
 }
 const qFields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
@@ -886,13 +887,25 @@ if(!golfField&&qFields.length>0){
 golfField=qFields[0];
 }
 if(golfField){
-const clickTarget=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x69, \x2e\x71-\x69\x63\x6f\x6e')||golfField;
+const control=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c')||golfField;
+const append=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69, \x2e\x71-\x69\x63\x6f\x6e');
+const native=golfField.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x69\x6e\x70\x75\x74');
+const clickTarget=append||control;
 clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1045(clickTarget);
+try{clickTarget.click();}catch(e){}
+if(control&&control!==clickTarget){
+try{control.click();}catch(e){}
+}
+if(native&&native!==clickTarget){
+try{native.click();}catch(e){}
+try{native.focus();}catch(e){}
+}
 await _0x1004(350);
-const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]');
-if(dlg&&dlg.offsetHeight>0){
-console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\x2e\x71-\x66\x69\x65\x6c\x64 \ubb3c\ub9ac \ud074\ub9ad)");
+const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
+.filter(el=>el.offsetHeight>0);
+if(opened.length>0){
+console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (.q-field \ubb3c\ub9ac \ud074\ub9ad, \uc635\uc158 ${opened.length}\uac1c)`);
 return true;
 }
 }
@@ -905,9 +918,11 @@ for(const targetEl of titleElements){
 const fieldParent=targetEl.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74')||targetEl.parentElement;
 const clickEl=fieldParent?.querySelector('\x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64, \x69')||targetEl;
 await _0x1045(clickEl);
+try{clickEl.click();}catch(e){}
 await _0x1004(350);
-const dlg=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]');
-if(dlg&&dlg.offsetHeight>0){
+const opened=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))
+.filter(el=>el.offsetHeight>0);
+if(opened.length>0){
 console.log("[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4 \uc5f4\uae30 \uc131\uacf5 (\ud14d\uc2a4\ud2b8 \uc694\uc18c \ud074\ub9ad)");
 return true;
 }
@@ -1199,8 +1214,14 @@ console.log(`[\ub9e4\ud06c\ub85c] 5\ub2e8\uacc4: \uace8\ud504\uc7a5(${targetText
 let dialogEl=null;
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-dialogEl=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x64\x69\x61\x6c\x6f\x67\x5f\x5f\x69\x6e\x6e\x65\x72, \x2e\x71-\x6d\x65\x6e\x75');
-if(dialogEl||document.querySelector('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]'))break;
+const candidates=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x76\x69\x72\x74\x75\x61\x6c-\x73\x63\x72\x6f\x6c\x6c\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74'))
+.filter(el=>el.offsetHeight>0);
+const hasOptions=candidates.find(c=>c.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0);
+if(hasOptions){
+dialogEl=hasOptions;
+break;
+}
+if(document.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0)break;
 await _0x1004(150);
 }
 const searchScope=dialogEl||document.body;
@@ -1803,25 +1824,16 @@ console.warn("[\ub9e4\ud06c\ub85c] \uc5d0\ub514\ud130\ub97c \ucc3e\uc9c0 \ubabb\
 return false;
 }
 function _0x1027(){
-const courseLabels=Array.from(document.querySelectorAll('\x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70'))
-.filter(el=>{
-const txt=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return(txt==='\uace8\ud504\uc7a5'||txt==='\uace8\ud504\uc7a5\uc120\ud0dd')&&el.offsetHeight>0;
-});
-for(const cl of courseLabels){
-const parent=cl.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x64\x69\x76\x2e\x72\x6f\x77, \x64\x69\x76\x2e\x63\x6f\x6c, \x64\x69\x76')||cl.parentElement;
-if(parent){
-const val=(parent.innerText||parent.textContent||'').replace(/골프장|선택|필수/g,'').trim();
-if(val)return val;
-}
-}
-const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64'))
+const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x73\x65\x6c\x65\x63\x74'))
 .filter(el=>el.offsetHeight>0);
 for(const f of fields){
 const fTxt=(f.innerText||f.textContent||'').trim();
-if(fTxt&&!/날짜|시간|그린피|캐디|식사|인원|조건|메모|내용/.test(fTxt)){
+if(!fTxt||fTxt.includes('\uc120\ud0dd\ud558\uc138\uc694')||fTxt==='\uace8\ud504\uc7a5'||fTxt.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd'))continue;
+if(/날짜|시간|그린피|캐디|식사|인원|조건|메모|내용/.test(fTxt))continue;
 const norm=_0x1044(fTxt);
 if(norm&&norm.length>=2)return fTxt;
+if(/남양주|보령|더반|빅토리아|링크나인|한림|스프링|글렌로스|동서울|참밸리|코브스윙|모카|세일|아세코|화성|신안|파주|임페리얼|로얄포레|떼제베|대영베이스|올데이|플라밍고/.test(fTxt)){
+return fTxt;
 }
 }
 return'';
@@ -5093,7 +5105,7 @@ total:items.length
 const courseGroups={};
 for(const it of items){
 const itemCat=(it.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
-const key=`${it.date}_${it.golf}_${itemCat}`;
+const key=`${it.date}_${it.golf}`;
 if(!courseGroups[key]){
 courseGroups[key]={
 date:it.date,
@@ -5117,7 +5129,9 @@ const tB=(b.time||'').replace(/[^\d]/g,'');
 return(parseInt(tA,10)||0)-(parseInt(tB,10)||0);
 });
 console.log(`\n================== [${logTag}] ${group.golf} (${group.date}) \uadf8\ub8f9 \ucc98\ub9ac \uc2dc\uc791 (\uc0c8 \ud0c0\uc784 ${group.items.length}\uac74) ==================`);
-const groupCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':((group.roomType==='\uc870\uc778')?'\uc870\uc778':(filterType==='\uc591\ub3c4'?'\uc591\ub3c4':'\uc870\uc778'));
+const hasJoin=group.items.some(it=>it.roomType==='\uc870\uc778');
+const hasTransfer=group.items.some(it=>it.roomType==='\uc591\ub3c4');
+const groupCategory=(hasJoin&&hasTransfer)?'\uc804\uccb4':(hasTransfer?'\uc591\ub3c4':(hasJoin?'\uc870\uc778':(filterType||'\uc804\uccb4')));
 const courseTrackKey=`${group.date}_${group.golf}`;
 if(!updatedNewTimesByCourse.has(courseTrackKey))updatedNewTimesByCourse.set(courseTrackKey,new Set());
 if(!processedOldTimesByCourse.has(courseTrackKey))processedOldTimesByCourse.set(courseTrackKey,new Set());
@@ -5563,15 +5577,18 @@ await _0x1004(300);
 }else if(action==='\x6d\x6f\x64\x69\x66\x79'){
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 const itemTargetDate=item.date||group.date;
-const itemTargetCategory=(item.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':((item.roomType==='\uc870\uc778')?'\uc870\uc778':groupCategory);
+const cardCat=(targetCard&&targetCard.postType&&targetCard.postType!=='\x75\x6e\x6b\x6e\x6f\x77\x6e')
+?targetCard.postType
+:((targetCard&&targetCard.rawTxt&&targetCard.rawTxt.includes('\uc591\ub3c4'))?'\uc591\ub3c4':((targetCard&&targetCard.rawTxt&&targetCard.rawTxt.includes('\uc870\uc778'))?'\uc870\uc778':groupCategory));
+const modifySearchCategory=(groupCategory==='\uc804\uccb4')?'\uc804\uccb4':cardCat;
 const itemTargetRegion=item.region||group.region;
-console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard.timeStr}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate})...`);
+console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard?.timeStr||''}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate}, \uac80\uc0c9 \uce74\ud14c\uace0\ub9ac: [${modifySearchCategory}])...`);
 if(isEditPage()||isDetailPage()||!_0x1031()||_0x1030()||_0x102f()){
-await navigateBackToList(itemTargetCategory);
+await navigateBackToList(modifySearchCategory);
 await _0x1004(250);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
-await _0x1043(itemTargetCategory);
+await _0x1043(modifySearchCategory);
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(itemTargetDate){
 await _0x1040(itemTargetDate);
@@ -5596,8 +5613,8 @@ if(Math.abs(b.topY-a.topY)>25)return b.topY-a.topY;
 return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<12;retry++){
-let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
-if(liveCards.length===0&&itemTargetCategory!=='\uc804\uccb4'){
+let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,modifySearchCategory,itemTargetDate);
+if(liveCards.length===0&&modifySearchCategory!=='\uc804\uccb4'){
 liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',itemTargetDate);
 }
 if(liveCards.length===0&&retry===2){
@@ -5608,7 +5625,7 @@ await _0x1004(250);
 liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',itemTargetDate);
 if(liveCards.length===0){
 await _0x1041(itemTargetRegion);
-await _0x1043(itemTargetCategory);
+await _0x1043(modifySearchCategory);
 await _0x1004(200);
 }
 }
@@ -5740,8 +5757,8 @@ if((detectedPostId&&processedPostIds.has(detectedPostId))||
 (/\/(?:detail|item)\/\d+/.test(curUrl)&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
-await navigateBackToList(itemTargetCategory);
-await _0x1043(itemTargetCategory);
+await navigateBackToList(modifySearchCategory);
+await _0x1043(modifySearchCategory);
 if(itemTargetDate)await _0x1040(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
 await _0x1041(itemTargetRegion);
@@ -5749,7 +5766,7 @@ await _0x1041(itemTargetRegion);
 await _0x1041('\uc804\uccb4');
 }
 await _0x1004(350);
-const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
+const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,modifySearchCategory,itemTargetDate);
 const sortedBottomCards=[...retryCards]
 .filter(c=>c.el!==targetCardEl&&!_replacedCardsSet.has(c.el)&&(!c.postId||!processedPostIds.has(c.postId)))
 .sort(compareReverseScreenOrder);
