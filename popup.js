@@ -7153,23 +7153,29 @@ tr.remove();
 });
 }
 const remainingExistingTrs=Array.from(tbody.querySelectorAll('\x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const existingMap=new Map();
+remainingExistingTrs.forEach(oldTr=>{
+const c=oldTr.querySelectorAll('\x74\x64');
+const oDate=(c[0]?.textContent||oldTr.dataset.date||'').trim();
+const oGolf=(c[2]?.textContent||oldTr.dataset.golf||'').trim();
+const oTime=(c[3]?.textContent||oldTr.dataset.time||'').trim();
+const oRoomType=(oldTr.dataset.roomType==='\uc591\ub3c4'||(c[4]?.textContent||'').includes('\uc591\ub3c4'))?'\uc591\ub3c4':'\uc870\uc778';
+const key=`${oDate}|${oGolf}|${oTime}|${oRoomType}`;
+existingMap.set(key,oldTr);
+});
 newItems.forEach(item=>{
 if(!item||!item.tr)return;
 const newDate=(item.date||'').trim();
 const newGolf=(item.golf||'').trim();
 const newTime=(item.time||'').trim();
 const newRoomType=(item.roomType==='\uc591\ub3c4'||item.tr?.dataset.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
-const dupIdx=remainingExistingTrs.findIndex(oldTr=>{
-const c=oldTr.querySelectorAll('\x74\x64');
-const oDate=(c[0]?.textContent||oldTr.dataset.date||'').trim();
-const oGolf=(c[2]?.textContent||oldTr.dataset.golf||'').trim();
-const oTime=(c[3]?.textContent||oldTr.dataset.time||'').trim();
-const oRoomType=(oldTr.dataset.roomType==='\uc591\ub3c4'||(c[4]?.textContent||'').includes('\uc591\ub3c4'))?'\uc591\ub3c4':'\uc870\uc778';
-return(oDate===newDate&&oGolf===newGolf&&oTime===newTime&&oRoomType===newRoomType);
-});
-if(dupIdx>=0){
-remainingExistingTrs[dupIdx].remove();
-remainingExistingTrs.splice(dupIdx,1);
+const key=`${newDate}|${newGolf}|${newTime}|${newRoomType}`;
+const oldTr=existingMap.get(key);
+if(oldTr){
+oldTr.remove();
+existingMap.delete(key);
+const remIdx=remainingExistingTrs.indexOf(oldTr);
+if(remIdx>=0)remainingExistingTrs.splice(remIdx,1);
 }
 });
 const newTrs=newItems.map(it=>it.tr).filter(Boolean);
@@ -7238,22 +7244,10 @@ return parsed;
 let isCardDragging=false;
 let dragTargetState=false;
 let lastHoveredIndex=null;
-function renderCardList(){
-const cardContainer=document.getElementById('\x63\x61\x72\x64\x4c\x69\x73\x74');
-if(!cardContainer)return;
-cardContainer.innerHTML='';
-const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
-if(trs.length===0){
-cardContainer.innerHTML=`
-            <div class="empty-state">
-                <div class="empty-title">\ubcc0\ud658\ub41c \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</div>
-                <div class="empty-desc">\uc704 \uc785\ub825\ucc3d\uc5d0 \ud2f0\ud0c0\uc784\uc744 \ubd99\uc5ec\ub123\uace0<br>[\uc870\uc778\uc6a9 \uc6d0\ud074\ub9ad]\uc744 \uc2e4\ud589\ud574\uc8fc\uc138\uc694.</div>
-            </div>`;
-updateSelectedBadge();
-return;
-}
-const fragment=document.createDocumentFragment();
-trs.forEach((tr,idx)=>{
+let visibleCardLimit=100;
+const INITIAL_CARD_CHUNK=100;
+const SCROLL_CARD_CHUNK=80;
+function createCardElement(tr,idx,trs){
 const cells=tr.querySelectorAll('\x74\x64');
 const date=cells[0]?.textContent||'';
 const region=cells[1]?.textContent||'';
@@ -7393,49 +7387,49 @@ waitGenderTagHtml=`<span class="card-tag pax-gender" style="background:#F3F4F6; 
 const isConfirmedCard=typeof isConfirmedTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isConfirmedTr(tr);
 const isDaegiCard=typeof isDaegiTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isDaegiTr(tr);
 card.innerHTML=`
-            <div class="card-check">
-                <input type="checkbox" ${isSelected?'\x63\x68\x65\x63\x6b\x65\x64':''} tabindex="-1">
-            </div>
-            <div class="card-main">
-                <div class="card-row-top">
-                    <div class="card-title-group">
-                        <span class="card-golf">${golf}</span>
-                        ${isTransferCard
+        <div class="card-check">
+            <input type="checkbox" ${isSelected?'\x63\x68\x65\x63\x6b\x65\x64':''} tabindex="-1">
+        </div>
+        <div class="card-main">
+            <div class="card-row-top">
+                <div class="card-title-group">
+                    <span class="card-golf">${golf}</span>
+                    ${isTransferCard
 ?`<span class="card-room-badge transfer" title="\uc591\ub3c4 \ud0c0\uc784 (4\uc778)">\uc591\ub3c4</span>`
 :`<span class="card-room-badge join" title="\uc870\uc778 \ud0c0\uc784 (${sizenum||'\uc870\uc778'})">\uc870\uc778</span>`
 }
-                        ${date?`<span class="card-date">${date}</span>`:''}
-                        ${!isMapped?`<span class="card-tag unmapped-tag" title="\ub9e4\ud551\uc0ac\uc804\uc5d0 \ubbf8\ub4f1\ub85d\ub41c \uad6c\uc7a5 (\uc790\ub3d9\uc120\ud0dd \uc81c\uc678)">\u26a0\ufe0f \ubbf8\ub4f1\ub85d</span>`:''}
-                    </div>
-                    <div class="card-meta-group">
-                        ${region?`<span class="card-region" style="background:${regionBg}; color:${regionColor};">${region}</span>`:''}
-                        <span class="card-source-badge ${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\x73\x6f\x75\x72\x63\x65-\x74\x6f\x70':'\x73\x6f\x75\x72\x63\x65-\x72\x6f\x63\x6b'}" data-index="${idx}" title="${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1 \ub370\uc774\ud130 (\ud074\ub9ad \uc2dc \ub77d\x2f\ud0d1 \ubcc0\uacbd)':'\uace8\ud504\ub77d \ub370\uc774\ud130 (\ud074\ub9ad \uc2dc \ub77d\x2f\ud0d1 \ubcc0\uacbd)'}">${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\ud0d1':'\ub77d'}</span>
-                        <span class="card-time ${isSeonti?'\x69\x73-\x73\x65\x6f\x6e\x74\x69':''}" title="${isSeonti?'\uc120\ud2f0 (\ud655\uc815\uae08\uc561)':''}">${time}</span>
-                    </div>
+                    ${date?`<span class="card-date">${date}</span>`:''}
+                    ${!isMapped?`<span class="card-tag unmapped-tag" title="\ub9e4\ud551\uc0ac\uc804\uc5d0 \ubbf8\ub4f1\ub85d\ub41c \uad6c\uc7a5 (\uc790\ub3d9\uc120\ud0dd \uc81c\uc678)">\u26a0\ufe0f \ubbf8\ub4f1\ub85d</span>`:''}
                 </div>
-                <div class="card-row-bottom">
-                    <span class="card-fee">${feeCardHtml}</span>
-                    <label class="card-seonti-pill ${isSeonti?'\x61\x63\x74\x69\x76\x65':''}" data-index="${idx}" title="${isSeonti?'\uc120\ud2f0\ubc29\uc73c\ub85c \uc9c0\uc815\ub428 (\uccb4\ud06c \ud574\uc81c \uc2dc \uc77c\ubc18 \ud0c0\uc784 \ubcf5\uad6c)':'\uccb4\ud06c \uc2dc \uc120\ud2f0\ubc29\uc73c\ub85c \uac15\uc81c \uc778\uc2dd (\uacf5\uc9c0\x2f\ud2b9\uc815\uad6c\uc7a5 \ud560\uc778 \uc81c\uc678)'}">
-                        <input type="checkbox" class="chk-seonti" ${isSeonti?'\x63\x68\x65\x63\x6b\x65\x64':''}>
-                        <span>${isSeonti?(isTransferCard?'\uc120\ud2f0':'\uc120\ud2f0\ubc29'):'\uc120\ud2f0'}</span>
-                    </label>
-                    ${noticeTagHtml}
-                    ${courseAdjTagHtml}
-                    ${priceDropTagHtml}
-                    ${cady?`<span class="card-tag">\ud83c\udfcc\ufe0f ${cady}</span>`:''}
-                    ${isMeal?`<span class="card-tag meal" title="\uc2dd\uc0ac\ud3ec\ud568">\ud83c\udf5a \uc2dd\uc0ac\ud3ec\ud568</span>`:''}
-                    ${condition?`<span class="card-tag">\u26f3 ${condition}</span>`:''}
-                    ${isConfirmedCard?`<span class="card-tag confirmed-tag" style="background:#EEF2FF; color:#4338CA; border:1px solid #C7D2FE; font-weight:700;" title="\ud655\uc815 \ud0c0\uc784 (\ucd5c\uc6b0\uc120 \uc120\ud0dd)">\ud83d\udccc \ud655\uc815</span>`:''}
-                    ${isDaegiCard&&!waitGenderTagHtml.includes('\ub300\uae30\x3a')?`<span class="card-tag daegi-tag" style="background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; font-weight:700;" title="\ub300\uae30 \ud0c0\uc784 (\ucd5c\uc6b0\uc120 \uc120\ud0dd)">\u23f3 \ub300\uae30</span>`:''}
-                    ${roomType&&roomType!=='\ubbf8\ud45c\uc2dc'&&!roomType.includes('\uc120\ud2f0')?`<span class="card-tag room">${roomType}</span>`:''}
-                    ${waitGenderTagHtml}
-                    ${sizenum?`<span class="card-tag pax">\ud83d\udc65 ${sizenum}</span>`:''}
+                <div class="card-meta-group">
+                    ${region?`<span class="card-region" style="background:${regionBg}; color:${regionColor};">${region}</span>`:''}
+                    <span class="card-source-badge ${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\x73\x6f\x75\x72\x63\x65-\x74\x6f\x70':'\x73\x6f\x75\x72\x63\x65-\x72\x6f\x63\x6b'}" data-index="${idx}" title="${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1 \ub370\uc774\ud130 (\ud074\ub9ad \uc2dc \ub77d\x2f\ud0d1 \ubcc0\uacbd)':'\uace8\ud504\ub77d \ub370\uc774\ud130 (\ud074\ub9ad \uc2dc \ub77d\x2f\ud0d1 \ubcc0\uacbd)'}">${source==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\ud0d1':'\ub77d'}</span>
+                    <span class="card-time ${isSeonti?'\x69\x73-\x73\x65\x6f\x6e\x74\x69':''}" title="${isSeonti?'\uc120\ud2f0 (\ud655\uc815\uae08\uc561)':''}">${time}</span>
                 </div>
             </div>
-            <div class="card-right-actions">
-                <button class="card-del-btn" title="\uc0ad\uc81c">&times;</button>
+            <div class="card-row-bottom">
+                <span class="card-fee">${feeCardHtml}</span>
+                <label class="card-seonti-pill ${isSeonti?'\x61\x63\x74\x69\x76\x65':''}" data-index="${idx}" title="${isSeonti?'\uc120\ud2f0\ubc29\uc73c\ub85c \uc9c0\uc815\ub428 (\uccb4\ud06c \ud574\uc81c \uc2dc \uc77c\ubc18 \ud0c0\uc784 \ubcf5\uad6c)':'\uccb4\ud06c \uc2dc \uc120\ud2f0\ubc29\uc73c\ub85c \uac15\uc81c \uc778\uc2dd (\uacf5\uc9c0\x2f\ud2b9\uc815\uad6c\uc7a5 \ud560\uc778 \uc81c\uc678)'}">
+                    <input type="checkbox" class="chk-seonti" ${isSeonti?'\x63\x68\x65\x63\x6b\x65\x64':''}>
+                    <span>${isSeonti?(isTransferCard?'\uc120\ud2f0':'\uc120\ud2f0\ubc29'):'\uc120\ud2f0'}</span>
+                </label>
+                ${noticeTagHtml}
+                ${courseAdjTagHtml}
+                ${priceDropTagHtml}
+                ${cady?`<span class="card-tag">\ud83c\udfcc\ufe0f ${cady}</span>`:''}
+                ${isMeal?`<span class="card-tag meal" title="\uc2dd\uc0ac\ud3ec\ud568">\ud83c\udf5a \uc2dd\uc0ac\ud3ec\ud568</span>`:''}
+                ${condition?`<span class="card-tag">\u26f3 ${condition}</span>`:''}
+                ${isConfirmedCard?`<span class="card-tag confirmed-tag" style="background:#EEF2FF; color:#4338CA; border:1px solid #C7D2FE; font-weight:700;" title="\ud655\uc815 \ud0c0\uc784 (\ucd5c\uc6b0\uc120 \uc120\ud0dd)">\ud83d\udccc \ud655\uc815</span>`:''}
+                ${isDaegiCard&&!waitGenderTagHtml.includes('\ub300\uae30\x3a')?`<span class="card-tag daegi-tag" style="background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; font-weight:700;" title="\ub300\uae30 \ud0c0\uc784 (\ucd5c\uc6b0\uc120 \uc120\ud0dd)">\u23f3 \ub300\uae30</span>`:''}
+                ${roomType&&roomType!=='\ubbf8\ud45c\uc2dc'&&!roomType.includes('\uc120\ud2f0')?`<span class="card-tag room">${roomType}</span>`:''}
+                ${waitGenderTagHtml}
+                ${sizenum?`<span class="card-tag pax">\ud83d\udc65 ${sizenum}</span>`:''}
             </div>
-        `;
+        </div>
+        <div class="card-right-actions">
+            <button class="card-del-btn" title="\uc0ad\uc81c">&times;</button>
+        </div>
+    `;
 function applySelection(targetState){
 card.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',targetState);
 const chk=card.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]');
@@ -7466,7 +7460,7 @@ e.preventDefault();
 const cur=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 const nextSource=(cur==='\x67\x6f\x6c\x66\x74\x6f\x70')?'\x67\x6f\x6c\x66\x72\x6f\x63\x6b':'\x67\x6f\x6c\x66\x74\x6f\x70';
 tr.dataset.source=nextSource;
-renderCardList();
+renderCardList(false);
 saveCurrentTableState();
 showToast(`\ucd9c\ucc98\uac00 [${nextSource==='\x67\x6f\x6c\x66\x74\x6f\x70'?'\uace8\ud504\ud0d1(\ud0d1)':'\uace8\ud504\ub77d(\ub77d)'}]\uc73c\ub85c \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 return;
@@ -7476,7 +7470,7 @@ if(mealTag){
 e.stopPropagation();
 const cur=tr.dataset.isMeal==='\x74\x72\x75\x65';
 tr.dataset.isMeal=(!cur).toString();
-renderCardList();
+renderCardList(false);
 saveCurrentTableState();
 showToast(!cur?'\ud83c\udf5a \uc2dd\uc0ac\ud3ec\ud568\uc73c\ub85c \uc9c0\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e':'\u26aa \uc2dd\uc0ac\ud3ec\ud568\uc774 \ud574\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 return;
@@ -7493,7 +7487,7 @@ tr.remove();
 card.remove();
 updateSelectedBadge();
 saveCurrentTableState();
-if(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72').length===0)renderCardList();
+if(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72').length===0)renderCardList(true);
 }
 });
 const seontiPill=card.querySelector('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c');
@@ -7507,9 +7501,77 @@ e.stopPropagation();
 toggleSeontiStatus(tr,chkSeonti.checked);
 });
 }
-fragment.appendChild(card);
+return card;
+}
+function loadMoreCards(){
+const cardContainer=document.getElementById('\x63\x61\x72\x64\x4c\x69\x73\x74');
+if(!cardContainer)return;
+const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+if(visibleCardLimit>=trs.length){
+const sentinel=document.getElementById('\x63\x61\x72\x64\x4c\x6f\x61\x64\x4d\x6f\x72\x65\x53\x65\x6e\x74\x69\x6e\x65\x6c');
+if(sentinel)sentinel.remove();
+return;
+}
+const prevLimit=visibleCardLimit;
+visibleCardLimit=Math.min(visibleCardLimit+SCROLL_CARD_CHUNK,trs.length);
+const nextBatch=trs.slice(prevLimit,visibleCardLimit);
+const fragment=document.createDocumentFragment();
+nextBatch.forEach((tr,i)=>{
+const idx=prevLimit+i;
+fragment.appendChild(createCardElement(tr,idx,trs));
 });
+const sentinel=document.getElementById('\x63\x61\x72\x64\x4c\x6f\x61\x64\x4d\x6f\x72\x65\x53\x65\x6e\x74\x69\x6e\x65\x6c');
+if(sentinel){
+cardContainer.insertBefore(fragment,sentinel);
+if(visibleCardLimit>=trs.length){
+sentinel.remove();
+}else{
+sentinel.innerHTML=`\u2b07\ufe0f \uc544\ub798\ub85c \uc2a4\ud06c\ub864\ud558\uc5ec \ub354\ubcf4\uae30 (\ud604\uc7ac ${visibleCardLimit.toLocaleString()}\uac1c / \ucd1d ${trs.length.toLocaleString()}\uac1c)`;
+}
+}else{
 cardContainer.appendChild(fragment);
+}
+}
+function renderCardList(resetLimit=true){
+const cardContainer=document.getElementById('\x63\x61\x72\x64\x4c\x69\x73\x74');
+if(!cardContainer)return;
+cardContainer.innerHTML='';
+const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+if(trs.length===0){
+cardContainer.innerHTML=`
+            <div class="empty-state">
+                <div class="empty-title">\ubcc0\ud658\ub41c \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</div>
+                <div class="empty-desc">\uc704 \uc785\ub825\ucc3d\uc5d0 \ud2f0\ud0c0\uc784\uc744 \ubd99\uc5ec\ub123\uace0<br>[\uc870\uc778\uc6a9 \uc6d0\ud074\ub9ad]\uc744 \uc2e4\ud589\ud574\uc8fc\uc138\uc694.</div>
+            </div>`;
+updateSelectedBadge();
+return;
+}
+if(resetLimit){
+visibleCardLimit=INITIAL_CARD_CHUNK;
+}
+const fragment=document.createDocumentFragment();
+const sliceTrs=trs.slice(0,visibleCardLimit);
+sliceTrs.forEach((tr,idx)=>{
+fragment.appendChild(createCardElement(tr,idx,trs));
+});
+if(trs.length>visibleCardLimit){
+const sentinel=document.createElement('\x64\x69\x76');
+sentinel.id='\x63\x61\x72\x64\x4c\x6f\x61\x64\x4d\x6f\x72\x65\x53\x65\x6e\x74\x69\x6e\x65\x6c';
+sentinel.className='\x63\x61\x72\x64-\x6c\x6f\x61\x64-\x6d\x6f\x72\x65-\x73\x65\x6e\x74\x69\x6e\x65\x6c';
+sentinel.style.cssText='\x74\x65\x78\x74-\x61\x6c\x69\x67\x6e\x3a\x63\x65\x6e\x74\x65\x72; \x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x30\x70\x78 \x36\x70\x78; \x63\x6f\x6c\x6f\x72\x3a\x23\x36\x42\x37\x32\x38\x30; \x66\x6f\x6e\x74-\x73\x69\x7a\x65\x3a\x31\x31\x70\x78; \x66\x6f\x6e\x74-\x77\x65\x69\x67\x68\x74\x3a\x36\x30\x30; \x63\x75\x72\x73\x6f\x72\x3a\x70\x6f\x69\x6e\x74\x65\x72; \x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x46\x38\x46\x41\x46\x43; \x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73\x3a\x36\x70\x78; \x6d\x61\x72\x67\x69\x6e\x3a\x38\x70\x78 \x30; \x62\x6f\x72\x64\x65\x72\x3a\x31\x70\x78 \x64\x61\x73\x68\x65\x64 \x23\x43\x42\x44\x35\x45\x31; \x74\x72\x61\x6e\x73\x69\x74\x69\x6f\x6e\x3a\x61\x6c\x6c \x30\x2e\x31\x35\x73;';
+sentinel.innerHTML=`\u2b07\ufe0f \uc544\ub798\ub85c \uc2a4\ud06c\ub864\ud558\uc5ec \ub354\ubcf4\uae30 (\ud604\uc7ac ${Math.min(visibleCardLimit,trs.length).toLocaleString()}\uac1c / \ucd1d ${trs.length.toLocaleString()}\uac1c)`;
+sentinel.addEventListener('\x63\x6c\x69\x63\x6b',()=>loadMoreCards());
+fragment.appendChild(sentinel);
+}
+cardContainer.appendChild(fragment);
+if(!cardContainer.__hasScrollListener){
+cardContainer.__hasScrollListener=true;
+cardContainer.addEventListener('\x73\x63\x72\x6f\x6c\x6c',()=>{
+if(cardContainer.scrollTop+cardContainer.clientHeight>=cardContainer.scrollHeight-250){
+loadMoreCards();
+}
+});
+}
 cardContainer.onmousemove=(e)=>{
 if(!isCardDragging)return;
 const hoveredCard=document.elementFromPoint(e.clientX,e.clientY)?.closest('\x2e\x74\x65\x65-\x63\x61\x72\x64');
@@ -9213,11 +9275,13 @@ showToast('\u26a0\ufe0f \uad6c\uc7a5\uba85\uc774 \uc5c6\uac70\ub098 \ubbf8\ub4f1
 function syncCardsSelection(){
 const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
 const cards=Array.from(document.querySelectorAll('\x23\x63\x61\x72\x64\x4c\x69\x73\x74 \x2e\x74\x65\x65-\x63\x61\x72\x64'));
-trs.forEach((tr,idx)=>{
+cards.forEach((card)=>{
+const idx=parseInt(card.dataset.index,10);
+const tr=trs[idx];
+if(tr){
 const isSel=tr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64');
-if(cards[idx]){
-cards[idx].classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',isSel);
-const chk=cards[idx].querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]');
+card.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',isSel);
+const chk=card.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]');
 if(chk)chk.checked=isSel;
 }
 });
