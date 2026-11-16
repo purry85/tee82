@@ -4970,6 +4970,11 @@ await executeSingleBack();
 await _0x1004(500);
 return false;
 }
+if(!_0x1030()&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
+console.log("[\uc2e0\uaddc\ub4f1\ub85d] \ub4f1\ub85d \uc644\ub8cc \ud6c4 \uc0c1\uc138\x2f\uc791\uc131 \ud654\uba74 \uac10\uc9c0 -> \ubaa9\ub85d \ubcf5\uadc0\ub97c \uc704\ud574 \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589");
+await executeSingleBack();
+await _0x1004(450);
+}
 console.log(`\u2705 [\uc2e0\uaddc\ub4f1\ub85d \uc644\ub8cc] ${item.golf} (${item.date} ${item.time}) \ub4f1\ub85d \uc131\uacf5!`);
 return true;
 }
@@ -5403,12 +5408,14 @@ newFee:item.fee
 }else{
 console.warn(`[${logTag}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud328 \ub610\ub294 \ucc28\ub2e8\ub428`);
 }
-if(pIdx<plan.length-1){
+if(globalIndex<items.length){
 console.log(`[${logTag}] \ucd94\uac00 \ub4f1\ub85d \ud6c4 \ub2e4\uc74c \ucc98\ub9ac\ub97c \uc704\ud574 '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ud654\uba74\uc73c\ub85c \ubcf5\uadc0...`);
 await _0x1032(itemTargetCategory);
+if(pIdx<plan.length-1){
 await _0x1042(itemTargetCategory);
 if(itemTargetDate)await _0x103f(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1040(itemTargetRegion);
+}
 await _0x1004(300);
 }
 }else if(action==='\x6d\x6f\x64\x69\x66\x79'){
@@ -6266,6 +6273,35 @@ total:request.items?request.items.length:0
 });
 _0x102b(request.items,request.memo,request.mode||'\x6a\x6f\x69\x6e',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
+}else if(request.action==='\x46\x4f\x52\x43\x45\x5f\x42\x41\x43\x4b\x5f\x41\x4e\x44\x5f\x52\x45\x53\x55\x4d\x45'){
+const rs=request.resumeState;
+if(!rs||!Array.isArray(rs.remainingItems)||rs.remainingItems.length===0){
+sendResponse({status:'\x65\x6d\x70\x74\x79'});
+return true;
+}
+if(isRegistrationRunning||isPostReplacementRunning||_priceUpdateRunning){
+console.log("[\uc790\ub3d9\ubcf5\uad6c] \uc774\ubbf8 \ub9e4\ud06c\ub85c\uac00 \uc815\uc0c1 \uc2e4\ud589 \uc911\uc774\ubbc0\ub85c \uc911\ubcf5 \uc7ac\uac1c \uc0dd\ub7b5");
+sendResponse({status:'\x61\x6c\x72\x65\x61\x64\x79\x5f\x72\x75\x6e\x6e\x69\x6e\x67'});
+return true;
+}
+console.log(`\ud83d\udd04 [\uc790\ub3d9\ubcf5\uad6c] \ud398\uc774\uc9c0 \ub9ac\ub85c\ub4dc/\uc774\ub3d9 \ud6c4 \uc911\ub2e8\ub41c \uc9c0\uc810(${rs.interruptedItemLabel||''})\ubd80\ud130 \ub9e4\ud06c\ub85c \uc790\ub3d9 \uc7ac\uac1c!`);
+setTimeout(async()=>{
+try{
+if(rs.needsHistoryBack&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
+await executeSingleBack();
+await _0x1004(500);
+}
+}catch(e){}
+if(rs.macroType==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45'){
+executeBatchPriceUpdate(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.confirmMismatch!==false,rs.customMemo||'');
+}else if(rs.macroType==='\x52\x45\x47\x49\x53\x54\x45\x52'){
+_0x102b(rs.remainingItems,rs.customMemo||'',rs.mode||'\x6a\x6f\x69\x6e',rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e');
+}else{
+executeBatchPostReplacement(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.customMemo||'',rs.confirmMismatch!==false,false,Boolean(rs.forceAllEdit));
+}
+},250);
+sendResponse({status:'\x72\x65\x73\x75\x6d\x65\x64'});
+return true;
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45'){
 if(_priceUpdateRunning||isPostReplacementRunning||isRegistrationRunning){
 console.log("[\ubcc0\ub3d9\uc218\uc815] \uc774\ubbf8 \uc791\uc5c5\uc774 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc774\uc804 \uc2e4\ud589 \uc815\ub9ac \ubc0f \uc7ac\uc2dc\uc791 \uc900\ube44");

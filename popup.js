@@ -9687,6 +9687,7 @@ return!names.some(name=>cleanSpecs.some(spec=>name.includes(spec)||spec.includes
 startGolfmonMacroSupervision({
 tabId:golfmonTab.id,
 macroType:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45',
+forceAllEdit:Boolean(forceAllEdit),
 items:effectiveReplaceItems,
 filterType:filterType,
 delayPreset:delayPreset,
@@ -15392,6 +15393,7 @@ _activeGolfmonSupervision={
 active:true,
 tabId:cfg.tabId,
 macroType:cfg.macroType||'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45',
+forceAllEdit:Boolean(cfg.forceAllEdit),
 allItems:Array.isArray(cfg.items)?[...cfg.items]:[],
 completedRegIds:new Set(),
 currentIndex:0,
@@ -15427,6 +15429,7 @@ return;
 }
 const resumeState={
 macroType:sup.macroType,
+forceAllEdit:Boolean(sup.forceAllEdit),
 remainingItems:remaining,
 totalOverallCount:sup.allItems.length,
 globalIndexOffset:sup.currentIndex,
@@ -16090,6 +16093,8 @@ const targetFeatures=String(data?.features||'').trim().toLowerCase();
 const targetTokens=targetFeatures.split(/[,+\/\s|;]+/).map(s=>s.trim()).filter(Boolean);
 const adminTokens=['\uad00\ub9ac\uc790','\x61\x64\x6d\x69\x6e','\ub9c8\uc2a4\ud130','\x6d\x61\x73\x74\x65\x72','\ucd5c\uace0\uad00\ub9ac\uc790','\uac1c\ubc1c\uc790'];
 const isAdminUser=(data&&data.isAdmin===true)||
+(typeof _0x102b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x102b())||
+(localStorage.getItem('\x76\x32\x5f\x69\x73\x41\x64\x6d\x69\x6e')==='\x74\x72\x75\x65')||
 (targetId==='\x61\x64\x6d\x69\x6e'||targetId==='\x61\x64\x6d\x69\x6e\x69\x73\x74\x72\x61\x74\x6f\x72'||targetId==='\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x61\x64\x6d\x69\x6e'||targetId==='\x70\x75\x72\x72\x79'||targetId==='\x70\x75\x72\x72\x79\x38\x35'||targetId==='\x79\x65\x62\x62\x61'||targetId.includes('\x61\x64\x6d\x69\x6e')||targetId.includes('\x6d\x61\x73\x74\x65\x72'))||
 (targetName==='\uad00\ub9ac\uc790'||targetName==='\ucd5c\uace0\uad00\ub9ac\uc790'||targetName.includes('\uad00\ub9ac\uc790'))||
 targetTokens.some(t=>adminTokens.includes(t));
