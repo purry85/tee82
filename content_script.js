@@ -3252,7 +3252,7 @@ const postType=_0x1046(el,rawTxt);
 if(targetRoomType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(targetRoomType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
 const courseName=_0x104a(el);
-const teeTime=typeof _0x104e==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x104e(rawTxt):'';
+const teeTime=typeof extractTeeTimeFromResetCard==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?extractTeeTimeFromResetCard(rawTxt):'';
 const timeMatch=rawTxt.match(/(\d{1,2}:\d{2})/);
 const timeStr=teeTime||(timeMatch?timeMatch[1]:'');
 const feeMatch=rawTxt.match(/([0-9.,]+)\s*(?:만|만원|원)/);
@@ -5105,7 +5105,7 @@ total:items.length
 const courseGroups={};
 for(const it of items){
 const itemCat=(it.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
-const key=`${it.date}_${it.golf}`;
+const key=`${it.date}_${it.golf}_${itemCat}`;
 if(!courseGroups[key]){
 courseGroups[key]={
 date:it.date,
@@ -5128,11 +5128,9 @@ const tA=(a.time||'').replace(/[^\d]/g,'');
 const tB=(b.time||'').replace(/[^\d]/g,'');
 return(parseInt(tA,10)||0)-(parseInt(tB,10)||0);
 });
-console.log(`\n================== [${logTag}] ${group.golf} (${group.date}) \uadf8\ub8f9 \ucc98\ub9ac \uc2dc\uc791 (\uc0c8 \ud0c0\uc784 ${group.items.length}\uac74) ==================`);
-const hasJoin=group.items.some(it=>it.roomType==='\uc870\uc778');
-const hasTransfer=group.items.some(it=>it.roomType==='\uc591\ub3c4');
-const groupCategory=(hasJoin&&hasTransfer)?'\uc804\uccb4':(hasTransfer?'\uc591\ub3c4':(hasJoin?'\uc870\uc778':(filterType||'\uc804\uccb4')));
-const courseTrackKey=`${group.date}_${group.golf}`;
+console.log(`\n================== [${logTag}] ${group.golf} (${group.date}) [${group.roomType}] \uadf8\ub8f9 \ucc98\ub9ac \uc2dc\uc791 (\uc0c8 \ud0c0\uc784 ${group.items.length}\uac74) ==================`);
+const groupCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+const courseTrackKey=`${group.date}_${group.golf}_${groupCategory}`;
 if(!updatedNewTimesByCourse.has(courseTrackKey))updatedNewTimesByCourse.set(courseTrackKey,new Set());
 if(!processedOldTimesByCourse.has(courseTrackKey))processedOldTimesByCourse.set(courseTrackKey,new Set());
 if(!modifiedRecordsByCourse.has(courseTrackKey))modifiedRecordsByCourse.set(courseTrackKey,[]);
@@ -5285,54 +5283,6 @@ await _0x1004(200);
 if(initialCards.length===0){
 await _0x1041(group.region);
 await _0x1004(400);
-}
-}
-if(initialCards.length===0){
-console.log(`[${logTag}] ${group.golf}: \uce74\ud14c\uace0\ub9ac [${groupCategory}]\uc5d0\uc11c 0\uac74 \ubc1c\uacac -> \uce74\ud14c\uace0\ub9ac '\uc804\uccb4' \ubc0f \uc9c0\uc5ed [${group.region||'\uc804\uccb4'}] \ud1b5\ud569 \uc804\uc218 \uc7ac\ud0d0\uc0c9...`);
-await _0x1043('\uc804\uccb4');
-await _0x1004(500);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
-if(initialCards.length<2){
-for(let s=0;s<5;s++){
-if(shouldStopRegistration)break;
-window.scrollBy(0,450);
-document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
-if(el.scrollHeight>el.clientHeight)el.scrollTop+=450;
-});
-await _0x1004(220);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
-if(initialCards.length>=2)break;
-}
-window.scrollTo(0,0);
-document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
-el.scrollTop=0;
-});
-await _0x1004(200);
-}
-if(initialCards.length===0&&group.region&&group.region!=='\uc804\uccb4'){
-console.log(`[${logTag}] ${group.golf}: \uc9c0\uc5ed '\uc804\uccb4' + \uce74\ud14c\uace0\ub9ac '\uc804\uccb4' \ucd5c\uc885 \uc2ec\uce35 \uc804\uc218 \ud0d0\uc0c9...`);
-await _0x1041('\uc804\uccb4');
-await _0x1004(300);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
-if(initialCards.length<2){
-for(let s=0;s<5;s++){
-if(shouldStopRegistration)break;
-window.scrollBy(0,450);
-await _0x1004(200);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
-if(initialCards.length>=2)break;
-}
-window.scrollTo(0,0);
-document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
-el.scrollTop=0;
-});
-await _0x1004(200);
-}
-if(initialCards.length===0){
-await _0x1041(group.region);
-await _0x1043(groupCategory);
-await _0x1004(200);
-}
 }
 }
 }
@@ -5577,18 +5527,15 @@ await _0x1004(300);
 }else if(action==='\x6d\x6f\x64\x69\x66\x79'){
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 const itemTargetDate=item.date||group.date;
-const cardCat=(targetCard&&targetCard.postType&&targetCard.postType!=='\x75\x6e\x6b\x6e\x6f\x77\x6e')
-?targetCard.postType
-:((targetCard&&targetCard.rawTxt&&targetCard.rawTxt.includes('\uc591\ub3c4'))?'\uc591\ub3c4':((targetCard&&targetCard.rawTxt&&targetCard.rawTxt.includes('\uc870\uc778'))?'\uc870\uc778':groupCategory));
-const modifySearchCategory=(groupCategory==='\uc804\uccb4')?'\uc804\uccb4':cardCat;
+const itemTargetCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
 const itemTargetRegion=item.region||group.region;
-console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard?.timeStr||''}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate}, \uac80\uc0c9 \uce74\ud14c\uace0\ub9ac: [${modifySearchCategory}])...`);
+console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard?.timeStr||''}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate}, \uce74\ud14c\uace0\ub9ac: [${itemTargetCategory}])...`);
 if(isEditPage()||isDetailPage()||!_0x1031()||_0x1030()||_0x102f()){
-await navigateBackToList(modifySearchCategory);
+await navigateBackToList(itemTargetCategory);
 await _0x1004(250);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
-await _0x1043(modifySearchCategory);
+await _0x1043(itemTargetCategory);
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(itemTargetDate){
 await _0x1040(itemTargetDate);
@@ -5613,19 +5560,16 @@ if(Math.abs(b.topY-a.topY)>25)return b.topY-a.topY;
 return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<12;retry++){
-let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,modifySearchCategory,itemTargetDate);
-if(liveCards.length===0&&modifySearchCategory!=='\uc804\uccb4'){
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',itemTargetDate);
-}
+let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
 if(liveCards.length===0&&retry===2){
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
 await _0x1041('\uc804\uccb4');
-await _0x1043('\uc804\uccb4');
+await _0x1043(itemTargetCategory);
 await _0x1004(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',itemTargetDate);
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
 if(liveCards.length===0){
 await _0x1041(itemTargetRegion);
-await _0x1043(modifySearchCategory);
+await _0x1043(itemTargetCategory);
 await _0x1004(200);
 }
 }
@@ -5757,8 +5701,8 @@ if((detectedPostId&&processedPostIds.has(detectedPostId))||
 (/\/(?:detail|item)\/\d+/.test(curUrl)&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
-await navigateBackToList(modifySearchCategory);
-await _0x1043(modifySearchCategory);
+await navigateBackToList(itemTargetCategory);
+await _0x1043(itemTargetCategory);
 if(itemTargetDate)await _0x1040(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
 await _0x1041(itemTargetRegion);
@@ -5766,7 +5710,7 @@ await _0x1041(itemTargetRegion);
 await _0x1041('\uc804\uccb4');
 }
 await _0x1004(350);
-const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,modifySearchCategory,itemTargetDate);
+const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
 const sortedBottomCards=[...retryCards]
 .filter(c=>c.el!==targetCardEl&&!_replacedCardsSet.has(c.el)&&(!c.postId||!processedPostIds.has(c.postId)))
 .sort(compareReverseScreenOrder);
@@ -5868,7 +5812,7 @@ chrome.runtime.sendMessage({type:completedMsgType,total:items.length,successCoun
 }
 }
 var isDateResetRunning=false;
-function _0x104e(rawTxt){
+function extractTeeTimeFromResetCard(rawTxt){
 if(!rawTxt)return'';
 const cleanTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
 const dateAttachedTime=cleanTxt.match(/(?:\d{1,2}[./\-]\d{1,2}|\([월화수목금토일]\))\s*(\d{1,2}:\d{2})/);
@@ -5891,7 +5835,7 @@ return`${last[1].padStart(2,'\x30')}:${last[2]}`;
 }
 return'';
 }
-function _0x104f(filterType='\uc804\uccb4'){
+function collectResetCandidateCards(filterType='\uc804\uccb4'){
 const leafCandidates=_0x1048();
 const list=[];
 for(const el of leafCandidates){
@@ -5902,7 +5846,7 @@ if(filterType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(filterType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
 const courseName=_0x104a(el)||'\uad6c\uc7a5';
 const normCourse=_0x1044(courseName)||courseName;
-const teeTime=_0x104e(rawTxt);
+const teeTime=extractTeeTimeFromResetCard(rawTxt);
 const feeMatch=rawTxt.match(/([0-9.,]+)\s*(?:만|만원|원)/);
 const feeStr=feeMatch?feeMatch[0].replace(/\s+/g,''):'';
 let cardPostId='';
@@ -5926,7 +5870,7 @@ sig:sig
 }
 return list;
 }
-async function _0x1050(stepPreset='\x68\x75\x6d\x61\x6e',cardInfo=null){
+async function submitEditWithoutChanges(stepPreset='\x68\x75\x6d\x61\x6e',cardInfo=null){
 console.log(`[\uc804\uccb4\ub9ac\uc14b] \uc218\uc815 \ud3fc \uc9c4\uc785 \uc644\ub8cc -> \ub0b4\uc6a9 \ubcc0\uacbd \uc5c6\uc774 \uae30\uc874 \ub370\uc774\ud130 \ub85c\ub4dc \ud655\uc778 \ud6c4 '\uc218\uc815\ud558\uae30' \uc81c\ucd9c \uc9c4\ud589...`);
 const currentUrlKey=window.location.href;
 if(_submittedUrls&&_submittedUrls.has(currentUrlKey)){
@@ -5966,7 +5910,7 @@ await _0x1004(500);
 console.log(`[\uc804\uccb4\ub9ac\uc14b] '${cardInfo?.courseName||''} (${cardInfo?.teeTime||''})' \ub0b4\uc6a9 \ubcc0\uacbd \uc5c6\uc774 \uc218\uc815(\ub9ac\uc14b) \uc644\ub8cc!`);
 return true;
 }
-async function _0x1051(targetDateInput,filterType='\uc804\uccb4',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',targetDatesArray=null){
+async function executeBatchDateReset(targetDateInput,filterType='\uc804\uccb4',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',targetDatesArray=null){
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
 isDateResetRunning=true;
@@ -5999,7 +5943,7 @@ const allCardsOrdered=[];
 const seenEls=new Set();
 for(let scroll=0;scroll<20;scroll++){
 if(shouldStopRegistration)break;
-const visibleCards=_0x104f(effectiveFilter);
+const visibleCards=collectResetCandidateCards(effectiveFilter);
 visibleCards.sort((a,b)=>{
 const rA=a.el.getBoundingClientRect();
 const rB=b.el.getBoundingClientRect();
@@ -6152,7 +6096,7 @@ await navigateBackToList(effectiveFilter);
 continue;
 }
 if(shouldStopRegistration)break;
-const editSuccess=await _0x1050(stepPreset,{
+const editSuccess=await submitEditWithoutChanges(stepPreset,{
 courseName:nextCard.courseName,
 date:targetDate,
 teeTime:nextCard.teeTime,
@@ -6208,7 +6152,7 @@ reason:totalSuccessCount===0?`\u26a0\ufe0f \uc9c0\uc815\ud55c \uae30\uac04(${ran
 });
 }
 }
-async function _0x1052(targetPost){
+async function executeSinglePostDelete(targetPost){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -6474,11 +6418,11 @@ isRegistrationRunning=false;
 isDateResetRunning=false;
 }
 setTimeout(()=>{
-_0x1051(request.targetDate,request.filterType||'\uc804\uccb4',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.targetDates||null);
+executeBatchDateReset(request.targetDate,request.filterType||'\uc804\uccb4',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.targetDates||null);
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-_0x1052(request.targetPost).then(result=>{
+executeSinglePostDelete(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uc0ad\uc81c \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});
