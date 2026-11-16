@@ -1,10 +1,9 @@
 {
-    "version":  "2.4.9",
+    "version":  "2.5.0",
     "releaseDate":  "2026-11-17",
-    "title":  "v2.4.9 맞춤 기준시간 옵션 & 골프몬 수정 멈춤 해결",
+    "title":  "v2.5.0 맞춤 기준시간 옵션 & 골프몬 수정 멈춤 해결",
     "releaseNotes":  [
-                         "- 대용량 티타임(수천 건 이상) 변환 및 스크롤 성능 300배 고속화 (가상 지연 렌더링 무한 스크롤)",
-                         "- 사이트 로그인 만료시 진행 중단 및 알림"
+                         "- 최적화"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
