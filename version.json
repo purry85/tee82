@@ -1,12 +1,11 @@
 {
-  "version": "2.1.8",
-  "releaseDate": "2026-11-14",
-  "title": "v2.1.8 주요 기능 개선",
+  "version": "2.2.0",
+  "releaseDate": "2026-11-16",
+  "title": "v2.2.0 골프장 탐색 안정화 및 오등록 방지 가드 강화",
   "releaseNotes": [
-    "• 플랫폼 동시 등록 개편 (원하는 사이트 체크 실행)",
-    "• 공지 동기화 복구 (3중 무장애 안심 동기화)",
-    "• 등록 속도 기본값 최적화 ('빠른 손' & '빠른 진행' 기본 적용)",
-    "• 최초 1회 원클릭 환경 등록 BAT 다운로드 및 원클릭 자동 업데이트 시스템 탑재"
+    "• 엠스클럽 의성 및 비수도권/원거리 구장 스마트 수정 및 등록 탐색 완벽 개선",
+    "• 타 구장 오등록 방지 3중 안전 가드 탑재 (선택 실패 시 자동 중단 및 제출 직전 구장 검증)",
+    "• 골프몬 가상 스크롤 및 네트워크 AJAX 지연 대기 보강으로 기존글 누락 방지"
   ],
   "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
   "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
