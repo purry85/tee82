@@ -620,35 +620,125 @@ golftop:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
 name:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
 region:'\uc778\ucc9c\uacbd\uc778'
 };
-const namyangjuEntry={
-golfmon:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
-golfpang:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
-golfrock:'\ub0a8\uc591\uc8fc(\x39\ud640)',
-golmarket:'\ub0a8\uc591\uc8fc(\x39\ud640)',
-golfland:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
-golftop:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
-name:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
-region:'\uacbd\uae30\ubd81\ubd80'
+function applySpecialCourseMappings(dict){
+if(!dict||typeof dict!=='\x6f\x62\x6a\x65\x63\x74')return;
+const club72LakeClassicEntry={
+golfmon:'\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)',golfpang:'\ud074\ub7fd\x37\x32',golfrock:'\ud074\ub7fd\x37\x32',
+golmarket:'\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)',golfland:'\ud074\ub7fd\x37\x32',golftop:'\ud074\ub7fd\x37\x32',
+name:'\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)',region:'\uc778\ucc9c\uacbd\uc778'
 };
-dictionary['\ud074\ub7fd\x37\x32']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd)']||{},club72LakeClassicEntry);
-dictionary['\ub808\x2f\ud074']=Object.assign({},dictionary['\ub808\x2f\ud074']||{},club72LakeClassicEntry);
-dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']=Object.assign({},dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']||{},club72OceanEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']||{},club72HaneulEntry);
-dictionary['\ub0a8\uc591\uc8fc']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']||{},namyangjuEntry);
+const club72OceanEntry={
+golfmon:'\ud074\ub7fd\x37\x32(\uc624\uc158)',golfpang:'\ud074\ub7fd\x37\x32(\uc624\uc158)',golfrock:'\ud074\ub7fd\x37\x32(\uc624\uc158)',
+golmarket:'\ud074\ub7fd\x37\x32(\uc624\uc158)',golfland:'\ud074\ub7fd\x37\x32(\uc624\uc158)',golftop:'\ud074\ub7fd\x37\x32(\uc624\uc158)',
+name:'\ud074\ub7fd\x37\x32(\uc624\uc158)',region:'\uc778\ucc9c\uacbd\uc778'
+};
+const club72HaneulEntry={
+golfmon:'\ud074\ub7fd\x37\x32(\ud558\ub298)',golfpang:'\ud074\ub7fd\x37\x32(\ud558\ub298)',golfrock:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
+golmarket:'\ud074\ub7fd\x37\x32(\ud558\ub298)',golfland:'\ud074\ub7fd\x37\x32(\ud558\ub298)',golftop:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
+name:'\ud074\ub7fd\x37\x32(\ud558\ub298)',region:'\uc778\ucc9c\uacbd\uc778'
+};
+for(const k of['\ud074\ub7fd\x37\x32','\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)','\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)','\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c)','\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd)','\ub808\x2f\ud074','\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']){
+dict[k]=Object.assign({},dict[k]||{},club72LakeClassicEntry);
+}
+dict['\ud074\ub7fd\x37\x32(\uc624\uc158)']=Object.assign({},dict['\ud074\ub7fd\x37\x32(\uc624\uc158)']||{},club72OceanEntry);
+dict['\ud074\ub7fd\x37\x32(\ud558\ub298)']=Object.assign({},dict['\ud074\ub7fd\x37\x32(\ud558\ub298)']||{},club72HaneulEntry);
+const namyangjuEntry={
+golfmon:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',golfpang:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',golfrock:'\ub0a8\uc591\uc8fc(\x39\ud640)',
+golmarket:'\ub0a8\uc591\uc8fc(\x39\ud640)',golfland:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',golftop:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+name:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',region:'\uacbd\uae30\ubd81\ubd80'
+};
+for(const k of['\ub0a8\uc591\uc8fc','\ub0a8\uc591\uc8fc\x63\x63','\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)','\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)','\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)','\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)','\ub0a8\uc591\uc8fc(\x39\ud640)','\ub0a8\uc591\uc8fc(\x70\x39)','\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)','\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},namyangjuEntry);
+}
+const boryeongEntry={
+golfmon:'\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)',golfpang:'\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)',golfrock:'\ubcf4\ub839\ubca0\uc774\uc2a4(\x39\ud640)',
+golmarket:'\ubcf4\ub839\ubca0\uc774\uc2a4(\x39\ud640)',golfland:'\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)',golftop:'\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)',
+name:'\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)',region:'\ucda9\uccad'
+};
+for(const k of['\ubcf4\ub839\ubca0\uc774\uc2a4','\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63','\ubcf4\ub839\ubca0\uc774\uc2a4 (\x39\ud640\x78\x32)','\ubcf4\ub839\ubca0\uc774\uc2a4(\x39\ud640\x78\x32)','\ubcf4\ub839(\x39\ud640\x78\x32)','\ubcf4\ub839 (\x39\ud640\x78\x32)','\ubcf4\ub839\ubca0\uc774\uc2a4(\x39\ud640)','\ubcf4\ub839\ubca0\uc774\uc2a4(\x70\x39)','\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63 (\x50\x39)','\ubcf4\ub839\ubca0\uc774\uc2a4\x63\x63(\x50\x39)','\ubcf4\ub839']){
+dict[k]=Object.assign({},dict[k]||{},boryeongEntry);
+}
+const thebanEntry={
+golfmon:'\ub354\ubc18\x63\x63(\x50\x39)',golfpang:'\ub354\ubc18\x63\x63(\x50\x39)',golfrock:'\ub354\ubc18',
+golmarket:'\ub354\ubc18',golfland:'\ub354\ubc18\x63\x63(\x50\x39)',golftop:'\ub354\ubc18\x63\x63(\x50\x39)',
+name:'\ub354\ubc18\x63\x63(\x50\x39)',region:'\uacbd\uae30\ub0a8\ubd80'
+};
+for(const k of['\ub354\ubc18','\ub354\ubc18\x63\x63','\ub354\ubc18(\x70\x39)','\ub354\ubc18\x63\x63(\x70\x39)','\ub354\ubc18\x63\x63(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},thebanEntry);
+}
+const victoriaEntry={
+golfmon:'\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)',golfpang:'\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)',golfrock:'\ube45\ud1a0\ub9ac\uc544(\x39\ud640)',
+golmarket:'\ube45\ud1a0\ub9ac\uc544(\x39\ud640)',golfland:'\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)',golftop:'\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)',
+name:'\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)',region:'\uacbd\uae30\ub0a8\ubd80'
+};
+for(const k of['\ube45\ud1a0\ub9ac\uc544','\ube45\ud1a0\ub9ac\uc544\x63\x63','\ube45\ud1a0\ub9ac\uc544(\x39\ud640)','\ube45\ud1a0\ub9ac\uc544(\x70\x39)','\ube45\ud1a0\ub9ac\uc544\x63\x63(\x70\x39)','\ube45\ud1a0\ub9ac\uc544\x63\x63(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},victoriaEntry);
+}
+const linknineEntry={
+golfmon:'\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)',golfpang:'\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)',golfrock:'\ub9c1\ud06c\ub098\uc778(\x39\ud640)',
+golmarket:'\ub9c1\ud06c\ub098\uc778(\x39\ud640)',golfland:'\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)',golftop:'\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)',
+name:'\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)',region:'\uacbd\uae30\ub0a8\ubd80'
+};
+for(const k of['\ub9c1\ud06c\ub098\uc778','\ub9c1\ud06c\ub098\uc778\x63\x63','\ub9c1\ud06c\ub098\uc778(\x39\ud640)','\ub9c1\ud06c\ub098\uc778(\x70\x39)','\ub9c1\ud06c\ub098\uc778\x63\x63(\x70\x39)','\ub9c1\ud06c\ub098\uc778\x63\x63(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},linknineEntry);
+}
+const hanlimAnseongEntry={
+golfmon:'\ud55c\ub9bc\uc548\uc131(\x50\x39)',golfpang:'\ud55c\ub9bc\uc548\uc131(\x50\x39)',golfrock:'\ud55c\ub9bc\uc548\uc131(\x39\ud640)',
+golmarket:'\ud55c\ub9bc\uc548\uc131(\x39\ud640)',golfland:'\ud55c\ub9bc\uc548\uc131(\x50\x39)',golftop:'\ud55c\ub9bc\uc548\uc131(\x50\x39)',
+name:'\ud55c\ub9bc\uc548\uc131(\x50\x39)',region:'\uacbd\uae30\ub0a8\ubd80'
+};
+for(const k of['\ud55c\ub9bc\uc548\uc131','\ud55c\ub9bc\uc548\uc131(\x39\ud640)','\ud55c\ub9bc\uc548\uc131(\x70\x39)','\ud55c\ub9bc\uc548\uc131(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},hanlimAnseongEntry);
+}
+const springvaleEntry={
+golfmon:'\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)',golfpang:'\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)',golfrock:'\uc2a4\ud504\ub9c1\ubca0\uc77c(\x39\ud640)',
+golmarket:'\uc2a4\ud504\ub9c1\ubca0\uc77c(\x39\ud640)',golfland:'\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)',golftop:'\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)',
+name:'\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)',region:'\uacbd\uae30\ub3d9\ubd80'
+};
+for(const k of['\uc2a4\ud504\ub9c1\ubca0\uc77c','\uc2a4\ud504\ub9c1\ubca0\uc77c(\x39\ud640)','\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63','\uc2a4\ud504\ub9c1\ubca0\uc77c\x67\x63(\x50\x39)']){
+dict[k]=Object.assign({},dict[k]||{},springvaleEntry);
+}
+const glenrossEntry={
+golfmon:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',golfpang:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',golfrock:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',
+golmarket:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',golfland:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',golftop:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',
+name:'\uae00\ub80c\ub85c\uc2a4(\x39\ud640)',region:'\uacbd\uae30\ub0a8\ubd80'
+};
+for(const k of['\uae00\ub80c\ub85c\uc2a4','\uae00\ub80c\ub85c\uc2a4(\x39\ud640)','\uae00\ub80c\ub85c\uc2a4\x63\x63']){
+dict[k]=Object.assign({},dict[k]||{},glenrossEntry);
+}
+const dongseoulEntry={
+golfmon:'\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]',golfpang:'\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]',golfrock:'\ub3d9\uc11c\uc6b8(\x39\ud640)',
+golmarket:'\ub3d9\uc11c\uc6b8(\x39\ud640)',golfland:'\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]',golftop:'\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]',
+name:'\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]',region:'\uac15\uc6d0'
+};
+for(const k of['\ub3d9\uc11c\uc6b8','\ub3d9\uc11c\uc6b8(\x39\ud640)','\ub3d9\uc11c\uc6b8\x63\x63','\ub3d9\uc11c\uc6b8\x43\x43[\uad6c \ub808\uc2a4\ud53c\uc544(\x70\x31\x30)]','\ub808\uc2a4\ud53c\uc544']){
+dict[k]=Object.assign({},dict[k]||{},dongseoulEntry);
+}
+const cobbswingEntry={
+golfmon:'\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)',golfpang:'\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)',golfrock:'\ucc38\ubc38\ub9ac',
+golmarket:'\ucc38\ubc38\ub9ac',golfland:'\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)',golftop:'\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)',
+name:'\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)',region:'\uacbd\uae30\ubd81\ubd80'
+};
+for(const k of['\ucc38\ubc38\ub9ac','\ucc38\ubc38\ub9ac\x63\x63','\ucf54\ube0c\uc2a4\uc719','\ucf54\ube0c\uc2a4\uc719(\uad6c \ucc38\ubc38\ub9ac\x43\x43)','\ucf54\ube0c\uc2a4\uc719(\uad6c\x3a\ucc38\ubc38\ub9ac)']){
+dict[k]=Object.assign({},dict[k]||{},cobbswingEntry);
+}
+const mokaEntry={
+golfmon:'\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)',golfpang:'\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)',golfrock:'\ubaa8\uce74(\uad6c\x3a\uc138\uc77c)',
+golmarket:'\ubaa8\uce74(\uad6c\x3a\uc138\uc77c)',golfland:'\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)',golftop:'\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)',
+name:'\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)',region:'\ucda9\uccad'
+};
+for(const k of['\ubaa8\uce74','\ubaa8\uce74\x63\x63','\uc138\uc77c','\uc138\uc77c\x63\x63','\ubaa8\uce74(\uad6c\x3a\uc138\uc77c)','\ubaa8\uce74\x63\x63(\uad6c\uc138\uc77c)','\ubaa8\uce74\x63\x63(\uad6c\x2e\uc138\uc77c)']){
+dict[k]=Object.assign({},dict[k]||{},mokaEntry);
+}
+const asecoEntry={
+golfmon:'\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63',golfpang:'\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63',golfrock:'\uc544\uc138\ucf54\ubc38\ub9ac(\x39\ud640)',
+golmarket:'\uc544\uc138\ucf54\ubc38\ub9ac(\x39\ud640)',golfland:'\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63',golftop:'\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63',
+name:'\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63',region:'\uc778\ucc9c\uacbd\uc778'
+};
+for(const k of['\uc544\uc138\ucf54','\uc544\uc138\ucf54\ubc38\ub9ac','\uc544\uc138\ucf54\ubc38\ub9ac(\x39\ud640)','\uc544\uc138\ucf54(\uc2dc\ud765)\x67\x63']){
+dict[k]=Object.assign({},dict[k]||{},asecoEntry);
+}
+}
 saveDictionary();
 try{
 if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
@@ -680,25 +770,7 @@ dictionary[k].region=defaultDict[k].region;
 }
 }
 }
-dictionary['\ud074\ub7fd\x37\x32']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c)']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd)']||{},club72LakeClassicEntry);
-dictionary['\ub808\x2f\ud074']=Object.assign({},dictionary['\ub808\x2f\ud074']||{},club72LakeClassicEntry);
-dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']=Object.assign({},dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']||{},club72LakeClassicEntry);
-dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']||{},club72OceanEntry);
-dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']||{},club72HaneulEntry);
-dictionary['\ub0a8\uc591\uc8fc']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']||{},namyangjuEntry);
-dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']||{},namyangjuEntry);
+applySpecialCourseMappings(dictionary);
 saveDictionary();
 }
 });
