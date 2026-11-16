@@ -620,6 +620,16 @@ golftop:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
 name:'\ud074\ub7fd\x37\x32(\ud558\ub298)',
 region:'\uc778\ucc9c\uacbd\uc778'
 };
+const namyangjuEntry={
+golfmon:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+golfpang:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+golfrock:'\ub0a8\uc591\uc8fc(\x39\ud640)',
+golmarket:'\ub0a8\uc591\uc8fc(\x39\ud640)',
+golfland:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+golftop:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+name:'\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)',
+region:'\uacbd\uae30\ubd81\ubd80'
+};
 dictionary['\ud074\ub7fd\x37\x32']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32']||{},club72LakeClassicEntry);
 dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)']||{},club72LakeClassicEntry);
 dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)']||{},club72LakeClassicEntry);
@@ -629,6 +639,16 @@ dictionary['\ub808\x2f\ud074']=Object.assign({},dictionary['\ub808\x2f\ud074']||
 dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']=Object.assign({},dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']||{},club72LakeClassicEntry);
 dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']||{},club72OceanEntry);
 dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']||{},club72HaneulEntry);
+dictionary['\ub0a8\uc591\uc8fc']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']||{},namyangjuEntry);
 saveDictionary();
 try{
 if(typeof chrome!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&chrome.storage&&chrome.storage.local){
@@ -669,6 +689,16 @@ dictionary['\ub808\x2f\ud074']=Object.assign({},dictionary['\ub808\x2f\ud074']||
 dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']=Object.assign({},dictionary['\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd']||{},club72LakeClassicEntry);
 dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\uc624\uc158)']||{},club72OceanEntry);
 dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']=Object.assign({},dictionary['\ud074\ub7fd\x37\x32(\ud558\ub298)']||{},club72HaneulEntry);
+dictionary['\ub0a8\uc591\uc8fc']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63 (\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc (\x39\ud640\x78\x32)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x39\ud640)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc(\x70\x39)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x70\x39)']||{},namyangjuEntry);
+dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']=Object.assign({},dictionary['\ub0a8\uc591\uc8fc\x63\x63(\x50\x39)']||{},namyangjuEntry);
 saveDictionary();
 }
 });

@@ -2826,7 +2826,7 @@ s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/
 .replace(/떼제베\s*[\(\[]?\s*(?:동북(?:동)?|한울\/?마루)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\ub3d9\ubd81');
 s=s.replace(/엠스클럽\s*(?:의성)?/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131')
 .replace(/엠스\s*의성/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131');
-s=s.replace(/남양주\s*(?:cc)?\s*(?:\(?(?:9홀|9홀x2|p9)\)?)?/gi,'\ub0a8\uc591\uc8fc');
+s=s.replace(/남양주\s*(?:cc)?(?:\s*[\(\[]?\s*(?:9홀(?:\s*[x*X]\s*2)?|p9|p18|18홀|퍼블릭)\s*[\)\]]?)?/gi,'\ub0a8\uc591\uc8fc');
 s=s.replace(/클럽\s*72\s*[\(\[]?\s*(?:레이크\s*[\/&,·\s]?\s*클래식|클래식\s*[\/&,·\s]?\s*레이크|레\s*[\/&,·\s]?\s*클|클\s*[\/&,·\s]?\s*레|레이크|클래식)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
 .replace(/club\s*72\s*[\(\[]?\s*(?:lake\s*[\/&,·\s]?\s*classic|classic\s*[\/&,·\s]?\s*lake|lake|classic)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
 .replace(/클럽\s*72\s*[\(\[]?\s*오션\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\uc624\uc158')
@@ -2926,6 +2926,10 @@ if(normG1&&_0x1018(normG1,normCard))return 0;
 if(normG2&&_0x1018(normG2,normCard))return 0;
 if((normG1==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd'||normG2==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')&&
 normCard.includes('\ud074\ub7fd\x37\x32')&&!normCard.includes('\uc624\uc158')&&!normCard.includes('\ud558\ub298')){
+return 100;
+}
+if((normG1==='\ub0a8\uc591\uc8fc'||normG2==='\ub0a8\uc591\uc8fc'||(normG1&&normG1.startsWith('\ub0a8\uc591\uc8fc'))||(normG2&&normG2.startsWith('\ub0a8\uc591\uc8fc')))&&
+normCard.includes('\ub0a8\uc591\uc8fc')){
 return 100;
 }
 if(normG1&&(normCard.includes(normG1)||(normG1.includes(normCard)&&normCard.length>=2)))return 100;
