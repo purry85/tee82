@@ -1423,8 +1423,8 @@ console.warn(`[\uace8\ud504\ub79c\ub4dc] \uc131\ubcc4 \uc635\uc158 [${targetOpti
 await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
 const memoEl=_0x1029(modal);
-if(memoEl){
-const finalMemo=item.memo||task.memo||'';
+const finalMemo=(item.memo||task.memo||'').trim();
+if(memoEl&&finalMemo){
 await _0x1009(memoEl,finalMemo);
 console.log(`[\uace8\ud504\ub79c\ub4dc] \ub4f1\ub85d \ub0b4\uc6a9(\uba54\ubaa8) \uc791\uc131 \uc644\ub8cc (${finalMemo.length}\uc790)`);
 await _0x1005(_0x1006('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));

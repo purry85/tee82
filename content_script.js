@@ -1768,7 +1768,11 @@ console.warn(`[\ub9e4\ud06c\ub85c] \uc694\uccad \uc778\uc6d0(${targetText}) \ubc
 return false;
 }
 async function _0x1026(customMemo,maxAttempts=10){
-const val=customMemo||"\uace8\ud504\ub77d \uc9c0\uc6d0 \ud61c\ud0dd\uac00\n\uac00\uc7a5 \ube60\ub974\uace0 \uc2e0\uc18d\ud558\uac8c \ubaa8\uc2ed\ub2c8\ub2e4\n\ud0c0\uad6c\uc7a5\uc0c1\ub2f4\uae4c\uc9c0 \ud55c\ubc88\uc5d0\n\ud604\uc7ac\uc2e4\uc7a5\uc785\ub2c8\ub2e4!!";
+const val=(customMemo!==undefined&&customMemo!==null)?String(customMemo):"";
+if(!val.trim()){
+console.log("[\ub9e4\ud06c\ub85c] \x31\x32\ub2e8\uacc4\x3a \ub4f1\ub85d\ubb38\uad6c\uac00 \ube44\uc5b4\uc788\uc5b4 \uc0c1\uc138 \ub0b4\uc6a9 \uc785\ub825 \uc0dd\ub7b5");
+return true;
+}
 console.log("[\ub9e4\ud06c\ub85c] \x31\x32\ub2e8\uacc4\x3a \uc0c1\uc138 \uc548\ub0b4 \ubb38\uad6c \uc785\ub825\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;

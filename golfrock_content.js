@@ -1157,8 +1157,8 @@ await _0x101e(targetWaitSex,stepPreset);
 await _0x1020(item,stepPreset);
 }
 const memoEl=_0x101b();
-if(memoEl){
-const finalMemo=item.memo||task.memo||'';
+const finalMemo=(item.memo||task.memo||'').trim();
+if(memoEl&&finalMemo){
 await _0x1009(memoEl,finalMemo);
 console.log(`[\uace8\ud504\ub77d] \ub4f1\ub85d \ub0b4\uc6a9(\uba54\ubaa8) \uc791\uc131 \uc644\ub8cc (${finalMemo.length}\uc790)`);
 await _0x1005(_0x1006('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
