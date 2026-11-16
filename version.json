@@ -1,13 +1,13 @@
 {
-  "version": "2.4.6",
-  "releaseDate": "2026-11-16",
-  "title": "v2.4.6 맞춤 기준시간 옵션 & 골프몬 수정 멈춤 해결",
-  "releaseNotes": [
-    "- 사용자별 1부, 2부, 3부 맞춤 기준시간 직접 설정 UI(⚙️ 기준시간) 및 즉시 재선택 기능 추가",
-    "- 계정별 시드 분산 제거 및 사용자가 지정한 기준시간(앵커) 기반 결정론적 최적 타임 선별",
-    "- 골프몬 일괄 수정 중 날짜 널뛰기 방지 (날짜 오름차순 정렬 순차 처리 및 상단 날짜 가로스크롤 보강)",
-    "- 대용량 티타임(수천 건 이상) 변환 및 스크롤 성능 300배 고속화 (가상 지연 렌더링 무한 스크롤)"
-  ],
-  "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
-  "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
+    "version":  "2.4.7",
+    "releaseDate":  "2026-11-16",
+    "title":  "v2.4.7 맞춤 기준시간 옵션 \u0026 골프몬 수정 멈춤 해결",
+    "releaseNotes":  [
+                         "- 사용자별 1부, 2부, 3부 맞춤 기준시간 직접 설정 UI(⚙️ 기준시간) 및 즉시 재선택 기능 추가",
+                         "- 계정별 시드 분산 제거 및 사용자가 지정한 기준시간(앵커) 기반 결정론적 최적 타임 선별",
+                         "- 골프몬 일괄 수정 중 날짜 널뛰기 방지 (날짜 오름차순 정렬 순차 처리 및 상단 날짜 가로스크롤 보강)",
+                         "- 대용량 티타임(수천 건 이상) 변환 및 스크롤 성능 300배 고속화 (가상 지연 렌더링 무한 스크롤)"
+                     ],
+    "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
+    "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
 }
