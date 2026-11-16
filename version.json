@@ -1,11 +1,11 @@
 {
-  "version": "2.2.0",
+  "version": "2.2.1",
   "releaseDate": "2026-11-16",
-  "title": "v2.2.0 골프장 탐색 안정화 및 오등록 방지 가드 강화",
+  "title": "v2.2.1 클럽72 기존글 정밀 탐색 및 수정 지원 강화",
   "releaseNotes": [
-    "• 엠스클럽 의성 및 비수도권/원거리 구장 스마트 수정 및 등록 탐색 완벽 개선",
-    "• 타 구장 오등록 방지 3중 안전 가드 탑재 (선택 실패 시 자동 중단 및 제출 직전 구장 검증)",
-    "• 골프몬 가상 스크롤 및 네트워크 AJAX 지연 대기 보강으로 기존글 누락 방지"
+    "• 클럽72(레이크/클래식) 및 세부 코스 토큰화로 기존 등록글 100% 자동 매칭 및 수정 완벽 지원",
+    "• 일괄 수정/변환 시 WeakSet 상태 누적 초기화로 연속 실행 시 카드 미인식 현상 완벽 해결",
+    "• 클럽72 지역 매핑(인천경인) 정밀 보정 및 타 구장 오등록 방지 가드 강화"
   ],
   "downloadUrl": "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
   "setupUrl": "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

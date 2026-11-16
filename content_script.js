@@ -954,6 +954,7 @@ if(tSky!==cSky)return true;
 const tLakeClassic=t.includes('\ub808\uc774\ud06c')||t.includes('\ud074\ub798\uc2dd')||t.includes('\ub808\ud074');
 const cLakeClassic=c.includes('\ub808\uc774\ud06c')||c.includes('\ud074\ub798\uc2dd')||c.includes('\ub808\ud074');
 if(tLakeClassic&&(cOcean||cSky))return true;
+if(cLakeClassic&&(tOcean||tSky))return true;
 if(!tLakeClassic&&!tOcean&&!tSky&&(cOcean||cSky))return true;
 }
 if(t.includes('\ub5bc\uc81c\ubca0')||c.includes('\ub5bc\uc81c\ubca0')){
@@ -2826,6 +2827,13 @@ s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/
 s=s.replace(/엠스클럽\s*(?:의성)?/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131')
 .replace(/엠스\s*의성/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131');
 s=s.replace(/남양주\s*(?:cc)?\s*(?:\(?(?:9홀|9홀x2|p9)\)?)?/gi,'\ub0a8\uc591\uc8fc');
+s=s.replace(/클럽\s*72\s*[\(\[]?\s*(?:레이크\s*[\/&,·\s]?\s*클래식|클래식\s*[\/&,·\s]?\s*레이크|레\s*[\/&,·\s]?\s*클|클\s*[\/&,·\s]?\s*레|레이크|클래식)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
+.replace(/club\s*72\s*[\(\[]?\s*(?:lake\s*[\/&,·\s]?\s*classic|classic\s*[\/&,·\s]?\s*lake|lake|classic)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
+.replace(/클럽\s*72\s*[\(\[]?\s*오션\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\uc624\uc158')
+.replace(/club\s*72\s*[\(\[]?\s*ocean\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\uc624\uc158')
+.replace(/클럽\s*72\s*[\(\[]?\s*하늘\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ud558\ub298')
+.replace(/club\s*72\s*[\(\[]?\s*sky\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ud558\ub298')
+.replace(/클럽\s*72(?!\s*(?:오션|하늘|ocean|sky|레이크클래식))/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd');
 s=s.replace(/\(?\s*p?\d+\s*홀(?:\s*[x*]\s*\d+)?\s*\)?/gi,'')
 .replace(/\(?\s*p\d+\s*\)?/gi,'')
 .replace(/\(\s*p\s*\)/gi,'');
@@ -2916,6 +2924,10 @@ function _0x1046(normCard,normG1,normG2){
 if(!normCard)return 0;
 if(normG1&&_0x1018(normG1,normCard))return 0;
 if(normG2&&_0x1018(normG2,normCard))return 0;
+if((normG1==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd'||normG2==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')&&
+normCard.includes('\ud074\ub7fd\x37\x32')&&!normCard.includes('\uc624\uc158')&&!normCard.includes('\ud558\ub298')){
+return 100;
+}
 if(normG1&&(normCard.includes(normG1)||(normG1.includes(normCard)&&normCard.length>=2)))return 100;
 if(normG2&&(normCard.includes(normG2)||(normG2.includes(normCard)&&normCard.length>=2)))return 95;
 const chainPrefixRegex=/^(골프존|클럽디|한림)/;
@@ -4880,9 +4892,15 @@ isRegistrationRunning=true;
 isPostReplacementRunning=true;
 _priceUpdateRunning=isPriceUpdateMode;
 shouldStopRegistration=false;
-_submitLocked=false;
+_replacedCardsSet=new WeakSet();
+window._replacedCardsSet=_replacedCardsSet;
+_submittedButtonsSet=new WeakSet();
+window._submittedButtonsSet=_submittedButtonsSet;
 _submittedUrls=new Set();
+window._submittedUrls=_submittedUrls;
 _submittedItems=new Set();
+window._submittedItems=_submittedItems;
+_submitLocked=false;
 resetEditSubmitLock();
 try{
 chrome.storage.local.set({isRegistrationRunning:true});
@@ -5022,14 +5040,17 @@ return true;
 };
 let initialCards=[];
 const seenCardKeys=new Set();
+const seenCardElements=new Set();
 const registerDiscoveredCards=(cards)=>{
 for(const c of cards){
+if(c.el&&seenCardElements.has(c.el))continue;
 const posKey=(typeof c.topY==='\x6e\x75\x6d\x62\x65\x72'&&typeof c.leftX==='\x6e\x75\x6d\x62\x65\x72')
 ?`${Math.round(c.topY)}_${Math.round(c.leftX)}`
 :(c.domOrderIdx!==undefined?`dom_${c.domOrderIdx}`:'');
 const k=c.postId||`${c.timeDigits||'\x6e\x6f\x74\x69\x6d\x65'}_${c.feeManVal??'\x6e\x6f\x66\x65\x65'}_${c.peopleStr||''}_${c.regStamp||''}_${posKey}`;
 if(!seenCardKeys.has(k)){
 seenCardKeys.add(k);
+if(c.el)seenCardElements.add(c.el);
 initialCards.push(c);
 }
 }
@@ -5497,6 +5518,13 @@ if(unhandled.length>0){
 liveCardObj=unhandled[0];
 liveCardObj.el.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 await _0x1004(150);
+}else if(targetDigits){
+const timeMatch=lastTryCards.find(c=>c.timeDigits===targetDigits&&(!c.postId||!processedPostIds.has(c.postId)));
+if(timeMatch){
+liveCardObj=timeMatch;
+liveCardObj.el.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
+await _0x1004(150);
+}
 }
 }
 if(!liveCardObj){
