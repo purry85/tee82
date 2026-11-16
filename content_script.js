@@ -4754,14 +4754,15 @@ total:items.length
 });
 const courseGroups={};
 for(const it of items){
-const key=`${it.date}_${it.golf}`;
+const itemCat=(it.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+const key=`${it.date}_${it.golf}_${itemCat}`;
 if(!courseGroups[key]){
 courseGroups[key]={
 date:it.date,
 golf:it.golf,
 rawGolf:it.rawGolf||it.golf,
 region:it.region,
-roomType:it.roomType,
+roomType:itemCat,
 items:[]
 };
 }

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomaTee (오토매티) - 원클릭 설치기 다운로드</title>
+    <link rel="icon" type="image/png" href="automatee_tile.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(180deg, #12324a 0%, #0d1726 45%, #0a111d 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            padding: 38px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+        }
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .logo-img {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            display: block;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+        h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #ffffff 40%, #5eead4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 26px;
+        }
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #10b981 0%, #0ea5e9 100%);
+            color: #ffffff;
+            font-size: 15.5px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 14px;
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.35);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.5);
+            filter: brightness(1.08);
+        }
+        .file-info {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 10px;
+            margin-bottom: 24px;
+        }
+        .guide-box {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(51, 65, 85, 0.45);
+            border-radius: 14px;
+            padding: 16px 18px;
+            text-align: left;
+        }
+        .guide-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+        .guide-step {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.65;
+            margin-bottom: 6px;
+        }
+        .guide-step:last-child {
+            margin-bottom: 0;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 11.5px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- 1. 정중앙 로고 -->
+        <div class="logo-wrapper">
+            <img src="automatee_tile.png" alt="AutomaTee" class="logo-img">
+        </div>
+
+        <!-- 2. 중앙 정렬 뱃지 -->
+        <div class="badge">Windows 전용 · 원클릭 설치기</div>
+
+        <!-- 3. 타이틀 및 버전 -->
+        <h1>AutomaTee</h1>
+        <p class="subtitle">골프 티타임 자동등록 솔루션 Ver 2.1.8</p>
+
+        <!-- 4. 원클릭 다운로드 버튼 -->
+        <a href="Automatee_Setup.exe" download="Automatee_Setup.exe" class="btn-download">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            설치 프로그램 다운로드
+        </a>
+        <div class="file-info">파일: Automatee_Setup.exe (약 2.2 MB)</div>
+
+        <!-- 4-1. 공식 사용설명서 바로가기 -->
+        <a href="manual.html" class="btn-manual" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: rgba(30, 41, 59, 0.75); border: 1px solid rgba(56, 189, 248, 0.35); color: #38BDF8; font-size: 13.5px; font-weight: 700; text-decoration: none; border-radius: 12px; margin-bottom: 12px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+            <span style="font-size: 16px;">📖</span> 공식 온라인 사용설명서 보기
+        </a>
+
+        <!-- 4-2. 애니데스크 원격 지원 카드 -->
+        <div class="remote-support-box" style="width: 100%; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(99, 102, 241, 0.45); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; text-align: left; box-shadow: 0 6px 16px rgba(0,0,0,0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="font-size: 13px; font-weight: 800; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
+                    <span>🖥️ 원격 설치 지원 (AnyDesk)</span>
+                </div>
+                <span style="font-size: 10px; background: rgba(99, 102, 241, 0.25); color: #c7d2fe; padding: 2px 7px; border-radius: 6px; font-weight: 700;">실시간 원격</span>
+            </div>
+            
+            <p style="font-size: 11.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;">
+                설치가 어려우신가요? 애니데스크를 다운받아 <b>실행하고, 애니데스크 회원가입 후 로그인 뒤</b>, 나타나는 <b>9자리 번호</b>를 보내주시면 원격 접속하여 직접 도와드립니다.
+            </p>
+
+            <!-- 1) 애니데스크 다운로드 버튼 -->
+            <a href="https://download.anydesk.com/AnyDesk.exe" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 9px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: all 0.2s;">
+                <span>⬇️ 애니데스크 다운로드 (다운 후 바로 실행)</span>
+            </a>
+
+            <!-- 2) 내 PC 번호 입력 및 전송 -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; gap: 6px;">
+                    <input type="text" id="anydeskName" placeholder="성함" style="flex: 1; padding: 9px 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(71, 85, 105, 0.8); border-radius: 8px; color: #fff; font-size: 12px; outline: none;">
+                    <input type="text" id="anydeskNumber" placeholder="AnyDesk 9자리 번호" style="flex: 1.35; padding: 9px 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(71, 85, 105, 0.8); border-radius: 8px; color: #38bdf8; font-weight: 700; font-size: 12.5px; outline: none; letter-spacing: 0.5px;">
+                </div>
+                <button type="button" id="btnSendAnydesk" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);">
+                    <span>🚀 내 PC 번호 전송하고 원격 요청하기</span>
+                </button>
+            </div>
+
+            <!-- 전송 완료 안내 메시지 영역 -->
+            <div id="anydeskSuccessMsg" style="display: none; margin-top: 8px; padding: 8px 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 6px; font-size: 11px; color: #34d399; line-height: 1.4;">
+                ✅ <b>원격 번호가 전송되었습니다!</b><br>
+                카카오톡 창이 열리면 붙여넣기(Ctrl+V) 하시면 담당자가 즉시 접속하여 도와드립니다.
+            </div>
+        </div>
+
+        <!-- 4-3. 카카오톡 1:1 상담 문의 -->
+        <a href="http://pf.kakao.com/_RxbSNX/chat" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: #FEE500; color: #191919; font-size: 13.5px; font-weight: 800; text-decoration: none; border-radius: 12px; margin-bottom: 22px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(254, 229, 0, 0.25);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#191919"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.25 4.54 6.62-.2.74-.72 2.68-.83 3.09-.13.5.18.5.38.36.16-.11 2.53-1.72 3.56-2.42.76.11 1.54.17 2.35.17 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
+            오토매티 카카오톡 1:1 실시간 문의
+        </a>
+
+        <!-- 5. 3단계 간편 설치 안내 -->
+        <div class="guide-box">
+            <div class="guide-title">📌 초간단 설치 안내</div>
+            <div class="guide-step">1. 위 버튼을 눌러 <b>Automatee_Setup.exe</b>를 다운로드합니다.</div>
+            <div class="guide-step">2. 다운로드된 파일을 실행하고 사용할 브라우저(크롬, 엣지 등)를 선택합니다.</div>
+            <div class="guide-step">3. <b>[원클릭 브라우저 연동 및 시작]</b>을 누르면 브라우저 툴바에 자동 등록됩니다.</div>
+        </div>
+
+        <div class="footer">
+            © 2026 AutomaTee. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        const AUTH_API_URL = 'https://script.google.com/macros/s/AKfycbw9BUEoZFUSIZ8jj1CqyxxZoKVdzel7vfc7DnIaEmtREOon4wN_Pmdc9ukhLsaOz81iFQ/exec';
+
+        document.getElementById('btnSendAnydesk').addEventListener('click', async () => {
+            const nameInput = document.getElementById('anydeskName');
+            const numInput = document.getElementById('anydeskNumber');
+            const successMsg = document.getElementById('anydeskSuccessMsg');
+
+            const name = (nameInput.value || '').trim();
+            const rawNum = (numInput.value || '').replace(/[^0-9]/g, '');
+
+            if (!name) {
+                alert('성함 또는 매니저명을 입력해주세요.');
+                nameInput.focus();
+                return;
+            }
+
+            if (rawNum.length < 8) {
+                alert('AnyDesk 9자리 번호를 올바르게 입력해주세요.');
+                numInput.focus();
+                return;
+            }
+
+            const formattedNum = rawNum.length === 9 
+                ? `${rawNum.slice(0,3)} ${rawNum.slice(3,6)} ${rawNum.slice(6,9)}`
+                : rawNum;
+
+            const copyText = `[오토매티 원격설치 요청]\n성함: ${name}\n애니데스크 번호: ${formattedNum}`;
+
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(copyText);
+                }
+            } catch (err) {
+                console.warn('Clipboard write failed:', err);
+            }
+
+            // 서버 전송 (CORS 제약 없는 100% 전송 보장: Image ping + fetch 병행)
+            const targetReqUrl = `${AUTH_API_URL}?action=remote_support_request&name=${encodeURIComponent(name)}&anydesk=${encodeURIComponent(formattedNum)}&time=${encodeURIComponent(new Date().toISOString())}`;
+            try {
+                const ping = new Image();
+                ping.src = targetReqUrl;
+            } catch(e) {}
+            try {
+                fetch(targetReqUrl, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+            } catch(e) {}
+
+            successMsg.style.display = 'block';
+            successMsg.innerHTML = `✅ <b>[${formattedNum}] 원격 번호가 복사되었습니다!</b><br>잠시 후 열리는 카카오톡 채팅창에 <b>붙여넣기(Ctrl+V)</b>하여 보내주시면 담당자가 즉시 접속하여 도와드립니다.`;
+
+            setTimeout(() => {
+                window.open('http://pf.kakao.com/_RxbSNX/chat', '_blank');
+            }, 800);
+        });
+
+        // 숫자 자동 포맷팅
+        document.getElementById('anydeskNumber').addEventListener('input', function(e) {
+            let v = this.value.replace(/[^0-9]/g, '');
+            if (v.length > 9) v = v.slice(0, 9);
+            if (v.length > 6) {
+                this.value = `${v.slice(0,3)} ${v.slice(3,6)} ${v.slice(6)}`;
+            } else if (v.length > 3) {
+                this.value = `${v.slice(0,3)} ${v.slice(3)}`;
+            } else {
+                this.value = v;
+            }
+        });
+    </script>
+</body>
+</html>
