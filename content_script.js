@@ -4488,7 +4488,7 @@ const normCard=_0x1041(rawTxt);
 const golfScore=_0x1044(normCard,normG1,normG2);
 if(golfScore===0)continue;
 if(targetDay){
-const cleanDateTxt=rawTxt.replace(/(?:등록|수정|작성)\.?\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
+const cleanDateTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
 const cardDateM=cleanDateTxt.match(/(?:^|[^\d])(\d{1,2})[./\-](\d{1,2})(?:\([월화수목금토일]\))?\s*\d{1,2}:\d{2}/)||
 cleanDateTxt.match(/(?:^|[^\d])(\d{1,2})[./\-](\d{1,2})\s*\([월화수목금토일]\)/)||
 cleanDateTxt.match(/(?:^|[^\d])(\d{1,2})[./\-](\d{1,2})(?=[^\d]|$)/);
@@ -4527,7 +4527,7 @@ const pIdM=href.match(/\/(?:detail|item)\/(\d+)/);
 if(pIdM)cardPostId=pIdM[1];
 }
 }
-const cleanForTime=rawTxt.replace(/(?:등록|수정|작성)\.?\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
+const cleanForTime=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
 const dateAttachedTime=cleanForTime.match(/(?:\d{1,2}[./\-]\d{1,2}|\([월화수목금토일]\))\s*(\d{1,2}:\d{2})/);
 const allTimes=Array.from(cleanForTime.matchAll(/(\d{1,2}):(\d{2})/g));
 const teeTimeCandidates=allTimes.filter(m=>{
@@ -4567,7 +4567,7 @@ feeManVal=Math.round((rawWon/10000)*10)/10;
 }
 feeStr=feeWonMatch[0];
 }
-const regStampMatch=rawTxt.match(/(?:등록|수정)[.\s]*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?\s*\d{1,2}:\d{2}/);
+const regStampMatch=rawTxt.match(/(?:등록|수정)[.,\s]*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?\s*\d{1,2}:\d{2}/);
 const regStamp=regStampMatch?regStampMatch[0].replace(/\s+/g,''):'';
 const peopleMatch=rawTxt.match(/(\d+)\s*명/);
 const peopleStr=peopleMatch?`${peopleMatch[1]}\uba85`:'';
@@ -4825,10 +4825,10 @@ continue;
 }
 if(group.region&&group.region!=='\uc804\uccb4'){
 await _0x103e(group.region);
-await _0x1003(200);
+await _0x1003(350);
 }else{
 await _0x103e('\uc804\uccb4');
-await _0x1003(200);
+await _0x1003(350);
 }
 if(shouldStopRegistration)break;
 const normalizeTimeDigits=(t)=>{
@@ -4867,7 +4867,10 @@ let initialCards=[];
 const seenCardKeys=new Set();
 const registerDiscoveredCards=(cards)=>{
 for(const c of cards){
-const k=c.postId||c.regStamp||`${c.timeDigits}_${c.feeManVal}`;
+const posKey=(typeof c.topY==='\x6e\x75\x6d\x62\x65\x72'&&typeof c.leftX==='\x6e\x75\x6d\x62\x65\x72')
+?`${Math.round(c.topY)}_${Math.round(c.leftX)}`
+:(c.domOrderIdx!==undefined?`dom_${c.domOrderIdx}`:'');
+const k=c.postId||c.regStamp||`${c.timeDigits}_${c.feeManVal}_${c.peopleStr||''}_${posKey}`;
 if(!seenCardKeys.has(k)){
 seenCardKeys.add(k);
 initialCards.push(c);
@@ -4877,7 +4880,7 @@ initialCards.push(c);
 for(let r=0;r<4;r++){
 registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length>=2)break;
-await _0x1003(200);
+await _0x1003(220);
 }
 if(initialCards.length<2){
 console.log(`[${logTag}] ${group.golf}: \uc0c1\ub2e8\uc5d0\uc11c ${initialCards.length}\uac74 \ubc1c\uacac -> \ud558\ub2e8 \uc2a4\ud06c\ub864 \uc804\uc218 \ud0d0\uc0c9 \uc9c4\ud589...`);
@@ -4904,7 +4907,7 @@ if(initialCards.length===0&&group.region&&group.region!=='\uc804\uccb4'){
 console.log(`[${logTag}] ${group.golf}: \uc9c0\uc815 \uc9c0\uc5ed(${group.region})\uc5d0\uc11c 0\uac74 \ubc1c\uacac -> \uc9c0\uc5ed '\uc804\uccb4' \ubc0f \uce74\ud14c\uace0\ub9ac [${groupCategory}] \uc815\ubc00 \uc7ac\ud0d0\uc0c9`);
 await _0x103e('\uc804\uccb4');
 await _0x1040(groupCategory);
-await _0x1003(200);
+await _0x1003(250);
 registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length<2){
 for(let s=0;s<maxScanScrolls;s++){
@@ -4926,6 +4929,54 @@ await _0x1003(200);
 if(initialCards.length===0){
 await _0x103e(group.region);
 await _0x1003(200);
+}
+}
+if(initialCards.length===0){
+console.log(`[${logTag}] ${group.golf}: \uce74\ud14c\uace0\ub9ac [${groupCategory}]\uc5d0\uc11c 0\uac74 \ubc1c\uacac -> \uce74\ud14c\uace0\ub9ac '\uc804\uccb4' \ubc0f \uc9c0\uc5ed [${group.region||'\uc804\uccb4'}] \ud1b5\ud569 \uc804\uc218 \uc7ac\ud0d0\uc0c9...`);
+await _0x1040('\uc804\uccb4');
+await _0x1003(300);
+registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
+if(initialCards.length<2){
+for(let s=0;s<5;s++){
+if(shouldStopRegistration)break;
+window.scrollBy(0,450);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+if(el.scrollHeight>el.clientHeight)el.scrollTop+=450;
+});
+await _0x1003(220);
+registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
+if(initialCards.length>=2)break;
+}
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+el.scrollTop=0;
+});
+await _0x1003(200);
+}
+if(initialCards.length===0&&group.region&&group.region!=='\uc804\uccb4'){
+console.log(`[${logTag}] ${group.golf}: \uc9c0\uc5ed '\uc804\uccb4' + \uce74\ud14c\uace0\ub9ac '\uc804\uccb4' \ucd5c\uc885 \uc2ec\uce35 \uc804\uc218 \ud0d0\uc0c9...`);
+await _0x103e('\uc804\uccb4');
+await _0x1003(300);
+registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
+if(initialCards.length<2){
+for(let s=0;s<5;s++){
+if(shouldStopRegistration)break;
+window.scrollBy(0,450);
+await _0x1003(200);
+registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date));
+if(initialCards.length>=2)break;
+}
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+el.scrollTop=0;
+});
+await _0x1003(200);
+}
+if(initialCards.length===0){
+await _0x103e(group.region);
+await _0x1040(groupCategory);
+await _0x1003(200);
+}
 }
 }
 }
@@ -5175,14 +5226,18 @@ return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<12;retry++){
 let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
+if(liveCards.length===0&&groupCategory!=='\uc804\uccb4'){
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
+}
 if(liveCards.length===0&&retry===2){
 if(group.region&&group.region!=='\uc804\uccb4'){
 await _0x103e('\uc804\uccb4');
-await _0x1040(groupCategory);
+await _0x1040('\uc804\uccb4');
 await _0x1003(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
+liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,'\uc804\uccb4',group.date);
 if(liveCards.length===0){
 await _0x103e(group.region);
+await _0x1040(groupCategory);
 await _0x1003(200);
 }
 }
@@ -5420,7 +5475,7 @@ chrome.runtime.sendMessage({type:completedMsgType,total:items.length,successCoun
 var isDateResetRunning=false;
 function extractTeeTimeFromResetCard(rawTxt){
 if(!rawTxt)return'';
-const cleanTxt=rawTxt.replace(/(?:등록|수정|작성)\.?\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
+const cleanTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
 const dateAttachedTime=cleanTxt.match(/(?:\d{1,2}[./\-]\d{1,2}|\([월화수목금토일]\))\s*(\d{1,2}:\d{2})/);
 if(dateAttachedTime){
 const parts=dateAttachedTime[1].split('\x3a');
