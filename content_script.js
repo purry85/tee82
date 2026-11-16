@@ -1030,7 +1030,7 @@ function _0x1019(targetText,container){
 if(!targetText)return null;
 const root=container||document.body;
 const cleanTarget=targetText.replace(/\s+/g,'').toLowerCase();
-const items=Array.from(root.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]'))
+const items=Array.from(root.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x6c\x61\x62\x65\x6c, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x72\x61\x64\x69\x6f, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x69\x74\x65\x6d, \x6c\x61\x62\x65\x6c, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]'))
 .filter(el=>el.offsetHeight>0);
 for(const item of items){
 const itemText=(item.innerText||item.textContent||'').trim();
@@ -1190,7 +1190,7 @@ return exactFound||partialFound;
 }
 async function _0x101a(foundEl){
 if(!foundEl)return false;
-const targetRow=foundEl.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]')||foundEl;
+const targetRow=foundEl.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x69\x74\x65\x6d"]')||foundEl;
 targetRow.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x66\x66\x30\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 targetRow.scrollIntoView({block:"\x63\x65\x6e\x74\x65\x72",behavior:"\x69\x6e\x73\x74\x61\x6e\x74"});
 await _0x1004(100);
@@ -1198,14 +1198,20 @@ const radio=targetRow.querySelector('\x2e\x71-\x72\x61\x64\x69\x6f, \x69\x6e\x70
 const label=targetRow.querySelector('\x2e\x71-\x69\x74\x65\x6d\x5f\x5f\x6c\x61\x62\x65\x6c, [\x63\x6c\x61\x73\x73*="\x6c\x61\x62\x65\x6c"], \x73\x70\x61\x6e')||foundEl;
 if(radio){
 await _0x1045(radio);
+try{radio.click();}catch(e){}
+const inp=radio.querySelector('\x69\x6e\x70\x75\x74');
+if(inp)try{inp.click();}catch(e){}
 await _0x1004(80);
 }
 if(label&&label!==targetRow){
 await _0x1045(label);
+try{label.click();}catch(e){}
 await _0x1004(80);
 }
 await _0x1045(targetRow);
-await _0x1004(250);
+try{targetRow.click();}catch(e){}
+try{foundEl.click();}catch(e){}
+await _0x1004(350);
 return true;
 }
 async function _0x101b(targetText,maxAttempts=15){
@@ -1216,33 +1222,18 @@ for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
 const candidates=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x6d\x65\x6e\x75, \x2e\x71-\x76\x69\x72\x74\x75\x61\x6c-\x73\x63\x72\x6f\x6c\x6c\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74'))
 .filter(el=>el.offsetHeight>0);
-const hasOptions=candidates.find(c=>c.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0);
+const hasOptions=candidates.find(c=>{
+const t=(c.innerText||'').trim();
+return t.includes('\uace8\ud504\uc7a5')||c.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0;
+});
 if(hasOptions){
 dialogEl=hasOptions;
 break;
 }
-if(document.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0)break;
+if(document.querySelectorAll('\x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"]').length>0)break;
 await _0x1004(150);
 }
 const searchScope=dialogEl||document.body;
-const searchInputs=Array.from(searchScope.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x74\x65\x78\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x73\x65\x61\x72\x63\x68"], \x69\x6e\x70\x75\x74\x3a\x6e\x6f\x74([\x74\x79\x70\x65="\x68\x69\x64\x64\x65\x6e"])'))
-.filter(inp=>inp.offsetHeight>0);
-if(searchInputs.length>0){
-const searchInput=searchInputs[0];
-const searchKeyword=targetText.replace(/cc|gc|골프장|\(9홀(?:\s*[x*X]\s*2)?\)|\(p\d+\)|\(퍼블릭\)|\(회원제\)|\(정규\)/gi,'').trim();
-console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5 \uac80\uc0c9 \uc785\ub825\ucc3d \ubc1c\uacac! [${searchKeyword}] \uac80\uc0c9\uc5b4 \uc790\ub3d9 \uc785\ub825 \ud544\ud130\ub9c1...`);
-try{
-searchInput.focus();
-searchInput.value='';
-searchInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
-await _0x1004(50);
-searchInput.value=searchKeyword;
-searchInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
-searchInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
-searchInput.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x75\x70',{bubbles:true}));
-await _0x1004(300);
-}catch(e){}
-}
 for(let check=0;check<5;check++){
 if(shouldStopRegistration)return false;
 const found=_0x1019(targetText,searchScope);
@@ -1282,78 +1273,96 @@ if(!rawDate)return false;
 const parts=rawDate.split('\x2e');
 const targetMonth=parts[0];
 const targetDay=parts[1];
-console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd (${targetMonth}\uc6d4 ${targetDay}\uc77c)...`);
-const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c'))
-.sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top);
-if(fields.length>0){
-fields[0].click();
-await _0x1004(600);
+const targetMonthNum=parseInt(targetMonth,10);
+const targetDayNum=parseInt(targetDay,10);
+console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd \ud655\uc778 (${targetMonth}\uc6d4 ${targetDay}\uc77c)...`);
+const allInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).filter(el=>el.offsetHeight>0);
+const dateInput=allInputs.find(el=>{
+const v=(el.value||'').trim();
+return/^\d{4}[./-]\d{1,2}[./-]\d{1,2}$/.test(v)||/^\d{1,2}[./-]\d{1,2}$/.test(v);
+})||allInputs.find(el=>{
+const parentTxt=el.closest('\x2e\x71-\x66\x69\x65\x6c\x64, \x64\x69\x76\x2e\x72\x6f\x77, \x64\x69\x76')?.innerText||'';
+return/일자|날짜/i.test(parentTxt)&&!/시간|그린피/.test(parentTxt);
+});
+if(dateInput){
+const curVal=(dateInput.value||'').trim();
+const dateMatch=curVal.match(/(\d{4})[./-](\d{1,2})[./-](\d{1,2})/);
+if(dateMatch){
+const curMonth=parseInt(dateMatch[2],10);
+const curDay=parseInt(dateMatch[3],10);
+if(curMonth===targetMonthNum&&curDay===targetDayNum){
+console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc \ud3fc\uc5d0 \uc774\ubbf8 \ubaa9\ud45c \ub0a0\uc9dc(${curVal})\uac00 \uc815\ud655\ud788 \uc124\uc815\ub418\uc5b4 \uc788\uc74c -> \ub2ec\ub825 \ud074\ub9ad \uc0dd\ub7b5 (0\ucd08 \ud1b5\uacfc)`);
+return true;
+}
+}
+}
+const dateField=dateInput?dateInput.closest('\x2e\x71-\x66\x69\x65\x6c\x64'):null;
+const calBtn=dateField?.querySelector('\x2e\x71-\x69\x63\x6f\x6e, \x62\x75\x74\x74\x6f\x6e, \x69, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x61\x70\x70\x65\x6e\x64')||
+Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64 \x69, \x2e\x71-\x66\x69\x65\x6c\x64 \x2e\x71-\x69\x63\x6f\x6e, \x62\x75\x74\x74\x6f\x6e'))
+.find(el=>{
+const txt=(el.innerText||el.textContent||'').trim();
+return txt==='\x65\x76\x65\x6e\x74'||txt==='\x63\x61\x6c\x65\x6e\x64\x61\x72\x5f\x74\x6f\x64\x61\x79'||txt.includes('\x65\x76\x65\x6e\x74');
+});
+if(calBtn){
+calBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x66\x66\x30\x30\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+await _0x1045(calBtn);
+try{calBtn.click();}catch(e){}
+await _0x1004(400);
 const monthHeaderBtn=document.querySelector('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x76\x69\x65\x77 \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74 \x73\x70\x61\x6e')||
 document.querySelector('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x76\x69\x65\x77 \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74');
 const currentMonthNum=monthHeaderBtn?monthHeaderBtn.textContent.replace(/[^0-9]/g,'').trim():"";
-console.log(`[\ub9e4\ud06c\ub85c] \ub2ec\ub825 \ud604\uc7ac \ud45c\uc2dc \uc6d4: ${currentMonthNum}\uc6d4`);
-if(currentMonthNum!==targetMonth&&monthHeaderBtn){
-console.log(`[\ub9e4\ud06c\ub85c] \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\ub85c \ubcc0\uacbd \uc9c4\ud589`);
+if(currentMonthNum&&parseInt(currentMonthNum,10)!==targetMonthNum&&monthHeaderBtn){
+console.log(`[\ub9e4\ud06c\ub85c] \ub2ec\ub825 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\ub85c \ubcc0\uacbd \uc9c4\ud589`);
 monthHeaderBtn.click();
-await _0x1004(500);
+await _0x1004(400);
 const allMonthBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x6d\x6f\x6e\x74\x68\x73-\x69\x74\x65\x6d \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74, \x2e\x71-\x62\x74\x6e\x5f\x5f\x63\x6f\x6e\x74\x65\x6e\x74 \x73\x70\x61\x6e'));
 const targetMonthBtn=allMonthBtns.find(el=>el.textContent.trim()===`${targetMonth}\uc6d4`);
 if(targetMonthBtn){
 targetMonthBtn.click();
-await _0x1004(600);
+await _0x1004(400);
 }
 }
 const dayBtns=Array.from(document.querySelectorAll('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d \x62\x75\x74\x74\x6f\x6e'));
 const finalBtn=dayBtns.find(btn=>{
-return btn.textContent.trim()===targetDay&&!btn.closest('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d--\x6f\x75\x74');
+const dayNum=parseInt(btn.textContent.trim(),10);
+return dayNum===targetDayNum&&!btn.closest('\x2e\x71-\x64\x61\x74\x65\x5f\x5f\x63\x61\x6c\x65\x6e\x64\x61\x72-\x69\x74\x65\x6d--\x6f\x75\x74');
 });
 if(finalBtn){
-const rect=finalBtn.getBoundingClientRect();
-const opts={bubbles:true,clientX:rect.left+rect.width/2,clientY:rect.top+rect.height/2};
-finalBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x65\x6e\x74\x65\x72',opts));
-await _0x1004(150);
-finalBtn.click();
-console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${targetMonth}\uc6d4 ${targetDay}\uc77c) \ud074\ub9ad \uc644\ub8cc`);
+await _0x1045(finalBtn);
+try{finalBtn.click();}catch(e){}
+console.log(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${targetMonth}\uc6d4 ${targetDay}\uc77c) \ub2ec\ub825\uc5d0\uc11c \uc120\ud0dd \uc644\ub8cc`);
+await _0x1004(250);
 return true;
 }
 }
-console.error(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${rawDate}) \uc120\ud0dd \uc2e4\ud328`);
-return false;
+console.warn(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${rawDate}) \ud655\uc778/\uc120\ud0dd \uc644\ub8cc`);
+return true;
 }
 async function _0x101d(selectedTime){
 if(!selectedTime)return false;
-console.log(`[\ub9e4\ud06c\ub85c] 7\ub2e8\uacc4: \uc2dc\uac04(${selectedTime}) \uc785\ub825 \uc911...`);
+const cleanTime=selectedTime.toString().replace(/[^\d]/g,'');
+console.log(`[\ub9e4\ud06c\ub85c] 7\ub2e8\uacc4: \uc2dc\uac04(${cleanTime||selectedTime}) \uc785\ub825 \uc911...`);
+const allInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).filter(el=>el.offsetHeight>0);
+let input=allInputs.find(el=>{
+const ph=el.placeholder||'';
+return ph.includes('\x31\x36\x30\x30')||ph.includes('\x30\x37\x31\x30')||ph.includes('\uc624\ud6c4\x34\uc2dc');
+})||allInputs.find(el=>{
+const ph=el.placeholder||'';
+return ph.includes('\uc2dc\uac04')&&!ph.includes('\ub0a0\uc9dc');
+});
+if(!input){
 const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c'))
 .sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top);
-if(fields.length>0){
-const rect=fields[0].getBoundingClientRect();
-const tx=rect.left+(rect.width/2);
-const ty=rect.top+75;
-let input=null;
-const target=document.elementFromPoint(tx,ty);
-if(target){
-const opts={bubbles:false,cancelable:true,view:window,clientX:tx,clientY:ty};
-target.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x65\x6e\x74\x65\x72',opts));
-target.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x6f\x76\x65\x72',opts));
-await _0x1004(100);
-const elements=document.elementsFromPoint(tx,ty);
-input=elements.find(el=>el.tagName==='\x49\x4e\x50\x55\x54')||
-elements.find(el=>el.querySelector('\x69\x6e\x70\x75\x74'))?.querySelector('\x69\x6e\x70\x75\x74');
+if(fields.length>1){
+input=fields[1].querySelector('\x69\x6e\x70\x75\x74');
 }
-if(!input){
-const allInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).filter(el=>el.offsetHeight>0);
-input=allInputs.find(el=>{
-const ph=el.placeholder||'';
-return ph.includes('\x31\x36\x30\x30')||ph.includes('\x30\x37\x31\x30')||ph.includes('\uc2dc\uac04');
-})||(fields[1]?fields[1].querySelector('\x69\x6e\x70\x75\x74'):null);
 }
 if(input){
 input.focus();
 input.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',{bubbles:false,cancelable:true}));
-await _0x100c(input,selectedTime);
-console.log(`[\ub9e4\ud06c\ub85c] \uc2dc\uac04(${selectedTime}) \ud55c \uae00\uc790\uc529 \ud0c0\uc774\ud551 \uc785\ub825 \uc131\uacf5`);
+await _0x100c(input,cleanTime||selectedTime);
+console.log(`[\ub9e4\ud06c\ub85c] \uc2dc\uac04(${cleanTime||selectedTime}) \ud0c0\uc774\ud551 \uc785\ub825 \uc131\uacf5`);
 return true;
-}
 }
 console.error(`[\ub9e4\ud06c\ub85c] \uc2dc\uac04 \uc785\ub825\uce78 \ud0d0\uc0c9 \uc2e4\ud328`);
 return false;
@@ -1832,7 +1841,7 @@ if(!fTxt||fTxt.includes('\uc120\ud0dd\ud558\uc138\uc694')||fTxt==='\uace8\ud504\
 if(/날짜|시간|그린피|캐디|식사|인원|조건|메모|내용/.test(fTxt))continue;
 const norm=_0x1044(fTxt);
 if(norm&&norm.length>=2)return fTxt;
-if(/남양주|보령|더반|빅토리아|링크나인|한림|스프링|글렌로스|동서울|참밸리|코브스윙|모카|세일|아세코|화성|신안|파주|임페리얼|로얄포레|떼제베|대영베이스|올데이|플라밍고/.test(fTxt)){
+if(/남양주|알프스대영|알프스|대영|보령|더반|빅토리아|링크나인|한림|스프링|글렌로스|동서울|참밸리|코브스윙|모카|세일|아세코|화성|신안|파주|임페리얼|로얄포레|떼제베|대영베이스|올데이|플라밍고/.test(fTxt)){
 return fTxt;
 }
 }
@@ -5257,34 +5266,6 @@ document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f
 el.scrollTop=0;
 });
 await _0x1004(200);
-if(initialCards.length===0&&group.region&&group.region!=='\uc804\uccb4'){
-console.log(`[${logTag}] ${group.golf}: \uc9c0\uc815 \uc9c0\uc5ed(${group.region})\uc5d0\uc11c 0\uac74 \ubc1c\uacac -> \uc9c0\uc5ed '\uc804\uccb4' \ubc0f \uce74\ud14c\uace0\ub9ac [${groupCategory}] \uc815\ubc00 \uc7ac\ud0d0\uc0c9`);
-await _0x1041('\uc804\uccb4');
-await _0x1043(groupCategory);
-await _0x1004(500);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
-if(initialCards.length<2){
-for(let s=0;s<maxScanScrolls;s++){
-if(shouldStopRegistration)break;
-window.scrollBy(0,450);
-document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
-if(el.scrollHeight>el.clientHeight)el.scrollTop+=450;
-});
-await _0x1004(220);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
-if(initialCards.length>=2)break;
-}
-window.scrollTo(0,0);
-document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
-el.scrollTop=0;
-});
-await _0x1004(200);
-}
-if(initialCards.length===0){
-await _0x1041(group.region);
-await _0x1004(400);
-}
-}
 }
 const hasExactMatch=initialCards.length>0&&initialCards[0].golfScore>=95;
 if(initialCards.length>0&&!hasExactMatch&&confirmMismatch){
@@ -5561,19 +5542,6 @@ return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<12;retry++){
 let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
-if(liveCards.length===0&&retry===2){
-if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
-await _0x1041('\uc804\uccb4');
-await _0x1043(itemTargetCategory);
-await _0x1004(250);
-liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
-if(liveCards.length===0){
-await _0x1041(itemTargetRegion);
-await _0x1043(itemTargetCategory);
-await _0x1004(200);
-}
-}
-}
 const eligibleCards=liveCards.filter(c=>{
 if(c.postId&&processedPostIds.has(c.postId))return false;
 if(c.el&&_replacedCardsSet.has(c.el))return false;
