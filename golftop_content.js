@@ -1741,9 +1741,403 @@ _0x1005({desc:'\ud83d\uded1 \uc790\ub3d9\ub4f1\ub85d\uc774 \uc911\ub2e8\ub418\uc
 _0x1006();
 sendResponse({success:true});
 return true;
+}else if(msg.action==='\x53\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54'){
+const enabled=!!msg.enabled;
+_0x1027(enabled);
+_0x102d(enabled);
+sendResponse({success:true,enabled:enabled});
+return true;
+}else if(msg.action==='\x47\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54\x5f\x53\x54\x41\x54\x55\x53'){
+const isEnabled=document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
+sendResponse({success:true,enabled:isEnabled});
+return true;
 }
 };
 if(!window.__golftop_legacy_listener_exists){
 chrome.runtime.onMessage.addListener(window.__golftop_onMessage_fn);
 }
 console.log("[\x54\x65\x65\x38\x32] \uace8\ud504\ud0d1(\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72) \uc790\ub3d9\ub4f1\ub85d \ucf58\ud150\uce20 \uc2a4\ud06c\ub9bd\ud2b8 \ub85c\ub4dc \uc644\ub8cc (\x56\x65\x72 \x32\x2e\x30\x2e\x35\x33)");
+const GTP_LAYOUT_STORAGE_KEY='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64';
+const GTP_LAYOUT_STYLE_ID='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x69\x6e\x6a\x65\x63\x74\x65\x64\x5f\x73\x74\x79\x6c\x65';
+let __gtp_smart_layout_observer=null;
+function _0x1026(){
+return new Promise(resolve=>{
+try{
+chrome.storage.local.get([GTP_LAYOUT_STORAGE_KEY],(res)=>{
+if(chrome.runtime.lastError||res[GTP_LAYOUT_STORAGE_KEY]===undefined){
+const localVal=localStorage.getItem(GTP_LAYOUT_STORAGE_KEY);
+resolve(localVal===null?true:localVal==='\x74\x72\x75\x65');
+}else{
+resolve(!!res[GTP_LAYOUT_STORAGE_KEY]);
+}
+});
+}catch(e){
+const localVal=localStorage.getItem(GTP_LAYOUT_STORAGE_KEY);
+resolve(localVal===null?true:localVal==='\x74\x72\x75\x65');
+}
+});
+}
+function _0x1027(enabled){
+try{
+chrome.storage.local.set({[GTP_LAYOUT_STORAGE_KEY]:enabled});
+}catch(e){}
+try{
+localStorage.setItem(GTP_LAYOUT_STORAGE_KEY,String(enabled));
+}catch(e){}
+}
+function _0x1028(){
+if(document.getElementById(GTP_LAYOUT_STYLE_ID))return;
+const style=document.createElement('\x73\x74\x79\x6c\x65');
+style.id=GTP_LAYOUT_STYLE_ID;
+style.textContent=`
+        /* ===== \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c) \ucd5c\uc801\ud654 CSS ===== */
+
+        /* 1. \uace8\ud504\uc7a5 \uc120\ud0dd \ubc84\ud2bc \ub9d0\uc904\uc784\ud45c(...) \uac15\uc81c \ud574\uc81c \ubc0f 2\uc904 \uc904\ubc14\uafc8 */
+        body.gtp-smart-layout-active .gtp-optimized-course-btn {
+            white-space: normal !important;
+            word-break: keep-all !important;
+            text-overflow: clip !important;
+            line-height: 1.25 !important;
+            font-size: 11px !important;
+            min-height: 36px !important;
+            height: auto !important;
+            padding: 4px 2px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 2. \ud560\uc778\uadf8\ub9b0\ud53c/\ud2b9\uc774\uc0ac\ud56d \ub3c5\ub9bd \uc5f4 \uc228\uae30\uae30 */
+        body.gtp-smart-layout-active .gtp-original-discount-column {
+            display: none !important;
+        }
+
+        /* 3. \ub2e8\uc77c \ud0ed(Tab) \ucee8\ud14c\uc774\ub108 \uc2a4\ud0c0\uc77c */
+        #gtp_smart_tab_container {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", Roboto, sans-serif;
+            display: none;
+        }
+        body.gtp-smart-layout-active #gtp_smart_tab_container {
+            display: block !important;
+        }
+
+        .gtp-tab-header {
+            display: flex;
+            background: #f1f5f9;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .gtp-tab-btn {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+            outline: none;
+        }
+        .gtp-tab-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .gtp-tab-btn.active {
+            background: #ffffff;
+            color: #059669;
+            border-bottom: 2px solid #059669;
+            font-weight: 800;
+        }
+        .gtp-tab-body {
+            padding: 8px 10px;
+            max-height: 240px;
+            overflow-y: auto;
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: #334155;
+        }
+        .gtp-tab-pane {
+            display: block;
+        }
+        .gtp-tab-pane[hidden] {
+            display: none !important;
+        }
+
+        /* 4. \ubaa8\ubc14\uc77c \ubd84\ud560\ud654\uba74 \ubbf8\ub514\uc5b4 \ucffc\ub9ac (\uac00\ub85c\ud3ed 900px \uc774\ud558) */
+        @media (max-width: 900px) {
+            body.gtp-smart-layout-active {
+                font-size: 11.5px !important;
+            }
+            body.gtp-smart-layout-active table th,
+            body.gtp-smart-layout-active table td {
+                padding: 4px 2px !important;
+                font-size: 11px !important;
+            }
+        }
+
+        /* 5. ON/OFF \ud50c\ub85c\ud305 \ud1a0\uae00 \uc54c\uc57d \ubc84\ud2bc (\uc808\ub300 \uac00\ub824\uc9c0\uc9c0 \uc54a\ub294 \ucd5c\uc0c1\uc704 z-index) */
+        #gtp_layout_toggle_pill {
+            z-index: 2147483647 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", Roboto, sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            cursor: pointer !important;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25) !important;
+            transition: all 0.2s ease !important;
+            user-select: none !important;
+            margin-right: 8px !important;
+            vertical-align: middle !important;
+        }
+        #gtp_layout_toggle_pill.fixed-mode {
+            position: fixed !important;
+            top: 12px !important;
+            right: 320px !important;
+        }
+        #gtp_layout_toggle_pill.state-on {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: #ffffff !important;
+            border: 1.5px solid #34d399 !important;
+        }
+        #gtp_layout_toggle_pill.state-off {
+            background: #ffffff !important;
+            color: #64748b !important;
+            border: 1.5px solid #cbd5e1 !important;
+        }
+        #gtp_layout_toggle_pill:hover {
+            transform: scale(1.04) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+        }
+    `;
+document.head.appendChild(style);
+}
+function _0x1029(){
+const courseContainer=_0x1013()||document.body;
+const candidates=Array.from(courseContainer.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76'))
+.filter(el=>{
+if(el.children.length>2)return false;
+const t=(el.innerText||el.textContent||'').trim();
+if(t.length<2||t.length>25)return false;
+const clean=t.replace(/\s+/g,'');
+if(['\uace8\ud504\uc7a5\uc120\ud0dd','\uc9c0\uc5ed\ubcc4','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad\ub3c4','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc'].includes(clean))return false;
+return true;
+});
+candidates.forEach(el=>{
+el.classList.add('\x67\x74\x70-\x6f\x70\x74\x69\x6d\x69\x7a\x65\x64-\x63\x6f\x75\x72\x73\x65-\x62\x74\x6e');
+});
+}
+function _0x102a(){
+let tabContainer=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x74\x61\x62\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
+const allEls=Array.from(document.querySelectorAll('\x68\x31, \x68\x32, \x68\x33, \x68\x34, \x68\x35, \x68\x36, \x74\x68, \x74\x64, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x73\x74\x72\x6f\x6e\x67, \x62'));
+let discountH=allEls.find(el=>el.children.length<=2&&(el.innerText||el.textContent||'').replace(/\s+/g,'')==='\ud560\uc778\uadf8\ub9b0\ud53c');
+let notesH=allEls.find(el=>el.children.length<=2&&((el.innerText||el.textContent||'').replace(/\s+/g,'')==='\uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d'||(el.innerText||el.textContent||'').replace(/\s+/g,'').includes('\ud2b9\uc774\uc0ac\ud56d')));
+let discountBox=null;
+let notesBox=null;
+let columnParent=null;
+if(discountH){
+let cur=discountH;
+for(let i=0;i<6&&cur&&cur!==document.body;i++){
+if(cur.offsetHeight>40&&cur.offsetWidth>100){
+discountBox=cur;
+break;
+}
+cur=cur.parentElement;
+}
+}
+if(notesH){
+let cur=notesH;
+for(let i=0;i<6&&cur&&cur!==document.body;i++){
+if(cur.offsetHeight>40&&cur.offsetWidth>100){
+notesBox=cur;
+break;
+}
+cur=cur.parentElement;
+}
+}
+if(discountBox&&notesBox){
+let p=discountBox.parentElement;
+while(p&&p!==document.body){
+if(p.contains(notesBox)){
+columnParent=p;
+break;
+}
+p=p.parentElement;
+}
+if(columnParent&&columnParent!==document.body){
+columnParent.classList.add('\x67\x74\x70-\x6f\x72\x69\x67\x69\x6e\x61\x6c-\x64\x69\x73\x63\x6f\x75\x6e\x74-\x63\x6f\x6c\x75\x6d\x6e');
+}
+}
+if(!tabContainer){
+tabContainer=document.createElement('\x64\x69\x76');
+tabContainer.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x74\x61\x62\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72';
+tabContainer.innerHTML=`
+            <div class="gtp-tab-header">
+                <button type="button" class="gtp-tab-btn active" id="gtp_tab_btn_fee">\ud83d\udcb0 \ud560\uc778 \uadf8\ub9b0\ud53c</button>
+                <button type="button" class="gtp-tab-btn" id="gtp_tab_btn_notes">\ud83d\udcdd \uace8\ud504\uc7a5 \ud2b9\uc774\uc0ac\ud56d</button>
+            </div>
+            <div class="gtp-tab-body">
+                <div class="gtp-tab-pane" id="gtp_pane_fee">\ud560\uc778 \uadf8\ub9b0\ud53c \uc815\ubcf4\ub97c \ubd88\ub7ec\uc624\ub294 \uc911\uc785\ub2c8\ub2e4...</div>
+                <div class="gtp-tab-pane" id="gtp_pane_notes" hidden>\uace8\ud504\uc7a5 \ud2b9\uc774\uc0ac\ud56d\uc744 \ubd88\ub7ec\uc624\ub294 \uc911\uc785\ub2c8\ub2e4...</div>
+            </div>
+        `;
+const btnFee=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x74\x61\x62\x5f\x62\x74\x6e\x5f\x66\x65\x65');
+const btnNotes=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x74\x61\x62\x5f\x62\x74\x6e\x5f\x6e\x6f\x74\x65\x73');
+const paneFee=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x70\x61\x6e\x65\x5f\x66\x65\x65');
+const paneNotes=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x70\x61\x6e\x65\x5f\x6e\x6f\x74\x65\x73');
+btnFee.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+btnFee.classList.add('\x61\x63\x74\x69\x76\x65');
+btnNotes.classList.remove('\x61\x63\x74\x69\x76\x65');
+paneFee.hidden=false;
+paneNotes.hidden=true;
+});
+btnNotes.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+btnNotes.classList.add('\x61\x63\x74\x69\x76\x65');
+btnFee.classList.remove('\x61\x63\x74\x69\x76\x65');
+paneNotes.hidden=false;
+paneFee.hidden=true;
+});
+const dateArea=document.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x64\x61\x74\x65"], \x2e\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72, \x23\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72')?.closest('\x64\x69\x76, \x74\x64, \x73\x65\x63\x74\x69\x6f\x6e')
+||document.body.querySelector('\x2e\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x23\x63\x6f\x6e\x74\x65\x6e\x74, \x6d\x61\x69\x6e')
+||document.body;
+if(dateArea&&dateArea.parentElement){
+dateArea.parentElement.appendChild(tabContainer);
+}else{
+document.body.appendChild(tabContainer);
+}
+}
+if(discountBox){
+const paneFee=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x70\x61\x6e\x65\x5f\x66\x65\x65');
+if(paneFee&&discountBox.innerHTML){
+paneFee.innerHTML=discountBox.innerHTML;
+}
+}
+if(notesBox){
+const paneNotes=tabContainer.querySelector('\x23\x67\x74\x70\x5f\x70\x61\x6e\x65\x5f\x6e\x6f\x74\x65\x73');
+if(paneNotes&&notesBox.innerHTML){
+paneNotes.innerHTML=notesBox.innerHTML;
+}
+}
+}
+function _0x102b(msg){
+let toast=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74');
+if(!toast){
+toast=document.createElement('\x64\x69\x76');
+toast.id='\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74';
+toast.style.cssText=`
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.94);
+            color: #ffffff;
+            padding: 9px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10000000;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", Roboto, sans-serif;
+        `;
+document.body.appendChild(toast);
+}
+toast.innerText=msg;
+toast.style.opacity='\x31';
+setTimeout(()=>{
+if(toast)toast.style.opacity='\x30';
+},2000);
+}
+function _0x102c(isEnabled){
+let pill=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x67\x67\x6c\x65\x5f\x70\x69\x6c\x6c');
+if(!pill){
+pill=document.createElement('\x64\x69\x76');
+pill.id='\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x67\x67\x6c\x65\x5f\x70\x69\x6c\x6c';
+pill.title='\ud074\ub9ad \uc2dc \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 \ubdf0\uc640 \uc6d0\ub798 \uc21c\uc815 \uace8\ud504\ud0d1 \ubdf0\ub97c \uc989\uc2dc \uc804\ud658\ud569\ub2c8\ub2e4\x2e';
+pill.addEventListener('\x63\x6c\x69\x63\x6b',async()=>{
+const current=document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
+const next=!current;
+_0x1027(next);
+_0x102d(next);
+_0x102b(next?'\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \uc801\uc6a9\ub428 (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c)':'\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0\ub428');
+});
+const logoutBtn=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, \x73\x70\x61\x6e, \x64\x69\x76'))
+.find(el=>el.children.length<=1&&(el.innerText||el.textContent||'').trim()==='\ub85c\uadf8\uc544\uc6c3');
+if(logoutBtn&&logoutBtn.parentElement){
+logoutBtn.parentElement.insertBefore(pill,logoutBtn);
+pill.classList.remove('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65');
+}else{
+pill.classList.add('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65');
+document.body.appendChild(pill);
+}
+}else{
+if(pill.classList.contains('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65')){
+const logoutBtn=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, \x73\x70\x61\x6e, \x64\x69\x76'))
+.find(el=>el.children.length<=1&&(el.innerText||el.textContent||'').trim()==='\ub85c\uadf8\uc544\uc6c3');
+if(logoutBtn&&logoutBtn.parentElement&&logoutBtn.parentElement!==pill.parentElement){
+logoutBtn.parentElement.insertBefore(pill,logoutBtn);
+pill.classList.remove('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65');
+}
+}
+}
+if(isEnabled){
+pill.className=(pill.classList.contains('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65')?'\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65 ':'')+'\x73\x74\x61\x74\x65-\x6f\x6e';
+pill.innerHTML='<\x73\x70\x61\x6e>\u26f3 \uc2a4\ub9c8\ud2b8 \ubdf0 [\x4f\x4e]<\x2f\x73\x70\x61\x6e>';
+}else{
+pill.className=(pill.classList.contains('\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65')?'\x66\x69\x78\x65\x64-\x6d\x6f\x64\x65 ':'')+'\x73\x74\x61\x74\x65-\x6f\x66\x66';
+pill.innerHTML='<\x73\x70\x61\x6e>\u26f3 \uc2a4\ub9c8\ud2b8 \ubdf0 [\x4f\x46\x46]<\x2f\x73\x70\x61\x6e>';
+}
+}
+function _0x102d(enabled){
+_0x1028();
+_0x102c(enabled);
+if(enabled){
+document.body.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
+_0x1029();
+_0x102a();
+if(!__gtp_smart_layout_observer){
+__gtp_smart_layout_observer=new MutationObserver(()=>{
+if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
+_0x1029();
+_0x102a();
+}
+});
+__gtp_smart_layout_observer.observe(document.body,{childList:true,subtree:true});
+}
+}else{
+document.body.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
+if(__gtp_smart_layout_observer){
+__gtp_smart_layout_observer.disconnect();
+__gtp_smart_layout_observer=null;
+}
+}
+}
+(async function _0x102e(){
+try{
+const enabled=await _0x1026();
+const runInit=()=>{
+_0x102d(enabled);
+};
+if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
+document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',runInit);
+}else{
+runInit();
+}
+}catch(e){
+console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3] \ucd08\uae30\ud654 \uc911 \uc608\uc678\x3a",e);
+}
+})();
