@@ -6351,14 +6351,50 @@ await _0x1041(group.date);
 await _0x1007(300);
 }
 if(shouldStopRegistration)break;
+const allCards=await scrollToBottomAndCollectAllCards(groupCategory);
+if(shouldStopRegistration)break;
+const normGroupGolf=_0x1046(group.golf)||_0x1046(group.rawGolf)||group.golf;
+const matchingCourseCards=allCards.filter(c=>{
+const normC=_0x1046(c.courseName)||c.courseName;
+return(normC===normGroupGolf||c.courseName.includes(normGroupGolf)||normGroupGolf.includes(c.courseName));
+});
+const availableCards=matchingCourseCards.filter(c=>!c.postId||!processedPostIds.has(c.postId));
+const plan=[];
+const unassignedItems=[];
+const usedCardSet=new Set();
 for(const item of group.items){
+const targetTimeClean=(item.time||'').replace(/[^\d]/g,'');
+const exactCard=availableCards.find(c=>{
+if(usedCardSet.has(c))return false;
+const cardTimeClean=(c.teeTime||'').replace(/[^\d]/g,'');
+return cardTimeClean&&targetTimeClean&&cardTimeClean===targetTimeClean;
+});
+if(exactCard){
+usedCardSet.add(exactCard);
+plan.push({item,card:exactCard,action:'\x6b\x65\x65\x70'});
+}else{
+unassignedItems.push(item);
+}
+}
+for(const item of unassignedItems){
+const remainingCard=availableCards.find(c=>!usedCardSet.has(c));
+if(remainingCard){
+usedCardSet.add(remainingCard);
+plan.push({item,card:remainingCard,action:'\x63\x68\x61\x6e\x67\x65'});
+}else{
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \ub9e4\uce6d \uac00\ub2a5\ud55c \uae30\uc874 \uae00 \uc2ac\ub86f\uc774 \uc5c6\uc5b4 \uac74\ub108\ub701\ub2c8\ub2e4.`);
+}
+}
+console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${group.golf}: \ucd1d ${plan.length}\uac74 \uc2e4\ud589 \uacc4\ud68d \uc218\ub9bd \uc644\ub8cc (\ub0b4\uc6a9\uc720\uc9c0: ${plan.filter(p=>p.action==='\x6b\x65\x65\x70').length}\uac74, \ubcc0\uacbd\uad50\uccb4: ${plan.filter(p=>p.action==='\x63\x68\x61\x6e\x67\x65').length}\uac74)`);
+for(const{item,card,action}of plan){
 if(shouldStopRegistration)break;
 globalIndex++;
-const targetTimeClean=(item.time||'').replace(/[^\d]/g,'');
-const normTargetCourse=_0x1046(item.golf)||_0x1046(item.rawGolf)||item.golf;
+const actionDesc=(action==='\x6b\x65\x65\x70')
+?'\ub9ac\uc14b (\ub0b4\uc6a9\uc720\uc9c0 \ub04c\uc62c)'
+:`\uad50\uccb4 \ub9ac\uc14b (${card.teeTime} \u2794 ${item.time} \ubcc0\uacbd)`;
 _0x1009({
 title:modeTitle,
-desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.date} ${item.time}) \ud0d0\uc0c9 \uc911...`,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.date} ${item.time}) ${actionDesc}...`,
 current:globalIndex,
 total:items.length
 });
@@ -6370,39 +6406,14 @@ golf:item.golf,
 date:item.date,
 time:item.time
 });
-const allCards=await scrollToBottomAndCollectAllCards(groupCategory);
-if(shouldStopRegistration)break;
-const matchingCourseCards=allCards.filter(c=>{
-const normC=_0x1046(c.courseName)||c.courseName;
-return(normC===normTargetCourse||c.courseName.includes(normTargetCourse)||normTargetCourse.includes(c.courseName));
-});
-let matchedCard=matchingCourseCards.find(c=>{
-const cardTimeClean=(c.teeTime||'').replace(/[^\d]/g,'');
-if(cardTimeClean&&targetTimeClean&&cardTimeClean===targetTimeClean){
-if(c.postId&&processedPostIds.has(c.postId))return false;
-return true;
-}
-return false;
-});
-if(!matchedCard){
-const unhandledCourseCards=matchingCourseCards.filter(c=>!c.postId||!processedPostIds.has(c.postId));
-if(unhandledCourseCards.length===1){
-matchedCard=unhandledCourseCards[0];
-}
-}
-if(!matchedCard){
-console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \uc77c\uce58\ud558\ub294 \ub4f1\ub85d\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud574 \uac74\ub108\ub700.`);
-continue;
-}
-console.log(`[\uc120\ud0dd\ub9ac\uc14b] \uce74\ub4dc \ub9e4\uce6d \uc131\uacf5: ${matchedCard.courseName} (${matchedCard.teeTime}) -> \uc0c1\uc138 \uc9c4\uc785`);
-const inDetail=await clickPostCardReliably(matchedCard.el);
+const inDetail=await clickPostCardReliably(card.el);
 if(!inDetail){
-console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${matchedCard.courseName} \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${card.courseName} \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 await navigateBackToList(groupCategory);
 continue;
 }
 const curUrlMatch=window.location.href.match(/\/(?:join|transfer)\/(?:detail|edit)\/(\d+)/);
-const detectedPostId=curUrlMatch?curUrlMatch[1]:matchedCard.postId;
+const detectedPostId=curUrlMatch?curUrlMatch[1]:card.postId;
 if(detectedPostId&&processedPostIds.has(detectedPostId)){
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] \uc774\ubbf8 \ub9ac\uc14b \ucc98\ub9ac\ub41c \uae00(ID: ${detectedPostId}) -> \uac74\ub108\ub700`);
 await navigateBackToList(groupCategory);
@@ -6412,24 +6423,30 @@ if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 const openedEdit=await openMenuAndClickEdit();
 if(!openedEdit){
-console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${matchedCard.courseName} \uc218\uc815 \ud3fc \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${card.courseName} \uc218\uc815 \ud3fc \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 if(detectedPostId)processedPostIds.add(detectedPostId);
 await navigateBackToList(groupCategory);
 continue;
 }
 if(shouldStopRegistration)break;
-const editSuccess=await submitEditWithoutChanges(stepPreset,{
-courseName:matchedCard.courseName,
+let editSuccess=false;
+if(action==='\x6b\x65\x65\x70'){
+editSuccess=await submitEditWithoutChanges(stepPreset,{
+courseName:card.courseName,
 date:item.date,
-teeTime:matchedCard.teeTime,
-feeStr:matchedCard.feeStr
+teeTime:card.teeTime,
+feeStr:card.feeStr
 });
+}else{
+console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf}: \uae30\uc874 \uae00(${card.teeTime})\uc744 \uc0c8 \ud0c0\uc784(${item.time} / ${item.fee}\ub9cc)\uc73c\ub85c \ubcc0\uacbd \uc218\uc815 \uc9c4\ud589!`);
+editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
+}
 if(detectedPostId){
 processedPostIds.add(detectedPostId);
 }
 if(editSuccess){
 successCount++;
-console.log(`[\uc120\ud0dd\ub9ac\uc14b \uc644\ub8cc -> \ub9e8 \uc704\ub85c \uc774\ub3d9\ub428] ${item.golf} (${item.date} ${item.time}) (${successCount}/${items.length}\uac74)`);
+console.log(`[\uc120\ud0dd\ub9ac\uc14b \uc644\ub8cc] ${item.golf} (${item.date} ${item.time}) [${actionDesc}] (${successCount}/${items.length}\uac74)`);
 chrome.runtime.sendMessage({
 type:'\x49\x54\x45\x4d\x5f\x52\x45\x53\x45\x54\x5f\x53\x55\x43\x43\x45\x53\x53',
 item:item,
