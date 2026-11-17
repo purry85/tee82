@@ -2547,50 +2547,89 @@ return`${year}-${mdM[1].padStart(2,'\x30')}-${mdM[2].padStart(2,'\x30')}`;
 return'';
 }
 function _0x1039(){
-const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'))
+const maxBottom=typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103b():450;
+const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-if(r.top<0||r.top>350)return false;
-if(r.left<0||r.left>260)return false;
+if(r.top<0||r.top>maxBottom)return false;
+if(r.left<0||r.left>550)return false;
 const txt=(el.innerText||el.textContent||'').trim();
-return/^\d{1,2}월/.test(txt);
+if(!txt||txt.length>25)return false;
+return/(\d{1,2})\s*월/.test(txt);
 });
 if(monthElements.length>0){
-monthElements.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
-const m=(monthElements[0].innerText||monthElements[0].textContent||'').trim().match(/^(\d{1,2})월/);
+monthElements.sort((a,b)=>{
+const txtA=(a.innerText||a.textContent||'').trim().length;
+const txtB=(b.innerText||b.textContent||'').trim().length;
+if(txtA!==txtB)return txtA-txtB;
+return(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight);
+});
+for(const el of monthElements){
+const txt=(el.innerText||el.textContent||'').trim();
+const m=txt.match(/(\d{1,2})\s*월/);
 if(m)return parseInt(m[1],10).toString();
+}
+}
+const cardDateElements=Array.from(document.querySelectorAll('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"], \x64\x69\x76, \x73\x70\x61\x6e'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+return/\b(\d{1,2})\/(\d{1,2})\s*\(/.test(txt);
+});
+if(cardDateElements.length>0){
+for(const el of cardDateElements){
+const txt=(el.innerText||el.textContent||'').trim();
+const m=txt.match(/\b(\d{1,2})\/(\d{1,2})\s*\(/);
+if(m){
+return parseInt(m[1],10).toString();
+}
+}
+}
+const urlDate=typeof _0x1041==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1041():'';
+if(urlDate){
+const urlM=typeof _0x1037==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1037(urlDate):'';
+if(urlM)return urlM;
 }
 return'';
 }
 async function _0x103a(targetMonth){
 if(!targetMonth)return true;
 const cleanTargetMonth=parseInt(targetMonth,10).toString();
-const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'))
+const maxBottom=typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103b():450;
+const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-if(r.top<0||r.top>350)return false;
-if(r.left<0||r.left>260)return false;
+if(r.top<0||r.top>maxBottom)return false;
+if(r.left<0||r.left>550)return false;
 const txt=(el.innerText||el.textContent||'').trim();
-return/\d{1,2}월/.test(txt);
+if(!txt||txt.length>25)return false;
+return/(\d{1,2})\s*월/.test(txt);
 });
-if(monthElements.length===0)return true;
-monthElements.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
-const currentMonthBtn=monthElements[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||monthElements[0];
+if(monthElements.length===0){
+console.warn(`[\uc6d4\ubcc0\uacbd] \uc0c1\ub2e8\uc5d0\uc11c 'X\uc6d4' \ub4dc\ub86d\ub2e4\uc6b4 \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568`);
+return false;
+}
+monthElements.sort((a,b)=>{
+const txtA=(a.innerText||a.textContent||'').trim().length;
+const txtB=(b.innerText||b.textContent||'').trim().length;
+if(txtA!==txtB)return txtA-txtB;
+return(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight);
+});
+const currentMonthBtn=monthElements[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x71-\x66\x69\x65\x6c\x64')||monthElements[0];
 const curTxt=(currentMonthBtn.innerText||currentMonthBtn.textContent||'').trim();
-const curMatch=curTxt.match(/(\d{1,2})월/);
+const curMatch=curTxt.match(/(\d{1,2})\s*월/);
 const curMonthNum=curMatch?parseInt(curMatch[1],10).toString():'';
 if(curMonthNum&&curMonthNum===cleanTargetMonth){
-console.log(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc774\ubbf8 \uc77c\uce58\ud568`);
+console.log(`[\uc6d4\ubcc0\uacbd] \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc774\ubbf8 \uc77c\uce58\ud568`);
 return true;
 }
-if(curMonthNum&&curMonthNum!==cleanTargetMonth){
-console.log(`[\uac00\uaca9\uc218\uc815] \ud604\uc7ac \uc6d4(${curMonthNum}\uc6d4) -> \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4)\ub85c \ubcc0\uacbd \uc2dc\ub3c4...`);
+console.log(`[\uc6d4\ubcc0\uacbd] \ud604\uc7ac \uc6d4(${curMonthNum||'?'}\uc6d4) -> \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4)\ub85c \ub4dc\ub86d\ub2e4\uc6b4 \ubcc0\uacbd \uc2dc\ub3c4...`);
 await _0x100e(currentMonthBtn);
 try{currentMonthBtn.click();}catch(e){}
 await _0x1007(450);
-const allItems=Array.from(document.querySelectorAll('\x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"] [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76, \x73\x70\x61\x6e'))
+const allItems=Array.from(document.querySelectorAll('\x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"] [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76, \x73\x70\x61\x6e, \x62\x75\x74\x74\x6f\x6e'))
 .filter(el=>el.offsetHeight>0);
 const targetItem=allItems.find(el=>{
 const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
@@ -2600,11 +2639,17 @@ if(targetItem){
 const clickT=targetItem.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x62\x75\x74\x74\x6f\x6e')||targetItem;
 await _0x100e(clickT);
 try{clickT.click();}catch(e){}
-console.log(`[\uac00\uaca9\uc218\uc815] \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4) \ub4dc\ub86d\ub2e4\uc6b4 \ud56d\ubaa9 \ud074\ub9ad \uc644\ub8cc!`);
+console.log(`[\uc6d4\ubcc0\uacbd] \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4) \ub4dc\ub86d\ub2e4\uc6b4 \ud56d\ubaa9 \ud074\ub9ad \uc644\ub8cc!`);
 await _0x1007(600);
-}
-}
+const afterMonth=_0x1039();
+if(afterMonth===cleanTargetMonth){
+console.log(`[\uc6d4\ubcc0\uacbd] \u2705 \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc804\ud658 \ud655\uc778 \uc131\uacf5!`);
 return true;
+}
+}else{
+console.warn(`[\uc6d4\ubcc0\uacbd] \ub4dc\ub86d\ub2e4\uc6b4 \uba54\ub274\uc5d0\uc11c [${cleanTargetMonth}\uc6d4] \ud56d\ubaa9\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
+}
+return false;
 }
 function _0x103b(){
 const cards=Array.from(document.querySelectorAll('\x2e\x71-\x63\x61\x72\x64, \x2e\x70\x72\x6f\x64\x75\x63\x74-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"]'))
@@ -2836,7 +2881,7 @@ const targetMonth=_0x1037(targetDateStr);
 const cleanDay=_0x1036(targetDateStr);
 const targetYmd=_0x1038(targetDateStr);
 if(!cleanDay){
-console.warn(`[\uac00\uaca9\uc218\uc815] \ub0a0\uc9dc \ud30c\uc2f1 \uc2e4\ud328 (\uc785\ub825: ${targetDateStr})`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ub0a0\uc9dc \ud30c\uc2f1 \uc2e4\ud328 (\uc785\ub825: ${targetDateStr})`);
 return true;
 }
 let curActiveMonth=_0x1039();
@@ -2845,40 +2890,41 @@ let curUrlDate=_0x1041();
 let curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
 let curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
 const isUrlMatch=Boolean(curUrlDate&&(!targetMonth||curUrlMonth===targetMonth)&&curUrlDay===cleanDay);
-const isScreenMatch=Boolean((!targetMonth||curActiveMonth===targetMonth)&&curActiveDay===cleanDay);
+const isScreenMatch=Boolean((!targetMonth||(curActiveMonth&&curActiveMonth===targetMonth))&&curActiveDay===cleanDay);
 if(isUrlMatch||(!curUrlDay&&isScreenMatch)){
-console.log(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \uc774\ubbf8 \ud65c\uc131\ud654 \ud655\uc778\ub428 (\ud654\uba74: ${curActiveMonth||'?'}\uc6d4 ${curActiveDay||'?'}\uc77c, URL: ${curUrlDate||'\ubbf8\ud45c\uc2dc'}) -> \uc911\ubcf5 \ud074\ub9ad \ubc29\uc9c0 (\uc0dd\ub7b5)`);
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \uc774\ubbf8 \ud65c\uc131\ud654 \ud655\uc778\ub428 (\ud654\uba74: ${curActiveMonth||'?'}\uc6d4 ${curActiveDay||'?'}\uc77c, URL: ${curUrlDate||'\ubbf8\ud45c\uc2dc'}) -> \uc911\ubcf5 \ud074\ub9ad \ubc29\uc9c0 (\uc0dd\ub7b5)`);
 return true;
 }
-console.log(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub0a0\uc9dc \uc77c\uce58 \uc120\ud0dd \uc2dc\ub3c4 -> \ubaa9\ud45c: [${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c] (\ud604\uc7ac \ud654\uba74: ${curActiveMonth||'?'}\uc6d4 ${curActiveDay||'?'}\uc77c, URL: ${curUrlDate||'\ubbf8\ud655\uc778'})`);
-if(targetMonth&&((curUrlMonth&&curUrlMonth!==targetMonth)||(curActiveMonth&&curActiveMonth!==targetMonth))){
-console.log(`[\uac00\uaca9\uc218\uc815] \u26a0\ufe0f \uc6d4 \ubd88\uc77c\uce58 \uac10\uc9c0 (\ud604\uc7ac: ${curUrlMonth||curActiveMonth}\uc6d4 -> \ubaa9\ud45c: ${targetMonth}\uc6d4) -> \uc6d4 \uc804\ud658 \uc2dc\ub3c4...`);
-await _0x103a(targetMonth);
-await _0x1007(350);
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc \uc77c\uce58 \uc120\ud0dd \uc2dc\ub3c4 -> \ubaa9\ud45c: [${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c] (\ud604\uc7ac \ud654\uba74: ${curActiveMonth||'?'}\uc6d4 ${curActiveDay||'?'}\uc77c, URL: ${curUrlDate||'\ubbf8\ud655\uc778'})`);
+if(targetMonth&&(curActiveMonth!==targetMonth||(curUrlMonth&&curUrlMonth!==targetMonth))){
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc6d4 \ubd88\uc77c\uce58 \uac10\uc9c0 (\ud604\uc7ac: \ud654\uba74 ${curActiveMonth||'?'}\uc6d4 / URL ${curUrlMonth||'?'}\uc6d4 -> \ubaa9\ud45c: ${targetMonth}\uc6d4) -> \ub4dc\ub86d\ub2e4\uc6b4 \uc804\ud658 \uc2dc\ub3c4...`);
+const switched=await _0x103a(targetMonth);
+await _0x1007(400);
 curActiveMonth=_0x1039();
 curUrlDate=_0x1041();
 curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
-if(targetYmd&&((curUrlMonth&&curUrlMonth!==targetMonth)||(curActiveMonth&&curActiveMonth!==targetMonth))){
-console.warn(`[\uac00\uaca9\uc218\uc815] \ud83d\udd04 UI \uc6d4 \ubcc0\uacbd \ubbf8\ubc18\uc601 -> URL qDate\ub97c [${targetYmd}]\ub85c \uc9c1\uc811 \uc804\ud658\ud569\ub2c8\ub2e4...`);
+if(targetYmd&&(curActiveMonth!==targetMonth||(curUrlMonth&&curUrlMonth!==targetMonth))){
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udd04 \ub4dc\ub86d\ub2e4\uc6b4 \uc6d4 \ubcc0\uacbd \ubbf8\ubc18\uc601 (\ud604\uc7ac: ${curActiveMonth}\uc6d4) -> URL qDate\ub97c [${targetYmd}]\ub85c \uac15\uc81c \uc804\ud658\ud569\ub2c8\ub2e4...`);
 try{
 const u=new URL(window.location.href);
 u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
-window.history.pushState({},'',u.toString());
-window.dispatchEvent(new PopStateEvent('\x70\x6f\x70\x73\x74\x61\x74\x65'));
-await _0x1007(500);
-const postUrl=_0x1041();
-const postMonth=postUrl?_0x1037(postUrl):'';
-const postDay=postUrl?_0x1036(postUrl):'';
-if(postDay===cleanDay&&(!targetMonth||postMonth===targetMonth)){
-console.log(`[\uac00\uaca9\uc218\uc815] \u2705 URL qDate \uc804\ud658\uc73c\ub85c [${targetYmd}] \ub85c\ub4dc \uc644\ub8cc!`);
-return true;
-}else{
 window.location.href=u.toString();
-await _0x1007(1500);
+await _0x1007(2000);
 return true;
-}
 }catch(e){}
 }
+}
+curActiveMonth=_0x1039();
+if(targetMonth&&curActiveMonth&&curActiveMonth!==targetMonth){
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udea8 \uce58\uba85\uc801 \uc704\ud5d8 \uc6d0\ucc9c \ucc28\ub2e8: \ud654\uba74 \uc6d4(${curActiveMonth}\uc6d4)\uc774 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\uacfc \ubd88\uc77c\uce58! \ub0a0\uc9dc \ubc84\ud2bc \ud074\ub9ad\uc744 \ucc28\ub2e8\ud558\uace0 URL qDate \uac15\uc81c \uc804\ud658\uc744 \uc2e4\ud589\ud569\ub2c8\ub2e4.`);
+if(targetYmd){
+const u=new URL(window.location.href);
+u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
+window.location.href=u.toString();
+await _0x1007(2000);
+return true;
+}
+return false;
 }
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
@@ -2886,12 +2932,12 @@ const dateEl=_0x103f(cleanDay);
 if(dateEl){
 const isAlreadyActive=_0x103e(dateEl);
 curActiveMonth=_0x1039();
-const monthMatches=!targetMonth||!curActiveMonth||curActiveMonth===targetMonth;
+const monthMatches=!targetMonth||(curActiveMonth&&curActiveMonth===targetMonth);
 if(isAlreadyActive&&isUrlMatch&&monthMatches){
-console.log(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \uc774\ubbf8 \ud65c\uc131 \ud074\ub798\uc2a4 \ud655\uc778\ub428 -> \uc644\ub8cc`);
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \uc774\ubbf8 \ud65c\uc131 \ud074\ub798\uc2a4 \ud655\uc778\ub428 -> \uc644\ub8cc`);
 return true;
 }
-console.log(`[\uac00\uaca9\uc218\uc815] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c \ubc1c\uacac -> \uc815\ubc00 \ud074\ub9ad \uc2e4\ud589`);
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c \ubc1c\uacac -> \uc815\ubc00 \ud074\ub9ad \uc2e4\ud589`);
 await _0x1042(dateEl,attempt);
 let verified=false;
 for(let wait=0;wait<20;wait++){
@@ -2901,10 +2947,11 @@ const activeMonthNow=_0x1039();
 const urlNow=_0x1041();
 const urlMonthNow=urlNow?_0x1037(urlNow):'';
 const urlDayNow=urlNow?_0x1036(urlNow):'';
+const monthOk=!targetMonth||(activeMonthNow&&activeMonthNow===targetMonth)||(urlMonthNow&&urlMonthNow===targetMonth);
 const urlDayMatch=Boolean(urlDayNow===cleanDay&&(!targetMonth||urlMonthNow===targetMonth));
-const screenDayMatch=Boolean(activeNow===cleanDay&&(!targetMonth||activeMonthNow===targetMonth));
-if(urlDayMatch||(!urlNow&&screenDayMatch)){
-console.log(`[\uac00\uaca9\uc218\uc815] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ud65c\uc131\ud654 \uc131\uacf5 \ud655\uc778\ub428! (\ud654\uba74: ${activeMonthNow}\uc6d4 ${activeNow}\uc77c, URL: ${urlNow})`);
+const screenDayMatch=Boolean(activeNow===cleanDay&&monthOk);
+if(urlDayMatch||(!urlNow&&screenDayMatch&&(!activeMonthNow||activeMonthNow===targetMonth))){
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ud65c\uc131\ud654 \uc131\uacf5 \ud655\uc778\ub428! (\ud654\uba74: ${activeMonthNow}\uc6d4 ${activeNow}\uc77c, URL: ${urlNow})`);
 verified=true;
 break;
 }
@@ -2914,10 +2961,10 @@ await _0x1007(350);
 return true;
 }
 if(attempt+1<maxAttempts){
-console.warn(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \ud074\ub9ad \ud6c4 \ubbf8\ubc18\uc601 -> ${attempt+2}\ud68c\ucc28 \uc7ac\uc2dc\ub3c4 \uc900\ube44...`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \ud074\ub9ad \ud6c4 \ubbf8\ubc18\uc601 -> ${attempt+2}\ud68c\ucc28 \uc7ac\uc2dc\ub3c4 \uc900\ube44...`);
 }
 }else{
-console.warn(`[\uac00\uaca9\uc218\uc815] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568`);
 }
 await _0x1007(250);
 }
@@ -2927,37 +2974,25 @@ const finalUrlDate=_0x1041();
 const finalUrlMonth=finalUrlDate?_0x1037(finalUrlDate):'';
 const finalUrlDay=finalUrlDate?_0x1036(finalUrlDate):'';
 if((finalUrlDay===cleanDay&&(!targetMonth||finalUrlMonth===targetMonth))||
-(!finalUrlDay&&finalActiveDay===cleanDay&&(!targetMonth||finalActiveMonth===targetMonth))){
-console.log(`[\uac00\uaca9\uc218\uc815] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ucd5c\uc885 \ud655\uc778 \uc131\uacf5`);
+(!finalUrlDay&&finalActiveDay===cleanDay&&(!targetMonth||(finalActiveMonth&&finalActiveMonth===targetMonth)))){
+console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ucd5c\uc885 \ud655\uc778 \uc131\uacf5`);
 return true;
 }
 if(targetYmd){
-console.warn(`[\uac00\uaca9\uc218\uc815] \u26a0\ufe0f UI \ud074\ub9ad \ubbf8\ubc18\uc601\uc73c\ub85c \uc778\ud574 URL qDate \ud30c\ub77c\ubbf8\ud130\ub97c \uc9c1\uc811 [${targetYmd}]\ub85c \uc804\ud658\ud569\ub2c8\ub2e4...`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f UI \ud074\ub9ad \ubbf8\ubc18\uc601\uc73c\ub85c \uc778\ud574 URL qDate \ud30c\ub77c\ubbf8\ud130\ub97c \uc9c1\uc811 [${targetYmd}]\ub85c \uc804\ud658\ud569\ub2c8\ub2e4...`);
 try{
 const u=new URL(window.location.href);
 if(u.searchParams.get('\x71\x44\x61\x74\x65')!==targetYmd){
 u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
-window.history.pushState({},'',u.toString());
-window.dispatchEvent(new PopStateEvent('\x70\x6f\x70\x73\x74\x61\x74\x65'));
-await _0x1007(500);
-const postUrl=_0x1041();
-const postMonth=postUrl?_0x1037(postUrl):'';
-const postDay=postUrl?_0x1036(postUrl):'';
-if(postDay===cleanDay&&(!targetMonth||postMonth===targetMonth)){
-console.log(`[\uac00\uaca9\uc218\uc815] \u2705 URL qDate \uc804\ud658 \uc131\uacf5 (${targetYmd})`);
-return true;
-}else{
-console.log(`[\uac00\uaca9\uc218\uc815] \ud83d\udd04 URL \uc774\ub3d9\uc744 \ud1b5\ud574 ${targetYmd} \ub370\uc774\ud130 \ub85c\ub4dc \uc2e4\ud589...`);
 window.location.href=u.toString();
-await _0x1007(1500);
+await _0x1007(2000);
 return true;
-}
 }
 }catch(e){
 console.error('\x55\x52\x4c \x71\x44\x61\x74\x65 \uc9c1\uc811 \uc804\ud658 \uc2e4\ud328\x3a',e);
 }
 }
-console.warn(`[\uac00\uaca9\uc218\uc815] \u26a0\ufe0f \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) UI \uc120\ud0dd \ucd5c\uc885 \ubbf8\ubc18\uc601 (\ud654\uba74: ${finalActiveDay||'\ubbf8\ud655\uc778'}\uc77c, URL: ${finalUrlDate||'\ubbf8\ud655\uc778'})`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) UI \uc120\ud0dd \ucd5c\uc885 \ubbf8\ubc18\uc601 (\ud654\uba74: ${finalActiveDay||'\ubbf8\ud655\uc778'}\uc77c, URL: ${finalUrlDate||'\ubbf8\ud655\uc778'})`);
 return false;
 }
 async function _0x1044(targetDateStr,maxRetries=3){
@@ -6193,9 +6228,20 @@ await _0x1007(350);
 if(shouldStopRegistration)break;
 await _0x1047(effectiveFilter);
 const dateClicked=await _0x1043(targetDate);
-await _0x1007(300);
+await _0x1007(350);
 const activeDayNow=_0x1040();
 const activeMonthNow=_0x1039();
+if(targetMonth&&activeMonthNow&&activeMonthNow!==targetMonth){
+console.error(`\ud83d\udea8 [\uc804\uccb4\ub9ac\uc14b] \ud654\uba74 \uc6d4 \ubd88\uc77c\uce58 \ucc28\ub2e8! (\ud604\uc7ac: ${activeMonthNow}\uc6d4 != \ubaa9\ud45c: ${targetMonth}\uc6d4). URL \uac15\uc81c \uc774\ub3d9 \uc2e4\ud589...`);
+const targetYmd=_0x1038(targetDate);
+if(targetYmd){
+const u=new URL(window.location.href);
+u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
+window.location.href=u.toString();
+await _0x1007(2000);
+}
+continue;
+}
 if(!dateClicked&&activeDayNow&&targetDay&&(activeDayNow!==targetDay||(targetMonth&&activeMonthNow&&activeMonthNow!==targetMonth))){
 console.warn(`\u26a0\ufe0f [\uc804\uccb4\ub9ac\uc14b] \uace8\ud504\ubaac \ub0b4\uae00 \ubaa9\ub85d \uc0c1\ub2e8\uc5d0\uc11c [${targetDate}] \ub0a0\uc9dc \ud0ed\uc744 \ucc3e\uc9c0 \ubabb\ud574 \ub2e4\uc74c \ub0a0\uc9dc\ub85c \ub118\uc5b4\uac11\ub2c8\ub2e4.`);
 continue;
