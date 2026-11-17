@@ -209,6 +209,7 @@ isRegistrationRunning=false;
 _priceUpdateRunning=false;
 isPostReplacementRunning=false;
 isDateResetRunning=false;
+isSelectedResetRunning=false;
 try{
 _0x100a(true);
 }catch(e){}
@@ -5887,6 +5888,7 @@ chrome.runtime.sendMessage({type:completedMsgType,total:items.length,successCoun
 }
 }
 var isDateResetRunning=false;
+var isSelectedResetRunning=false;
 function extractTeeTimeFromResetCard(rawTxt){
 if(!rawTxt)return'';
 const cleanTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
@@ -6223,7 +6225,257 @@ type:'\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x
 targetDate:rangeLabel,
 total:totalDiscoveredAllDates,
 successCount:totalSuccessCount,
-reason:totalSuccessCount===0?`\u26a0\ufe0f \uc9c0\uc815\ud55c \uae30\uac04(${rangeLabel})\uc5d0 \ub4f1\ub85d\ub41c \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ub9ac\uc14b\ud560 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.`:undefined
+reason:totalSuccessCount===0?`\uc9c0\uc815\ud55c \uae30\uac04(${rangeLabel})\uc5d0 \ub4f1\ub85d\ub41c \uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ub9ac\uc14b\ud560 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.`:undefined
+});
+}
+}
+async function executeBatchSelectedReset(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+if(!items||items.length===0)return;
+if(isRegistrationRunning)return;
+isRegistrationRunning=true;
+isSelectedResetRunning=true;
+shouldStopRegistration=false;
+_submitLocked=false;
+_submittedUrls=new Set();
+_submittedItems=new Set();
+resetEditSubmitLock();
+try{
+chrome.storage.local.set({isRegistrationRunning:true});
+}catch(e){}
+const modeTitle='\uace8\ud504\ubaac \uc120\ud0dd\ub9ac\uc14b';
+console.log(`[${modeTitle} \uc2dc\uc791] \ucd1d ${items.length}\uac74 (\ub2e8\uacc4\ubcc4 \uc18d\ub3c4: ${stepPreset}, \ud0c0\uc784 \uac04 \ub300\uae30: ${delayPreset})`);
+_0x1009({
+title:modeTitle,
+desc:`\ucd1d ${items.length}\uac74 \uc2dc\uc791 \uc900\ube44 \uc911...`,
+current:0,
+total:items.length
+});
+const courseGroups={};
+for(const it of items){
+const itemCat=(it.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+const key=`${it.date}_${it.golf}_${itemCat}`;
+if(!courseGroups[key]){
+courseGroups[key]={
+date:it.date,
+golf:it.golf,
+rawGolf:it.rawGolf||it.golf,
+region:it.region,
+roomType:itemCat,
+items:[]
+};
+}
+courseGroups[key].items.push(it);
+}
+const sortedGroupKeys=Object.keys(courseGroups).sort((kA,kB)=>{
+const gA=courseGroups[kA],gB=courseGroups[kB];
+const dA=(gA.date||'').split(/[./\-]/),dB=(gB.date||'').split(/[./\-]/);
+const mA=parseInt(dA[0],10)||0,mB=parseInt(dB[0],10)||0;
+if(mA!==mB)return mA-mB;
+const dayA=parseInt(dA[1],10)||0,dayB=parseInt(dB[1],10)||0;
+if(dayA!==dayB)return dayA-dayB;
+return(gA.golf||'').localeCompare(gB.golf||'');
+});
+let successCount=0;
+let globalIndex=0;
+const processedPostIds=new Set();
+const scrollToBottomAndCollectAllCards=async(catFilter)=>{
+window.scrollTo(0,0);
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+el.scrollTop=0;
+});
+await _0x1007(200);
+const allCardsOrdered=[];
+const seenEls=new Set();
+for(let scroll=0;scroll<20;scroll++){
+if(shouldStopRegistration)break;
+const visibleCards=collectResetCandidateCards(catFilter);
+visibleCards.sort((a,b)=>{
+const rA=a.el.getBoundingClientRect();
+const rB=b.el.getBoundingClientRect();
+if(Math.abs(rA.top-rB.top)>15)return rA.top-rB.top;
+return rA.left-rB.left;
+});
+for(const c of visibleCards){
+if(!seenEls.has(c.el)){
+seenEls.add(c.el);
+allCardsOrdered.push(c);
+}
+}
+const prevScrollY=window.scrollY;
+window.scrollBy(0,500);
+let scrolledContainer=false;
+document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
+if(el.scrollHeight>el.clientHeight){
+const before=el.scrollTop;
+el.scrollTop+=500;
+if(el.scrollTop!==before)scrolledContainer=true;
+}
+});
+await _0x1007(220);
+if(window.scrollY===prevScrollY&&!scrolledContainer&&scroll>=1){
+break;
+}
+}
+return allCardsOrdered;
+};
+for(const groupKey of sortedGroupKeys){
+if(shouldStopRegistration)break;
+const group=courseGroups[groupKey];
+const groupCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+console.log(`\n================== [\uc120\ud0dd\ub9ac\uc14b] ${group.golf} (${group.date}) [${groupCategory}] \ub300\uc0c1 ${group.items.length}\uac74 \ucc98\ub9ac \uc2dc\uc791 ==================`);
+if(isEditPage()||isDetailPage()){
+await navigateBackToList(groupCategory);
+await _0x1007(350);
+}
+await _0x1035(groupCategory);
+if(shouldStopRegistration)break;
+await _0x1045(groupCategory);
+if(shouldStopRegistration)break;
+if(group.region&&group.region!=='\uc804\uccb4'){
+await _0x1043(group.region);
+await _0x1007(250);
+}else{
+await _0x1043('\uc804\uccb4');
+await _0x1007(250);
+}
+if(shouldStopRegistration)break;
+if(group.date){
+await _0x1042(group.date);
+await _0x1007(300);
+}
+if(shouldStopRegistration)break;
+const targetDayNum=_0x1036(group.date);
+const curDayNum=_0x103e();
+const curUrlDate=_0x103f();
+const curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
+const isDateMatch=(curUrlDay&&targetDayNum&&curUrlDay===targetDayNum)||
+(curDayNum&&targetDayNum&&curDayNum===targetDayNum);
+if(!isDateMatch){
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${group.golf} (${group.date}) \ub0a0\uc9dc \ud0ed \ubbf8\uc77c\uce58\ub85c \uac74\ub108\ub700.`);
+globalIndex+=group.items.length;
+continue;
+}
+for(const item of group.items){
+if(shouldStopRegistration)break;
+globalIndex++;
+const targetTimeClean=(item.time||'').replace(/[^\d]/g,'');
+const normTargetCourse=_0x1046(item.golf)||_0x1046(item.rawGolf)||item.golf;
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.date} ${item.time}) \ud0d0\uc0c9 \uc911...`,
+current:globalIndex,
+total:items.length
+});
+chrome.runtime.sendMessage({
+type:'\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x50\x52\x4f\x47\x52\x45\x53\x53',
+current:globalIndex,
+total:items.length,
+golf:item.golf,
+date:item.date,
+time:item.time
+});
+const allCards=await scrollToBottomAndCollectAllCards(groupCategory);
+if(shouldStopRegistration)break;
+const matchingCourseCards=allCards.filter(c=>{
+const normC=_0x1046(c.courseName)||c.courseName;
+return(normC===normTargetCourse||c.courseName.includes(normTargetCourse)||normTargetCourse.includes(c.courseName));
+});
+let matchedCard=matchingCourseCards.find(c=>{
+const cardTimeClean=(c.teeTime||'').replace(/[^\d]/g,'');
+if(cardTimeClean&&targetTimeClean&&cardTimeClean===targetTimeClean){
+if(c.postId&&processedPostIds.has(c.postId))return false;
+return true;
+}
+return false;
+});
+if(!matchedCard){
+const unhandledCourseCards=matchingCourseCards.filter(c=>!c.postId||!processedPostIds.has(c.postId));
+if(unhandledCourseCards.length===1){
+matchedCard=unhandledCourseCards[0];
+}
+}
+if(!matchedCard){
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \uc77c\uce58\ud558\ub294 \ub4f1\ub85d\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud574 \uac74\ub108\ub700.`);
+continue;
+}
+console.log(`[\uc120\ud0dd\ub9ac\uc14b] \uce74\ub4dc \ub9e4\uce6d \uc131\uacf5: ${matchedCard.courseName} (${matchedCard.teeTime}) -> \uc0c1\uc138 \uc9c4\uc785`);
+const inDetail=await clickPostCardReliably(matchedCard.el);
+if(!inDetail){
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${matchedCard.courseName} \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+await navigateBackToList(groupCategory);
+continue;
+}
+const curUrlMatch=window.location.href.match(/\/(?:join|transfer)\/(?:detail|edit)\/(\d+)/);
+const detectedPostId=curUrlMatch?curUrlMatch[1]:matchedCard.postId;
+if(detectedPostId&&processedPostIds.has(detectedPostId)){
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] \uc774\ubbf8 \ub9ac\uc14b \ucc98\ub9ac\ub41c \uae00(ID: ${detectedPostId}) -> \uac74\ub108\ub700`);
+await navigateBackToList(groupCategory);
+continue;
+}
+if(shouldStopRegistration)break;
+await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
+const openedEdit=await openMenuAndClickEdit();
+if(!openedEdit){
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${matchedCard.courseName} \uc218\uc815 \ud3fc \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+if(detectedPostId)processedPostIds.add(detectedPostId);
+await navigateBackToList(groupCategory);
+continue;
+}
+if(shouldStopRegistration)break;
+const editSuccess=await submitEditWithoutChanges(stepPreset,{
+courseName:matchedCard.courseName,
+date:item.date,
+teeTime:matchedCard.teeTime,
+feeStr:matchedCard.feeStr
+});
+if(detectedPostId){
+processedPostIds.add(detectedPostId);
+}
+if(editSuccess){
+successCount++;
+console.log(`[\uc120\ud0dd\ub9ac\uc14b \uc644\ub8cc -> \ub9e8 \uc704\ub85c \uc774\ub3d9\ub428] ${item.golf} (${item.date} ${item.time}) (${successCount}/${items.length}\uac74)`);
+chrome.runtime.sendMessage({
+type:'\x49\x54\x45\x4d\x5f\x52\x45\x53\x45\x54\x5f\x53\x55\x43\x43\x45\x53\x53',
+item:item,
+rawGolf:item.rawGolf,
+golf:item.golf,
+date:item.date,
+time:item.time,
+regId:item.regId
+});
+}else{
+console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \uc81c\ucd9c \ubbf8\ud655\uc778 -> \ubaa9\ub85d \ubcf5\uadc0`);
+}
+if(!_0x1033()||_0x1032()||_0x1031()){
+await navigateBackToList(groupCategory);
+await _0x1007(350);
+}
+if(shouldStopRegistration)break;
+const cooldownMs=_0x100d(delayPreset||'\x73\x61\x66\x65');
+await _0x1007(cooldownMs);
+}
+}
+isRegistrationRunning=false;
+isSelectedResetRunning=false;
+try{chrome.storage.local.set({isRegistrationRunning:false});}catch(e){}
+_0x1009({
+title:modeTitle,
+desc:`\uc120\ud0dd\ub9ac\uc14b \uc644\ub8cc! \ucd1d ${successCount}/${items.length}\uac74`,
+current:items.length,
+total:items.length
+});
+if(shouldStopRegistration){
+chrome.runtime.sendMessage({
+type:'\x53\x45\x4c\x45\x43\x54\x45\x44\x5f\x52\x45\x53\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44',
+total:items.length,
+successCount:successCount
+});
+}else{
+chrome.runtime.sendMessage({
+type:'\x53\x45\x4c\x45\x43\x54\x45\x44\x5f\x52\x45\x53\x45\x54\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44',
+total:items.length,
+successCount:successCount,
+reason:successCount===0?'\uc120\ud0dd\ud55c \ud2f0\ud0c0\uc784\uc758 \uae00\uc744 \uace8\ud504\ubaac\uc5d0\uc11c \ucc3e\uc9c0 \ubabb\ud588\uac70\ub098 \ub9ac\uc14b\ud560 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e':undefined
 });
 }
 }
@@ -6515,14 +6767,27 @@ executeBatchPostReplacement(request.items,request.delayPreset||'\x73\x61\x66\x65
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54'){
-if(isDateResetRunning||isRegistrationRunning){
+if(isDateResetRunning||isSelectedResetRunning||isRegistrationRunning){
 console.log("[\uc804\uccb4\ub9ac\uc14b] \uc774\ubbf8 \uc791\uc5c5\uc774 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc774\uc804 \uc2e4\ud589 \uc815\ub9ac \ubc0f \uc7ac\uc2dc\uc791 \uc900\ube44");
 shouldStopRegistration=true;
 isRegistrationRunning=false;
 isDateResetRunning=false;
+isSelectedResetRunning=false;
 }
 setTimeout(()=>{
 executeBatchDateReset(request.targetDate,request.filterType||'\uc804\uccb4',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.targetDates||null);
+},100);
+sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
+}else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x53\x45\x4c\x45\x43\x54\x45\x44\x5f\x52\x45\x53\x45\x54'){
+if(isDateResetRunning||isSelectedResetRunning||isRegistrationRunning){
+console.log("[\uc120\ud0dd\ub9ac\uc14b] \uc774\ubbf8 \uc791\uc5c5\uc774 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc774\uc804 \uc2e4\ud589 \uc815\ub9ac \ubc0f \uc7ac\uc2dc\uc791 \uc900\ube44");
+shouldStopRegistration=true;
+isRegistrationRunning=false;
+isDateResetRunning=false;
+isSelectedResetRunning=false;
+}
+setTimeout(()=>{
+executeBatchSelectedReset(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){

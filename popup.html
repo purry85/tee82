@@ -802,10 +802,10 @@
         }
 
         .btn-full-reset-action {
-            flex: 0 0 180px;
+            flex: 0 0 72px;
             height: 26px;
-            padding: 0 10px !important;
-            font-size: 11.5px !important;
+            padding: 0 4px !important;
+            font-size: 11px !important;
             font-weight: 800 !important;
             background: #6366F1 !important;
             color: #FFFFFF !important;
@@ -817,6 +817,7 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
+            cursor: pointer;
         }
 
         .btn-full-reset-action:hover {
@@ -831,20 +832,71 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
         }
 
-        /* 전체리셋 주기 선택 그룹 */
+        .btn-selected-reset-action {
+            flex: 0 0 72px;
+            height: 26px;
+            padding: 0 4px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+            letter-spacing: -0.2px !important;
+            border-radius: 5px !important;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25) !important;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .btn-selected-reset-action:hover {
+            background: #1D4ED8 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(37, 99, 235, 0.35) !important;
+        }
+
+        .btn-selected-reset-action:active {
+            background: #1E40AF !important;
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* 전체/선택리셋 주기 선택 그룹 */
         .reset-repeat-group {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
             height: 26px;
-            padding: 0 10px;
+            padding: 0 8px;
             background: #EEF2FF;
             border: 1px solid #C7D2FE;
             border-radius: 5px;
             box-sizing: border-box;
             flex: 1 1 auto;
             user-select: none;
+        }
+
+        .input-reset-custom-min {
+            width: 36px;
+            height: 19px;
+            padding: 0 2px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            border: 1px solid #C7D2FE;
+            border-radius: 4px;
+            background: #FFFFFF;
+            color: #312E81;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input-reset-custom-min:focus {
+            border-color: #4F46E5;
+            background: #F5F3FF;
         }
 
         .reset-repeat-title {
@@ -4494,19 +4546,20 @@
                     <button type="button" class="btn-hero-submit btn-full-reset-action" id="btnResetGolfmonDatePosts" title="지정한 시작 날짜부터 종료 날짜까지 등록된 골프몬 글을 내용 변경 없이 차례대로 모두 수정(리셋)합니다">
                         <span>전체리셋</span>
                     </button>
-                    <div class="reset-repeat-group" id="resetIntervalGroup" title="전체리셋 실행 주기 선택 (1회 실행, 30분마다, 1시간마다, 3시간마다 자동 반복)">
+                    <button type="button" class="btn-hero-submit btn-selected-reset-action" id="btnResetGolfmonSelectedPosts" title="티타임 목록에서 체크된 타임만 골프몬에서 찾아 내용 변경 없이 수정(끌어올리기/리셋)합니다">
+                        <span>선택리셋</span>
+                    </button>
+                    <div class="reset-repeat-group" id="resetIntervalGroup" title="리셋 실행 주기 선택 (1회 실행 또는 원하는 분 단위 자동 반복)">
                         <span class="reset-repeat-title">주기:</span>
                         <label class="reset-repeat-label" title="1회만 실행하고 종료"><input type="radio" name="resetIntervalOption" value="0" checked> 1회</label>
-                        <label class="reset-repeat-label" title="30분마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="30"> 30분</label>
-                        <label class="reset-repeat-label" title="1시간마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="60"> 1시간</label>
-                        <label class="reset-repeat-label" title="3시간마다 지정 날짜 자동 리셋"><input type="radio" name="resetIntervalOption" value="180"> 3시간</label>
+                        <label class="reset-repeat-label" title="원하는 분 주기마다 자동 반복"><input type="radio" name="resetIntervalOption" value="custom"> <input type="number" id="inputResetCustomMinutes" class="input-reset-custom-min" value="30" min="1" max="1440" title="반복 실행할 주기(분)"> 분</label>
                     </div>
                 </div>
-                <!-- ⏱️ 자동 리셋 카운트다운 배너 -->
+                <!-- 자동 리셋 카운트다운 배너 -->
                 <div id="resetTimerStatusBanner" style="display: none; margin-top: 4px; padding: 4px 6px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 5px; font-size: 9.5px; color: #3730A3; align-items: center; justify-content: space-between; box-sizing: border-box; width: 100%;">
                     <div style="display: flex; align-items: center; gap: 5px;">
                         <span class="timer-live-dot" style="width: 7px; height: 7px; background: #10B981; border-radius: 50%; display: inline-block;"></span>
-                        <span id="resetTimerStatusText" style="font-weight: 700;">⏱️ 전체리셋 자동 반복 중 (다음 실행: 계산 중...)</span>
+                        <span id="resetTimerStatusText" style="font-weight: 700;">리셋 자동 반복 중 (다음 실행: 계산 중...)</span>
                     </div>
                     <button type="button" id="btnStopResetTimer" style="background: #EF4444; color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 9.5px; font-weight: 700; cursor: pointer;">중단</button>
                 </div>
@@ -4831,7 +4884,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.5.1</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.5.3</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -5315,7 +5368,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.5.1 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.5.3 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>

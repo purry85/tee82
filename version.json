@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.1",
+    "version":  "2.5.3",
     "releaseDate":  "2026-11-17",
-    "title":  "v2.5.1 맞춤 기준시간 옵션 & 골프몬 수정 멈춤 해결",
+    "title":  "v2.5.3 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
     "releaseNotes":  [
-                         "- 스킵문제 수정"
+                         "- [선택리셋] 기능 신설 (popup.html, sidepanel.html, popup.js, content_script.js)"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
