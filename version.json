@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.4",
+    "version":  "2.5.5",
     "releaseDate":  "2026-11-17",
-    "title":  "v2.5.4 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
+    "title":  "v2.5.5 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
     "releaseNotes":  [
-                         "- 선택리셋 추가"
+                         "- 선택수정 기능추가"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
