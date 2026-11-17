@@ -15815,9 +15815,6 @@ _activeGolfmonSupervision.successCount++;
 if(msg.regId)_activeGolfmonSupervision.completedRegIds.add(msg.regId);
 }
 if(msg.item)recordRegisteredItem(msg.item);
-if(!isResetRepeatingActive){
-uncheckItem(msg.regId,msg.item);
-}
 recordDailyStat('\x67\x6f\x6c\x66\x6d\x6f\x6e','\uc120\ud0dd\ub9ac\uc14b',msg.item?.golf||msg.item?.rawGolf,1);
 }else if(msg.type==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x50\x52\x4f\x47\x52\x45\x53\x53'){
 if(_activeGolfmonSupervision&&typeof msg.current==='\x6e\x75\x6d\x62\x65\x72'){

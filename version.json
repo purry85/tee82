@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.6",
+    "version":  "2.5.7",
     "releaseDate":  "2026-11-17",
-    "title":  "v2.5.6 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
+    "title":  "v2.5.7 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
     "releaseNotes":  [
-                         "- 선택수정시, 리셋후 타임변경 체크하면 변경된것으로 수정교체."
+                         "- 선택기능 추가. bug fix."
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
