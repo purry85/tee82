@@ -7154,32 +7154,59 @@ tr.remove();
 }
 const remainingExistingTrs=Array.from(tbody.querySelectorAll('\x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
 const existingMap=new Map();
+const makeMatchKey=(d,g,t,r)=>{
+const normD=(typeof extractDayNumber==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?extractDayNumber(d):'')||(d||'').trim();
+const normG=(typeof normalizeCourseForMatch==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?normalizeCourseForMatch(g):'')||(g||'').trim();
+const normT=(t||'').toString().replace(/[^\d]/g,'');
+const normR=(r==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+return`${normD}|${normG}|${normT}|${normR}`;
+};
 remainingExistingTrs.forEach(oldTr=>{
 const c=oldTr.querySelectorAll('\x74\x64');
 const oDate=(c[0]?.textContent||oldTr.dataset.date||'').trim();
-const oGolf=(c[2]?.textContent||oldTr.dataset.golf||'').trim();
+const oGolf=(c[2]?.textContent||oldTr.dataset.rawGolf||oldTr.dataset.golf||'').trim();
 const oTime=(c[3]?.textContent||oldTr.dataset.time||'').trim();
 const oRoomType=(oldTr.dataset.roomType==='\uc591\ub3c4'||(c[4]?.textContent||'').includes('\uc591\ub3c4'))?'\uc591\ub3c4':'\uc870\uc778';
-const key=`${oDate}|${oGolf}|${oTime}|${oRoomType}`;
+const key=makeMatchKey(oDate,oGolf,oTime,oRoomType);
 existingMap.set(key,oldTr);
 });
+let priceUpdatedCount=0;
 newItems.forEach(item=>{
 if(!item||!item.tr)return;
 const newDate=(item.date||'').trim();
-const newGolf=(item.golf||'').trim();
+const newGolf=(item.golf||item.rawGolf||'').trim();
 const newTime=(item.time||'').trim();
 const newRoomType=(item.roomType==='\uc591\ub3c4'||item.tr?.dataset.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
-const key=`${newDate}|${newGolf}|${newTime}|${newRoomType}`;
+const key=makeMatchKey(newDate,newGolf,newTime,newRoomType);
 const oldTr=existingMap.get(key);
 if(oldTr){
+const oldC=oldTr.querySelectorAll('\x74\x64');
+const oldFee=parseFloat(oldTr.dataset.totalFee||oldTr.dataset.baseFee||oldC[4]?.textContent?.replace(/[^\d.]/g,''))||0;
+const newFee=parseFloat(item.tr.dataset.totalFee||item.tr.dataset.baseFee||item.tr.querySelectorAll('\x74\x64')[4]?.textContent?.replace(/[^\d.]/g,''))||0;
+if(oldFee>0&&newFee>0&&oldFee>newFee){
+const diff=Math.round((newFee-oldFee)*10)/10;
+item.tr.dataset.isPriceDropped='\x74\x72\x75\x65';
+item.tr.dataset.prevFee=oldFee.toString();
+item.tr.dataset.priceDiff=diff.toString();
+priceUpdatedCount++;
+console.log(`[\uac00\uaca9 \uc778\ud558 \uac31\uc2e0] ${newGolf} (${newDate} ${newTime}): \uae30\uc874 ${oldFee}\ub9cc \u2794 \uc0c8 \uac00\uaca9 ${newFee}\ub9cc (${diff}\ub9cc)`);
+}else if(oldTr.dataset.isPriceDropped==='\x74\x72\x75\x65'&&oldTr.dataset.prevFee){
+item.tr.dataset.isPriceDropped='\x74\x72\x75\x65';
+item.tr.dataset.prevFee=oldTr.dataset.prevFee;
+item.tr.dataset.priceDiff=oldTr.dataset.priceDiff;
+}
+if(oldTr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64')){
+item.tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
+item.isPreservedSelection=true;
+}
 oldTr.remove();
 existingMap.delete(key);
 const remIdx=remainingExistingTrs.indexOf(oldTr);
 if(remIdx>=0)remainingExistingTrs.splice(remIdx,1);
 }
 });
-const newTrs=newItems.map(it=>it.tr).filter(Boolean);
-const newSelectedCount=applyAutoSelectTwoToTrs(newTrs);
+const pureNewTrs=newItems.filter(it=>it.tr&&!it.isPreservedSelection).map(it=>it.tr);
+const newSelectedCount=pureNewTrs.length>0?applyAutoSelectTwoToTrs(pureNewTrs):0;
 const firstExistingTr=tbody.firstElementChild;
 newItems.forEach(item=>{
 if(!item||!item.tr)return;
@@ -7197,7 +7224,8 @@ const inputEl=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74');
 if(inputEl)inputEl.value='';
 try{localStorage.removeItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x49\x6e\x70\x75\x74\x54\x65\x78\x74');}catch(e){}
 const keptCount=remainingExistingTrs.length;
-showToast(`\uc2e0\uaddc \ud0c0\uc784 ${newItems.length}\uac74 \uc0c1\ub2e8 \uc6b0\uc120\ubc30\uce58 \uc644\ub8cc! (\uc2e0\uaddc ${newSelectedCount}\uac1c \uc790\ub3d9\uc120\ud0dd, \uae30\uc874 \ub300\uae30 ${keptCount}\uac74 \uc720\uc9c0)`);
+const priceMsg=priceUpdatedCount>0?`, \uac00\uaca9\uc778\ud558 ${priceUpdatedCount}\uac74 \uac31\uc2e0`:'';
+showToast(`\uc2e0\uaddc \ud0c0\uc784 ${newItems.length}\uac74 \uc0c1\ub2e8 \uc6b0\uc120\ubc30\uce58 \uc644\ub8cc! (\uae30\uc874 \uccb4\ud06c \uc720\uc9c0${priceMsg})`);
 return true;
 }
 tbody.innerHTML='';

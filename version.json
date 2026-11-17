@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.8",
+    "version":  "2.5.9",
     "releaseDate":  "2026-11-17",
-    "title":  "v2.5.8 골프몬 선택리셋 및 맞춤 분 단위 주기 추가",
+    "title":  "선택수정시, 새로운 가격하락타임 붙혀넣기시, 가격변동되어 선택수정유지.",
     "releaseNotes":  [
-                         "- 개별수정 버그픽스"
+                         "- 선택수정시, 새로운 가격하락타임 붙혀넣기시, 가격변동되어 선택수정유지."
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
