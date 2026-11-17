@@ -1797,7 +1797,7 @@ document.head.appendChild(style);
 style.textContent=`
         /* ===== \uace8\ud504\ud0d1 \uace8\ud504\ub77d \uc644\ubcbd \uc77c\uce58 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 CSS ===== */
 
-        /* 1. \uc0c1\ub2e8 \ud589: \ub2ec\ub825(\uc88c) + \ud2b9\uc774\uc0ac\ud56d(\uc6b0) \ub9e8 \uc704 \ubc30\uce58, \uadf8 \ud558\ub2e8\uc5d0 \uace8\ud504\uc7a5 \ubaa9\ub85d(\uc804\ud3ed) */
+        /* 1. \uc0c1\ub2e8 \ud589: \ub2ec\ub825(\uc88c) + \ud2b9\uc774\uc0ac\ud56d(\uc6b0) 2\uc5f4 \ub098\ub780\ud788 \ubc30\uce58 */
         body.gtp-smart-layout-active .gtp-smart-top-row,
         body.gtp-smart-layout-active tr.gtp-smart-top-row {
             display: flex !important;
@@ -1805,6 +1805,7 @@ style.textContent=`
             width: 100% !important;
             box-sizing: border-box !important;
             align-items: flex-start !important;
+            gap: 12px !important;
             height: auto !important;
             max-height: none !important;
             min-height: 0 !important;
@@ -1812,31 +1813,35 @@ style.textContent=`
             margin-bottom: 12px !important;
         }
 
-        /* [\ub9e8 \uc704 \uc88c\uce21]: \ub2ec\ub825 \ubc0f \uc794\uc5ec\ud0c0\uc784 \ud544\ud130 (Column 1) */
+        /* [\uc0c1\ub2e8 \uc88c\uce21]: \ub2ec\ub825 \ubc0f \uc794\uc5ec\ud0c0\uc784 \ud544\ud130 (Column 1) */
         body.gtp-smart-layout-active .gtp-smart-col-date,
         body.gtp-smart-layout-active tr.gtp-smart-top-row > td.gtp-smart-col-date {
             order: 1 !important;
-            flex: 0 0 45% !important;
-            max-width: 45% !important;
+            flex: 0 0 340px !important;
+            width: 340px !important;
+            max-width: 340px !important;
             box-sizing: border-box !important;
             padding: 8px 10px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
             border: 1px solid #e2e8f0 !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-            height: auto !important;
+            height: 280px !important;
+            min-height: 280px !important;
             max-height: 280px !important;
             overflow-y: auto !important;
         }
 
-        /* [\ub9e8 \uc704 \uc6b0\uce21]: \ud560\uc778\uadf8\ub9b0\ud53c / \uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d (Column 3) */
+        /* [\uc0c1\ub2e8 \uc6b0\uce21]: \ud560\uc778\uadf8\ub9b0\ud53c / \uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d (Column 3) */
         body.gtp-smart-layout-active .gtp-smart-col-detail,
         body.gtp-smart-layout-active tr.gtp-smart-top-row > td.gtp-smart-col-detail {
             order: 2 !important;
-            flex: 0 0 calc(55% - 10px) !important;
-            max-width: calc(55% - 10px) !important;
+            flex: 1 1 0 !important;
+            min-width: 300px !important;
+            width: auto !important;
+            max-width: none !important;
             box-sizing: border-box !important;
-            margin-left: 10px !important;
+            margin-left: 0 !important;
             padding: 8px 10px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
@@ -1845,9 +1850,16 @@ style.textContent=`
             display: flex !important;
             flex-direction: column !important;
             visibility: visible !important;
-            height: auto !important;
+            height: 280px !important;
+            min-height: 280px !important;
             max-height: 280px !important;
             overflow-y: auto !important;
+        }
+
+        body.gtp-smart-layout-active .gtp-smart-col-detail > * {
+            max-width: 100% !important;
+            width: 100% !important;
+            visibility: visible !important;
         }
 
         /* [\uadf8 \ud558\ub2e8 \uc804\uccb4 \ud3ed]: \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d (Column 2) */
@@ -1858,7 +1870,7 @@ style.textContent=`
             max-width: 100% !important;
             width: 100% !important;
             box-sizing: border-box !important;
-            margin-top: 10px !important;
+            margin-top: 6px !important;
             padding: 8px 10px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
@@ -1866,8 +1878,21 @@ style.textContent=`
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
             display: block !important;
             height: auto !important;
-            max-height: 290px !important;
+            max-height: 310px !important;
             overflow: hidden !important;
+        }
+
+        /* \uace8\ud504\uc7a5 \uc120\ud0dd \ub0b4\ubd80 \ubaa8\ub4e0 \ub798\ud37c 100% \uac00\ub85c\ud3ed \uac15\uc81c (250px \uc881\ud798 \ucc28\ub2e8) */
+        body.gtp-smart-layout-active .gtp-smart-col-course > div,
+        body.gtp-smart-layout-active .gtp-smart-col-course form,
+        body.gtp-smart-layout-active .gtp-smart-col-course section,
+        body.gtp-smart-layout-active .gtp-smart-col-course div[class*="body"],
+        body.gtp-smart-layout-active .gtp-smart-col-course div[id*="scroll"],
+        body.gtp-smart-layout-active #gtp_smart_regions_grid {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         /* 2. \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d: \uace8\ud504\ub77d\ucc98\ub7fc 3\uac1c \uad8c\uc5ed\uc529 \ub098\ub780\ud788 \uadf8\ub9ac\ub4dc \ubc30\uce58:
@@ -1878,11 +1903,13 @@ style.textContent=`
         body.gtp-smart-layout-active .gtp-regions-grid {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 8px !important;
+            gap: 10px !important;
             width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
             box-sizing: border-box !important;
             align-items: stretch !important;
-            max-height: 250px !important;
+            max-height: 255px !important;
             overflow-y: auto !important;
             padding-right: 4px !important;
         }
@@ -1892,12 +1919,13 @@ style.textContent=`
             background: #f8fafc !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 6px !important;
-            padding: 5px !important;
+            padding: 6px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
             min-width: 0 !important;
-            max-height: 235px !important;
+            width: 100% !important;
+            max-height: 240px !important;
             overflow: hidden !important;
         }
 
@@ -1922,8 +1950,9 @@ style.textContent=`
         body.gtp-smart-layout-active .gtp-region-buttons-wrap {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 3px !important;
+            gap: 4px !important;
             width: 100% !important;
+            min-width: 100% !important;
             box-sizing: border-box !important;
             max-height: 195px !important;
             overflow-y: auto !important;
@@ -1937,7 +1966,7 @@ style.textContent=`
             text-overflow: clip !important;
             line-height: 1.15 !important;
             font-size: 10.5px !important;
-            min-height: 35px !important;
+            min-height: 34px !important;
             height: auto !important;
             padding: 2px 2px !important;
             display: inline-flex !important;
@@ -2325,9 +2354,22 @@ break;
 p=p.parentElement;
 }
 }
+let w=commonParent;
+while(w&&w!==document.body){
+w.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+w.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+w.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+w.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+if(w===colCourse)break;
+w=w.parentElement;
+}
 const gridContainer=document.createElement('\x64\x69\x76');
 gridContainer.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64';
 gridContainer.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e\x73-\x67\x72\x69\x64';
+gridContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 const regionCardsMap=new Map();
 detectedRegions.forEach((reg)=>{
 const card=document.createElement('\x64\x69\x76');
@@ -2425,16 +2467,32 @@ rowContainer.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x74\x6f\x70-\x72\
 if(colDate){
 __gtp_cached_date_col=colDate;
 colDate.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
+colDate.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 if(colDetail){
 __gtp_cached_detail_col=colDetail;
 colDetail.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
-colDetail.style.display='\x66\x6c\x65\x78';
-colDetail.style.visibility='\x76\x69\x73\x69\x62\x6c\x65';
+colDetail.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+Array.from(colDetail.querySelectorAll('*')).forEach(el=>{
+if(el.style.display==='\x6e\x6f\x6e\x65'){
+el.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+}
+el.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+});
 }
 if(colCourse){
 __gtp_cached_course_col=colCourse;
 colCourse.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
+colCourse.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 _0x102d(colCourse);
 const buttons=_0x102c(colCourse);
