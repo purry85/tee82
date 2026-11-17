@@ -6362,6 +6362,17 @@ const availableCards=matchingCourseCards.filter(c=>!c.postId||!processedPostIds.
 const plan=[];
 const unassignedItems=[];
 const usedCardSet=new Set();
+const parseFeeManVal=(f)=>{
+const num=parseFloat((f||'').toString().replace(/[^\d.]/g,''));
+if(isNaN(num))return null;
+return num>=1000?Math.round((num/10000)*10)/10:num;
+};
+const isPriceIdentical=(itFee,cardFeeStr)=>{
+const f1=parseFeeManVal(itFee);
+const f2=parseFeeManVal(cardFeeStr);
+if(f1===null||f2===null)return true;
+return Math.abs(f1-f2)<0.05;
+};
 for(const item of group.items){
 const targetTimeClean=(item.time||'').replace(/[^\d]/g,'');
 const exactCard=availableCards.find(c=>{
@@ -6371,7 +6382,12 @@ return cardTimeClean&&targetTimeClean&&cardTimeClean===targetTimeClean;
 });
 if(exactCard){
 usedCardSet.add(exactCard);
+const isPriceSame=isPriceIdentical(item.fee,exactCard.feeStr);
+if(isPriceSame){
 plan.push({item,card:exactCard,action:'\x6b\x65\x65\x70'});
+}else{
+plan.push({item,card:exactCard,action:'\x63\x68\x61\x6e\x67\x65\x5f\x66\x65\x65'});
+}
 }else{
 unassignedItems.push(item);
 }
@@ -6385,13 +6401,18 @@ plan.push({item,card:remainingCard,action:'\x63\x68\x61\x6e\x67\x65'});
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \ub9e4\uce6d \uac00\ub2a5\ud55c \uae30\uc874 \uae00 \uc2ac\ub86f\uc774 \uc5c6\uc5b4 \uac74\ub108\ub701\ub2c8\ub2e4.`);
 }
 }
-console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${group.golf}: \ucd1d ${plan.length}\uac74 \uc2e4\ud589 \uacc4\ud68d \uc218\ub9bd \uc644\ub8cc (\ub0b4\uc6a9\uc720\uc9c0: ${plan.filter(p=>p.action==='\x6b\x65\x65\x70').length}\uac74, \ubcc0\uacbd\uad50\uccb4: ${plan.filter(p=>p.action==='\x63\x68\x61\x6e\x67\x65').length}\uac74)`);
+console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${group.golf}: \ucd1d ${plan.length}\uac74 \uc2e4\ud589 \uacc4\ud68d \uc218\ub9bd \uc644\ub8cc (\ub0b4\uc6a9\uc720\uc9c0: ${plan.filter(p=>p.action==='\x6b\x65\x65\x70').length}\uac74, \uac00\uaca9\uc218\uc815: ${plan.filter(p=>p.action==='\x63\x68\x61\x6e\x67\x65\x5f\x66\x65\x65').length}\uac74, \ud0c0\uc784\uad50\uccb4: ${plan.filter(p=>p.action==='\x63\x68\x61\x6e\x67\x65').length}\uac74)`);
 for(const{item,card,action}of plan){
 if(shouldStopRegistration)break;
 globalIndex++;
-const actionDesc=(action==='\x6b\x65\x65\x70')
-?'\ub9ac\uc14b (\ub0b4\uc6a9\uc720\uc9c0 \ub04c\uc62c)'
-:`\uad50\uccb4 \ub9ac\uc14b (${card.teeTime} \u2794 ${item.time} \ubcc0\uacbd)`;
+let actionDesc='';
+if(action==='\x6b\x65\x65\x70'){
+actionDesc='\ub9ac\uc14b (\ub0b4\uc6a9\uc720\uc9c0 \ub04c\uc62c)';
+}else if(action==='\x63\x68\x61\x6e\x67\x65\x5f\x66\x65\x65'){
+actionDesc=`\uac00\uaca9\uc218\uc815 \ub9ac\uc14b (${card.feeStr} \u2794 ${item.fee}\ub9cc)`;
+}else{
+actionDesc=`\uad50\uccb4 \ub9ac\uc14b (${card.teeTime} \u2794 ${item.time}, ${item.fee}\ub9cc)`;
+}
 _0x1009({
 title:modeTitle,
 desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.date} ${item.time}) ${actionDesc}...`,
@@ -6437,6 +6458,9 @@ date:item.date,
 teeTime:card.teeTime,
 feeStr:card.feeStr
 });
+}else if(action==='\x63\x68\x61\x6e\x67\x65\x5f\x66\x65\x65'){
+console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.time}): \ubc14\ub010 \uac00\uaca9(${card.feeStr} \u2794 ${item.fee}\ub9cc)\uc73c\ub85c \uc218\uc815\ud558\uc5ec \ub9ac\uc14b \uc9c4\ud589!`);
+editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
 }else{
 console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf}: \uae30\uc874 \uae00(${card.teeTime})\uc744 \uc0c8 \ud0c0\uc784(${item.time} / ${item.fee}\ub9cc)\uc73c\ub85c \ubcc0\uacbd \uc218\uc815 \uc9c4\ud589!`);
 editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
