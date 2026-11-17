@@ -2937,14 +2937,7 @@ return true;
 }
 curActiveMonth=_0x1039();
 if(targetMonth&&curActiveMonth&&curActiveMonth!==targetMonth){
-console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udea8 \uce58\uba85\uc801 \uc704\ud5d8 \uc6d0\ucc9c \ucc28\ub2e8: \ud654\uba74 \uc6d4(${curActiveMonth}\uc6d4)\uc774 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\uacfc \ubd88\uc77c\uce58! \ub0a0\uc9dc \ubc84\ud2bc \ud074\ub9ad\uc744 \ucc28\ub2e8\ud558\uace0 URL qDate \uac15\uc81c \uc804\ud658\uc744 \uc2e4\ud589\ud569\ub2c8\ub2e4.`);
-if(targetYmd){
-const u=new URL(window.location.href);
-u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
-window.location.href=u.toString();
-await _0x1007(2000);
-return true;
-}
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udea8 \uce58\uba85\uc801 \uc704\ud5d8 \uc6d0\ucc9c \ucc28\ub2e8: \ud654\uba74 \uc6d4(${curActiveMonth}\uc6d4)\uc774 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\uacfc \ubd88\uc77c\uce58! \ub0a0\uc9dc \ubc84\ud2bc \ud074\ub9ad\uc744 \ucc28\ub2e8\ud558\uace0 \uc0dd\ub7b5\ud569\ub2c8\ub2e4.`);
 return false;
 }
 for(let attempt=0;attempt<maxAttempts;attempt++){
@@ -2985,7 +2978,8 @@ if(attempt+1<maxAttempts){
 console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \ud074\ub9ad \ud6c4 \ubbf8\ubc18\uc601 -> ${attempt+2}\ud68c\ucc28 \uc7ac\uc2dc\ub3c4 \uc900\ube44...`);
 }
 }else{
-console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568 (\ud574\ub2f9 \ub0a0\uc9dc \ub4f1\ub85d\uae00/\ud0ed \uc5c6\uc74c)`);
+break;
 }
 await _0x1007(250);
 }
@@ -2999,21 +2993,7 @@ if((finalUrlDay===cleanDay&&(!targetMonth||finalUrlMonth===targetMonth))||
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ucd5c\uc885 \ud655\uc778 \uc131\uacf5`);
 return true;
 }
-if(targetYmd){
-console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f UI \ud074\ub9ad \ubbf8\ubc18\uc601\uc73c\ub85c \uc778\ud574 URL qDate \ud30c\ub77c\ubbf8\ud130\ub97c \uc9c1\uc811 [${targetYmd}]\ub85c \uc804\ud658\ud569\ub2c8\ub2e4...`);
-try{
-const u=new URL(window.location.href);
-if(u.searchParams.get('\x71\x44\x61\x74\x65')!==targetYmd){
-u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
-window.location.href=u.toString();
-await _0x1007(2000);
-return true;
-}
-}catch(e){
-console.error('\x55\x52\x4c \x71\x44\x61\x74\x65 \uc9c1\uc811 \uc804\ud658 \uc2e4\ud328\x3a',e);
-}
-}
-console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) UI \uc120\ud0dd \ucd5c\uc885 \ubbf8\ubc18\uc601 (\ud654\uba74: ${finalActiveDay||'\ubbf8\ud655\uc778'}\uc77c, URL: ${finalUrlDate||'\ubbf8\ud655\uc778'})`);
+console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \ud0ed\uc774 \uc5c6\uac70\ub098 \uc120\ud0dd \ubd88\uac00 (\ud654\uba74: ${finalActiveMonth||'?'}\uc6d4 ${finalActiveDay||'\ubbf8\ud655\uc778'}\uc77c) -> \ub4f1\ub85d\uae00 \uc5c6\uc74c \ucc98\ub9ac`);
 return false;
 }
 async function _0x1044(targetDateStr,maxRetries=3){
@@ -6252,19 +6232,13 @@ const dateClicked=await _0x1043(targetDate);
 await _0x1007(350);
 const activeDayNow=_0x1040();
 const activeMonthNow=_0x1039();
-if(targetMonth&&activeMonthNow&&activeMonthNow!==targetMonth){
-console.error(`\ud83d\udea8 [\uc804\uccb4\ub9ac\uc14b] \ud654\uba74 \uc6d4 \ubd88\uc77c\uce58 \ucc28\ub2e8! (\ud604\uc7ac: ${activeMonthNow}\uc6d4 != \ubaa9\ud45c: ${targetMonth}\uc6d4). URL \uac15\uc81c \uc774\ub3d9 \uc2e4\ud589...`);
-const targetYmd=_0x1038(targetDate);
-if(targetYmd){
-const u=new URL(window.location.href);
-u.searchParams.set('\x71\x44\x61\x74\x65',targetYmd);
-window.location.href=u.toString();
-await _0x1007(2000);
-}
-continue;
-}
-if(!dateClicked&&activeDayNow&&targetDay&&(activeDayNow!==targetDay||(targetMonth&&activeMonthNow&&activeMonthNow!==targetMonth))){
-console.warn(`\u26a0\ufe0f [\uc804\uccb4\ub9ac\uc14b] \uace8\ud504\ubaac \ub0b4\uae00 \ubaa9\ub85d \uc0c1\ub2e8\uc5d0\uc11c [${targetDate}] \ub0a0\uc9dc \ud0ed\uc744 \ucc3e\uc9c0 \ubabb\ud574 \ub2e4\uc74c \ub0a0\uc9dc\ub85c \ub118\uc5b4\uac11\ub2c8\ub2e4.`);
+const urlDateNow=_0x1041();
+const urlMonthNow=urlDateNow?_0x1037(urlDateNow):'';
+const urlDayNow=urlDateNow?_0x1036(urlDateNow):'';
+const isMonthMatch=Boolean(!targetMonth||(activeMonthNow&&activeMonthNow===targetMonth)||(urlMonthNow&&urlMonthNow===targetMonth));
+const isDayMatch=Boolean(!targetDay||(activeDayNow&&activeDayNow===targetDay)||(urlDayNow&&urlDayNow===targetDay));
+if(!dateClicked||!isMonthMatch||!isDayMatch){
+console.log(`[\uc804\uccb4\ub9ac\uc14b] \u23e9 [${targetDate}] \ud574\ub2f9 \ub0a0\uc9dc\uc5d0 \ub4f1\ub85d\ub41c \uae00/\ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4 (\uc120\ud0dd\uacb0\uacfc: ${dateClicked}, \ud654\uba74: ${activeMonthNow||'?'}\uc6d4 ${activeDayNow||'?'}\uc77c, URL: ${urlMonthNow||'?'}\uc6d4 ${urlDayNow||'?'}\uc77c). \uc790\ub3d9\uc73c\ub85c \ub2e4\uc74c \ub0a0\uc9dc\ub85c \ub118\uc5b4\uac11\ub2c8\ub2e4.`);
 continue;
 }
 await _0x1045('\uc804\uccb4');
@@ -6415,7 +6389,7 @@ reason:totalSuccessCount===0?`\uc9c0\uc815\ud55c \uae30\uac04(${rangeLabel})\uc5
 });
 }
 }
-async function executeBatchSelectedReset(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x1052(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
 if(!items||items.length===0)return;
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
@@ -6702,7 +6676,7 @@ reason:successCount===0?'\uc120\ud0dd\ud55c \ud2f0\ud0c0\uc784\uc758 \uae00\uc74
 });
 }
 }
-async function executeSinglePostDelete(targetPost){
+async function _0x1053(targetPost){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -7010,11 +6984,11 @@ isDateResetRunning=false;
 isSelectedResetRunning=false;
 }
 setTimeout(()=>{
-executeBatchSelectedReset(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
+_0x1052(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-executeSinglePostDelete(request.targetPost).then(result=>{
+_0x1053(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uc0ad\uc81c \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});
