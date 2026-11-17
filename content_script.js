@@ -2597,6 +2597,14 @@ async function _0x103a(targetMonth){
 if(!targetMonth)return true;
 const cleanTargetMonth=parseInt(targetMonth,10).toString();
 const maxBottom=typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103b():450;
+const curMonthCheck=_0x1039();
+if(curMonthCheck===cleanTargetMonth){
+console.log(`[\uc6d4\ubcc0\uacbd] \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc774\ubbf8 \uc77c\uce58\ud568`);
+return true;
+}
+let dialogEl=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x63\x61\x72\x64');
+const isDialogAlreadyOpen=dialogEl&&dialogEl.innerText&&(dialogEl.innerText.includes('\uc120\ud0dd\ud558\uc138\uc694')||dialogEl.innerText.includes('\uc6d4'));
+if(!isDialogAlreadyOpen){
 const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -2618,37 +2626,50 @@ if(txtA!==txtB)return txtA-txtB;
 return(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight);
 });
 const currentMonthBtn=monthElements[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x71-\x66\x69\x65\x6c\x64')||monthElements[0];
-const curTxt=(currentMonthBtn.innerText||currentMonthBtn.textContent||'').trim();
-const curMatch=curTxt.match(/(\d{1,2})\s*월/);
-const curMonthNum=curMatch?parseInt(curMatch[1],10).toString():'';
-if(curMonthNum&&curMonthNum===cleanTargetMonth){
-console.log(`[\uc6d4\ubcc0\uacbd] \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc774\ubbf8 \uc77c\uce58\ud568`);
-return true;
-}
-console.log(`[\uc6d4\ubcc0\uacbd] \ud604\uc7ac \uc6d4(${curMonthNum||'?'}\uc6d4) -> \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4)\ub85c \ub4dc\ub86d\ub2e4\uc6b4 \ubcc0\uacbd \uc2dc\ub3c4...`);
+console.log(`[\uc6d4\ubcc0\uacbd] \ud604\uc7ac \uc6d4 -> \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4) \ubaa8\ub2ec \uc5f4\uae30 \ud074\ub9ad \uc2e4\ud589...`);
 await _0x100e(currentMonthBtn);
 try{currentMonthBtn.click();}catch(e){}
-await _0x1007(450);
-const allItems=Array.from(document.querySelectorAll('\x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"] [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76, \x73\x70\x61\x6e, \x62\x75\x74\x74\x6f\x6e'))
-.filter(el=>el.offsetHeight>0);
-const targetItem=allItems.find(el=>{
+await _0x1007(500);
+}else{
+console.log(`[\uc6d4\ubcc0\uacbd] '\uc120\ud0dd\ud558\uc138\uc694' \ubaa8\ub2ec\uc774 \uc774\ubbf8 \ud654\uba74\uc5d0 \uc5f4\ub824 \uc788\uc2b5\ub2c8\ub2e4. \uc989\uc2dc \uc120\ud0dd \uc9c4\ud589`);
+}
+const allItems=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x69\x74\x65\x6d, \x2e\x71-\x6d\x65\x6e\x75 \x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"] \x64\x69\x76, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x64\x69\x76, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x6c\x69\x73\x74\x62\x6f\x78"] [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76, \x73\x70\x61\x6e, \x62\x75\x74\x74\x6f\x6e'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
 return t===`${cleanTargetMonth}\uc6d4`||t.startsWith(`${cleanTargetMonth}\uc6d4`);
 });
-if(targetItem){
-const clickT=targetItem.closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x62\x75\x74\x74\x6f\x6e')||targetItem;
+if(allItems.length>0){
+allItems.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
+const clickT=allItems[0].closest('\x2e\x71-\x69\x74\x65\x6d, [\x72\x6f\x6c\x65="\x6f\x70\x74\x69\x6f\x6e"], \x6c\x61\x62\x65\x6c, \x62\x75\x74\x74\x6f\x6e, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||allItems[0];
+console.log(`[\uc6d4\ubcc0\uacbd] \ubaa9\ud45c \uc6d4 [${cleanTargetMonth}\uc6d4] \ud56d\ubaa9 \ud074\ub9ad!`);
 await _0x100e(clickT);
 try{clickT.click();}catch(e){}
-console.log(`[\uc6d4\ubcc0\uacbd] \ubaa9\ud45c \uc6d4(${cleanTargetMonth}\uc6d4) \ub4dc\ub86d\ub2e4\uc6b4 \ud56d\ubaa9 \ud074\ub9ad \uc644\ub8cc!`);
-await _0x1007(600);
+await _0x1007(350);
+}else{
+console.warn(`[\uc6d4\ubcc0\uacbd] \ub4dc\ub86d\ub2e4\uc6b4 \ubaa8\ub2ec\uc5d0\uc11c [${cleanTargetMonth}\uc6d4] \ud56d\ubaa9\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
+}
+const selectButtons=Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"] \x62\x75\x74\x74\x6f\x6e, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"] \x2e\x71-\x62\x74\x6e, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
+return t==='\uc120\ud0dd'||t==='\ud655\uc778'||t==='\uc644\ub8cc';
+});
+if(selectButtons.length>0){
+const primaryBtn=selectButtons.find(el=>el.offsetWidth>80)||selectButtons[0];
+console.log(`[\uc6d4\ubcc0\uacbd] \u2705 \ubaa8\ub2ec \ud558\ub2e8 [\uc120\ud0dd] \ud655\uc778 \ubc84\ud2bc \ud074\ub9ad! (\ud14d\uc2a4\ud2b8: ${primaryBtn.innerText.trim()})`);
+await _0x100e(primaryBtn);
+try{primaryBtn.click();}catch(e){}
+await _0x1007(700);
+}else{
+console.warn(`[\uc6d4\ubcc0\uacbd] \ubaa8\ub2ec \ud558\ub2e8 [\uc120\ud0dd] \ud655\uc778 \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
+}
 const afterMonth=_0x1039();
 if(afterMonth===cleanTargetMonth){
-console.log(`[\uc6d4\ubcc0\uacbd] \u2705 \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc804\ud658 \ud655\uc778 \uc131\uacf5!`);
+console.log(`[\uc6d4\ubcc0\uacbd] \u2705 \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc804\ud658 \ubc0f \ubaa8\ub2ec \uc801\uc6a9 \uc644\ub8cc!`);
 return true;
 }
-}else{
-console.warn(`[\uc6d4\ubcc0\uacbd] \ub4dc\ub86d\ub2e4\uc6b4 \uba54\ub274\uc5d0\uc11c [${cleanTargetMonth}\uc6d4] \ud56d\ubaa9\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
-}
+console.warn(`[\uc6d4\ubcc0\uacbd] UI \uc6d4 \ubcc0\uacbd \ud6c4\uc5d0\ub3c4 \uc0c1\ub2e8 \uc6d4\uc774 ${afterMonth||'\ubbf8\ud655\uc778'}\uc6d4 \uc0c1\ud0dc\uc784`);
 return false;
 }
 function _0x103b(){
