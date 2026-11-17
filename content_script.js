@@ -2719,7 +2719,7 @@ return null;
 }
 function _0x103e(){
 const regionBarTop=_0x103a();
-const maxBottom=Math.max(regionBarTop+30,220);
+const maxBottom=regionBarTop>0?(regionBarTop-5):180;
 const topElements=Array.from(document.querySelectorAll('*'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -5226,28 +5226,42 @@ await _0x1035(groupCategory);
 if(shouldStopRegistration)break;
 await _0x1045(groupCategory);
 if(shouldStopRegistration)break;
+if(group.region&&group.region!=='\uc804\uccb4'){
+await _0x1043(group.region);
+await _0x1007(250);
+}else{
+await _0x1043('\uc804\uccb4');
+await _0x1007(250);
+}
+if(shouldStopRegistration)break;
 if(group.date){
 await _0x1042(group.date);
 await _0x1007(300);
 }
 if(shouldStopRegistration)break;
 const targetDayNum=_0x1036(group.date);
-let curScreenDay=_0x103e();
 const curUrlDate=_0x103f();
 const curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
-if(targetDayNum&&((curScreenDay&&curScreenDay!==targetDayNum)||(curUrlDay&&curUrlDay!==targetDayNum))){
+let curScreenDay=_0x103e();
+const isUrlMatched=Boolean(curUrlDay&&targetDayNum&&curUrlDay===targetDayNum);
+if(!isUrlMatched&&targetDayNum&&((curScreenDay&&curScreenDay!==targetDayNum)||(curUrlDay&&curUrlDay!==targetDayNum))){
 console.warn(`[${logTag}] \u26a0\ufe0f \ud604\uc7ac \ud654\uba74/URL \ub0a0\uc9dc(\ud654\uba74:${curScreenDay||'\ubbf8\ud655\uc778'}\uc77c, URL:${curUrlDay||'\ubbf8\ud655\uc778'}\uc77c)\uac00 \ubaa9\ud45c \ub0a0\uc9dc(${targetDayNum}\uc77c)\uc640 \ubd88\uc77c\uce58! \ub0a0\uc9dc \uc7ac\uc120\ud0dd \uae34\uae09 \uc2e4\ud589...`);
 await _0x1042(group.date,3);
 await _0x1007(350);
 }
 const finalUrlDay=_0x103f()?_0x1036(_0x103f()):'';
 const finalScreenDay=_0x103e();
-const isWrongScreenDay=Boolean(finalScreenDay&&finalScreenDay!==targetDayNum);
-const isWrongUrlDay=Boolean(finalUrlDay&&finalUrlDay!==targetDayNum);
-const isWrongDay=targetDayNum&&(isWrongScreenDay||isWrongUrlDay);
+let isWrongDay=false;
+if(targetDayNum){
+if(finalUrlDay){
+isWrongDay=(finalUrlDay!==targetDayNum);
+}else if(finalScreenDay){
+isWrongDay=(finalScreenDay!==targetDayNum);
+}
+}
 if(isWrongDay){
-const detectedDay=finalScreenDay||finalUrlDay||'\ubbf8\ud655\uc778';
-console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \ubd88\uc77c\uce58(\ud654\uba74:${detectedDay}\uc77c != \ubaa9\ud45c:${targetDayNum}\uc77c)\ub85c [${group.golf} ${group.date}] ${group.items.length}\uac74 \uc548\uc804 \uc2a4\ud0b5 \uc9c4\ud589`);
+const detectedDay=finalUrlDay||finalScreenDay||'\ubbf8\ud655\uc778';
+console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \ubd88\uc77c\uce58(\ud655\uc778\ub41c \ub0a0\uc9dc:${detectedDay}\uc77c != \ubaa9\ud45c:${targetDayNum}\uc77c)\ub85c [${group.golf} ${group.date}] ${group.items.length}\uac74 \uc548\uc804 \uc2a4\ud0b5 \uc9c4\ud589`);
 for(const it of group.items){
 globalIndex++;
 _0x1009({
@@ -5261,17 +5275,10 @@ type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x
 golf:it.golf,
 date:it.date,
 time:it.time,
-reason:`\ud654\uba74 \ub0a0\uc9dc(${detectedDay}\uc77c)\uc640 \ubaa9\ud45c \ub0a0\uc9dc(${targetDayNum}\uc77c) \ubd88\uc77c\uce58\ub85c \uac74\ub108\ub700`
+reason:`\ud655\uc778\ub41c \ub0a0\uc9dc(${detectedDay}\uc77c)\uc640 \ubaa9\ud45c \ub0a0\uc9dc(${targetDayNum}\uc77c) \ubd88\uc77c\uce58\ub85c \uac74\ub108\ub700`
 });
 }
 continue;
-}
-if(group.region&&group.region!=='\uc804\uccb4'){
-await _0x1043(group.region);
-await _0x1007(350);
-}else{
-await _0x1043('\uc804\uccb4');
-await _0x1007(350);
 }
 if(shouldStopRegistration)break;
 const normalizeTimeDigits=(t)=>{
