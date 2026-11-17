@@ -1,9 +1,9 @@
 {
-    "version":  "2.6.2",
+    "version":  "2.6.3",
     "releaseDate":  "2026-11-17",
     "title":  "선택수정시, 새로운 가격하락타임 붙혀넣기시, 가격변동되어 선택수정유지.",
     "releaseNotes":  [
-                         "- 전체리셋중 날짜매칭 오류 수정완료"
+                         "- 새로운 레이아웃 테스트"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
