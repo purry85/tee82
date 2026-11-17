@@ -1900,18 +1900,19 @@ style.textContent=`
            [\uac15\uc6d0\ub3c4]   [\uacbd\uc0c1\ub3c4]   [\uc804\ub77c\ub3c4]
            [\uc81c\uc8fc\ub3c4]
         */
+        body.gtp-smart-layout-active #gtp_smart_regions_grid,
         body.gtp-smart-layout-active .gtp-regions-grid {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 10px !important;
+            gap: 12px !important;
             width: 100% !important;
             max-width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
             align-items: stretch !important;
-            max-height: 255px !important;
+            max-height: 260px !important;
             overflow-y: auto !important;
-            padding-right: 4px !important;
+            padding: 4px 4px 8px 4px !important;
         }
 
         /* \uad8c\uc5ed\ubcc4 \uce74\ub4dc \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c\uc758 \ub3c5\ub9bd \uad8c\uc5ed \ubc15\uc2a4) */
@@ -1919,7 +1920,7 @@ style.textContent=`
             background: #f8fafc !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 6px !important;
-            padding: 6px !important;
+            padding: 6px 8px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
@@ -1927,6 +1928,7 @@ style.textContent=`
             width: 100% !important;
             max-height: 240px !important;
             overflow: hidden !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
         }
 
         /* \uad8c\uc5ed \uc81c\ubaa9 \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \ud2b9\uc720\uc758 [\uacbd\uae30\ub0a8\ubd80], [\ucda9\uccad\ub3c4], [\uacbd\uae30\ubd81\ubd80] \ub179\uc0c9 \ubc43\uc9c0 \ud5e4\ub354) */
@@ -2176,6 +2178,9 @@ return'\ud06c\ub9ac\uc2a4\n\ubc38\ub9ac';
 if(clean.includes('\ud0dc\uad11')){
 return'\ud0dc\uad11\n\x63\x63';
 }
+if(clean.includes('\uc601\uad11')){
+return'\uc601\uad11\n\x63\x63';
+}
 if(clean.includes('\ud30c\uc778\ud06c\ub9ac\ud06c')){
 return'\ud30c\uc778\n\ud06c\ub9ac\ud06c';
 }
@@ -2406,16 +2411,20 @@ regData.btnsWrap.appendChild(btn);
 detectedRegions.forEach(reg=>{
 reg.el.style.display='\x6e\x6f\x6e\x65';
 });
-__gtp_cached_common_parent=commonParent;
-Array.from(commonParent.children).forEach(child=>{
+__gtp_cached_common_parent=colCourse;
+Array.from(colCourse.children).forEach(child=>{
 if(child!==gridContainer){
+const txt=(child.innerText||child.textContent||'').trim();
+const isHeader=(txt.includes('\uace8\ud504\uc7a5 \uc120\ud0dd')||txt.includes('\uace8\ud504\uc7a5\uc120\ud0dd'))&&!txt.includes('\uacbd\uae30\ubd81\ubd80');
+if(!isHeader){
 if(child.__gtp_orig_display===undefined){
 child.__gtp_orig_display=child.style.display||'';
 }
 child.style.display='\x6e\x6f\x6e\x65';
 }
+}
 });
-commonParent.appendChild(gridContainer);
+colCourse.appendChild(gridContainer);
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \uad8c\uc5ed \uadf8\ub9ac\ub4dc \uc0dd\uc131 \uc644\ub8cc (${detectedRegions.length}\uac1c \uad8c\uc5ed, \uad6c\uc7a5 ${allBtns.length}\uac1c)`);
 }
 function _0x102e(){
