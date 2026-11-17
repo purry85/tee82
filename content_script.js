@@ -6346,15 +6346,11 @@ await _0x1007(300);
 if(shouldStopRegistration)break;
 const targetDayNum=_0x1036(group.date);
 const curDayNum=_0x103e();
-const curUrlDate=_0x103f();
-const curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
-const isDateMatch=(curUrlDay&&targetDayNum&&curUrlDay===targetDayNum)||
-(curDayNum&&targetDayNum&&curDayNum===targetDayNum);
-if(!isDateMatch){
-console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${group.golf} (${group.date}) \ub0a0\uc9dc \ud0ed \ubbf8\uc77c\uce58\ub85c \uac74\ub108\ub700.`);
-globalIndex+=group.items.length;
-continue;
+if(targetDayNum&&curDayNum&&targetDayNum!==curDayNum){
+await _0x1041(group.date);
+await _0x1007(300);
 }
+if(shouldStopRegistration)break;
 for(const item of group.items){
 if(shouldStopRegistration)break;
 globalIndex++;

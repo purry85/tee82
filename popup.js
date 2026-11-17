@@ -10041,6 +10041,61 @@ localStorage.setItem('\x76\x32\x5f\x6c\x61\x73\x74\x52\x65\x73\x65\x74\x54\x69\x
 chrome.storage.local.set({v2_lastResetTimestamp:now});
 }catch(e){}
 }
+function getSelectedTeeTimeItems(){
+let targetTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+if(targetTrs.length===0){
+const selectedCards=Array.from(document.querySelectorAll('\x2e\x74\x65\x65-\x63\x61\x72\x64\x2e\x73\x65\x6c\x65\x63\x74\x65\x64, \x2e\x74\x65\x65-\x63\x61\x72\x64 \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"]\x3a\x63\x68\x65\x63\x6b\x65\x64'));
+if(selectedCards.length>0){
+const allTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+const matchedTrs=[];
+selectedCards.forEach(c=>{
+const cardEl=c.closest('\x2e\x74\x65\x65-\x63\x61\x72\x64')||c;
+const idx=parseInt(cardEl.dataset.index,10);
+if(!isNaN(idx)&&allTrs[idx])matchedTrs.push(allTrs[idx]);
+});
+if(matchedTrs.length>0)targetTrs=matchedTrs;
+}
+}
+if(targetTrs.length===0)return[];
+targetTrs.forEach((tr,idx)=>{
+if(!tr.dataset.regId){
+tr.dataset.regId=`sel_reset_${Date.now()}_${idx}`;
+}
+});
+return targetTrs.map(tr=>{
+const cells=tr.querySelectorAll('\x74\x64');
+const origGolf=cells[2]?.textContent?.trim()||'';
+const rawGolf=tr.dataset.rawGolf||origGolf;
+const golfmonGolf=tr.dataset.golfmonGolf||getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6d\x6f\x6e').name||origGolf;
+const roomTypeRaw=(tr.dataset.roomType||'').trim();
+const sizenumRaw=(cells[7]?.textContent||'').trim();
+const conditionRaw=(cells[6]?.textContent||'').trim();
+let resolvedRoomType='\uc870\uc778';
+if(roomTypeRaw==='\uc591\ub3c4'){
+resolvedRoomType='\uc591\ub3c4';
+}else if(roomTypeRaw==='\uc870\uc778'||roomTypeRaw==='\uc120\ud2f0\ubc29'||roomTypeRaw.includes('\uc120\ud2f0')||roomTypeRaw.includes('\ub300\uae30')){
+resolvedRoomType='\uc870\uc778';
+}else if(sizenumRaw==='\x34\uc778'&&roomTypeRaw!=='\uc870\uc778'){
+resolvedRoomType='\uc591\ub3c4';
+}
+return{
+regId:tr.dataset.regId,
+date:cells[0]?.textContent?.trim()||'',
+region:cells[1]?.textContent?.trim()||'',
+golf:golfmonGolf,
+rawGolf:rawGolf,
+time:cells[3]?.textContent?.trim()||'',
+fee:tr.dataset.totalFee||tr.dataset.baseFee||cells[4]?.textContent?.trim().replace(/[^\d.]/g,'')||'',
+cady:cells[5]?.textContent?.trim()||'',
+condition:conditionRaw,
+sizenum:sizenumRaw,
+roomType:resolvedRoomType,
+origRoomType:roomTypeRaw,
+isPrepaid:tr.dataset.isPrepaid==='\x74\x72\x75\x65',
+isMeal:tr.dataset.isMeal==='\x74\x72\x75\x65'
+};
+});
+}
 function startGolfmonSelectedReset(isSubsequentCycle=false){
 if(!_0x1025('\ubaac'))return;
 if(isGolfmonSelectedResetting){
@@ -10051,7 +10106,7 @@ activeResetMode='\x73\x65\x6c\x65\x63\x74\x65\x64';
 try{
 localStorage.setItem('\x76\x32\x5f\x61\x63\x74\x69\x76\x65\x52\x65\x73\x65\x74\x4d\x6f\x64\x65','\x73\x65\x6c\x65\x63\x74\x65\x64');
 }catch(e){}
-let items=getSelectedParsedData();
+let items=getSelectedTeeTimeItems();
 if(!items||items.length===0){
 if(isSubsequentCycle&&lastSelectedResetItems&&lastSelectedResetItems.length>0){
 items=lastSelectedResetItems;
