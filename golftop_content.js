@@ -1804,10 +1804,15 @@ style.textContent=`
             flex-wrap: wrap !important;
             width: 100% !important;
             box-sizing: border-box !important;
-            align-items: stretch !important;
+            align-items: flex-start !important;
+            height: auto !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            margin-bottom: 12px !important;
         }
 
-        /* [\ub9e8 \uc704 \uc88c\uce21]: \ub2ec\ub825 (Column 1) */
+        /* [\ub9e8 \uc704 \uc88c\uce21]: \ub2ec\ub825 \ubc0f \uc794\uc5ec\ud0c0\uc784 \ud544\ud130 (Column 1) */
         body.gtp-smart-layout-active .gtp-smart-col-date,
         body.gtp-smart-layout-active tr.gtp-smart-top-row > td.gtp-smart-col-date {
             order: 1 !important;
@@ -1819,6 +1824,9 @@ style.textContent=`
             border-radius: 8px !important;
             border: 1px solid #e2e8f0 !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+            height: auto !important;
+            max-height: 280px !important;
+            overflow-y: auto !important;
         }
 
         /* [\ub9e8 \uc704 \uc6b0\uce21]: \ud560\uc778\uadf8\ub9b0\ud53c / \uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d (Column 3) */
@@ -1837,7 +1845,8 @@ style.textContent=`
             display: flex !important;
             flex-direction: column !important;
             visibility: visible !important;
-            max-height: 290px !important;
+            height: auto !important;
+            max-height: 280px !important;
             overflow-y: auto !important;
         }
 
@@ -1856,6 +1865,9 @@ style.textContent=`
             border: 1px solid #e2e8f0 !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
             display: block !important;
+            height: auto !important;
+            max-height: 290px !important;
+            overflow: hidden !important;
         }
 
         /* 2. \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d: \uace8\ud504\ub77d\ucc98\ub7fc 3\uac1c \uad8c\uc5ed\uc529 \ub098\ub780\ud788 \uadf8\ub9ac\ub4dc \ubc30\uce58:
@@ -1869,8 +1881,8 @@ style.textContent=`
             gap: 8px !important;
             width: 100% !important;
             box-sizing: border-box !important;
-            align-items: start !important;
-            max-height: 480px !important;
+            align-items: stretch !important;
+            max-height: 250px !important;
             overflow-y: auto !important;
             padding-right: 4px !important;
         }
@@ -1885,6 +1897,8 @@ style.textContent=`
             display: flex !important;
             flex-direction: column !important;
             min-width: 0 !important;
+            max-height: 235px !important;
+            overflow: hidden !important;
         }
 
         /* \uad8c\uc5ed \uc81c\ubaa9 \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \ud2b9\uc720\uc758 [\uacbd\uae30\ub0a8\ubd80], [\ucda9\uccad\ub3c4], [\uacbd\uae30\ubd81\ubd80] \ub179\uc0c9 \ubc43\uc9c0 \ud5e4\ub354) */
@@ -1893,7 +1907,7 @@ style.textContent=`
             font-weight: 800 !important;
             color: #065f46 !important;
             background: #d1fae5 !important;
-            padding: 4px 6px !important;
+            padding: 3px 6px !important;
             border-radius: 4px !important;
             margin-bottom: 5px !important;
             text-align: center !important;
@@ -1901,15 +1915,19 @@ style.textContent=`
             display: block !important;
             box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
             user-select: none !important;
+            flex-shrink: 0 !important;
         }
 
-        /* \uad8c\uc5ed \ub0b4\ubd80\uc758 \ubc84\ud2bc \uadf8\ub9ac\ub4dc (3\uac1c\uc529 \uade0\ub4f1 \ubc30\uce58) */
+        /* \uad8c\uc5ed \ub0b4\ubd80\uc758 \ubc84\ud2bc \uadf8\ub9ac\ub4dc (3\uac1c\uc529 \uade0\ub4f1 \ubc30\uce58 + \uce74\ub4dc \ub0b4\ubd80 \uc138\ub85c \uc2a4\ud06c\ub864) */
         body.gtp-smart-layout-active .gtp-region-buttons-wrap {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             gap: 3px !important;
             width: 100% !important;
             box-sizing: border-box !important;
+            max-height: 195px !important;
+            overflow-y: auto !important;
+            padding-right: 2px !important;
         }
 
         /* \uace8\ud504\uc7a5 \uc120\ud0dd \ubc84\ud2bc 2\uc904 \uc904\ubc14\uafc8 \ubc0f \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 */
@@ -1941,16 +1959,22 @@ style.textContent=`
 
         /* \uc138\ub85c \uc2a4\ud06c\ub864\ubc14 \ucee4\uc2a4\ud140 \uc2a4\ud0c0\uc77c (\ub354 \ub69c\ub837\ud558\uace0 \ub9e4\ub044\ub7fd\uac8c) */
         body.gtp-smart-layout-active .gtp-regions-grid::-webkit-scrollbar,
-        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar {
+        body.gtp-smart-layout-active .gtp-region-buttons-wrap::-webkit-scrollbar,
+        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar,
+        body.gtp-smart-layout-active .gtp-smart-col-date::-webkit-scrollbar {
             width: 6px !important;
         }
         body.gtp-smart-layout-active .gtp-regions-grid::-webkit-scrollbar-track,
-        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar-track {
+        body.gtp-smart-layout-active .gtp-region-buttons-wrap::-webkit-scrollbar-track,
+        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar-track,
+        body.gtp-smart-layout-active .gtp-smart-col-date::-webkit-scrollbar-track {
             background: #f1f5f9 !important;
             border-radius: 4px !important;
         }
         body.gtp-smart-layout-active .gtp-regions-grid::-webkit-scrollbar-thumb,
-        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar-thumb {
+        body.gtp-smart-layout-active .gtp-region-buttons-wrap::-webkit-scrollbar-thumb,
+        body.gtp-smart-layout-active .gtp-smart-col-detail::-webkit-scrollbar-thumb,
+        body.gtp-smart-layout-active .gtp-smart-col-date::-webkit-scrollbar-thumb {
             background: #94a3b8 !important;
             border-radius: 4px !important;
         }
@@ -1975,6 +1999,8 @@ let __gtp_cached_row=null;
 let __gtp_cached_date_col=null;
 let __gtp_cached_course_col=null;
 let __gtp_cached_detail_col=null;
+let __gtp_cached_common_parent=null;
+let __gtp_cached_form_container=null;
 let __gtp_cached_detected_regions=[];
 let __gtp_cached_optimized_btns=[];
 function _0x1029(rawTxt,titleVal){
@@ -1986,17 +2012,17 @@ const clean=text.replace(/\s+/g,' ').trim();
 if(clean.includes('\ub0a8\uc591\uc8fc')){
 return'\ub0a8\uc591\uc8fc\x63\x63\n(\x39\ud640)';
 }
-if(clean.includes('\uace8\ud504\uc874')&&(clean.includes('\uc548')||clean.includes('\uc548\uc131\x57')||clean.includes('\uc548\uc131\x77'))){
+if(clean.includes('\uace8\ud504\uc874')&&(clean.includes('\uc548\uc131\x57')||clean.includes('\uc548\uc131\x77')||(clean.includes('\uc548')&&!clean.includes('\uc548\uc131\x48')))){
 return'\uace8\ud504\uc874\n\uc548\uc131\x57';
+}
+if(clean.includes('\uace8\ud504\uc874')&&clean.includes('\uc548\uc131\x48')){
+return'\uace8\ud504\uc874\n\uc548\uc131\x48';
 }
 if(clean.includes('\uace8\ud504\uc874')&&clean.includes('\uc774')){
 return'\uace8\ud504\uc874\n\uc774\ucc9c';
 }
 if(clean.includes('\uace8\ud504\uc874')&&clean.includes('\uc1a1\ub3c4')){
 return'\uace8\ud504\uc874\n\uc1a1\ub3c4';
-}
-if(clean.includes('\uace8\ud504\uc874')&&clean.includes('\uc548\uc131\x48')){
-return'\uace8\ud504\uc874\n\uc548\uc131\x48';
 }
 if(clean.includes('\uace8\ud504\uc874')&&clean.includes('\uc9c4\ucc9c')){
 return'\uace8\ud504\uc874\n\uc9c4\ucc9c';
@@ -2013,7 +2039,7 @@ return'\ubca0\uc5b4\uc988\n\ubca0\uc2a4\ud2b8';
 if(clean.includes('\ube44\uc5d0\uc774\ube44\uc2a4')&&(clean.includes('\x2e\x2e\x2e')||clean.includes('\u2026')||clean.includes('\x50')||clean.includes('\x70')||clean.includes('\ud37c\ube14\ub9ad'))){
 return'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\n(\x50)';
 }
-if(clean==='\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'){
+if(clean==='\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0'||clean.startsWith('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')){
 return'\ube44\uc5d0\uc774\n\ube44\uc2a4\ud0c0';
 }
 if(clean.includes('\uce90\uc2ac\ub809\uc2a4')){
@@ -2025,8 +2051,110 @@ return'\ud074\ub7fd\x37\x32\n(\uc624\uc158)';
 if(clean.includes('\ud074\ub7fd\x37\x32')&&clean.includes('\ud558\ub298')){
 return'\ud074\ub7fd\x37\x32\n(\ud558\ub298)';
 }
-if(clean.includes('\uc36c\ubc38\ub9ac')){
+if(clean.includes('\uc36c\ubc38\ub9ac')&&(clean.includes('\uc5ec\uc8fc')||clean.includes('\uacbd\uae30'))){
 return'\uc36c\ubc38\ub9ac\n\uc5ec\uc8fc';
+}
+if(clean.includes('\uc36c\ubc38\ub9ac')&&(clean.includes('\uc74c\uc131')||clean.includes('\ucda9\uccad'))){
+return'\uc36c\ubc38\ub9ac\n\uc74c\uc131';
+}
+if(clean.includes('\ub808\uc778\ubcf4\uc6b0')){
+return'\ub808\uc778\ubcf4\uc6b0\n\ud790\uc2a4';
+}
+if(clean.includes('\ubcf4\ub839')){
+return'\ubcf4\ub839\n\ubca0\uc774\uc2a4';
+}
+if(clean.includes('\ubaa8\uce74')){
+return'\ubaa8\uce74\n(\uad6c\x3a\ub5bc\uc81c\ubca0)';
+}
+if(clean.includes('\uc784\ud398\ub9ac\uc5bc')){
+return'\uc784\ud398\ub9ac\uc5bc\n\ub808\uc774\ud06c';
+}
+if(clean.includes('\ub300\uc601\ubca0\uc774\uc2a4')){
+return'\ub300\uc601\n\ubca0\uc774\uc2a4\x63\x63';
+}
+if(clean.includes('\ub300\uc601\ud790\uc2a4')){
+return'\ub300\uc601\n\ud790\uc2a4\x63\x63';
+}
+if(clean.includes('\ub85c\uc584\ud3ec\ub808')){
+return'\ub85c\uc584\n\ud3ec\ub808\x63\x63';
+}
+if(clean.includes('\uc18d\ub9ac\uc0b0')){
+return'\uc18d\ub9ac\uc0b0\n\x63\x63';
+}
+if(clean.includes('\uc194\ub77c\uace0')){
+return'\uc194\ub77c\uace0\n\x63\x63';
+}
+if(clean.includes('\uc62c\ub370\uc774')){
+return'\uc62c\ub370\uc774\n\x63\x63';
+}
+if(clean.includes('\ud50c\ub77c\ubc0d\uace0')){
+return'\ud50c\ub77c\ubc0d\uace0\n\x63\x63';
+}
+if(clean.includes('\ud788\ub4e0\ubc38\ub9ac')){
+return'\ud788\ub4e0\n\ubc38\ub9ac\x63\x63';
+}
+if(clean.includes('\ubca0\uc2a4\ud2b8\ubc38\ub9ac')){
+return'\ubca0\uc2a4\ud2b8\n\ubc38\ub9ac\x63\x63';
+}
+if(clean.includes('\ube44\uc804\ud790\uc2a4')){
+return'\ube44\uc804\n\ud790\uc2a4\x63\x63';
+}
+if(clean.includes('\uc11c\uc6b8\ud55c\uc591')){
+return'\uc11c\uc6b8\n\ud55c\uc591\x63\x63';
+}
+if(clean.includes('\ud3ec\ub808\uc2a4\ud2b8\ud790')){
+return'\ud3ec\ub808\uc2a4\ud2b8\n\ud790\x63\x63';
+}
+if(clean.includes('\ud55c\uc591\ud30c\uc778')){
+return'\ud55c\uc591\n\ud30c\uc778\x63\x63';
+}
+if(clean.includes('\uac15\ub0a8\x33\x30\x30')){
+return'\uac15\ub0a8\n\x33\x30\x30\x63\x63';
+}
+if(clean.includes('\uadf8\ub9b0\ud790')){
+return'\uadf8\ub9b0\ud790\n\x63\x63';
+}
+if(clean.includes('\ud06c\ub85c\uc2a4\ube44')){
+return'\ub354\n\ud06c\ub85c\uc2a4\ube44';
+}
+if(clean.includes('\ub77c\ube44\ub3cc')){
+return'\ub77c\ube44\ub3cc\n\x63\x63';
+}
+if(clean.includes('\ub9ac\ubca0\ub77c')){
+return'\ub9ac\ubca0\ub77c\n\x63\x63';
+}
+if(clean.includes('\uc138\ud604')){
+return'\uc138\ud604\n\x63\x63';
+}
+if(clean.includes('\uc2e0\ub77c')){
+return'\uc2e0\ub77c\n\x63\x63';
+}
+if(clean.includes('\uc2e0\uc548')){
+return'\uc2e0\uc548\n\x63\x63';
+}
+if(clean.includes('\uc591\ud3c9\x54\x50\x43')||clean.includes('\uc591\ud3c9\x74\x70\x63')){
+return'\uc591\ud3c9\n\x54\x50\x43';
+}
+if(clean.includes('\uc6a9\uc778\x63\x63')||clean==='\uc6a9\uc778'){
+return'\uc6a9\uc778\n\x63\x63';
+}
+if(clean.includes('\uc9c0\uc0b0\x63\x63')||clean==='\uc9c0\uc0b0'){
+return'\uc9c0\uc0b0\n\x63\x63';
+}
+if(clean.includes('\ud06c\ub9ac\uc2a4\ubc38\ub9ac')){
+return'\ud06c\ub9ac\uc2a4\n\ubc38\ub9ac';
+}
+if(clean.includes('\ud0dc\uad11')){
+return'\ud0dc\uad11\n\x63\x63';
+}
+if(clean.includes('\ud30c\uc778\ud06c\ub9ac\ud06c')){
+return'\ud30c\uc778\n\ud06c\ub9ac\ud06c';
+}
+if(clean.includes('\ud55c\uc6d0')){
+return'\ud55c\uc6d0\n\x63\x63';
+}
+if(clean.includes('\ud574\uc194\ub9ac\uc544')){
+return'\ud574\uc194\ub9ac\uc544\n\x63\x63';
 }
 if(clean.includes('(')){
 return clean.replace('(','\n(');
@@ -2092,7 +2220,7 @@ cur=parent;
 }
 if(colDetail){
 const dTxt=colDetail.innerText||colDetail.textContent||'';
-if(dTxt.includes('\uacbd\uae30\ubd81\ubd80')||dTxt.includes('\uacbd\uae30\ub0a8\ubd80')||dTxt.includes('\ub0a0\uc9dc \uc120\ud0dd')||dTxt.includes('\x32\x30\x32\x36\x2e')){
+if(colDetail===colDate||colDetail===colCourse||dTxt.includes('\uacbd\uae30\ubd81\ubd80')||dTxt.includes('\uacbd\uae30\ub0a8\ubd80')){
 colDetail=null;
 }
 }
@@ -2114,16 +2242,34 @@ return best||colCourse;
 }
 function _0x102c(colCourse){
 if(!colCourse)return[];
-const btns=Array.from(colCourse.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61\x2e\x62\x74\x6e, \x2e\x62\x74\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"]'));
-return btns.filter(b=>{
-if(b.offsetHeight<=0&&b.offsetWidth<=0)return false;
-if(b.children.length>2)return false;
-const txt=(b.innerText||b.value||b.textContent||'').trim().replace(/\s+/g,'');
-if(['\uace8\ud504\uc7a5\uc120\ud0dd','\uc9c0\uc5ed\ubcc4','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad\ub3c4','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc','\uc870\ud68c'].includes(txt)){
+const elements=Array.from(colCourse.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76, \x6c\x69, \x74\x64, \x6c\x61\x62\x65\x6c'));
+const candidates=elements.filter(el=>{
+if(el.offsetHeight<=0&&el.offsetWidth<=0)return false;
+if(el.children.length>=3)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+if(txt.length<2||txt.length>25)return false;
+const cleanT=txt.replace(/\s+/g,'');
+if(['\uace8\ud504\uc7a5\uc120\ud0dd','\uc9c0\uc5ed\ubcc4','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad\ub3c4','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc','\uac15\uc6d0\ub3c4','\uc804\ub77c\ub3c4','\uacbd\uc0c1\ub3c4','\uc81c\uc8fc\ub3c4','\uc870\ud68c','\ub0b4\uc6a9','\uc791\uc131\uc77c','\ub0a0\uc9dc\uc120\ud0dd','\ucd08\uae30\ud654','\ud544\ud130','\ub2ec\ub825','\uae30\uac04'].includes(cleanT)){
 return false;
 }
-return txt.length>=2&&txt.length<=25;
+return true;
 });
+const result=[];
+candidates.forEach(el=>{
+let p=el.parentElement;
+let isChildOfOther=false;
+while(p&&p!==colCourse){
+if(candidates.includes(p)&&(p.tagName==='\x42\x55\x54\x54\x4f\x4e'||p.tagName==='\x41'||p.getAttribute('\x72\x6f\x6c\x65')==='\x62\x75\x74\x74\x6f\x6e'||p.classList.contains('\x62\x74\x6e'))){
+isChildOfOther=true;
+break;
+}
+p=p.parentElement;
+}
+if(!isChildOfOther){
+result.push(el);
+}
+});
+return result;
 }
 function _0x102d(colCourse){
 if(!colCourse)return;
@@ -2218,6 +2364,15 @@ regData.btnsWrap.appendChild(btn);
 detectedRegions.forEach(reg=>{
 reg.el.style.display='\x6e\x6f\x6e\x65';
 });
+__gtp_cached_common_parent=commonParent;
+Array.from(commonParent.children).forEach(child=>{
+if(child!==gridContainer){
+if(child.__gtp_orig_display===undefined){
+child.__gtp_orig_display=child.style.display||'';
+}
+child.style.display='\x6e\x6f\x6e\x65';
+}
+});
 commonParent.appendChild(gridContainer);
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \uad8c\uc5ed \uadf8\ub9ac\ub4dc \uc0dd\uc131 \uc644\ub8cc (${detectedRegions.length}\uac1c \uad8c\uc5ed, \uad6c\uc7a5 ${allBtns.length}\uac1c)`);
 }
@@ -2244,6 +2399,15 @@ __gtp_cached_detected_regions.forEach(reg=>{
 if(reg.el)reg.el.style.display='';
 });
 __gtp_cached_detected_regions=[];
+}
+if(__gtp_cached_common_parent){
+Array.from(__gtp_cached_common_parent.children).forEach(child=>{
+if(child.__gtp_orig_display!==undefined){
+child.style.display=child.__gtp_orig_display;
+delete child.__gtp_orig_display;
+}
+});
+__gtp_cached_common_parent=null;
 }
 }
 function _0x102f(){
@@ -2290,6 +2454,28 @@ count++;
 });
 __gtp_cached_optimized_btns=buttons;
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uad6c\uc7a5 \ubc84\ud2bc ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8 \ucd5c\uc801\ud654 \uc644\ub8cc`);
+const allFormWrappers=Array.from(document.querySelectorAll('\x64\x69\x76, \x66\x6f\x72\x6d, \x73\x65\x63\x74\x69\x6f\x6e, \x74\x61\x62\x6c\x65'));
+const resvForm=allFormWrappers.find(el=>{
+if(el.children.length>10)return false;
+const txt=(el.innerText||el.textContent||'').trim();
+return txt.includes('\uc2e0\uccad \uad6c\ubd84')&&(txt.includes('\uc608\uc57d\x2f\ub300\uae30')||txt.includes('\ud64d\ubcf4'));
+});
+if(resvForm){
+let formContainer=resvForm;
+while(formContainer&&formContainer.parentElement&&formContainer.parentElement!==document.body){
+if(rowContainer&&formContainer.parentElement.contains(rowContainer)&&formContainer.parentElement.children.length>=2){
+break;
+}
+formContainer=formContainer.parentElement;
+}
+if(formContainer&&formContainer!==rowContainer){
+__gtp_cached_form_container=formContainer;
+formContainer.style.setProperty('\x63\x6c\x65\x61\x72','\x62\x6f\x74\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+formContainer.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+formContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x31\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+formContainer.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x35','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+}
 return{success:true,buttonCount:count};
 }
 function _0x1030(){
@@ -2312,6 +2498,13 @@ __gtp_cached_detail_col=null;
 if(__gtp_cached_course_col){
 __gtp_cached_course_col.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
 __gtp_cached_course_col=null;
+}
+if(__gtp_cached_form_container){
+__gtp_cached_form_container.style.removeProperty('\x63\x6c\x65\x61\x72');
+__gtp_cached_form_container.style.removeProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e');
+__gtp_cached_form_container.style.removeProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70');
+__gtp_cached_form_container.style.removeProperty('\x7a-\x69\x6e\x64\x65\x78');
+__gtp_cached_form_container=null;
 }
 const cols=_0x102a();
 if(cols){
