@@ -828,6 +828,9 @@ noticeDiscount:tr.dataset.noticeDiscount||'',
 noticeTagDesc:tr.dataset.noticeTagDesc||'',
 noticeType:tr.dataset.noticeType||'',
 coursePriceAdj:tr.dataset.coursePriceAdj||'',
+waitGender:tr.dataset.waitGender||'',
+waitPax:tr.dataset.waitPax||'',
+sizenum:tr.dataset.sizenum||cells[7]?.textContent?.trim()||'',
 source:tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b',
 selected:tr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64')
 };
@@ -893,6 +896,9 @@ if(item.noticeDiscount)tr.dataset.noticeDiscount=item.noticeDiscount;
 if(item.noticeTagDesc)tr.dataset.noticeTagDesc=item.noticeTagDesc;
 if(item.noticeType)tr.dataset.noticeType=item.noticeType;
 if(item.coursePriceAdj)tr.dataset.coursePriceAdj=item.coursePriceAdj;
+if(item.waitGender)tr.dataset.waitGender=item.waitGender;
+if(item.waitPax)tr.dataset.waitPax=item.waitPax;
+if(item.sizenum)tr.dataset.sizenum=item.sizenum;
 tr.dataset.source=item.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 if(item.selected)tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
 const stdRegion=getRegion(item.region,(item.rawGolf||'')+' '+(item.golf||''));
@@ -7154,9 +7160,17 @@ tr.remove();
 }
 const remainingExistingTrs=Array.from(tbody.querySelectorAll('\x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
 const existingMap=new Map();
+const cleanCourseMatchName=(name)=>{
+if(!name)return'';
+let s=String(name).trim();
+s=s.replace(/\(?\d+\s*홀(?:\s*[x*]\s*\d+)?\)?|\(?p\d*\)?/gi,'');
+s=s.replace(/\((?:충청도|강원도|경기북부|경기남부|인천경인|전라도|경상도|제주)\)/gi,'');
+s=s.replace(/cc|gc|골프클럽|컨트리클럽|골프장/gi,'');
+return s.replace(/[\s\-_()[\]]/g,'').toLowerCase();
+};
 const makeMatchKey=(d,g,t,r)=>{
 const normD=(typeof extractDayNumber==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?extractDayNumber(d):'')||(d||'').trim();
-const normG=(typeof normalizeCourseForMatch==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?normalizeCourseForMatch(g):'')||(g||'').trim();
+const normG=cleanCourseMatchName(g);
 const normT=(t||'').toString().replace(/[^\d]/g,'');
 const normR=(r==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
 return`${normD}|${normG}|${normT}|${normR}`;
@@ -7171,6 +7185,7 @@ const key=makeMatchKey(oDate,oGolf,oTime,oRoomType);
 existingMap.set(key,oldTr);
 });
 let priceUpdatedCount=0;
+let peopleUpdatedCount=0;
 newItems.forEach(item=>{
 if(!item||!item.tr)return;
 const newDate=(item.date||'').trim();
@@ -7194,6 +7209,12 @@ console.log(`[\uac00\uaca9 \uc778\ud558 \uac31\uc2e0] ${newGolf} (${newDate} ${n
 item.tr.dataset.isPriceDropped='\x74\x72\x75\x65';
 item.tr.dataset.prevFee=oldTr.dataset.prevFee;
 item.tr.dataset.priceDiff=oldTr.dataset.priceDiff;
+}
+const oldPeople=(oldC[7]?.textContent||'').trim();
+const newPeople=(item.tr.querySelectorAll('\x74\x64')[7]?.textContent||'').trim();
+if(oldPeople&&newPeople&&oldPeople!==newPeople){
+peopleUpdatedCount++;
+console.log(`[\uc778\uc6d0\uc218 \ubcc0\ub3d9 \uac31\uc2e0] ${newGolf} (${newDate} ${newTime}): \uae30\uc874 [${oldPeople}] \u2794 \uc0c8 \uc778\uc6d0 [${newPeople}]`);
 }
 if(oldTr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64')){
 item.tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
@@ -7408,9 +7429,9 @@ const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 const waitGender=tr.dataset.waitGender||(tr.dataset.waitPax==='\x30'||!tr.dataset.waitPax?'\uc778\uc6d0\uc5c6\uc74c':'\ub0a8');
 let waitGenderTagHtml='';
 if(waitGender&&waitGender!=='\uc778\uc6d0\uc5c6\uc74c'){
-waitGenderTagHtml=`<span class="card-tag pax-gender" style="background:#FEF3C7; color:#92400E; font-weight:700;" title="\uace8\ud504\ub77d \ub300\uae30\uc131\ubcc4: ${escapeAttr(waitGender)}">\ub300\uae30: ${escapeHtml(waitGender)}</span>`;
+waitGenderTagHtml=`<span class="card-tag pax-gender" style="background:#FEF3C7; color:#92400E; font-weight:700;" title="\uace8\ud504\ub77d \ub300\uae30\uc131\ubcc4: ${escapeAttr(waitGender)} (\ud074\ub9ad\ud558\uc5ec \uc778\uc6d0/\uac00\uaca9 \ubcc0\uacbd)">\ub300\uae30: ${escapeHtml(waitGender)}</span>`;
 }else{
-waitGenderTagHtml=`<span class="card-tag pax-gender" style="background:#F3F4F6; color:#6B7280;" title="\uace8\ud504\ub77d \ub300\uae30\uc131\ubcc4: \uc778\uc6d0\uc5c6\uc74c (4\uc778 \ubaa8\uc9d1)">\ub300\uae30\uc5c6\uc74c</span>`;
+waitGenderTagHtml=`<span class="card-tag pax-gender" style="background:#F3F4F6; color:#6B7280;" title="\uace8\ud504\ub77d \ub300\uae30\uc131\ubcc4: \uc778\uc6d0\uc5c6\uc74c (\ud074\ub9ad\ud558\uc5ec \uc778\uc6d0/\uac00\uaca9 \ubcc0\uacbd)">\ub300\uae30\uc5c6\uc74c</span>`;
 }
 const isConfirmedCard=typeof isConfirmedTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isConfirmedTr(tr);
 const isDaegiCard=typeof isDaegiTr==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&isDaegiTr(tr);
@@ -7423,8 +7444,8 @@ card.innerHTML=`
                 <div class="card-title-group">
                     <span class="card-golf">${golf}</span>
                     ${isTransferCard
-?`<span class="card-room-badge transfer" title="\uc591\ub3c4 \ud0c0\uc784 (4\uc778)">\uc591\ub3c4</span>`
-:`<span class="card-room-badge join" title="\uc870\uc778 \ud0c0\uc784 (${sizenum||'\uc870\uc778'})">\uc870\uc778</span>`
+?`<span class="card-room-badge transfer" title="\uc591\ub3c4 \ud0c0\uc784 (4\uc778 - \ud074\ub9ad \uc2dc \uc778\uc6d0/\uac00\uaca9 \ubcc0\uacbd)">\uc591\ub3c4</span>`
+:`<span class="card-room-badge join" title="\uc870\uc778 \ud0c0\uc784 (${sizenum||'\uc870\uc778'} - \ud074\ub9ad \uc2dc \uc778\uc6d0/\uac00\uaca9 \ubcc0\uacbd)">\uc870\uc778</span>`
 }
                     ${date?`<span class="card-date">${date}</span>`:''}
                     ${!isMapped?`<span class="card-tag unmapped-tag" title="\ub9e4\ud551\uc0ac\uc804\uc5d0 \ubbf8\ub4f1\ub85d\ub41c \uad6c\uc7a5 (\uc790\ub3d9\uc120\ud0dd \uc81c\uc678)">\ubbf8\ub4f1\ub85d</span>`:''}
@@ -7436,7 +7457,7 @@ card.innerHTML=`
                 </div>
             </div>
             <div class="card-row-bottom">
-                <span class="card-fee">${feeCardHtml}</span>
+                <span class="card-fee" title="\ud074\ub9ad\ud558\uc5ec \uac00\uaca9/\uc778\uc6d0 \ubcc0\uacbd">${feeCardHtml}</span>
                 <label class="card-seonti-pill ${isSeonti?'\x61\x63\x74\x69\x76\x65':''}" data-index="${idx}" title="${isSeonti?'\uc120\ud2f0\ubc29\uc73c\ub85c \uc9c0\uc815\ub428 (\uccb4\ud06c \ud574\uc81c \uc2dc \uc77c\ubc18 \ud0c0\uc784 \ubcf5\uad6c)':'\uccb4\ud06c \uc2dc \uc120\ud2f0\ubc29\uc73c\ub85c \uac15\uc81c \uc778\uc2dd (\uacf5\uc9c0\x2f\ud2b9\uc815\uad6c\uc7a5 \ud560\uc778 \uc81c\uc678)'}">
                     <input type="checkbox" class="chk-seonti" ${isSeonti?'\x63\x68\x65\x63\x6b\x65\x64':''}>
                     <span>${isSeonti?(isTransferCard?'\uc120\ud2f0':'\uc120\ud2f0\ubc29'):'\uc120\ud2f0'}</span>
@@ -7451,7 +7472,7 @@ card.innerHTML=`
                 ${isDaegiCard&&!waitGenderTagHtml.includes('\ub300\uae30\x3a')?`<span class="card-tag daegi-tag" style="background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; font-weight:700;" title="\ub300\uae30 \ud0c0\uc784 (\ucd5c\uc6b0\uc120 \uc120\ud0dd)">\ub300\uae30</span>`:''}
                 ${roomType&&roomType!=='\ubbf8\ud45c\uc2dc'&&!roomType.includes('\uc120\ud2f0')?`<span class="card-tag room">${roomType}</span>`:''}
                 ${waitGenderTagHtml}
-                ${sizenum?`<span class="card-tag pax">${sizenum}</span>`:''}
+                ${sizenum?`<span class="card-tag pax" title="\ubaa8\uc9d1 \uc778\uc6d0 (\ud074\ub9ad\ud558\uc5ec \uc778\uc6d0/\uac00\uaca9 \ubcc0\uacbd)">${sizenum}</span>`:''}
             </div>
         </div>
         <div class="card-right-actions">
@@ -7465,7 +7486,15 @@ if(chk)chk.checked=targetState;
 tr.classList.toggle('\x73\x65\x6c\x65\x63\x74\x65\x64',targetState);
 }
 card.addEventListener('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',(e)=>{
-if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65'))return;
+if(e.target.classList.contains('\x63\x61\x72\x64-\x64\x65\x6c-\x62\x74\x6e')||
+e.target.closest('\x2e\x6e\x6f\x74\x69\x63\x65-\x74\x61\x67')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x73\x65\x6f\x6e\x74\x69-\x70\x69\x6c\x6c')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x6d\x65\x61\x6c')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x66\x65\x65')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x70\x61\x78')||
+e.target.closest('\x2e\x70\x61\x78-\x67\x65\x6e\x64\x65\x72')||
+e.target.closest('\x2e\x63\x61\x72\x64-\x72\x6f\x6f\x6d-\x62\x61\x64\x67\x65'))return;
 e.preventDefault();
 isCardDragging=true;
 dragTargetState=!card.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64');
@@ -7481,6 +7510,14 @@ updateSelectedBadge();
 }
 });
 card.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+const feeEl=e.target.closest('\x2e\x63\x61\x72\x64-\x66\x65\x65');
+const paxEl=e.target.closest('\x2e\x63\x61\x72\x64-\x74\x61\x67\x2e\x70\x61\x78')||e.target.closest('\x2e\x70\x61\x78-\x67\x65\x6e\x64\x65\x72')||e.target.closest('\x2e\x63\x61\x72\x64-\x72\x6f\x6f\x6d-\x62\x61\x64\x67\x65');
+if(feeEl||paxEl){
+e.stopPropagation();
+e.preventDefault();
+openEditItemModal(tr,feeEl?'\x66\x65\x65':'\x70\x61\x78');
+return;
+}
 const sourceBadge=e.target.closest('\x2e\x63\x61\x72\x64-\x73\x6f\x75\x72\x63\x65-\x62\x61\x64\x67\x65');
 if(sourceBadge){
 e.stopPropagation();
@@ -8276,6 +8313,238 @@ progressDesc.textContent=failMsgs||'\uae00\uc744 \ucc3e\uc9c0 \ubabb\ud588\uac70
 }
 showToast(`${failMsgs||'\uae00 \ub9c8\uac10\x2f\uc0ad\uc81c \uc2e4\ud328'}`);
 }
+}
+let currentEditingTr=null;
+function openEditItemModal(tr,focusField='\x66\x65\x65'){
+if(!tr)return;
+currentEditingTr=tr;
+const cells=tr.querySelectorAll('\x74\x64');
+const date=cells[0]?.textContent?.trim()||tr.dataset.date||'';
+const golf=cells[2]?.textContent?.trim()||tr.dataset.rawGolf||tr.dataset.golf||'';
+const time=cells[3]?.textContent?.trim()||tr.dataset.time||'';
+const totalFee=tr.dataset.totalFee||tr.dataset.baseFee||cells[4]?.textContent?.replace(/[^\d.]/g,'')||'';
+const fieldFee=tr.dataset.fieldFee||'';
+const prepaidFee=tr.dataset.prepaidFee||'';
+const sizenum=(cells[7]?.textContent?.trim()||tr.dataset.sizenum||'\x34\uc778').replace(/\s+/g,'');
+const waitGender=tr.dataset.waitGender||(tr.dataset.waitPax==='\x30'||!tr.dataset.waitPax?'\uc778\uc6d0\uc5c6\uc74c':(cells[6]?.textContent?.trim()||''));
+const roomType=tr.dataset.roomType||(cells[4]?.textContent?.includes('\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778');
+const isSeonti=(tr.dataset.manualSeonti==='\x74\x72\x75\x65'||tr.dataset.isSeontiOrDaegi==='\x74\x72\x75\x65'||roomType==='\uc120\ud2f0\ubc29'||roomType.includes('\uc120\ud2f0'));
+const titleEl=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c\x54\x69\x74\x6c\x65');
+const subTitleEl=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c\x53\x75\x62\x54\x69\x74\x6c\x65');
+if(titleEl)titleEl.textContent=`[${golf}] ${time} \uc815\ubcf4 \uc218\uc815`;
+if(subTitleEl)subTitleEl.textContent=`\ub0a0\uc9dc: ${date} | \ud604\uc7ac \uad6c\ubd84: ${roomType}`;
+const totalFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
+const fieldFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
+const prepaidFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
+const splitBox=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x65\x65\x53\x70\x6c\x69\x74\x42\x6f\x78');
+if(totalFeeInput)totalFeeInput.value=totalFee;
+if(fieldFeeInput)fieldFeeInput.value=fieldFee;
+if(prepaidFeeInput)prepaidFeeInput.value=prepaidFee;
+if(fieldFee&&prepaidFee&&splitBox){
+splitBox.style.display='\x62\x6c\x6f\x63\x6b';
+}else if(splitBox){
+splitBox.style.display='\x6e\x6f\x6e\x65';
+}
+const paxButtons=document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65');
+paxButtons.forEach(btn=>{
+const p=btn.dataset.pax;
+if(p===sizenum||(sizenum.startsWith(p.replace('\uc778','')))){
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+}else{
+btn.classList.remove('\x61\x63\x74\x69\x76\x65');
+}
+});
+const genderButtons=document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65');
+const waitGenderInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74');
+genderButtons.forEach(btn=>{
+const g=btn.dataset.gender;
+if(g===waitGender||(g==='\uc778\uc6d0\uc5c6\uc74c'&&(!waitGender||waitGender==='\ub300\uae30\uc5c6\uc74c'||waitGender==='\uc778\uc6d0\uc5c6\uc74c'))){
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+}else{
+btn.classList.remove('\x61\x63\x74\x69\x76\x65');
+}
+});
+if(waitGenderInput){
+waitGenderInput.value=(waitGender&&waitGender!=='\uc778\uc6d0\uc5c6\uc74c'&&waitGender!=='\ub300\uae30\uc5c6\uc74c')?waitGender:'';
+}
+const roomButtons=document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x52\x6f\x6f\x6d\x54\x79\x70\x65\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x72\x6f\x6f\x6d-\x63\x68\x6f\x69\x63\x65');
+roomButtons.forEach(btn=>{
+if(btn.dataset.room===roomType){
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+}else{
+btn.classList.remove('\x61\x63\x74\x69\x76\x65');
+}
+});
+const chkSeonti=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x43\x68\x6b\x53\x65\x6f\x6e\x74\x69');
+if(chkSeonti)chkSeonti.checked=isSeonti;
+const modal=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c');
+if(modal){
+modal.style.display='\x66\x6c\x65\x78';
+setTimeout(()=>{
+if(focusField==='\x70\x61\x78'){
+const activePaxBtn=document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65\x2e\x61\x63\x74\x69\x76\x65')||document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65');
+activePaxBtn?.focus();
+}else{
+totalFeeInput?.focus();
+totalFeeInput?.select();
+}
+},50);
+}
+}
+function closeEditItemModal(){
+const modal=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c');
+if(modal)modal.style.display='\x6e\x6f\x6e\x65';
+currentEditingTr=null;
+}
+function saveEditItemModal(){
+if(!currentEditingTr){
+closeEditItemModal();
+return;
+}
+const tr=currentEditingTr;
+const cells=tr.querySelectorAll('\x74\x64');
+const totalFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
+const fieldFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
+const prepaidFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
+const waitGenderInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74');
+const chkSeonti=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x43\x68\x6b\x53\x65\x6f\x6e\x74\x69');
+const activePaxBtn=document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65\x2e\x61\x63\x74\x69\x76\x65');
+const selectedPax=activePaxBtn?activePaxBtn.dataset.pax:(cells[7]?.textContent?.trim()||'\x34\uc778');
+let selectedGender=waitGenderInput?waitGenderInput.value.trim():'';
+if(!selectedGender){
+const activeGenderBtn=document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65\x2e\x61\x63\x74\x69\x76\x65');
+selectedGender=activeGenderBtn?activeGenderBtn.dataset.gender:'\uc778\uc6d0\uc5c6\uc74c';
+}
+const activeRoomBtn=document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x52\x6f\x6f\x6d\x54\x79\x70\x65\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x72\x6f\x6f\x6d-\x63\x68\x6f\x69\x63\x65\x2e\x61\x63\x74\x69\x76\x65');
+const selectedRoom=activeRoomBtn?activeRoomBtn.dataset.room:(selectedPax==='\x34\uc778'?'\uc591\ub3c4':'\uc870\uc778');
+const rawVal=totalFeeInput?totalFeeInput.value.trim():'';
+const newFee=parseFloat(rawVal)||0;
+const oldFee=parseFloat(tr.dataset.totalFee||tr.dataset.baseFee||cells[4]?.textContent?.replace(/[^\d.]/g,''))||0;
+if(newFee>0){
+tr.dataset.totalFee=newFee.toString();
+tr.dataset.baseFee=newFee.toString();
+if(fieldFeeInput&&fieldFeeInput.value.trim()){
+tr.dataset.fieldFee=fieldFeeInput.value.trim();
+}
+if(prepaidFeeInput&&prepaidFeeInput.value.trim()){
+tr.dataset.prepaidFee=prepaidFeeInput.value.trim();
+}
+if(oldFee>0&&oldFee>newFee){
+const diff=Math.round((newFee-oldFee)*10)/10;
+tr.dataset.isPriceDropped='\x74\x72\x75\x65';
+tr.dataset.prevFee=oldFee.toString();
+tr.dataset.priceDiff=diff.toString();
+}else if(oldFee===newFee&&tr.dataset.isPriceDropped==='\x74\x72\x75\x65'){
+}else{
+delete tr.dataset.isPriceDropped;
+delete tr.dataset.prevFee;
+delete tr.dataset.priceDiff;
+}
+if(tr.dataset.fieldFee&&tr.dataset.prepaidFee){
+cells[4].textContent=`\ud604\uc7a5 ${tr.dataset.fieldFee}\ub9cc/\uc120\uc785 ${tr.dataset.prepaidFee}\ub9cc`;
+}else{
+cells[4].textContent=`${newFee}\ub9cc`;
+}
+}
+if(selectedPax){
+tr.dataset.sizenum=selectedPax;
+if(cells[7])cells[7].textContent=selectedPax;
+}
+tr.dataset.waitGender=selectedGender;
+const numericPax=selectedPax.replace(/[^\d]/g,'');
+tr.dataset.waitPax=(selectedGender==='\uc778\uc6d0\uc5c6\uc74c'||selectedGender==='\ub300\uae30\uc5c6\uc74c')?'\x30':(numericPax||'\x32');
+if(cells[6]&&selectedGender&&selectedGender!=='\uc778\uc6d0\uc5c6\uc74c'){
+cells[6].textContent=selectedGender;
+}
+tr.dataset.roomType=selectedRoom;
+if(chkSeonti){
+tr.dataset.manualSeonti=chkSeonti.checked?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65';
+if(chkSeonti.checked){
+tr.dataset.isSeontiOrDaegi='\x74\x72\x75\x65';
+}
+}
+renderCardList(false);
+saveCurrentTableState();
+const golfName=cells[2]?.textContent?.trim()||tr.dataset.rawGolf||'';
+const timeVal=cells[3]?.textContent?.trim()||tr.dataset.time||'';
+showToast(`[${golfName} ${timeVal}] \uac00\uaca9(${newFee}\ub9cc) / \uc778\uc6d0(${selectedPax}) \ubcc0\uacbd \uc644\ub8cc`);
+closeEditItemModal();
+}
+function initEditItemModal(){
+document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x45\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c\x58')?.addEventListener('\x63\x6c\x69\x63\x6b',closeEditItemModal);
+document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x45\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeEditItemModal);
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+if(e.target.id==='\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c')closeEditItemModal();
+});
+document.getElementById('\x62\x74\x6e\x53\x61\x76\x65\x45\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+saveEditItemModal();
+});
+document.querySelectorAll('\x2e\x62\x74\x6e-\x71\x75\x69\x63\x6b-\x61\x64\x6a\x75\x73\x74').forEach(btn=>{
+btn.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+const adj=parseFloat(btn.dataset.adj)||0;
+const feeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
+if(feeInput){
+let cur=parseFloat(feeInput.value)||0;
+cur=Math.max(0,Math.round((cur+adj)*10)/10);
+feeInput.value=cur;
+const fieldInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
+if(fieldInput&&fieldInput.value.trim()){
+let curField=parseFloat(fieldInput.value)||0;
+curField=Math.max(0,Math.round((curField+adj)*10)/10);
+fieldInput.value=curField;
+}
+}
+});
+});
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65').forEach(btn=>{
+btn.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65').forEach(b=>b.classList.remove('\x61\x63\x74\x69\x76\x65'));
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+const pax=btn.dataset.pax;
+if(pax==='\x34\uc778'){
+const waitText=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74');
+if(waitText&&(!waitText.value||waitText.value==='\ub0a8'||waitText.value==='\ub0a8\ub0a8')){
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65').forEach(b=>{
+b.classList.toggle('\x61\x63\x74\x69\x76\x65',b.dataset.gender==='\uc778\uc6d0\uc5c6\uc74c');
+});
+waitText.value='';
+}
+}
+});
+});
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65').forEach(btn=>{
+btn.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65').forEach(b=>b.classList.remove('\x61\x63\x74\x69\x76\x65'));
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+const g=btn.dataset.gender;
+const waitText=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74');
+if(waitText){
+waitText.value=(g==='\uc778\uc6d0\uc5c6\uc74c')?'':g;
+}
+});
+});
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74')?.addEventListener('\x69\x6e\x70\x75\x74',(e)=>{
+const val=e.target.value.trim();
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x47\x65\x6e\x64\x65\x72\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x67\x65\x6e\x64\x65\x72-\x63\x68\x6f\x69\x63\x65').forEach(btn=>{
+btn.classList.toggle('\x61\x63\x74\x69\x76\x65',btn.dataset.gender===val);
+});
+});
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x52\x6f\x6f\x6d\x54\x79\x70\x65\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x72\x6f\x6f\x6d-\x63\x68\x6f\x69\x63\x65').forEach(btn=>{
+btn.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
+document.querySelectorAll('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x52\x6f\x6f\x6d\x54\x79\x70\x65\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x72\x6f\x6f\x6d-\x63\x68\x6f\x69\x63\x65').forEach(b=>b.classList.remove('\x61\x63\x74\x69\x76\x65'));
+btn.classList.add('\x61\x63\x74\x69\x76\x65');
+});
+});
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c')?.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e',(e)=>{
+if(e.key==='\x45\x6e\x74\x65\x72'){
+e.preventDefault();
+saveEditItemModal();
+}else if(e.key==='\x45\x73\x63\x61\x70\x65'){
+e.preventDefault();
+closeEditItemModal();
+}
+});
 }
 function initSoldOutTextModal(){
 document.getElementById('\x62\x74\x6e\x4e\x61\x76\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
@@ -11711,7 +11980,7 @@ _0x1056();
 }
 const STEP_DELAY_OPTIONS={
 standard:[
-{value:'\x73\x6c\x6f\x77',text:'\ud83d\udc22 \uc2e0\uc911\ud55c \uc0ac\ub78c (\x30\x2e\x38~\x31\x2e\x38\ucd08 \uc5ec\uc720)'},
+{value:'\x73\x6c\x6f\x77',text:'\uc2e0\uc911\ud55c \uc0ac\ub78c (\x30\x2e\x38~\x31\x2e\x38\ucd08 \uc5ec\uc720)'},
 {value:'\x66\x61\x73\x74',text:'\ube60\ub978 \uc190 (\x30\x2e\x32~\x30\x2e\x35\ucd08 \uc2e0\uc18d)'}
 ],
 admin:[
@@ -11720,7 +11989,7 @@ admin:[
 };
 const RANDOM_DELAY_OPTIONS={
 standard:[
-{value:'\x73\x74\x65\x61\x6c\x74\x68',text:'\ud83d\udd76\ufe0f \ud2b9\uae09 \uc704\uc7a5 (\x33\x2e\x35~\x37\x2e\x35\ucd08 \ubd88\uaddc\uce59)'},
+{value:'\x73\x74\x65\x61\x6c\x74\x68',text:'\ud2b9\uae09 \uc704\uc7a5 (\x33\x2e\x35~\x37\x2e\x35\ucd08 \ubd88\uaddc\uce59)'},
 {value:'\x66\x61\x73\x74',text:'\ube60\ub978 \uc9c4\ud589 (\x31\x2e\x32~\x32\x2e\x36\ucd08 \ub2e8\ucd95)'}
 ],
 admin:[
@@ -15677,6 +15946,7 @@ updateLivePrepaidFees();
 updateSortBarUI();
 initPreferredPartsUI();
 initSoldOutTextModal();
+initEditItemModal();
 checkAndUncheckCompletedFromStorage();
 setTimeout(applyToolbarIconFromPopup,1200);
 _0x104b();

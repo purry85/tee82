@@ -1655,6 +1655,204 @@
             max-height: 94vh;
         }
 
+        /* 티타임 개별 수정 (가격·인원) 모달 스타일 */
+        .edit-item-modal-card {
+            background: white;
+            border-radius: 12px;
+            width: 92%;
+            max-width: 380px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.18s ease-out;
+            border: 1px solid #CBD5E1;
+        }
+        .edit-item-modal-header {
+            background: #F8FAFC;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .edit-item-modal-body {
+            padding: 14px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .edit-item-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input-with-unit {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .edit-item-input {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E293B;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.15s;
+        }
+        .edit-item-input:focus {
+            border-color: #2563EB;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+        }
+        .unit-label {
+            position: absolute;
+            right: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748B;
+            pointer-events: none;
+        }
+        .edit-quick-btns {
+            display: flex;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .btn-quick-adjust {
+            flex: 1;
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-quick-adjust:hover {
+            background: #E2E8F0;
+            border-color: #94A3B8;
+            color: #0F172A;
+        }
+        .edit-pax-btn-group, .edit-room-btn-group {
+            display: flex;
+            gap: 6px;
+        }
+        .btn-pax-choice, .btn-room-choice {
+            flex: 1;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 8px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-pax-choice:hover, .btn-room-choice:hover {
+            border-color: #93C5FD;
+            background: #EFF6FF;
+            color: #1D4ED8;
+        }
+        .btn-pax-choice.active, .btn-room-choice.active {
+            background: #2563EB;
+            border-color: #1D4ED8;
+            color: #FFFFFF;
+            font-weight: 800;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+        }
+        .edit-gender-btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        .btn-gender-choice {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-gender-choice:hover {
+            border-color: #CBD5E1;
+            background: #F1F5F9;
+        }
+        .btn-gender-choice.active {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+            color: #92400E;
+            font-weight: 800;
+        }
+        .edit-item-modal-footer {
+            padding: 10px 14px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .btn-edit-item-save {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            color: white;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+            transition: all 0.15s;
+        }
+        .btn-edit-item-save:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+        /* 카드 내 호버 피드백 스타일 */
+        .card-fee {
+            cursor: pointer !important;
+            border-radius: 4px;
+            padding: 1px 4px;
+            transition: all 0.15s;
+            display: inline-block;
+        }
+        .card-fee:hover {
+            background: #EEF2FF !important;
+            color: #3730A3 !important;
+            outline: 1.5px dashed #6366F1;
+        }
+        .card-tag.pax {
+            cursor: pointer !important;
+            transition: all 0.15s;
+        }
+        .card-tag.pax:hover {
+            background: #DBEAFE !important;
+            color: #1E40AF !important;
+            outline: 1.5px dashed #3B82F6;
+        }
+        .card-tag.pax-gender {
+            cursor: pointer !important;
+            transition: all 0.15s;
+        }
+        .card-tag.pax-gender:hover {
+            background: #FEF08A !important;
+            color: #854D0E !important;
+            outline: 1.5px dashed #EAB308;
+        }
+
         .soldout-modal-header {
             background: #F8FAFC;
             padding: 10px 14px;
@@ -6231,6 +6429,109 @@
                 <button type="button" class="btn-dict-cancel" id="btnCancelSoldOutModal">취소</button>
                 <button type="button" class="btn-soldout-execute" id="btnExecuteSoldOut">
                     <span>해당 글 즉시 삭제/마감 실행</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 개별 티타임 가격/인원 간편 수정 모달 -->
+    <div class="dict-modal-overlay" id="editItemModal" style="display: none; z-index: 1090;">
+        <div class="edit-item-modal-card">
+            <!-- 헤더 -->
+            <div class="edit-item-modal-header">
+                <div>
+                    <h3 id="editItemModalTitle" style="margin: 0; font-size: 13px; font-weight: 800; color: #1E293B;">티타임 정보 수정</h3>
+                    <div id="editItemModalSubTitle" style="font-size: 10.5px; color: #64748B;">구장 및 시간 상세</div>
+                </div>
+                <button type="button" class="unmapped-modal-close" id="btnCloseEditItemModalX" title="닫기">&times;</button>
+            </div>
+
+            <!-- 본문 -->
+            <div class="edit-item-modal-body">
+                <!-- 1. 가격(그린피) 영역 -->
+                <div class="edit-item-section">
+                    <div class="edit-item-section-title">그린피 (단위: 만원)</div>
+                    <div class="edit-item-fee-inputs" id="editItemFeeNormalBox">
+                        <div class="input-with-unit">
+                            <input type="number" step="0.1" id="editItemTotalFee" class="edit-item-input" placeholder="예: 4.5">
+                            <span class="unit-label">만원</span>
+                        </div>
+                        <div class="edit-quick-btns">
+                            <button type="button" class="btn-quick-adjust" data-adj="-1">-1만</button>
+                            <button type="button" class="btn-quick-adjust" data-adj="-0.5">-0.5만</button>
+                            <button type="button" class="btn-quick-adjust" data-adj="0.5">+0.5만</button>
+                            <button type="button" class="btn-quick-adjust" data-adj="1">+1만</button>
+                        </div>
+                    </div>
+                    <!-- 선입/현장 분리 타임용 상세 박스 -->
+                    <div class="edit-item-fee-split" id="editItemFeeSplitBox" style="display: none;">
+                        <div style="display: flex; gap: 8px; margin-top: 6px;">
+                            <div style="flex: 1;">
+                                <label style="font-size: 10px; color: #64748B; display: block; margin-bottom: 2px;">현장 결제</label>
+                                <div class="input-with-unit">
+                                    <input type="number" step="0.1" id="editItemFieldFee" class="edit-item-input" placeholder="10.9">
+                                    <span class="unit-label">만</span>
+                                </div>
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 10px; color: #64748B; display: block; margin-bottom: 2px;">선입금</label>
+                                <div class="input-with-unit">
+                                    <input type="number" step="0.1" id="editItemPrepaidFee" class="edit-item-input" placeholder="1">
+                                    <span class="unit-label">만</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 인원수 (sizenum) 선택 -->
+                <div class="edit-item-section">
+                    <div class="edit-item-section-title">모집 인원 (인원수)</div>
+                    <div class="edit-pax-btn-group" id="editItemPaxGroup">
+                        <button type="button" class="btn-pax-choice" data-pax="1인">1인</button>
+                        <button type="button" class="btn-pax-choice" data-pax="2인">2인</button>
+                        <button type="button" class="btn-pax-choice" data-pax="3인">3인</button>
+                        <button type="button" class="btn-pax-choice" data-pax="4인">4인</button>
+                    </div>
+                </div>
+
+                <!-- 3. 대기 구성 / 성별 -->
+                <div class="edit-item-section">
+                    <div class="edit-item-section-title">대기 조건 / 성별</div>
+                    <div class="edit-gender-btn-group" id="editItemGenderGroup" style="margin-bottom: 6px;">
+                        <button type="button" class="btn-gender-choice" data-gender="인원없음">대기없음</button>
+                        <button type="button" class="btn-gender-choice" data-gender="남">남</button>
+                        <button type="button" class="btn-gender-choice" data-gender="남남">남남</button>
+                        <button type="button" class="btn-gender-choice" data-gender="남여">남여</button>
+                        <button type="button" class="btn-gender-choice" data-gender="여">여</button>
+                        <button type="button" class="btn-gender-choice" data-gender="남남남">남남남</button>
+                    </div>
+                    <input type="text" id="editItemWaitGenderText" class="edit-item-input" placeholder="직접 입력 (예: 남남, 부부/커플, 무관 등)">
+                </div>
+
+                <!-- 4. 구분 (조인 / 양도) 및 선티방 토글 -->
+                <div class="edit-item-section" style="display: flex; gap: 12px; align-items: center;">
+                    <div style="flex: 1;">
+                        <div class="edit-item-section-title">구분</div>
+                        <div class="edit-room-btn-group" id="editItemRoomTypeGroup">
+                            <button type="button" class="btn-room-choice" data-room="조인">조인</button>
+                            <button type="button" class="btn-room-choice" data-room="양도">양도</button>
+                        </div>
+                    </div>
+                    <div style="flex: 1; padding-top: 14px;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 11px; font-weight: 700; color: #374151;">
+                            <input type="checkbox" id="editItemChkSeonti" style="width: 15px; height: 15px; cursor: pointer;">
+                            <span>선티방 지정</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 푸터 액션 버튼 -->
+            <div class="edit-item-modal-footer">
+                <button type="button" class="btn-dict-cancel" id="btnCancelEditItemModal">취소</button>
+                <button type="button" class="btn-edit-item-save" id="btnSaveEditItemModal">
+                    <span>변경 저장 (Enter)</span>
                 </button>
             </div>
         </div>
