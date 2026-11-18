@@ -3097,13 +3097,60 @@ anc.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x30\
 if(anc===topBlock)break;
 anc=anc.parentElement;
 }
-const firstTop=first.getBoundingClientRect().top;
-const gap=firstTop-rowBottom;
+const startEl=_0x1032();
+let card=first;
+if(startEl&&first.contains(startEl)&&startEl!==first){
+const labelTop=startEl.getBoundingClientRect().top;
+let p=startEl;
+card=startEl;
+while(p&&p!==first){
+const t=p.getBoundingClientRect().top;
+if(t>=labelTop-30)card=p;else break;
+p=p.parentElement;
+}
+let c=card;
+while(c&&c!==first){
+let prev=c.previousElementSibling;
+while(prev){
+const hasCtrl=prev.querySelector('\x69\x6e\x70\x75\x74, \x62\x75\x74\x74\x6f\x6e, \x73\x65\x6c\x65\x63\x74, \x61, \x74\x65\x78\x74\x61\x72\x65\x61')||/^(INPUT|BUTTON|SELECT|A|TEXTAREA)$/.test(prev.tagName);
+const txt=(prev.innerText||prev.textContent||'').trim();
+if(!hasCtrl&&txt.length<5&&prev.id!=='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72'){
+prev.dataset.gtpGapCollapsed='\x74\x72\x75\x65';
+prev.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+prev=prev.previousElementSibling;
+}
+const par=c.parentElement;
+if(par){
+par.dataset.gtpGapCollapsed='\x74\x72\x75\x65';
+par.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+par.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+c=par;
+}
+}
+const cardTop=card.getBoundingClientRect().top;
+const gap=cardTop-rowBottom;
 const desired=4;
+console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \uc0c1\ub2e8-\uc911\ub2e8 \uac04\uaca9 \uc2e4\uce21: ${Math.round(gap)}px (card=${card.tagName}.${card.className||''})`);
 if(Math.abs(gap-desired)>1){
-const curMargin=parseFloat(getComputedStyle(first).marginTop)||0;
+const target=card===first?first:card;
+const curMargin=parseFloat(getComputedStyle(target).marginTop)||0;
 const newMargin=Math.round(curMargin-(gap-desired));
-first.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70',newMargin+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+target.dataset.gtpGapCollapsed='\x74\x72\x75\x65';
+target.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70',newMargin+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+target.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+const remain=card.getBoundingClientRect().top-rowBottom-desired;
+if(Math.abs(remain)>2){
+const wrap=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72');
+[...resvBlocks,wrap].filter(Boolean).forEach(el=>{
+const prevShift=parseFloat(el.dataset.gtpShift||'\x30');
+const shift=Math.max(0,prevShift+remain);
+el.dataset.gtpShift=String(shift);
+el.dataset.gtpGapCollapsed='\x74\x72\x75\x65';
+el.style.setProperty('\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d',`translateY(-${Math.round(shift)}px)`,'\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+});
 }
 }catch(e){
 console.warn('[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \uc0c1\ub2e8-\uc911\ub2e8 \uc5ec\ubc31 \ubcf4\uc815 \uc624\ub958\x3a',e);
@@ -3255,8 +3302,9 @@ const colDate=__gtp_cached_date_col||cols.colDate;
 const colDetail=__gtp_cached_detail_col||cols.colDetail;
 const formContainer=__gtp_cached_form_container;
 document.querySelectorAll('[\x64\x61\x74\x61-\x67\x74\x70-\x67\x61\x70-\x63\x6f\x6c\x6c\x61\x70\x73\x65\x64="\x74\x72\x75\x65"]').forEach(el=>{
-['\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d'].forEach(p=>el.style.removeProperty(p));
+['\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x70\x61\x64\x64\x69\x6e\x67-\x74\x6f\x70','\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x64\x69\x73\x70\x6c\x61\x79','\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d'].forEach(p=>el.style.removeProperty(p));
 delete el.dataset.gtpGapCollapsed;
+delete el.dataset.gtpShift;
 });
 if(__gtp_cached_resv_blocks&&__gtp_cached_resv_blocks.length>0){
 __gtp_cached_resv_blocks.forEach(block=>{
