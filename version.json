@@ -1,9 +1,9 @@
 {
-    "version":  "2.6.7",
+    "version":  "2.6.8",
     "releaseDate":  "2026-11-18",
-    "title":  "스마트뷰 모드 테스트",
+    "title":  "골프탑 스마트뷰 예약메뉴 순서 정상화",
     "releaseNotes":  [
-                         "- 새로운 레이아웃 테스트"
+                         "- 상단(달력/필터/특이사항) -\u003e 중단(예약메뉴 전체 100% 온전 유지) -\u003e 하단(골프장선택 3열)"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
