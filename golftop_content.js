@@ -1746,7 +1746,7 @@ return true;
 }else if(msg.action==='\x53\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54'){
 const enabled=!!msg.enabled;
 _0x1027(enabled);
-_0x103a(enabled);
+_0x103b(enabled);
 sendResponse({success:true,enabled:enabled});
 return true;
 }else if(msg.action==='\x47\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54\x5f\x53\x54\x41\x54\x55\x53'){
@@ -1807,6 +1807,8 @@ style.textContent=`
             height: auto !important;
             max-height: none !important;
             overflow: visible !important;
+            margin-bottom: 4px !important;
+            padding-bottom: 0px !important;
         }
 
         /* 1. \uc0c1\ub2e8 \ud589: \ub2ec\ub825(\uc88c) + \ud544\ud130(\uc911) + \ud2b9\uc774\uc0ac\ud56d/\ud560\uc778\uadf8\ub9b0\ud53c(\uc6b0) 3\uce74\ub4dc \ub098\ub780\ud788 \ubc30\uce58 */
@@ -1817,12 +1819,12 @@ style.textContent=`
             width: 100% !important;
             box-sizing: border-box !important;
             align-items: flex-start !important;
-            gap: 10px !important;
-            height: 260px !important;
-            min-height: 260px !important;
-            max-height: 260px !important;
+            gap: 6px !important;
+            height: 235px !important;
+            min-height: 235px !important;
+            max-height: 235px !important;
             overflow: visible !important;
-            margin-bottom: 10px !important;
+            margin-bottom: 4px !important;
         }
 
         /* [\uc0c1\ub2e8 \uc88c\uce21 \uc804\uccb4 \ucee8\ud14c\uc774\ub108]: \ub2ec\ub825 \ubc0f \uc794\uc5ec\ud0c0\uc784 \ud544\ud130 \ub798\ud37c (Column 1) */
@@ -1831,13 +1833,13 @@ style.textContent=`
             order: 1 !important;
             display: flex !important;
             flex-direction: row !important;
-            gap: 10px !important;
+            gap: 6px !important;
             flex: 0 0 auto !important;
             width: auto !important;
             max-width: none !important;
-            height: 260px !important;
-            min-height: 260px !important;
-            max-height: 260px !important;
+            height: 235px !important;
+            min-height: 235px !important;
+            max-height: 235px !important;
             background: transparent !important;
             border: none !important;
             padding: 0 !important;
@@ -1853,12 +1855,12 @@ style.textContent=`
             width: 240px !important;
             max-width: 240px !important;
             min-width: 240px !important;
-            height: 260px !important;
-            max-height: 260px !important;
+            height: 235px !important;
+            max-height: 235px !important;
             background: #ffffff !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 8px !important;
-            padding: 6px 8px !important;
+            padding: 4px 6px !important;
             box-sizing: border-box !important;
             overflow-y: auto !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
@@ -1871,12 +1873,12 @@ style.textContent=`
             width: 230px !important;
             max-width: 230px !important;
             min-width: 230px !important;
-            height: 260px !important;
-            max-height: 260px !important;
+            height: 235px !important;
+            max-height: 235px !important;
             background: #ffffff !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 8px !important;
-            padding: 6px 8px !important;
+            padding: 4px 6px !important;
             box-sizing: border-box !important;
             overflow-y: auto !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
@@ -1890,12 +1892,12 @@ style.textContent=`
             min-width: 260px !important;
             width: auto !important;
             max-width: none !important;
-            height: 260px !important;
-            min-height: 260px !important;
-            max-height: 260px !important;
+            height: 235px !important;
+            min-height: 235px !important;
+            max-height: 235px !important;
             box-sizing: border-box !important;
             margin-left: 0 !important;
-            padding: 6px 10px !important;
+            padding: 4px 6px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
             border: 1px solid #cbd5e1 !important;
@@ -1912,24 +1914,13 @@ style.textContent=`
             visibility: visible !important;
         }
 
-        /* \ud2b9\uc774\uc0ac\ud56d \ud5e4\ub354 \ubc43\uc9c0 */
+        /* \ud2b9\uc774\uc0ac\ud56d \ud5e4\ub354 \ubc43\uc9c0 \uc228\uae40 (\uc0ac\uc6a9\uc790 \uc694\uccad: \uc81c\ubaa9 \uc548\ub123\uc5b4\ub3c4 \ub428) */
+        body.gtp-smart-layout-active #gtp_smart_detail_header,
         body.gtp-smart-layout-active .gtp-detail-header-styled {
-            font-size: 11.5px !important;
-            font-weight: 800 !important;
-            color: #1e3a8a !important;
-            background: #dbeafe !important;
-            padding: 4px 8px !important;
-            border-radius: 4px !important;
-            margin-bottom: 6px !important;
-            text-align: center !important;
-            border: 1px solid #93c5fd !important;
-            display: block !important;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
-            user-select: none !important;
-            flex-shrink: 0 !important;
+            display: none !important;
         }
 
-        /* [\uc911\ub2e8 \uc804\uccb4\ud3ed]: \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d (\uc0c1\ub2e8 \ud589\uacfc \ud558\ub2e8 \uc608\uc57d \ud3fc \uc0ac\uc774\uc5d0 \ub3c5\ub9bd \ube14\ub85d\uc73c\ub85c \ubb3c\ub9ac\uc801 \ubc30\uce58) */
+        /* [\ud558\ub2e8/\uc911\ub2e8 \uc804\uccb4\ud3ed]: \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d (\uc0c1\ub2e8 \ud589\uacfc \ud558\ub2e8 \uc608\uc57d \ud3fc \uc0ac\uc774\uc5d0 \ub3c5\ub9bd \ube14\ub85d\uc73c\ub85c \ubb3c\ub9ac\uc801 \ubc30\uce58) */
         body.gtp-smart-layout-active #gtp_smart_course_wrapper,
         body.gtp-smart-layout-active #gtp_smart_course_tr,
         body.gtp-smart-layout-active .gtp-smart-col-course,
@@ -1940,9 +1931,9 @@ style.textContent=`
             max-width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
-            margin-top: 10px !important;
-            margin-bottom: 12px !important;
-            padding: 8px 10px !important;
+            margin-top: 4px !important;
+            margin-bottom: 6px !important;
+            padding: 4px 6px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
             border: 1px solid #cbd5e1 !important;
@@ -1982,13 +1973,16 @@ style.textContent=`
             background: transparent !important;
         }
 
-        /* \ud558\ub2e8 \uc608\uc57d/\ub300\uae30/\ud64d\ubcf4 \uc2e0\uccad \ud3fc 100% \uac00\uc2dc\uc131 \ubc0f \uc21c\ucc28 \ud750\ub984 \ubcf4\uc7a5 */
+        /* \uc911\ub2e8/\ud558\ub2e8 \uc608\uc57d/\ub300\uae30/\ud64d\ubcf4 \uc2e0\uccad \ud3fc \ucef4\ud329\ud2b8 \uc5ec\ubc31 \ubcf4\uc7a5 */
         body.gtp-smart-layout-active .gtp-smart-resv-container,
-        body.gtp-smart-layout-active #gtp_smart_course_wrapper + *,
-        body.gtp-smart-layout-active #gtp_smart_course_tr + tr {
+        body.gtp-smart-layout-active table:has(.gtp-smart-top-row) + *,
+        body.gtp-smart-layout-active .gtp-smart-top-row + * {
             clear: both !important;
             position: relative !important;
-            margin-top: 12px !important;
+            margin-top: 4px !important;
+            margin-bottom: 4px !important;
+            padding-top: 0px !important;
+            padding-bottom: 2px !important;
             z-index: 1 !important;
         }
 
@@ -2016,7 +2010,7 @@ style.textContent=`
         body.gtp-smart-layout-active .gtp-regions-grid {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 10px !important;
+            gap: 6px !important;
             width: 100% !important;
             max-width: 100% !important;
             min-width: 100% !important;
@@ -2024,14 +2018,14 @@ style.textContent=`
             align-items: start !important;
             max-height: 480px !important;
             overflow-y: auto !important;
-            padding: 2px 4px 6px 2px !important;
+            padding: 2px 2px !important;
         }
 
         /* 3\uac1c \ub3c5\ub9bd \uc138\ub85c \uc5f4 \ucee8\ud14c\uc774\ub108 (\uac01 \uc5f4\ubcc4\ub85c \uce74\ub4dc\uac00 \uc704\uc5d0\uc11c \uc544\ub798\ub85c \ubb3c \ud750\ub974\ub4ef \uc790\uc5f0\uc2a4\ub7fd\uac8c \ubc30\uce58) */
         body.gtp-smart-layout-active .gtp-region-col {
             display: flex !important;
             flex-direction: column !important;
-            gap: 10px !important;
+            gap: 6px !important;
             width: 100% !important;
             min-width: 0 !important;
             box-sizing: border-box !important;
@@ -2042,7 +2036,7 @@ style.textContent=`
             background: #f8fafc !important;
             border: 1px solid #cbd5e1 !important;
             border-radius: 6px !important;
-            padding: 6px 8px !important;
+            padding: 4px 6px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
@@ -2056,13 +2050,13 @@ style.textContent=`
 
         /* \uad8c\uc5ed \uc81c\ubaa9 \uc2a4\ud0c0\uc77c (\ub179\uc0c9 \ubc43\uc9c0 \ud5e4\ub354) */
         body.gtp-smart-layout-active .gtp-region-header-styled {
-            font-size: 11.5px !important;
+            font-size: 11px !important;
             font-weight: 800 !important;
             color: #065f46 !important;
             background: #d1fae5 !important;
-            padding: 3px 6px !important;
+            padding: 2px 5px !important;
             border-radius: 4px !important;
-            margin-bottom: 5px !important;
+            margin-bottom: 3px !important;
             text-align: center !important;
             border: 1px solid #6ee7b7 !important;
             display: block !important;
@@ -2076,7 +2070,7 @@ style.textContent=`
         body.gtp-smart-layout-active .gtp-region-buttons-wrap {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 4px !important;
+            gap: 3px !important;
             width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
@@ -2092,9 +2086,9 @@ style.textContent=`
             white-space: pre-line !important;
             word-break: keep-all !important;
             text-overflow: clip !important;
-            line-height: 1.15 !important;
+            line-height: 1.12 !important;
             font-size: 10.5px !important;
-            min-height: 34px !important;
+            min-height: 32px !important;
             height: auto !important;
             padding: 2px 2px !important;
             display: inline-flex !important;
@@ -2170,14 +2164,14 @@ style.textContent=`
                 flex: 1 1 230px !important;
                 max-width: 100% !important;
                 width: auto !important;
-                height: 250px !important;
+                height: 235px !important;
             }
             body.gtp-smart-layout-active #gtp_smart_filter_box,
             body.gtp-smart-layout-active .gtp-smart-filter-card {
                 flex: 1 1 200px !important;
                 max-width: 100% !important;
                 width: auto !important;
-                height: 250px !important;
+                height: 235px !important;
             }
             body.gtp-smart-layout-active .gtp-smart-col-detail {
                 order: 2 !important;
@@ -2533,22 +2527,22 @@ container.appendChild(calBox);
 container.appendChild(filterBox);
 container.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 container.style.setProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x72\x6f\x77','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-container.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+container.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 container.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x66\x6c\x65\x78-\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 container.style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 container.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-container.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-container.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-container.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+container.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+container.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+container.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 if(container!==colDate){
 colDate.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDate.style.setProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x72\x6f\x77','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDate.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDate.style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDate.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDate.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDate.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDate.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDate.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \ud83d\udcc5 \ub2ec\ub825 \ubc0f \ud83d\udd0d \ud544\ud130\uc120\ud0dd \x32\uac1c \uce74\ub4dc \uc88c\uc6b0 \ubd84\ud560 \uc644\ub8cc");
 return{calBox,filterBox};
@@ -2672,7 +2666,7 @@ gridContainer.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e\x73-\x67\x72\x69\
 }
 gridContainer.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x67\x72\x69\x64','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x67\x72\x69\x64-\x74\x65\x6d\x70\x6c\x61\x74\x65-\x63\x6f\x6c\x75\x6d\x6e\x73','\x72\x65\x70\x65\x61\x74(\x33, \x6d\x69\x6e\x6d\x61\x78(\x30, \x31\x66\x72))','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2680,7 +2674,7 @@ gridContainer.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6
 gridContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x34\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x34\x70\x78 \x36\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 const colDefs=[
 {colIndex:1,regions:['\uacbd\uae30\ubd81\ubd80','\uac15\uc6d0\ub3c4','\uc81c\uc8fc\ub3c4']},
 {colIndex:2,regions:['\uacbd\uae30\ub0a8\ubd80','\uacbd\uc0c1\ub3c4']},
@@ -2695,7 +2689,7 @@ colEl.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x63\x6f\x6c';
 colEl.dataset.gtpCol=String(cDef.colIndex);
 colEl.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colEl.style.setProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x63\x6f\x6c\x75\x6d\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colEl.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colEl.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colEl.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colEl.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2743,7 +2737,7 @@ card.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65
 card.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x67\x72\x69\x64','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x67\x72\x69\x64-\x74\x65\x6d\x70\x6c\x61\x74\x65-\x63\x6f\x6c\x75\x6d\x6e\x73','\x72\x65\x70\x65\x61\x74(\x33, \x6d\x69\x6e\x6d\x61\x78(\x30, \x31\x66\x72))','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-btnsWrap.style.setProperty('\x67\x61\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+btnsWrap.style.setProperty('\x67\x61\x70','\x33\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2910,54 +2904,65 @@ return t==='\uc2e0\uccad\uc77c\uc790'||t.startsWith('\uc2e0\uccad\uc77c\uc790');
 });
 return dateLabels.length>0?dateLabels[0]:null;
 }
-function _0x1033(rowContainer,colCourse){
+function _0x1033(rowContainer){
+const resvLabel=_0x1032();
+if(!resvLabel)return null;
+const rowAncestors=new Set();
+let r=rowContainer;
+while(r&&r!==document.body){
+rowAncestors.add(r);
+r=r.parentElement;
+}
+let cur=resvLabel;
+let block=resvLabel;
+while(cur&&cur.parentElement&&cur.parentElement!==document.body){
+const p=cur.parentElement;
+if(rowAncestors.has(p)){
+block=cur;
+break;
+}
+if(p.tagName==='\x46\x4f\x52\x4d'||p.id==='\x66\x6f\x72\x6d\x31'||p.classList.contains('\x6d\x61\x69\x6e\x5f\x63\x6f\x6e\x74\x65\x6e\x74')||p.classList.contains('\x63\x6f\x6e\x74\x65\x6e\x74')){
+block=cur;
+break;
+}
+block=cur;
+cur=p;
+}
+return block;
+}
+const findReservationSectionStart=_0x1033;
+function _0x1034(rowContainer,colCourse){
 if(!colCourse||!rowContainer)return null;
 if(!colCourse.__gtp_orig_parent){
 colCourse.__gtp_orig_parent=colCourse.parentElement;
 colCourse.__gtp_orig_next=colCourse.nextSibling;
 }
 const topTable=rowContainer.closest('\x74\x61\x62\x6c\x65')||rowContainer;
-const resvLabel=_0x1032();
-if(resvLabel&&topTable.contains(resvLabel)){
-const resvRow=resvLabel.closest('\x74\x72');
-if(resvRow&&resvRow!==rowContainer){
-let courseTr=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72');
-if(!courseTr){
-courseTr=document.createElement('\x74\x72');
-courseTr.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72';
-const td=document.createElement('\x74\x64');
-td.colSpan=100;
-td.style.padding='\x30';
-td.style.border='\x6e\x6f\x6e\x65';
-td.appendChild(colCourse);
-courseTr.appendChild(td);
-}
-if(resvRow.parentElement){
-if(resvRow.previousElementSibling!==courseTr){
-resvRow.parentElement.insertBefore(courseTr,resvRow);
-}
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 [\x43\x61\x73\x65 \x41] \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc608\uc57d \ud589 \ubc14\ub85c \uc55e [\uc911\ub2e8]\uc73c\ub85c \ubb3c\ub9ac\uc801 \uc774\ub3d9 \uc644\ub8cc");
-return courseTr;
-}
-}
-}
-let topBlock=topTable;
-while(topBlock.parentElement&&topBlock.parentElement!==document.body&&topBlock.parentElement.children.length===1){
-topBlock=topBlock.parentElement;
-}
+const resvContainer=_0x1033(rowContainer);
 let wrapper=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72');
 if(!wrapper){
 wrapper=document.createElement('\x64\x69\x76');
 wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72';
 wrapper.appendChild(colCourse);
 }
+if(resvContainer&&resvContainer.parentElement){
+if(resvContainer.nextElementSibling!==wrapper){
+resvContainer.insertAdjacentElement('\x61\x66\x74\x65\x72\x65\x6e\x64',wrapper);
+}
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc608\uc57d \uba54\ub274 \ubc14\ub85c \ub4a4 [\ud558\ub2e8]\uc73c\ub85c \ubc30\uce58 \uc644\ub8cc");
+return wrapper;
+}
+let topBlock=topTable;
+while(topBlock.parentElement&&topBlock.parentElement!==document.body&&topBlock.parentElement.children.length===1){
+topBlock=topBlock.parentElement;
+}
 if(topBlock.nextElementSibling!==wrapper){
 topBlock.insertAdjacentElement('\x61\x66\x74\x65\x72\x65\x6e\x64',wrapper);
 }
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 [\x43\x61\x73\x65 \x42] \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc0c1\ub2e8 \ube14\ub85d \ubc14\ub85c \ub4a4 [\uc911\ub2e8]\uc73c\ub85c \ubb3c\ub9ac\uc801 \uc774\ub3d9 \uc644\ub8cc (\ud558\ub2e8 \uc608\uc57d\uba54\ub274\uc640 \uc644\ubcbd \ubd84\ub9ac)");
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc0c1\ub2e8 \ube14\ub85d \ubc14\ub85c \ub4a4\ub85c \ubc30\uce58 \uc644\ub8cc");
 return wrapper;
 }
-function _0x1034(colCourse){
+function _0x1035(colCourse){
 if(!colCourse)return;
 if(colCourse.__gtp_orig_parent&&document.body.contains(colCourse.__gtp_orig_parent)){
 colCourse.__gtp_orig_parent.insertBefore(colCourse,colCourse.__gtp_orig_next||null);
@@ -2979,7 +2984,7 @@ __gtp_cached_form_container.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79')
 __gtp_cached_form_container=null;
 }
 }
-function _0x1035(){
+function _0x1036(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 \uc2dc\uc791\x2e\x2e\x2e");
 const cols=_0x102a();
 if(!cols||!cols.colCourse){
@@ -2993,12 +2998,12 @@ rowContainer.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x74\x6f\x70-\x72\
 rowContainer.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x66\x6c\x65\x78-\x77\x72\x61\x70','\x6e\x6f\x77\x72\x61\x70','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x66\x6c\x65\x78-\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 let p=rowContainer.parentElement;
 while(p&&p!==document.body){
@@ -3028,40 +3033,21 @@ colDetail.style.setProperty('\x66\x6c\x65\x78','\x31 \x31 \x32\x36\x30\x70\x78',
 colDetail.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDetail.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDetail.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x23\x66\x66\x66\x66\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x62\x6f\x72\x64\x65\x72','\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x38\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDetail.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x36\x70\x78 \x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x34\x70\x78 \x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x31\x70\x78 \x33\x70\x78 \x72\x67\x62\x61(\x30, \x30, \x30, \x30\x2e\x30\x34)','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x63\x6f\x6c\x75\x6d\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-let detailHeader=colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72');
-if(!detailHeader){
-detailHeader=document.createElement('\x64\x69\x76');
-detailHeader.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72';
-detailHeader.className='\x67\x74\x70-\x64\x65\x74\x61\x69\x6c-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64';
-detailHeader.style.cssText=`
-                font-size: 11.5px !important;
-                font-weight: 800 !important;
-                color: #1e3a8a !important;
-                background: #dbeafe !important;
-                padding: 4px 8px !important;
-                border-radius: 4px !important;
-                margin-bottom: 6px !important;
-                text-align: center !important;
-                border: 1px solid #93c5fd !important;
-                display: block !important;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
-                user-select: none !important;
-                flex-shrink: 0 !important;
-            `;
-detailHeader.innerText='\ud83d\udcdd \ud560\uc778\uadf8\ub9b0\ud53c \x2f \uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d';
-colDetail.insertBefore(detailHeader,colDetail.firstChild);
+const existingDetailHeader=colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72, \x2e\x67\x74\x70-\x64\x65\x74\x61\x69\x6c-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64');
+if(existingDetailHeader){
+existingDetailHeader.remove();
 }
 Array.from(colDetail.querySelectorAll('*')).forEach(el=>{
 if(el.style.display==='\x6e\x6f\x6e\x65'){
@@ -3072,7 +3058,7 @@ el.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x6
 }
 if(colCourse){
 __gtp_cached_course_col=colCourse;
-_0x1033(rowContainer,colCourse);
+_0x1034(rowContainer,colCourse);
 colCourse.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
 colCourse.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -3080,12 +3066,12 @@ colCourse.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%',
 colCourse.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x62\x6c\x6f\x63\x6b','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x31\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x23\x66\x66\x66\x66\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72','\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x38\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x38\x70\x78 \x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x34\x70\x78 \x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -3094,13 +3080,16 @@ colCourse.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31\x30','\x69\x6d\x70
 }
 const count=_0x102f(colCourse)||0;
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uad6c\uc7a5 \ubc84\ud2bc ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8 \ubc0f \ud074\ub9ad \ud578\ub4e4\ub7ec \uc5f0\ub3d9 \uc644\ub8cc`);
-const resvFormContainer=__gtp_cached_form_container||findReservationSectionStart(rowContainer);
+const resvFormContainer=__gtp_cached_form_container||_0x1033(rowContainer);
 if(resvFormContainer){
 __gtp_cached_form_container=resvFormContainer;
 resvFormContainer.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
 resvFormContainer.style.setProperty('\x63\x6c\x65\x61\x72','\x62\x6f\x74\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvFormContainer.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-resvFormContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x31\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+resvFormContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+resvFormContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+resvFormContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+resvFormContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvFormContainer.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvFormContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvFormContainer.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x62\x6c\x6f\x63\x6b','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -3108,7 +3097,7 @@ resvFormContainer.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','
 }
 return{success:true,buttonCount:count};
 }
-function _0x1036(){
+function _0x1037(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u21a9\ufe0f \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0 \uc2dc\uc791\x2e\x2e\x2e");
 _0x1031();
 const cols=_0x102a()||{};
@@ -3117,7 +3106,7 @@ const rowContainer=__gtp_cached_row||cols.rowContainer;
 const colDate=__gtp_cached_date_col||cols.colDate;
 const colDetail=__gtp_cached_detail_col||cols.colDetail;
 const formContainer=__gtp_cached_form_container;
-_0x1034(colCourse);
+_0x1035(colCourse);
 if(colDate){
 _0x102c(colDate);
 colDate.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
@@ -3168,7 +3157,7 @@ p=p.parentElement;
 }
 if(colDetail){
 colDetail.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
-const detailHeader=colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72');
+const detailHeader=colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72, \x2e\x67\x74\x70-\x64\x65\x74\x61\x69\x6c-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64');
 if(detailHeader)detailHeader.remove();
 colDetail.style.removeProperty('\x6f\x72\x64\x65\x72');
 colDetail.style.removeProperty('\x66\x6c\x65\x78');
@@ -3257,7 +3246,7 @@ __gtp_cached_detected_regions=[];
 __gtp_cached_common_parent=null;
 __gtp_cached_orig_scroll_el=null;
 }
-function _0x1037(msg){
+function _0x1038(msg){
 let toast=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74');
 if(!toast){
 toast=document.createElement('\x64\x69\x76');
@@ -3287,7 +3276,7 @@ setTimeout(()=>{
 if(toast)toast.style.opacity='\x30';
 },2500);
 }
-function _0x1038(isEnabled){
+function _0x1039(isEnabled){
 let pill=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x67\x67\x6c\x65\x5f\x70\x69\x6c\x6c');
 if(!pill){
 pill=document.createElement('\x64\x69\x76');
@@ -3321,13 +3310,13 @@ e.stopPropagation();
 const current=document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
 const next=!current;
 _0x1027(next);
-_0x103a(next);
+_0x103b(next);
 if(next){
-const res=_0x1035()||{};
+const res=_0x1036()||{};
 const count=res.buttonCount||0;
-_0x1037(`\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \uc801\uc6a9\ub428 (\uad6c\uc7a5 ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8)`);
+_0x1038(`\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \uc801\uc6a9\ub428 (\uad6c\uc7a5 ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8)`);
 }else{
-_0x1037('\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0\ub428');
+_0x1038('\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0\ub428');
 }
 });
 document.body.appendChild(pill);
@@ -3344,14 +3333,14 @@ pill.style.border='\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x3
 pill.innerHTML='<\x73\x70\x61\x6e>\u26f3 \uc2a4\ub9c8\ud2b8\ubdf0 [\x4f\x46\x46]<\x2f\x73\x70\x61\x6e>';
 }
 }
-function _0x1039(){
+function _0x103a(){
 if(__gtp_is_layout_updating)return;
 if(__gtp_layout_debounce_timer)clearTimeout(__gtp_layout_debounce_timer);
 __gtp_layout_debounce_timer=setTimeout(()=>{
 if(!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
 __gtp_is_layout_updating=true;
 try{
-_0x1035();
+_0x1036();
 }catch(e){
 console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \ucd5c\uc801\ud654 \uc624\ub958]\x3a",e);
 }finally{
@@ -3359,23 +3348,23 @@ __gtp_is_layout_updating=false;
 }
 },250);
 }
-function _0x103a(enabled){
+function _0x103b(enabled){
 _0x1028();
-_0x1038(enabled);
+_0x1039(enabled);
 if(enabled){
 document.body.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
-_0x1039();
+_0x103a();
 if(!__gtp_smart_layout_observer){
 __gtp_smart_layout_observer=new MutationObserver(()=>{
 if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
-_0x1039();
+_0x103a();
 }
 });
 __gtp_smart_layout_observer.observe(document.body,{childList:true,subtree:true});
 }
 }else{
 document.body.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
-_0x1036();
+_0x1037();
 if(__gtp_smart_layout_observer){
 __gtp_smart_layout_observer.disconnect();
 __gtp_smart_layout_observer=null;
@@ -3386,18 +3375,18 @@ try{
 chrome.storage.onChanged.addListener((changes,area)=>{
 if(area==='\x6c\x6f\x63\x61\x6c'&&changes[GTP_LAYOUT_STORAGE_KEY]){
 const nextVal=!!changes[GTP_LAYOUT_STORAGE_KEY].newValue;
-_0x103a(nextVal);
+_0x103b(nextVal);
 }
 });
 }catch(e){}
-(async function _0x103b(){
+(async function _0x103c(){
 try{
 const enabled=await _0x1026();
 const runInit=()=>{
-_0x103a(enabled);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1035();},400);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1035();},1000);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1035();},2000);
+_0x103b(enabled);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1036();},400);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1036();},1000);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1036();},2000);
 };
 if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
 document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',runInit);
