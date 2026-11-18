@@ -1983,14 +1983,13 @@ style.textContent=`
         }
 
         /* \ud558\ub2e8 \uc608\uc57d/\ub300\uae30/\ud64d\ubcf4 \uc2e0\uccad \ud3fc 100% \uac00\uc2dc\uc131 \ubc0f \uc21c\ucc28 \ud750\ub984 \ubcf4\uc7a5 */
-        body.gtp-smart-layout-active .gtp-smart-resv-container {
+        body.gtp-smart-layout-active .gtp-smart-resv-container,
+        body.gtp-smart-layout-active #gtp_smart_course_wrapper + *,
+        body.gtp-smart-layout-active #gtp_smart_course_tr + tr {
             clear: both !important;
             position: relative !important;
             margin-top: 12px !important;
             z-index: 1 !important;
-            width: 100% !important;
-            display: block !important;
-            visibility: visible !important;
         }
 
         /* \uace8\ud504\uc7a5 \uc120\ud0dd \ub0b4\ubd80 \ubaa8\ub4e0 \ub798\ud37c 100% \uac00\ub85c\ud3ed \uac15\uc81c (250px \uc881\ud798 \ucc28\ub2e8) */
@@ -2889,94 +2888,73 @@ __gtp_cached_detected_regions=[];
 __gtp_cached_common_parent=null;
 __gtp_cached_orig_scroll_el=null;
 }
-function _0x1032(rowContainer){
-if(!rowContainer)return null;
-const rowAncestors=new Set();
-let r=rowContainer;
-while(r&&r!==document.body){
-rowAncestors.add(r);
-r=r.parentElement;
-}
-const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67, \x64\x74, \x64\x64'))
+function _0x1032(){
+const all=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67, \x64\x74, \x64\x64, \x62\x75\x74\x74\x6f\x6e, \x61'))
 .filter(el=>{
-if(rowAncestors.has(el)||rowContainer.contains(el))return false;
 if(el.children.length>2)return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
 return t==='\uc2e0\uccad\uad6c\ubd84'||t.startsWith('\uc2e0\uccad\uad6c\ubd84');
 });
-let startEl=allLabels.length>0?allLabels[0]:null;
-if(!startEl){
+if(all.length>0)return all[0];
 const btns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e'))
 .filter(el=>{
-if(rowAncestors.has(el)||rowContainer.contains(el))return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
-return t.includes('\uc608\uc57d\ub300\uae30')||(t.includes('\uc608\uc57d')&&t.includes('\ub300\uae30')&&!t.includes('\ud655\uc815'));
+return t==='\uc608\uc57d\x2f\ub300\uae30'||t==='\uc608\uc57d\ub300\uae30';
 });
-if(btns.length>0)startEl=btns[0];
-}
-if(!startEl){
+if(btns.length>0)return btns[0];
 const dateLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67'))
 .filter(el=>{
-if(rowAncestors.has(el)||rowContainer.contains(el))return false;
 if(el.children.length>2)return false;
 const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
 return t==='\uc2e0\uccad\uc77c\uc790'||t.startsWith('\uc2e0\uccad\uc77c\uc790');
 });
-if(dateLabels.length>0)startEl=dateLabels[0];
-}
-if(!startEl){
-console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uc608\uc57d \uc2e0\uccad \ud3fc \uc2dc\uc791 \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568");
-return null;
-}
-let cur=startEl;
-let resvStartBlock=startEl;
-while(cur&&cur.parentElement&&cur.parentElement!==document.body){
-const p=cur.parentElement;
-if(rowAncestors.has(p)){
-resvStartBlock=cur;
-break;
-}
-resvStartBlock=cur;
-cur=p;
-}
-return resvStartBlock;
+return dateLabels.length>0?dateLabels[0]:null;
 }
 function _0x1033(rowContainer,colCourse){
-if(!colCourse)return null;
-const resvStartBlock=_0x1032(rowContainer);
-if(!resvStartBlock){
-console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uc608\uc57d \ud3fc \uc2dc\uc791\uc810\uc744 \ucc3e\uc9c0 \ubabb\ud558\uc5ec \uae30\ubcf8 \ubc30\uce58 \uc720\uc9c0");
-return null;
-}
-const parent=resvStartBlock.parentElement;
-let wrapper=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72')||colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72');
-if(wrapper&&wrapper.parentElement===parent&&wrapper.nextElementSibling===resvStartBlock){
-return wrapper;
-}
+if(!colCourse||!rowContainer)return null;
 if(!colCourse.__gtp_orig_parent){
 colCourse.__gtp_orig_parent=colCourse.parentElement;
 colCourse.__gtp_orig_next=colCourse.nextSibling;
 }
-if(!wrapper){
-if(parent.tagName==='\x54\x42\x4f\x44\x59'||parent.tagName==='\x54\x41\x42\x4c\x45'){
-wrapper=document.createElement('\x74\x72');
-wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72';
+const topTable=rowContainer.closest('\x74\x61\x62\x6c\x65')||rowContainer;
+const resvLabel=_0x1032();
+if(resvLabel&&topTable.contains(resvLabel)){
+const resvRow=resvLabel.closest('\x74\x72');
+if(resvRow&&resvRow!==rowContainer){
+let courseTr=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72');
+if(!courseTr){
+courseTr=document.createElement('\x74\x72');
+courseTr.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72';
 const td=document.createElement('\x74\x64');
 td.colSpan=100;
 td.style.padding='\x30';
 td.style.border='\x6e\x6f\x6e\x65';
 td.appendChild(colCourse);
-wrapper.appendChild(td);
-}else{
+courseTr.appendChild(td);
+}
+if(resvRow.parentElement){
+if(resvRow.previousElementSibling!==courseTr){
+resvRow.parentElement.insertBefore(courseTr,resvRow);
+}
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 [\x43\x61\x73\x65 \x41] \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc608\uc57d \ud589 \ubc14\ub85c \uc55e [\uc911\ub2e8]\uc73c\ub85c \ubb3c\ub9ac\uc801 \uc774\ub3d9 \uc644\ub8cc");
+return courseTr;
+}
+}
+}
+let topBlock=topTable;
+while(topBlock.parentElement&&topBlock.parentElement!==document.body&&topBlock.parentElement.children.length===1){
+topBlock=topBlock.parentElement;
+}
+let wrapper=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72');
+if(!wrapper){
 wrapper=document.createElement('\x64\x69\x76');
 wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72';
 wrapper.appendChild(colCourse);
 }
+if(topBlock.nextElementSibling!==wrapper){
+topBlock.insertAdjacentElement('\x61\x66\x74\x65\x72\x65\x6e\x64',wrapper);
 }
-parent.insertBefore(wrapper,resvStartBlock);
-resvStartBlock.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
-__gtp_cached_form_container=resvStartBlock;
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 [\uc911\ub2e8], \uc608\uc57d \uba54\ub274\ub97c [\ud558\ub2e8]\uc73c\ub85c \uc644\ubcbd \uc21c\uc11c \uc7ac\ubc30\uce58 \uc644\ub8cc");
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 [\x43\x61\x73\x65 \x42] \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc0c1\ub2e8 \ube14\ub85d \ubc14\ub85c \ub4a4 [\uc911\ub2e8]\uc73c\ub85c \ubb3c\ub9ac\uc801 \uc774\ub3d9 \uc644\ub8cc (\ud558\ub2e8 \uc608\uc57d\uba54\ub274\uc640 \uc644\ubcbd \ubd84\ub9ac)");
 return wrapper;
 }
 function _0x1034(colCourse){
@@ -3116,7 +3094,7 @@ colCourse.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31\x30','\x69\x6d\x70
 }
 const count=_0x102f(colCourse)||0;
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uad6c\uc7a5 \ubc84\ud2bc ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8 \ubc0f \ud074\ub9ad \ud578\ub4e4\ub7ec \uc5f0\ub3d9 \uc644\ub8cc`);
-const resvFormContainer=__gtp_cached_form_container||_0x1032(rowContainer);
+const resvFormContainer=__gtp_cached_form_container||findReservationSectionStart(rowContainer);
 if(resvFormContainer){
 __gtp_cached_form_container=resvFormContainer;
 resvFormContainer.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
