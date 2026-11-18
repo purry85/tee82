@@ -12270,41 +12270,6 @@ updateSelectedBadge();
 showToast(isActive?'\ud83d\udd04 \uc911\ub2e8 \ud6c4 \ud0c0\uc784 \ucd94\uac00 \uc2dc \uc0c1\ub2e8 \uc6b0\uc120 \uc774\uc5b4\ubd99\uc774\uae30 \ud65c\uc131\ud654':'\ud0c0\uc784 \ucd94\uac00 \uc2dc \uae30\uc874 \ubaa9\ub85d \uc804\uccb4 \ucd08\uae30\ud654 \ubaa8\ub4dc\ub85c \ubcc0\uacbd');
 });
 }
-const chkGolftopLayoutEl=document.getElementById('\x63\x68\x6b\x47\x6f\x6c\x66\x74\x6f\x70\x53\x6d\x61\x72\x74\x4c\x61\x79\x6f\x75\x74');
-if(chkGolftopLayoutEl){
-try{
-chrome.storage.local.get(['\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64'],(res)=>{
-if(res&&res.gtp_smart_layout_enabled!==undefined){
-chkGolftopLayoutEl.checked=!!res.gtp_smart_layout_enabled;
-}else{
-const localSaved=localStorage.getItem('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64');
-chkGolftopLayoutEl.checked=localSaved===null?true:localSaved==='\x74\x72\x75\x65';
-}
-});
-}catch(e){
-const localSaved=localStorage.getItem('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64');
-chkGolftopLayoutEl.checked=localSaved===null?true:localSaved==='\x74\x72\x75\x65';
-}
-chkGolftopLayoutEl.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){
-const isEnabled=this.checked;
-try{
-chrome.storage.local.set({gtp_smart_layout_enabled:isEnabled});
-}catch(e){}
-try{
-localStorage.setItem('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64',String(isEnabled));
-}catch(e){}
-try{
-chrome.tabs.query({url:['*\x3a\x2f\x2f*\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*','*\x3a\x2f\x2f\x69\x6e\x74\x72\x61\x2e\x67\x6f\x6c\x66\x74\x6f\x70\x2e\x6b\x72\x2f*']},(tabs)=>{
-if(tabs&&tabs.length>0){
-tabs.forEach(t=>{
-chrome.tabs.sendMessage(t.id,{action:'\x53\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54',enabled:isEnabled}).catch(()=>{});
-});
-}
-});
-}catch(e){}
-showToast(isEnabled?'\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ubdf0 (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c) \ud65c\uc131\ud654\ub428':'\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0\ub85c \ubcf5\uc6d0\ub428');
-});
-}
 const btnResumeClearEl=document.getElementById('\x62\x74\x6e\x52\x65\x73\x75\x6d\x65\x43\x6c\x65\x61\x72\x49\x6e\x6c\x69\x6e\x65');
 if(btnResumeClearEl){
 btnResumeClearEl.addEventListener('\x63\x6c\x69\x63\x6b',function(e){
@@ -15738,12 +15703,6 @@ if(chkSoldOut)chkSoldOut.checked=newSoldOut;
 try{localStorage.setItem('\x76\x32\x5f\x73\x6f\x6c\x64\x4f\x75\x74\x46\x65\x61\x74\x75\x72\x65\x41\x63\x74\x69\x76\x65',newSoldOut?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');}catch(e){}
 const isLabActive=localStorage.getItem('\x76\x32\x5f\x6c\x61\x62\x4d\x6f\x64\x65\x41\x63\x74\x69\x76\x65')==='\x74\x72\x75\x65';
 _0x1030(isLabActive);
-}
-if(area==='\x6c\x6f\x63\x61\x6c'&&typeof changes.gtp_smart_layout_enabled!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'){
-const newLayoutVal=!!changes.gtp_smart_layout_enabled.newValue;
-const chkLayout=document.getElementById('\x63\x68\x6b\x47\x6f\x6c\x66\x74\x6f\x70\x53\x6d\x61\x72\x74\x4c\x61\x79\x6f\x75\x74');
-if(chkLayout)chkLayout.checked=newLayoutVal;
-try{localStorage.setItem('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x65\x6e\x61\x62\x6c\x65\x64',newLayoutVal?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');}catch(e){}
 }
 if(area==='\x6c\x6f\x63\x61\x6c'&&changes.v2_specialTargetCourses){
 const newCourses=changes.v2_specialTargetCourses.newValue;

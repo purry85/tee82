@@ -1,9 +1,9 @@
 {
-    "version":  "2.8.0",
+    "version":  "2.9.0",
     "releaseDate":  "2026-11-18",
-    "title":  "v2.8.0",
+    "title":  "v2.9.0",
     "releaseNotes":  [
-                         "- 스마트뷰 기능 추가 (모바일겸용)"
+                         "- 스마트뷰 제거 및 별도화"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
