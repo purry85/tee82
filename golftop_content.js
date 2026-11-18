@@ -1746,7 +1746,7 @@ return true;
 }else if(msg.action==='\x53\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54'){
 const enabled=!!msg.enabled;
 _0x1027(enabled);
-_0x1045(enabled);
+_0x1049(enabled);
 sendResponse({success:true,enabled:enabled});
 return true;
 }else if(msg.action==='\x47\x45\x54\x5f\x47\x4f\x4c\x46\x54\x4f\x50\x5f\x53\x4d\x41\x52\x54\x5f\x4c\x41\x59\x4f\x55\x54\x5f\x53\x54\x41\x54\x55\x53'){
@@ -1798,6 +1798,11 @@ document.head.appendChild(style);
 }
 style.textContent=`
         /* ===== \uace8\ud504\ud0d1 \uace8\ud504\ub77d \uc644\ubcbd \uc77c\uce58 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 CSS ===== */
+        html:has(body.gtp-smart-layout-active),
+        body.gtp-smart-layout-active {
+            touch-action: pan-x pan-y pinch-zoom !important;
+            -webkit-text-size-adjust: none !important;
+        }
 
         /* 0. \ud14c\uc774\ube14 \ubc0f tbody display block \ubcc0\ud658 (flex \uc790\uc2dd\uc758 \uba40\ud2f0\ub77c\uc778 \uc904\ubc14\uafc8 \ub192\uc774 \ubd95\uad34 \uc6d0\ucc9c \ubc29\uc9c0) */
         body.gtp-smart-layout-active table:has(.gtp-smart-top-row),
@@ -2082,11 +2087,11 @@ style.textContent=`
 
         /* \uad8c\uc5ed \uc81c\ubaa9 \uc2a4\ud0c0\uc77c (\ub179\uc0c9 \ubc43\uc9c0 \ud5e4\ub354) */
         body.gtp-smart-layout-active .gtp-region-header-styled {
-            font-size: 11px !important;
+            font-size: 12.5px !important;
             font-weight: 800 !important;
-            color: #065f46 !important;
+            color: #064e3b !important;
             background: #d1fae5 !important;
-            padding: 2px 5px !important;
+            padding: 3px 6px !important;
             border-radius: 4px !important;
             margin-bottom: 3px !important;
             text-align: center !important;
@@ -2113,14 +2118,16 @@ style.textContent=`
             align-content: start !important;
         }
 
-        /* \uace8\ud504\uc7a5 \uc120\ud0dd \ubc84\ud2bc 2\uc904 \uc904\ubc14\uafc8 \ubc0f \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 */
+        /* \uace8\ud504\uc7a5 \uc120\ud0dd \ubc84\ud2bc 2\uc904 \uc904\ubc14\uafc8 \ubc0f \uac00\ub3c5\uc131 \ub300\ud3ed \uac15\ud654 (\ud3f4\ub4dc/\ubaa8\ubc14\uc77c \uc120\uba85\ub3c4 \ud5a5\uc0c1) */
         body.gtp-smart-layout-active .gtp-smart-course-btn {
             white-space: pre-line !important;
             word-break: keep-all !important;
             text-overflow: clip !important;
-            line-height: 1.12 !important;
-            font-size: 10.5px !important;
-            min-height: 32px !important;
+            line-height: 1.15 !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.3px !important;
+            min-height: 34px !important;
             height: auto !important;
             padding: 2px 2px !important;
             display: inline-flex !important;
@@ -2130,8 +2137,8 @@ style.textContent=`
             box-sizing: border-box !important;
             border-radius: 4px !important;
             background: #ffffff !important;
-            border: 1px solid #cbd5e1 !important;
-            color: #1e293b !important;
+            border: 1px solid #94a3b8 !important;
+            color: #0f172a !important;
             cursor: pointer !important;
             transition: all 0.1s ease !important;
             width: 100% !important;
@@ -2139,7 +2146,7 @@ style.textContent=`
         }
         body.gtp-smart-layout-active .gtp-smart-course-btn:hover {
             background: #f1f5f9 !important;
-            border-color: #94a3b8 !important;
+            border-color: #64748b !important;
         }
 
         /* \uad6c\uc7a5 \uc120\ud0dd \ud65c\uc131\ud654(active/selected) \uc0c1\ud0dc */
@@ -2148,7 +2155,92 @@ style.textContent=`
             background: #2563eb !important;
             border-color: #1d4ed8 !important;
             color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+
+        /* ===== \ud3f4\ub4dc/\ubaa8\ubc14\uc77c \ubc0f \uc804\uccb4 \ud654\uba74 \uae00\uc790 \uac00\ub3c5\uc131(\uc120\uba85\ub3c4/\ud06c\uae30/\uad75\uae30/\uba85\uc554\ube44) \ub300\ud3ed \uac15\ud654 ===== */
+        body.gtp-smart-layout-active {
+            -webkit-font-smoothing: antialiased !important;
+            text-rendering: optimizeLegibility !important;
+        }
+
+        /* 1) \uc0c1\ub2e8 \uc88c\uce21 \ub2ec\ub825 \ubc0f \ud544\ud130 \uce74\ub4dc \uac00\ub3c5\uc131 \uac15\ud654 */
+        body.gtp-smart-layout-active #gtp_smart_cal_box td,
+        body.gtp-smart-layout-active #gtp_smart_cal_box th,
+        body.gtp-smart-layout-active #gtp_smart_cal_box span,
+        body.gtp-smart-layout-active #gtp_smart_cal_box b,
+        body.gtp-smart-layout-active #gtp_smart_cal_box strong {
             font-weight: 700 !important;
+        }
+        body.gtp-smart-layout-active #gtp_smart_filter_box label,
+        body.gtp-smart-layout-active #gtp_smart_filter_box label span {
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        /* 2) \uc0c1\ub2e8 \uc6b0\uce21 \ud560\uc778\uadf8\ub9b0\ud53c / \uace8\ud504\uc7a5\ud2b9\uc774\uc0ac\ud56d \uac00\ub3c5\uc131 \uac15\ud654 */
+        body.gtp-smart-layout-active .gtp-smart-col-detail th {
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            background: #f1f5f9 !important;
+        }
+        body.gtp-smart-layout-active .gtp-smart-col-detail td,
+        body.gtp-smart-layout-active .gtp-smart-col-detail p,
+        body.gtp-smart-layout-active .gtp-smart-col-detail div {
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            line-height: 1.35 !important;
+        }
+
+        /* 3) \uc911\ub2e8 \uc608\uc57d/\ub300\uae30/\ud64d\ubcf4 \uc2e0\uccad \ud3fc \uac00\ub3c5\uc131 \uac15\ud654 */
+        body.gtp-smart-layout-active .gtp-smart-resv-container th,
+        body.gtp-smart-layout-active .gtp-smart-resv-container td:first-child,
+        body.gtp-smart-layout-active .gtp-smart-resv-container dt {
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+        }
+        body.gtp-smart-layout-active .gtp-smart-resv-container label,
+        body.gtp-smart-layout-active .gtp-smart-resv-container td,
+        body.gtp-smart-layout-active .gtp-smart-resv-container span {
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+        }
+        body.gtp-smart-layout-active .gtp-smart-resv-container input[type="text"],
+        body.gtp-smart-layout-active .gtp-smart-resv-container input[type="number"],
+        body.gtp-smart-layout-active .gtp-smart-resv-container input[type="tel"],
+        body.gtp-smart-layout-active .gtp-smart-resv-container select,
+        body.gtp-smart-layout-active .gtp-smart-resv-container textarea {
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+        body.gtp-smart-layout-active .gtp-smart-resv-container button,
+        body.gtp-smart-layout-active .gtp-smart-resv-container .btn {
+            font-weight: 800 !important;
+        }
+
+        /* 4) \uc6b0\uce21 \uc794\uc5ec\ud0c0\uc784 \ubc0f \uc678 \uc794\uc5ec\ud0c0\uc784 \ud14c\uc774\ube14 \uac00\ub3c5\uc131 \ub300\ud3ed \uac15\ud654 */
+        body.gtp-smart-layout-active [data-gtp-right-stretched="true"] th {
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            background: #f1f5f9 !important;
+        }
+        body.gtp-smart-layout-active [data-gtp-right-stretched="true"] td {
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            line-height: 1.3 !important;
+            letter-spacing: -0.2px !important;
+        }
+        body.gtp-smart-layout-active [data-gtp-right-stretched="true"] td button,
+        body.gtp-smart-layout-active [data-gtp-right-stretched="true"] td a,
+        body.gtp-smart-layout-active [data-gtp-right-stretched="true"] td .btn {
+            font-size: 13px !important;
+            font-weight: 800 !important;
         }
 
         /* \uc138\ub85c \uc2a4\ud06c\ub864\ubc14 \ucee4\uc2a4\ud140 \uc2a4\ud0c0\uc77c (\ub354 \ub69c\ub837\ud558\uace0 \ub9e4\ub044\ub7fd\uac8c) */
@@ -2814,14 +2906,14 @@ script.remove();
 await _0x1002(origBtn);
 setTimeout(()=>{
 if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
-_0x103d(__gtp_cached_row);
-_0x1039(__gtp_cached_row,null,__gtp_cached_resv_blocks);
+_0x1041(__gtp_cached_row);
+_0x103d(__gtp_cached_row,null,__gtp_cached_resv_blocks);
 }
 },200);
 setTimeout(()=>{
 if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
-_0x103d(__gtp_cached_row);
-_0x1039(__gtp_cached_row,null,__gtp_cached_resv_blocks);
+_0x1041(__gtp_cached_row);
+_0x103d(__gtp_cached_row,null,__gtp_cached_resv_blocks);
 }
 },500);
 }
@@ -3064,14 +3156,95 @@ child.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x30\x70\x78','\x69\x6d\
 }
 });
 }
-_0x1039(rowContainer,topBlock,resvBlocks);
+_0x103d(rowContainer,topBlock,resvBlocks);
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \x33\ub2e8 \uc139\uc158 \ubc00\ucc29 \ubc30\uce58 \uc644\ub8cc (\uc0c1\ub2e8 -> \uc911\ub2e8\x3a\uc608\uc57d\uc2e0\uccad\ub780 -> \ud558\ub2e8\x3a\uace8\ud504\uc7a5\uc120\ud0dd)");
 return{topBlock,resvBlocks,wrapper};
 }
 const relocateCourseColumnToMiddle=_0x1036;
 const GTP_BASE_DESIGN_WIDTH=1580;
 let __gtp_resize_listener_attached=false;
-function _0x1037(resetZoomOnly=false){
+let __gtp_pinch_listener_attached=false;
+let __gtp_user_pinch_scale=1.0;
+let __gtp_is_pinching=false;
+let __gtp_last_client_width=0;
+function _0x1037(enabled){
+try{
+let vp=document.querySelector('\x6d\x65\x74\x61[\x6e\x61\x6d\x65="\x76\x69\x65\x77\x70\x6f\x72\x74"]');
+if(enabled){
+if(!vp){
+vp=document.createElement('\x6d\x65\x74\x61');
+vp.name='\x76\x69\x65\x77\x70\x6f\x72\x74';
+vp.dataset.gtpCreatedViewport='\x74\x72\x75\x65';
+if(document.head)document.head.appendChild(vp);
+}else if(vp.dataset.gtpOrigContent===undefined){
+vp.dataset.gtpOrigContent=vp.getAttribute('\x63\x6f\x6e\x74\x65\x6e\x74')||'';
+}
+vp.setAttribute('\x63\x6f\x6e\x74\x65\x6e\x74','\x77\x69\x64\x74\x68=\x64\x65\x76\x69\x63\x65-\x77\x69\x64\x74\x68, \x69\x6e\x69\x74\x69\x61\x6c-\x73\x63\x61\x6c\x65=\x31\x2e\x30, \x6d\x69\x6e\x69\x6d\x75\x6d-\x73\x63\x61\x6c\x65=\x30\x2e\x31, \x6d\x61\x78\x69\x6d\x75\x6d-\x73\x63\x61\x6c\x65=\x35\x2e\x30, \x75\x73\x65\x72-\x73\x63\x61\x6c\x61\x62\x6c\x65=\x79\x65\x73');
+}else if(vp){
+if(vp.dataset.gtpCreatedViewport==='\x74\x72\x75\x65'){
+vp.remove();
+}else if(vp.dataset.gtpOrigContent!==undefined){
+vp.setAttribute('\x63\x6f\x6e\x74\x65\x6e\x74',vp.dataset.gtpOrigContent);
+delete vp.dataset.gtpOrigContent;
+}
+}
+}catch(e){}
+}
+function _0x1038(){
+if(__gtp_pinch_listener_attached)return;
+__gtp_pinch_listener_attached=true;
+let startDist=0;
+let startPinchScale=1.0;
+let startVvScale=1.0;
+function _0x1039(t1,t2){
+const dx=t1.clientX-t2.clientX;
+const dy=t1.clientY-t2.clientY;
+return Math.hypot(dx,dy);
+}
+document.addEventListener('\x74\x6f\x75\x63\x68\x73\x74\x61\x72\x74',(e)=>{
+if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
+if(e.touches&&e.touches.length===2){
+__gtp_is_pinching=true;
+startDist=_0x1039(e.touches[0],e.touches[1]);
+startPinchScale=__gtp_user_pinch_scale;
+startVvScale=(window.visualViewport&&window.visualViewport.scale)?window.visualViewport.scale:1.0;
+}
+},{passive:true});
+document.addEventListener('\x74\x6f\x75\x63\x68\x6d\x6f\x76\x65',(e)=>{
+if(!__gtp_is_pinching||!e.touches||e.touches.length!==2||startDist<=10)return;
+if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
+const curDist=_0x1039(e.touches[0],e.touches[1]);
+const ratio=curDist/startDist;
+const curVvScale=(window.visualViewport&&window.visualViewport.scale)?window.visualViewport.scale:1.0;
+const nativeZoomChanged=Math.abs(curVvScale-startVvScale)>0.04;
+if(!nativeZoomChanged||(curVvScale<=1.02&&ratio<0.98)||__gtp_user_pinch_scale!==1.0){
+const nextScale=Math.max(0.5,Math.min(3.5,startPinchScale*ratio));
+if(Math.abs(nextScale-__gtp_user_pinch_scale)>0.01){
+__gtp_user_pinch_scale=nextScale;
+_0x103b(false);
+}
+}
+},{passive:true});
+const endPinch=(e)=>{
+if(!e.touches||e.touches.length<2){
+__gtp_is_pinching=false;
+}
+};
+document.addEventListener('\x74\x6f\x75\x63\x68\x65\x6e\x64',endPinch,{passive:true});
+document.addEventListener('\x74\x6f\x75\x63\x68\x63\x61\x6e\x63\x65\x6c',endPinch,{passive:true});
+}
+function _0x103a(){
+const calBox=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x61\x6c\x5f\x62\x6f\x78')||__gtp_cached_row;
+if(calBox){
+const curZoom=parseFloat(document.body.style.zoom)||1;
+const unzoomedLeft=calBox.getBoundingClientRect().left/curZoom;
+if(unzoomedLeft>=0&&unzoomedLeft<120){
+return 1380;
+}
+}
+return GTP_BASE_DESIGN_WIDTH;
+}
+function _0x103b(resetZoomOnly=false){
 if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
 if(document.body){
 document.body.style.removeProperty('\x7a\x6f\x6f\x6d');
@@ -3082,12 +3255,13 @@ document.body.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
 document.documentElement.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x78');
 return;
 }
-const vw=document.documentElement.clientWidth||window.innerWidth||GTP_BASE_DESIGN_WIDTH;
+const designW=_0x103a();
+const vw=document.documentElement.clientWidth||window.innerWidth||designW;
 if(resetZoomOnly){
-if(vw<GTP_BASE_DESIGN_WIDTH){
-document.body.style.setProperty('\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-document.body.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-document.body.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+if(vw<designW){
+document.body.style.setProperty('\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+document.body.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+document.body.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }else{
 document.body.style.removeProperty('\x77\x69\x64\x74\x68');
 document.body.style.removeProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68');
@@ -3096,22 +3270,22 @@ document.body.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
 document.body.style.removeProperty('\x7a\x6f\x6f\x6d');
 return;
 }
-if(vw<GTP_BASE_DESIGN_WIDTH){
-const scale=Math.max(0.35,vw/GTP_BASE_DESIGN_WIDTH);
-document.documentElement.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x78','\x68\x69\x64\x64\x65\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-document.body.style.setProperty('\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-document.body.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-document.body.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68',GTP_BASE_DESIGN_WIDTH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+document.documentElement.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x78');
+if(vw<designW||__gtp_user_pinch_scale!==1.0){
+const baseScale=vw<designW?Math.max(0.15,vw/designW):1.0;
+const scale=Math.max(0.12,Math.min(4.0,baseScale*__gtp_user_pinch_scale));
+document.body.style.setProperty('\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+document.body.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+document.body.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68',designW+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 document.body.style.setProperty('\x7a\x6f\x6f\x6d',scale.toFixed(4),'\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }else{
-document.documentElement.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x78');
 document.body.style.removeProperty('\x77\x69\x64\x74\x68');
 document.body.style.removeProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68');
 document.body.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
 document.body.style.removeProperty('\x7a\x6f\x6f\x6d');
 }
 }
-function _0x1038(container){
+function _0x103c(container){
 if(!container)return 0;
 let maxBottom=0;
 const els=container.querySelectorAll('*');
@@ -3146,13 +3320,13 @@ if(bottom>maxBottom)maxBottom=bottom;
 }
 return maxBottom;
 }
-function _0x1039(rowContainer,topBlock,resvBlocks){
+function _0x103d(rowContainer,topBlock,resvBlocks){
 try{
 if(!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
 if(!rowContainer||!resvBlocks||resvBlocks.length===0)return;
 const first=resvBlocks[0];
 if(!document.body.contains(first)||!document.body.contains(rowContainer))return;
-_0x1037(true);
+_0x103b(true);
 let rowBottom=0;
 const topLeftCards=[
 document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x61\x6c\x5f\x62\x6f\x78'),
@@ -3163,7 +3337,7 @@ topLeftCards.forEach(c=>{
 const b=c.getBoundingClientRect().bottom;
 if(b>rowBottom)rowBottom=b;
 });
-if(!rowBottom)rowBottom=_0x1038(rowContainer)||rowContainer.getBoundingClientRect().bottom;
+if(!rowBottom)rowBottom=_0x103c(rowContainer)||rowContainer.getBoundingClientRect().bottom;
 let anc=rowContainer.parentElement;
 while(anc&&anc!==document.body){
 if(resvBlocks.some(b=>anc.contains(b)))break;
@@ -3282,10 +3456,10 @@ cGap=courseWrap.getBoundingClientRect().top-resvCardBottom;
 }catch(e){
 console.warn('[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \uc0c1\ub2e8-\uc911\ub2e8 \uc5ec\ubc31 \ubcf4\uc815 \uc624\ub958\x3a',e);
 }finally{
-_0x1037(false);
+_0x103b(false);
 }
 }
-function _0x103a(rowContainer){
+function _0x103e(rowContainer){
 const startEl=_0x1033();
 const calBox=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x61\x6c\x5f\x62\x6f\x78');
 const courseWrap=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72');
@@ -3308,7 +3482,7 @@ if(!mainHdr||mainHdr.contains(el))mainHdr=el;
 }
 }
 if(!mainHdr)return null;
-function _0x103b(hdr){
+function _0x103f(hdr){
 if(!hdr)return null;
 let cur=hdr;
 let bestWithTable=null;
@@ -3348,15 +3522,15 @@ while(o&&o.parentElement&&o.parentElement!==rightCol)o=o.parentElement;
 mainBox=m;
 otherBox=o;
 }else{
-mainBox=_0x103b(mainHdr);
-otherBox=otherHdr?_0x103b(otherHdr):null;
+mainBox=_0x103f(mainHdr);
+otherBox=otherHdr?_0x103f(otherHdr):null;
 if(mainBox&&mainBox.parentElement&&!leftMustNotContain.some(lx=>mainBox.parentElement.contains(lx))){
 rightCol=mainBox.parentElement;
 }
 }
 return{rightCol,mainBox,otherBox,leftMustNotContain};
 }
-function _0x103c(box,targetHeight){
+function _0x1040(box,targetHeight){
 if(!box||targetHeight<=0)return;
 box.dataset.gtpRightStretched='\x74\x72\x75\x65';
 box.style.setProperty('\x68\x65\x69\x67\x68\x74',targetHeight+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -3413,13 +3587,13 @@ el.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f',
 }
 });
 }
-function _0x103d(rowContainer){
+function _0x1041(rowContainer){
 try{
 if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
 const baseRow=rowContainer||__gtp_cached_row;
-const panels=_0x103a(baseRow);
+const panels=_0x103e(baseRow);
 if(!panels||!panels.mainBox)return;
-_0x1037(true);
+_0x103b(true);
 const{rightCol,mainBox,otherBox,leftMustNotContain}=panels;
 const courseWrap=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72');
 const refTop=baseRow?baseRow.getBoundingClientRect().top:mainBox.getBoundingClientRect().top;
@@ -3461,7 +3635,7 @@ mainBox.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x35','\x69\x6d\x70\x6f\x
 if(hasOther){
 const mainH=Math.max(380,Math.round(resvBottom-refTop));
 const otherH=Math.max(300,Math.round(courseBottom-resvBottom-6));
-_0x103c(mainBox,mainH);
+_0x1040(mainBox,mainH);
 let oAnc=otherBox.parentElement;
 while(oAnc&&oAnc!==document.body&&oAnc!==rightCol){
 if(leftMustNotContain&&leftMustNotContain.some(lx=>oAnc.contains(lx)))break;
@@ -3475,7 +3649,7 @@ otherBox.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x30\x70\x78
 otherBox.style.removeProperty('\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d');
 otherBox.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 otherBox.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x35','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-_0x103c(otherBox,otherH);
+_0x1040(otherBox,otherH);
 const targetOtherTop=resvBottom+6;
 const curOtherTop=otherBox.getBoundingClientRect().top;
 if(Math.abs(curOtherTop-targetOtherTop)>4){
@@ -3484,15 +3658,15 @@ otherBox.style.setProperty('\x74\x72\x61\x6e\x73\x66\x6f\x72\x6d',`translateY(${
 }
 }else{
 const mainH=Math.max(600,Math.round(courseBottom-refTop));
-_0x103c(mainBox,mainH);
+_0x1040(mainBox,mainH);
 }
 }catch(e){
 console.warn('[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \uc6b0\uce21 \uc794\uc5ec\ud0c0\uc784 \uc601\uc5ed \ud655\uc7a5 \uc624\ub958\x3a',e);
 }finally{
-_0x1037(false);
+_0x103b(false);
 }
 }
-function _0x103e(colCourse){
+function _0x1042(colCourse){
 if(!colCourse)return;
 if(colCourse.__gtp_orig_parent&&document.body.contains(colCourse.__gtp_orig_parent)){
 colCourse.__gtp_orig_parent.insertBefore(colCourse,colCourse.__gtp_orig_next||null);
@@ -3514,7 +3688,7 @@ __gtp_cached_form_container.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79')
 __gtp_cached_form_container=null;
 }
 }
-function _0x103f(){
+function _0x1043(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 \uc2dc\uc791\x2e\x2e\x2e");
 const cols=_0x102a();
 if(!cols||!cols.colCourse){
@@ -3625,17 +3799,17 @@ colCourse.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31\x30','\x69\x6d\x70
 _0x1036(rowContainer,colCourse);
 }
 const count=_0x1030(colCourse)||0;
-_0x1039(rowContainer,null,__gtp_cached_resv_blocks);
-_0x103d(rowContainer);
-_0x1039(rowContainer,null,__gtp_cached_resv_blocks);
-_0x1037(false);
+_0x103d(rowContainer,null,__gtp_cached_resv_blocks);
+_0x1041(rowContainer);
+_0x103d(rowContainer,null,__gtp_cached_resv_blocks);
+_0x103b(false);
 if(__gtp_smart_layout_observer)__gtp_smart_layout_observer.takeRecords();
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uad6c\uc7a5 \ubc84\ud2bc ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8 \ubc0f \ud074\ub9ad \ud578\ub4e4\ub7ec \uc5f0\ub3d9 \uc644\ub8cc`);
 return{success:true,buttonCount:count};
 }
-function _0x1040(){
+function _0x1044(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u21a9\ufe0f \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0 \uc2dc\uc791\x2e\x2e\x2e");
-_0x1037(false);
+_0x103b(false);
 _0x1032();
 const cols=_0x102a()||{};
 const colCourse=__gtp_cached_course_col||cols.colCourse;
@@ -3669,7 +3843,7 @@ block.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6
 });
 __gtp_cached_resv_blocks=[];
 }
-_0x103e(colCourse);
+_0x1042(colCourse);
 if(colDate){
 _0x102d(colDate);
 colDate.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
@@ -3809,7 +3983,7 @@ __gtp_cached_detected_regions=[];
 __gtp_cached_common_parent=null;
 __gtp_cached_orig_scroll_el=null;
 }
-function _0x1041(msg){
+function _0x1045(msg){
 let toast=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74');
 if(!toast){
 toast=document.createElement('\x64\x69\x76');
@@ -3839,7 +4013,7 @@ setTimeout(()=>{
 if(toast)toast.style.opacity='\x30';
 },2500);
 }
-function _0x1042(isEnabled){
+function _0x1046(isEnabled){
 let pill=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x67\x67\x6c\x65\x5f\x70\x69\x6c\x6c');
 if(!pill){
 pill=document.createElement('\x64\x69\x76');
@@ -3873,13 +4047,13 @@ e.stopPropagation();
 const current=document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
 const next=!current;
 _0x1027(next);
-_0x1045(next);
+_0x1049(next);
 if(next){
-const res=_0x103f()||{};
+const res=_0x1043()||{};
 const count=res.buttonCount||0;
-_0x1041(`\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \uc801\uc6a9\ub428 (\uad6c\uc7a5 ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8)`);
+_0x1045(`\u26f3 \uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \uc801\uc6a9\ub428 (\uad6c\uc7a5 ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8)`);
 }else{
-_0x1041('\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0\ub428');
+_0x1045('\u21a9\ufe0f \uace8\ud504\ud0d1 \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0\ub428');
 }
 });
 document.body.appendChild(pill);
@@ -3896,14 +4070,14 @@ pill.style.border='\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x3
 pill.innerHTML='<\x73\x70\x61\x6e>\u26f3 \uc2a4\ub9c8\ud2b8\ubdf0 [\x4f\x46\x46]<\x2f\x73\x70\x61\x6e>';
 }
 }
-function _0x1043(){
+function _0x1047(){
 if(__gtp_is_layout_updating)return;
 if(__gtp_layout_debounce_timer)clearTimeout(__gtp_layout_debounce_timer);
 __gtp_layout_debounce_timer=setTimeout(()=>{
 if(!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
 __gtp_is_layout_updating=true;
 try{
-_0x103f();
+_0x1043();
 }catch(e){
 console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 \ucd5c\uc801\ud654 \uc624\ub958]\x3a",e);
 }finally{
@@ -3912,7 +4086,7 @@ __gtp_is_layout_updating=false;
 }
 },250);
 }
-function _0x1044(m){
+function _0x1048(m){
 const t=m.target&&m.target.nodeType===1?m.target:(m.target?m.target.parentElement:null);
 if(!t)return true;
 if(t.closest&&t.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72, \x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64, \x23\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74, \x23\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x67\x67\x6c\x65\x5f\x70\x69\x6c\x6c, \x23\x67\x74\x70\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c, \x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x61\x6c\x5f\x62\x6f\x78, \x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x66\x69\x6c\x74\x65\x72\x5f\x62\x6f\x78'))return true;
@@ -3922,33 +4096,40 @@ n.id==='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x61\x6c\x5f\x62\x6f\x78'||n
 n.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x75\x72\x73\x65-\x62\x74\x6e')||n.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65')))return true;
 return false;
 }
-function _0x1045(enabled){
+function _0x1049(enabled){
 _0x1028();
-_0x1042(enabled);
+_0x1046(enabled);
+_0x1037(enabled);
+_0x1038();
 if(!__gtp_resize_listener_attached){
 __gtp_resize_listener_attached=true;
 window.addEventListener('\x72\x65\x73\x69\x7a\x65',()=>{
-if(document.body&&document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65')){
-_0x1037(false);
-}
+if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
+if(__gtp_is_pinching)return;
+if(window.visualViewport&&window.visualViewport.scale>1.02)return;
+const cw=document.documentElement.clientWidth||window.innerWidth||0;
+if(Math.abs(cw-__gtp_last_client_width)<2)return;
+__gtp_last_client_width=cw;
+_0x103b(false);
 });
 }
 if(enabled){
 document.body.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
-_0x1037(false);
-_0x1043();
+__gtp_last_client_width=document.documentElement.clientWidth||window.innerWidth||0;
+_0x103b(false);
+_0x1047();
 if(!__gtp_smart_layout_observer){
 __gtp_smart_layout_observer=new MutationObserver((mutations)=>{
 if(__gtp_is_layout_updating)return;
 if(!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
-if(mutations.every(_0x1044))return;
-_0x1043();
+if(mutations.every(_0x1048))return;
+_0x1047();
 });
 __gtp_smart_layout_observer.observe(document.body,{childList:true,subtree:true});
 }
 }else{
 document.body.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65');
-_0x1040();
+_0x1044();
 if(__gtp_smart_layout_observer){
 __gtp_smart_layout_observer.disconnect();
 __gtp_smart_layout_observer=null;
@@ -3959,18 +4140,18 @@ try{
 chrome.storage.onChanged.addListener((changes,area)=>{
 if(area==='\x6c\x6f\x63\x61\x6c'&&changes[GTP_LAYOUT_STORAGE_KEY]){
 const nextVal=!!changes[GTP_LAYOUT_STORAGE_KEY].newValue;
-_0x1045(nextVal);
+_0x1049(nextVal);
 }
 });
 }catch(e){}
-(async function _0x1046(){
+(async function _0x104a(){
 try{
 const enabled=await _0x1026();
 const runInit=()=>{
-_0x1045(enabled);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x103f();},400);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x103f();},1000);
-setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x103f();},2000);
+_0x1049(enabled);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1043();},400);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1043();},1000);
+setTimeout(()=>{if(document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))_0x1043();},2000);
 };
 if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
 document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',runInit);
