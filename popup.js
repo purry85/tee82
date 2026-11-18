@@ -6836,16 +6836,20 @@ const isAdminUser=(typeof _0x102b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x102b(
 if(fullCheckText.includes('\uc5ec\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\uc5ec\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub140\ubd88\uac00')||fullCheckText.includes('\ub0a8\ub0a8\ubd88\uac00')||fullCheckText.includes('\ubd80\ubd80\ubd88\uac00')||fullCheckText.includes('\ucee4\ud50c\ubd88\uac00')){
 joinCondition='\ubb34\uad00';
 }else{
-const hasExplicitCoupleOnly=/남[여녀]\s*만|남\/여\s*만|부부\s*\/?\s*커플|부부만|커플만/.test(fullCheckText)||
-(/(?:^|[^\w가-힣])(?:부부|커플)(?:[^\w가-힣]|$)/.test(fullCheckText)&&!fullCheckText.includes('\ubd88\uac00'));
 const hasExplicitMaleOnly=fullCheckText.includes('\ub0a8\uc790\ub9cc')||fullCheckText.includes('\ub0a8\uc131\ub9cc')||fullCheckText.includes('\ub0a8\uc790 \uc804\uc6a9')||fullCheckText.includes('\ub0a8\uc131 \uc804\uc6a9')||fullCheckText.includes('\ub0a8\ub0a8\ub9cc');
 const hasExplicitFemaleOnly=fullCheckText.includes('\uc5ec\uc790\ub9cc')||fullCheckText.includes('\uc5ec\uc131\ub9cc')||fullCheckText.includes('\uc5ec\uc790 \uc804\uc6a9')||fullCheckText.includes('\uc5ec\uc131 \uc804\uc6a9')||fullCheckText.includes('\uc5ec\uc5ec\ub9cc');
-const isCoupleWait=(resolvedWaitGender==='\ub0a8\uc5ec')||
-(actualWaitPax===2&&/남[여녀]|부부|커플/.test(fullCheckText))||
+const isCoupleWait=(actualWaitPax===2)&&(
+resolvedWaitGender==='\ub0a8\uc5ec'||
+/남[여녀]|부부|커플/.test(fullCheckText)||
 /대기(?:중)?\s*[:\s]?\s*2\s*인?\s*[\[\(]?\s*(?:2인\s*[\/:\-]?)?남[여녀]/.test(fullCheckText)||
 /\[\s*2인\s*\(\s*남[여녀]\s*\)\s*\]|\(\s*2인\s*\[\s*남[여녀]\s*\]\s*\)/.test(fullCheckText)||
-/(?:^|[\s,;([/])2인\s*[\(\[]?\s*남[여녀]\s*[\)\]]?(?=[\s,;)/\]]|$)/.test(fullCheckText);
-if(hasExplicitCoupleOnly||isCoupleWait){
+/(?:^|[\s,;([/])2인\s*[\(\[]?\s*남[여녀]\s*[\)\]]?(?=[\s,;)/\]]|$)/.test(fullCheckText)
+);
+const hasExplicitCoupleOnly=(actualWaitPax!==3&&actualWaitPax!==1)&&(
+/남[여녀]\s*만|남\/여\s*만|부부\s*\/?\s*커플|부부만|커플만/.test(fullCheckText)||
+(/(?:^|[^\w가-힣])(?:부부|커플)(?:[^\w가-힣]|$)/.test(fullCheckText)&&!fullCheckText.includes('\ubd88\uac00'))
+);
+if(isCoupleWait||hasExplicitCoupleOnly){
 joinCondition='\ubd80\ubd80\x2f\ucee4\ud50c';
 }else if(hasExplicitMaleOnly){
 joinCondition='\ub0a8\uc790';
