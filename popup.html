@@ -4219,7 +4219,102 @@
             justify-content: center;
             padding: 14px;
             box-sizing: border-box;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
             animation: authFadeIn 0.25s ease;
+        }
+        /* 모바일 소프트 키보드 팝업 시(세로 폭 축소 또는 포커스) 카드 위치 점프 및 키보드 강제 닫힘 방지 */
+        @media (max-height: 560px) {
+            .auth-overlay {
+                align-items: flex-start !important;
+                padding: 8px 10px 24px 10px !important;
+            }
+            .auth-card {
+                padding: 14px 16px 12px 16px !important;
+                gap: 8px !important;
+            }
+            .auth-logo-tile {
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 12px !important;
+                margin-bottom: 2px !important;
+            }
+            .auth-wordmark-img {
+                height: 20px !important;
+            }
+            .auth-subtitle {
+                display: none !important;
+            }
+        }
+        body.kb-open .auth-overlay {
+            align-items: flex-start !important;
+            padding: 8px 10px 24px 10px !important;
+        }
+        body.kb-open .auth-card {
+            padding: 14px 16px 12px 16px !important;
+            gap: 8px !important;
+        }
+        body.kb-open .auth-logo-tile {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 12px !important;
+            margin-bottom: 2px !important;
+        }
+        body.kb-open .auth-wordmark-img {
+            height: 20px !important;
+        }
+        body.kb-open .auth-subtitle {
+            display: none !important;
+        }
+        /* 모바일 사이드패널 전용 내장 터치 키패드 */
+        .auth-vkb-panel {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            border-radius: 8px;
+            padding: 6px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            user-select: none;
+        }
+        .auth-vkb-row {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+        .auth-vkb-key {
+            flex: 1;
+            min-width: 0;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 5px;
+            color: #F8FAFC;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-family: inherit;
+        }
+        .auth-vkb-key:active {
+            background: #10B981;
+            color: #FFFFFF;
+            border-color: #34D399;
+        }
+        .auth-vkb-key.fn-key {
+            background: rgba(59, 130, 246, 0.22);
+            border-color: rgba(96, 165, 250, 0.35);
+            font-size: 10.5px;
+            flex: 1.4;
+        }
+        .auth-vkb-key.del-key {
+            background: rgba(239, 68, 68, 0.22);
+            border-color: rgba(248, 113, 113, 0.35);
+            font-size: 10.5px;
+            flex: 1.5;
         }
         @keyframes authFadeIn {
             from { opacity: 0; transform: scale(0.97); }
@@ -5082,7 +5177,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.7.6</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 2.7.7</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -5566,7 +5661,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.7.6 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 2.7.7 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
@@ -5779,7 +5874,10 @@
                             <input type="checkbox" id="chkAuthAutoLogin" checked>
                             <span>비밀번호 저장</span>
                         </label>
+                        <button type="button" id="btnToggleAuthVkb" style="background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(52, 211, 153, 0.4); color: #6EE7B7; border-radius: 5px; padding: 2px 7px; font-size: 10.5px; font-weight: 700; cursor: pointer;">화면키패드</button>
                     </div>
+
+                    <div id="authVirtualKeypad" class="auth-vkb-panel"></div>
 
                     <div id="authAlertBox" class="auth-alert" style="display: none;"></div>
 

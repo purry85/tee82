@@ -17469,6 +17469,7 @@ closeChangePwModal();
 }
 const btnTogglePw=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x41\x75\x74\x68\x50\x77');
 const inputPw=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x50\x77');
+const inputId=document.getElementById('\x61\x75\x74\x68\x49\x6e\x70\x75\x74\x49\x64');
 if(btnTogglePw&&inputPw){
 btnTogglePw.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const isPw=inputPw.type==='\x70\x61\x73\x73\x77\x6f\x72\x64';
@@ -17476,6 +17477,159 @@ inputPw.type=isPw?'\x74\x65\x78\x74':'\x70\x61\x73\x73\x77\x6f\x72\x64';
 btnTogglePw.innerText=isPw?'\ud83d\ude48':'\ud83d\udc41\ufe0f';
 });
 }
+(function initMobileAuthInputStabilizer(){
+const authInputs=[inputId,inputPw].filter(Boolean);
+let activeTargetInput=inputId||inputPw||null;
+let lastTouchTs=0;
+let vkbShift=false;
+const vkbPanel=document.getElementById('\x61\x75\x74\x68\x56\x69\x72\x74\x75\x61\x6c\x4b\x65\x79\x70\x61\x64');
+const btnToggleVkb=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x41\x75\x74\x68\x56\x6b\x62');
+function highlightActiveInput(){
+authInputs.forEach(inp=>{
+if(inp===activeTargetInput){
+inp.style.borderColor='\x23\x31\x30\x42\x39\x38\x31';
+inp.style.boxShadow='\x30 \x30 \x30 \x32\x70\x78 \x72\x67\x62\x61(\x31\x36, \x31\x38\x35, \x31\x32\x39, \x30\x2e\x32\x38)';
+}else{
+inp.style.borderColor='';
+inp.style.boxShadow='';
+}
+});
+}
+function renderVirtualKeypad(){
+if(!vkbPanel)return;
+vkbPanel.innerHTML='';
+const rows=vkbShift
+?[
+['!','@','\x23','$','%','^','&','*','\x5f','-'],
+['\x51','\x57','\x45','\x52','\x54','\x59','\x55','\x49','\x4f','\x50'],
+['\x41','\x53','\x44','\x46','\x47','\x48','\x4a','\x4b','\x4c','\x2e'],
+['\x53\x48\x49\x46\x54','\x5a','\x58','\x43','\x56','\x42','\x4e','\x4d','\u232b']
+]
+:[
+['\x31','\x32','\x33','\x34','\x35','\x36','\x37','\x38','\x39','\x30'],
+['\x71','\x77','\x65','\x72','\x74','\x79','\x75','\x69','\x6f','\x70'],
+['\x61','\x73','\x64','\x66','\x67','\x68','\x6a','\x6b','\x6c','\x5f'],
+['\x53\x48\x49\x46\x54','\x7a','\x78','\x63','\x76','\x62','\x6e','\x6d','\u232b']
+];
+const topBar=document.createElement('\x64\x69\x76');
+topBar.className='\x61\x75\x74\x68-\x76\x6b\x62-\x72\x6f\x77';
+topBar.style.marginBottom='\x32\x70\x78';
+const btnTargetId=document.createElement('\x62\x75\x74\x74\x6f\x6e');
+btnTargetId.type='\x62\x75\x74\x74\x6f\x6e';
+btnTargetId.className='\x61\x75\x74\x68-\x76\x6b\x62-\x6b\x65\x79 \x66\x6e-\x6b\x65\x79';
+btnTargetId.style.background=activeTargetInput===inputId?'\x23\x30\x35\x39\x36\x36\x39':'\x72\x67\x62\x61(\x32\x35\x35,\x32\x35\x35,\x32\x35\x35,\x30\x2e\x30\x38)';
+btnTargetId.innerText='\uc544\uc774\ub514 \uc785\ub825\uc911';
+btnTargetId.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+activeTargetInput=inputId;
+highlightActiveInput();
+renderVirtualKeypad();
+});
+const btnTargetPw=document.createElement('\x62\x75\x74\x74\x6f\x6e');
+btnTargetPw.type='\x62\x75\x74\x74\x6f\x6e';
+btnTargetPw.className='\x61\x75\x74\x68-\x76\x6b\x62-\x6b\x65\x79 \x66\x6e-\x6b\x65\x79';
+btnTargetPw.style.background=activeTargetInput===inputPw?'\x23\x30\x35\x39\x36\x36\x39':'\x72\x67\x62\x61(\x32\x35\x35,\x32\x35\x35,\x32\x35\x35,\x30\x2e\x30\x38)';
+btnTargetPw.innerText='\ube44\ubc00\ubc88\ud638 \uc785\ub825\uc911';
+btnTargetPw.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+activeTargetInput=inputPw;
+highlightActiveInput();
+renderVirtualKeypad();
+});
+const btnClear=document.createElement('\x62\x75\x74\x74\x6f\x6e');
+btnClear.type='\x62\x75\x74\x74\x6f\x6e';
+btnClear.className='\x61\x75\x74\x68-\x76\x6b\x62-\x6b\x65\x79 \x64\x65\x6c-\x6b\x65\x79';
+btnClear.innerText='\uc804\uccb4\uc9c0\uc6c0';
+btnClear.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+if(activeTargetInput){
+activeTargetInput.value='';
+activeTargetInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
+}
+});
+topBar.appendChild(btnTargetId);
+topBar.appendChild(btnTargetPw);
+topBar.appendChild(btnClear);
+vkbPanel.appendChild(topBar);
+rows.forEach(r=>{
+const rowEl=document.createElement('\x64\x69\x76');
+rowEl.className='\x61\x75\x74\x68-\x76\x6b\x62-\x72\x6f\x77';
+r.forEach(k=>{
+const keyBtn=document.createElement('\x62\x75\x74\x74\x6f\x6e');
+keyBtn.type='\x62\x75\x74\x74\x6f\x6e';
+keyBtn.className='\x61\x75\x74\x68-\x76\x6b\x62-\x6b\x65\x79';
+if(k==='\x53\x48\x49\x46\x54'){
+keyBtn.classList.add('\x66\x6e-\x6b\x65\x79');
+keyBtn.innerText=vkbShift?'\uc18c\ubb38\uc790\x2f\uc22b\uc790':'\ub300\ubb38\uc790\x2f\uae30\ud638';
+}else if(k==='\u232b'){
+keyBtn.classList.add('\x64\x65\x6c-\x6b\x65\x79');
+keyBtn.innerText='\u2190 \uc9c0\uc6c0';
+}else{
+keyBtn.innerText=k;
+}
+keyBtn.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+e.stopPropagation();
+if(!activeTargetInput)activeTargetInput=inputId||inputPw;
+if(k==='\x53\x48\x49\x46\x54'){
+vkbShift=!vkbShift;
+renderVirtualKeypad();
+return;
+}
+if(k==='\u232b'){
+activeTargetInput.value=String(activeTargetInput.value||'').slice(0,-1);
+}else{
+activeTargetInput.value=String(activeTargetInput.value||'')+k;
+}
+activeTargetInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
+});
+rowEl.appendChild(keyBtn);
+});
+vkbPanel.appendChild(rowEl);
+});
+}
+if(btnToggleVkb&&vkbPanel){
+btnToggleVkb.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
+e.preventDefault();
+const isOpen=vkbPanel.style.display==='\x66\x6c\x65\x78';
+vkbPanel.style.display=isOpen?'\x6e\x6f\x6e\x65':'\x66\x6c\x65\x78';
+if(!isOpen){
+if(!activeTargetInput)activeTargetInput=inputId||inputPw;
+highlightActiveInput();
+renderVirtualKeypad();
+}
+});
+}
+authInputs.forEach(inp=>{
+inp.addEventListener('\x74\x6f\x75\x63\x68\x73\x74\x61\x72\x74',()=>{
+lastTouchTs=Date.now();
+activeTargetInput=inp;
+document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
+highlightActiveInput();
+if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
+},{passive:true});
+inp.addEventListener('\x66\x6f\x63\x75\x73',()=>{
+activeTargetInput=inp;
+document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
+highlightActiveInput();
+if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
+});
+inp.addEventListener('\x62\x6c\x75\x72',()=>{
+const elapsed=Date.now()-lastTouchTs;
+if(elapsed>=0&&elapsed<600){
+setTimeout(()=>{
+if(document.activeElement!==inputId&&document.activeElement!==inputPw){
+try{inp.focus({preventScroll:true});}catch(err){try{inp.focus();}catch(e2){}}
+if(vkbPanel&&vkbPanel.style.display!=='\x66\x6c\x65\x78'){
+vkbPanel.style.display='\x66\x6c\x65\x78';
+renderVirtualKeypad();
+}
+}
+},30);
+}
+});
+});
+})();
 const KAKAO_CHAT_URL='\x68\x74\x74\x70\x3a\x2f\x2f\x70\x66\x2e\x6b\x61\x6b\x61\x6f\x2e\x63\x6f\x6d\x2f\x5f\x52\x78\x62\x53\x4e\x58\x2f\x63\x68\x61\x74';
 const handleOpenKakao=(e)=>{
 if(e&&e.preventDefault)e.preventDefault();
