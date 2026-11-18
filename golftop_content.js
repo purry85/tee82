@@ -2055,7 +2055,10 @@ style.textContent=`
             align-items: start !important;
             max-height: 480px !important;
             overflow-y: auto !important;
-            padding: 2px 2px !important;
+            -webkit-overflow-scrolling: touch !important;
+            overscroll-behavior-y: contain !important;
+            touch-action: pan-x pan-y pinch-zoom !important;
+            padding: 2px 2px 24px 2px !important;
         }
 
         /* 3\uac1c \ub3c5\ub9bd \uc138\ub85c \uc5f4 \ucee8\ud14c\uc774\ub108 (\uac01 \uc5f4\ubcc4\ub85c \uce74\ub4dc\uac00 \uc704\uc5d0\uc11c \uc544\ub798\ub85c \ubb3c \ud750\ub974\ub4ef \uc790\uc5f0\uc2a4\ub7fd\uac8c \ubc30\uce58) */
@@ -2066,6 +2069,7 @@ style.textContent=`
             width: 100% !important;
             min-width: 0 !important;
             box-sizing: border-box !important;
+            padding-bottom: 24px !important;
         }
 
         /* \uad8c\uc5ed\ubcc4 \uce74\ub4dc \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c - \uad6c\uc7a5 \uc218\uc5d0 \ub9de\ucdb0 \ud558\ub2e8\uc73c\ub85c \uc790\uc5f0\uc2a4\ub7fd\uac8c \ub298\uc5b4\ub0a8, \ub0b4\ubd80 \uc2a4\ud06c\ub864 \uc5c6\uc74c) */
@@ -2227,14 +2231,14 @@ style.textContent=`
             vertical-align: middle !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container td:nth-child(2) {
-            width: 485px !important;
-            min-width: 440px !important;
+            width: 520px !important;
+            min-width: 470px !important;
             max-width: none !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container td:nth-child(3) {
             width: auto !important;
-            min-width: 80px !important;
-            max-width: 130px !important;
+            min-width: 70px !important;
+            max-width: 110px !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container label,
         body.gtp-smart-layout-active .gtp-smart-resv-container span {
@@ -2244,16 +2248,18 @@ style.textContent=`
             white-space: nowrap !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container label {
-            margin-right: 4px !important;
+            margin-right: 3px !important;
+            margin-left: 0px !important;
             margin-top: 0px !important;
             margin-bottom: 0px !important;
+            padding-right: 0px !important;
             display: inline-flex !important;
             align-items: center !important;
             gap: 2px !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container input[type="radio"],
         body.gtp-smart-layout-active .gtp-smart-resv-container input[type="checkbox"] {
-            margin: 0px 2px 0px 0px !important;
+            margin: 0px 1.5px 0px 0px !important;
         }
         body.gtp-smart-layout-active .gtp-smart-resv-container input[type="text"],
         body.gtp-smart-layout-active .gtp-smart-resv-container input[type="number"],
@@ -2844,9 +2850,56 @@ gridContainer.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x3
 gridContainer.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+if(!gridContainer.dataset.gtpDynamicMaxH){
 gridContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x34\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
 gridContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('-\x77\x65\x62\x6b\x69\x74-\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x73\x63\x72\x6f\x6c\x6c\x69\x6e\x67','\x74\x6f\x75\x63\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6f\x76\x65\x72\x73\x63\x72\x6f\x6c\x6c-\x62\x65\x68\x61\x76\x69\x6f\x72-\x79','\x63\x6f\x6e\x74\x61\x69\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x74\x6f\x75\x63\x68-\x61\x63\x74\x69\x6f\x6e','\x70\x61\x6e-\x78 \x70\x61\x6e-\x79 \x70\x69\x6e\x63\x68-\x7a\x6f\x6f\x6d','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x32\x70\x78 \x32\x34\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+if(gridContainer.dataset.gtpTouchScrollAttached!=='\x74\x72\x75\x65'){
+gridContainer.dataset.gtpTouchScrollAttached='\x74\x72\x75\x65';
+let tStartY=0;
+let tStartX=0;
+let tStartScroll=0;
+let tIsDragging=false;
+gridContainer.addEventListener('\x74\x6f\x75\x63\x68\x73\x74\x61\x72\x74',(e)=>{
+if(!e.touches||e.touches.length!==1){
+tIsDragging=false;
+return;
+}
+tStartY=e.touches[0].clientY;
+tStartX=e.touches[0].clientX;
+tStartScroll=gridContainer.scrollTop;
+tIsDragging=false;
+},{passive:true});
+gridContainer.addEventListener('\x74\x6f\x75\x63\x68\x6d\x6f\x76\x65',(e)=>{
+if(!e.touches||e.touches.length!==1)return;
+const dy=tStartY-e.touches[0].clientY;
+const dx=Math.abs(e.touches[0].clientX-tStartX);
+if(!tIsDragging&&Math.abs(dy)>7&&Math.abs(dy)>dx){
+tIsDragging=true;
+}
+if(tIsDragging){
+const curZoom=parseFloat(document.body.style.zoom)||1;
+const nextScroll=Math.max(0,tStartScroll+(dy/curZoom));
+if(Math.abs(gridContainer.scrollTop-nextScroll)>3){
+gridContainer.scrollTop=nextScroll;
+}
+if(e.cancelable)e.preventDefault();
+}
+},{passive:false});
+const finishTouchDrag=()=>{
+if(tIsDragging){
+gridContainer.dataset.gtpJustScrolled='\x74\x72\x75\x65';
+setTimeout(()=>{delete gridContainer.dataset.gtpJustScrolled;},140);
+}
+tIsDragging=false;
+};
+gridContainer.addEventListener('\x74\x6f\x75\x63\x68\x65\x6e\x64',finishTouchDrag,{passive:true});
+gridContainer.addEventListener('\x74\x6f\x75\x63\x68\x63\x61\x6e\x63\x65\x6c',finishTouchDrag,{passive:true});
+}
 const colDefs=[
 {colIndex:1,regions:['\uacbd\uae30\ubd81\ubd80','\uac15\uc6d0\ub3c4','\uc81c\uc8fc\ub3c4']},
 {colIndex:2,regions:['\uacbd\uae30\ub0a8\ubd80','\uacbd\uc0c1\ub3c4']},
@@ -2953,6 +3006,11 @@ if(origBtn.classList.contains('\x61\x63\x74\x69\x76\x65')||origBtn.classList.con
 gridBtn.classList.add('\x61\x63\x74\x69\x76\x65','\x73\x65\x6c\x65\x63\x74\x65\x64');
 }
 gridBtn.addEventListener('\x63\x6c\x69\x63\x6b',async(e)=>{
+if(gridContainer&&gridContainer.dataset.gtpJustScrolled==='\x74\x72\x75\x65'){
+e.preventDefault();
+e.stopPropagation();
+return;
+}
 e.preventDefault();
 e.stopPropagation();
 document.querySelectorAll('\x2e\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x75\x72\x73\x65-\x62\x74\x6e').forEach(b=>{
@@ -3178,15 +3236,15 @@ cols[0].style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x37\x30\x70\x78'
 cols[0].style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 markCompacted(cols[1]);
 cols[1].removeAttribute('\x77\x69\x64\x74\x68');
-cols[1].style.setProperty('\x77\x69\x64\x74\x68','\x34\x38\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-cols[1].style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x34\x34\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cols[1].style.setProperty('\x77\x69\x64\x74\x68','\x35\x32\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cols[1].style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x34\x37\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 cols[1].style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 if(cols[2]){
 markCompacted(cols[2]);
 cols[2].removeAttribute('\x77\x69\x64\x74\x68');
 cols[2].style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-cols[2].style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-cols[2].style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x33\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cols[2].style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x37\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cols[2].style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 }
 });
@@ -3247,20 +3305,20 @@ col1.style.setProperty('\x6c\x69\x6e\x65-\x68\x65\x69\x67\x68\x74','\x31\x2e\x31
 col1.style.setProperty('\x77\x68\x69\x74\x65-\x73\x70\x61\x63\x65','\x6e\x6f\x77\x72\x61\x70','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 markCompacted(col2);
 col2.removeAttribute('\x77\x69\x64\x74\x68');
-col2.style.setProperty('\x77\x69\x64\x74\x68','\x34\x38\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col2.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x34\x34\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col2.style.setProperty('\x77\x69\x64\x74\x68','\x35\x32\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col2.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x34\x37\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 col2.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col2.style.setProperty('\x66\x6c\x65\x78','\x31 \x31 \x34\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col2.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col2.style.setProperty('\x66\x6c\x65\x78','\x31 \x31 \x34\x39\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col2.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x31\x70\x78 \x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 col2.style.setProperty('\x6c\x69\x6e\x65-\x68\x65\x69\x67\x68\x74','\x31\x2e\x31\x35','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 if(col3){
 markCompacted(col3);
 col3.removeAttribute('\x77\x69\x64\x74\x68');
 col3.style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col3.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col3.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x33\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col3.style.setProperty('\x66\x6c\x65\x78','\x30 \x31 \x31\x30\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-col3.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col3.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x37\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col3.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col3.style.setProperty('\x66\x6c\x65\x78','\x30 \x31 \x39\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+col3.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x31\x70\x78 \x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 col3.style.setProperty('\x6c\x69\x6e\x65-\x68\x65\x69\x67\x68\x74','\x31\x2e\x31\x35','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 Array.from(col2.querySelectorAll('\x62\x72')).forEach(br=>{
@@ -3270,6 +3328,14 @@ br.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x6e\x6f\x6e\x65','\x69\x6d
 const actionBtns=Array.from(col2.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')).filter(b=>{
 const t=(b.innerText||b.textContent||b.value||'').trim().replace(/\s+/g,'');
 return t.includes('\ubcf5\uc0ac')||t.includes('\ucd94\uac00')||t.includes('\uc0ad\uc81c')||t.includes('\ud0c0\uc784\ub9ac\uc14b')||t.includes('\ub9ac\uc14b');
+});
+Array.from(col2.querySelectorAll('\x6c\x61\x62\x65\x6c, \x73\x70\x61\x6e')).forEach(ls=>{
+if(actionBtns.includes(ls)||actionBtns.some(b=>b.contains(ls)))return;
+markCompacted(ls);
+ls.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x72\x69\x67\x68\x74','\x33\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+ls.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x6c\x65\x66\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+ls.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x72\x69\x67\x68\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+ls.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x6c\x65\x66\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 });
 actionBtns.forEach(btn=>{
 markCompacted(btn);
@@ -3794,6 +3860,37 @@ courseWrap.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70',newM+'\x70\
 courseWrap.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 courseWrap.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 cGap=courseWrap.getBoundingClientRect().top-resvCardBottom;
+}
+let scrollAnc=courseWrap.parentElement;
+while(scrollAnc&&scrollAnc!==document.body){
+const acs=getComputedStyle(scrollAnc);
+if(acs.overflowY==='\x68\x69\x64\x64\x65\x6e'||acs.overflow==='\x68\x69\x64\x64\x65\x6e'){
+scrollAnc.dataset.gtpGapCollapsed='\x74\x72\x75\x65';
+scrollAnc.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+scrollAnc.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+scrollAnc=scrollAnc.parentElement;
+}
+const gridContainer=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64');
+if(gridContainer&&document.body.contains(gridContainer)){
+const designW=_0x103b();
+const vw=document.documentElement.clientWidth||window.innerWidth||designW;
+const vvW=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||vw||designW;
+const vvH=(window.visualViewport&&window.visualViewport.height)||window.innerHeight||document.documentElement.clientHeight||900;
+const unzoomedViewportBottom=(vw<designW)
+?Math.floor(designW*(vvH/Math.max(1,vvW)))
+:Math.floor(vvH);
+const gridTop=gridContainer.getBoundingClientRect().top;
+const availH=Math.floor(unzoomedViewportBottom-gridTop-14);
+const targetMaxH=Math.max(115,Math.min(500,availH));
+gridContainer.dataset.gtpDynamicMaxH=String(targetMaxH);
+gridContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74',targetMaxH+'\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('-\x77\x65\x62\x6b\x69\x74-\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x73\x63\x72\x6f\x6c\x6c\x69\x6e\x67','\x74\x6f\x75\x63\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6f\x76\x65\x72\x73\x63\x72\x6f\x6c\x6c-\x62\x65\x68\x61\x76\x69\x6f\x72-\x79','\x63\x6f\x6e\x74\x61\x69\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x74\x6f\x75\x63\x68-\x61\x63\x74\x69\x6f\x6e','\x70\x61\x6e-\x78 \x70\x61\x6e-\x79 \x70\x69\x6e\x63\x68-\x7a\x6f\x6f\x6d','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x32\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 }
 }catch(e){
@@ -4454,9 +4551,9 @@ window.addEventListener('\x72\x65\x73\x69\x7a\x65',()=>{
 if(!document.body||!document.body.classList.contains('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x6c\x61\x79\x6f\x75\x74-\x61\x63\x74\x69\x76\x65'))return;
 if(__gtp_is_pinching)return;
 if(window.visualViewport&&window.visualViewport.scale>1.02)return;
-const cw=document.documentElement.clientWidth||window.innerWidth||0;
-if(Math.abs(cw-__gtp_last_client_width)<2)return;
-__gtp_last_client_width=cw;
+__gtp_last_client_width=document.documentElement.clientWidth||window.innerWidth||0;
+_0x103e(__gtp_cached_row,null,__gtp_cached_resv_blocks);
+_0x1042(__gtp_cached_row);
 _0x103c(false);
 });
 }
