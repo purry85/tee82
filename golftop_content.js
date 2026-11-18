@@ -2897,56 +2897,67 @@ while(r&&r!==document.body){
 rowAncestors.add(r);
 r=r.parentElement;
 }
-const all=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67, \x62\x75\x74\x74\x6f\x6e, \x61, \x66\x6f\x72\x6d, \x74\x61\x62\x6c\x65'));
-let targetEl=all.find(el=>{
+const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67, \x64\x74, \x64\x64'))
+.filter(el=>{
 if(rowAncestors.has(el)||rowContainer.contains(el))return false;
-const t=(el.textContent||'').replace(/\s+/g,'');
-return t==='\uc2e0\uccad\uad6c\ubd84'||t.startsWith('\uc2e0\uccad\uad6c\ubd84')||t==='\uc2e0\uccad\uc77c\uc790'||t.startsWith('\uc2e0\uccad\uc77c\uc790')||t.includes('\uad11\uace0\uc720\x2f\ubb34')||t.includes('\uacb0\uc81c\uad6c\ubd84');
+if(el.children.length>2)return false;
+const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
+return t==='\uc2e0\uccad\uad6c\ubd84'||t.startsWith('\uc2e0\uccad\uad6c\ubd84');
 });
-if(!targetEl){
-targetEl=all.find(el=>{
+let startEl=allLabels.length>0?allLabels[0]:null;
+if(!startEl){
+const btns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e'))
+.filter(el=>{
 if(rowAncestors.has(el)||rowContainer.contains(el))return false;
-const t=(el.textContent||'').replace(/\s+/g,'');
-return(t.includes('\uc608\uc57d\x2f\ub300\uae30')&&t.includes('\ud64d\ubcf4'))||t==='\uc608\uc57d\uc2e0\uccad'||t==='\ub300\uae30\uc2e0\uccad';
+const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
+return t.includes('\uc608\uc57d\ub300\uae30')||(t.includes('\uc608\uc57d')&&t.includes('\ub300\uae30')&&!t.includes('\ud655\uc815'));
 });
+if(btns.length>0)startEl=btns[0];
 }
-if(!targetEl){
-const topTable=rowContainer.closest('\x74\x61\x62\x6c\x65');
-if(topTable&&topTable.nextElementSibling){
-return topTable.nextElementSibling;
+if(!startEl){
+const dateLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67'))
+.filter(el=>{
+if(rowAncestors.has(el)||rowContainer.contains(el))return false;
+if(el.children.length>2)return false;
+const t=(el.innerText||el.textContent||'').trim().replace(/[\s\-_/]/g,'');
+return t==='\uc2e0\uccad\uc77c\uc790'||t.startsWith('\uc2e0\uccad\uc77c\uc790');
+});
+if(dateLabels.length>0)startEl=dateLabels[0];
 }
+if(!startEl){
+console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uc608\uc57d \uc2e0\uccad \ud3fc \uc2dc\uc791 \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568");
 return null;
 }
-let cur=targetEl;
-let formBlock=targetEl;
+let cur=startEl;
+let resvStartBlock=startEl;
 while(cur&&cur.parentElement&&cur.parentElement!==document.body){
 const p=cur.parentElement;
 if(rowAncestors.has(p)){
-formBlock=cur;
+resvStartBlock=cur;
 break;
 }
-formBlock=cur;
+resvStartBlock=cur;
 cur=p;
 }
-return formBlock;
+return resvStartBlock;
 }
 function _0x1033(rowContainer,colCourse){
 if(!colCourse)return null;
-const existingWrapper=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72')||colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72');
-if(existingWrapper){
-return existingWrapper;
-}
-const formBlock=_0x1032(rowContainer);
-if(!formBlock){
-console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uc608\uc57d \ud3fc \ube14\ub85d\uc744 \ucc3e\uc9c0 \ubabb\ud558\uc5ec \uae30\ubcf8 \ubc30\uce58 \uc720\uc9c0");
+const resvStartBlock=_0x1032(rowContainer);
+if(!resvStartBlock){
+console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uc608\uc57d \ud3fc \uc2dc\uc791\uc810\uc744 \ucc3e\uc9c0 \ubabb\ud558\uc5ec \uae30\ubcf8 \ubc30\uce58 \uc720\uc9c0");
 return null;
+}
+const parent=resvStartBlock.parentElement;
+let wrapper=colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72')||colCourse.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72');
+if(wrapper&&wrapper.parentElement===parent&&wrapper.nextElementSibling===resvStartBlock){
+return wrapper;
 }
 if(!colCourse.__gtp_orig_parent){
 colCourse.__gtp_orig_parent=colCourse.parentElement;
 colCourse.__gtp_orig_next=colCourse.nextSibling;
 }
-const parent=formBlock.parentElement;
-let wrapper=null;
+if(!wrapper){
 if(parent.tagName==='\x54\x42\x4f\x44\x59'||parent.tagName==='\x54\x41\x42\x4c\x45'){
 wrapper=document.createElement('\x74\x72');
 wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x74\x72';
@@ -2956,16 +2967,16 @@ td.style.padding='\x30';
 td.style.border='\x6e\x6f\x6e\x65';
 td.appendChild(colCourse);
 wrapper.appendChild(td);
-parent.insertBefore(wrapper,formBlock);
 }else{
 wrapper=document.createElement('\x64\x69\x76');
 wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f\x77\x72\x61\x70\x70\x65\x72';
 wrapper.appendChild(colCourse);
-parent.insertBefore(wrapper,formBlock);
 }
-formBlock.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
-__gtp_cached_form_container=formBlock;
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \uc601\uc5ed\uc744 \uc0c1\ub2e8 \ud589\uacfc \ud558\ub2e8 \uc608\uc57d \ud3fc \uc0ac\uc774\uc758 \ub3c5\ub9bd \x44\x4f\x4d \uc704\uce58\ub85c \ubb3c\ub9ac\uc801 \uc774\ub3d9 \uc644\ub8cc (\uc608\uc57d\uce78 \x31\x30\x30% \uac00\uc2dc\ud654)");
+}
+parent.insertBefore(wrapper,resvStartBlock);
+resvStartBlock.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
+__gtp_cached_form_container=resvStartBlock;
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 [\uc911\ub2e8], \uc608\uc57d \uba54\ub274\ub97c [\ud558\ub2e8]\uc73c\ub85c \uc644\ubcbd \uc21c\uc11c \uc7ac\ubc30\uce58 \uc644\ub8cc");
 return wrapper;
 }
 function _0x1034(colCourse){
