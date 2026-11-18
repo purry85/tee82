@@ -1813,8 +1813,10 @@ style.textContent=`
             min-height: 0px !important;
             max-height: none !important;
             overflow: visible !important;
-            margin-bottom: 4px !important;
-            padding-bottom: 2px !important;
+            margin-top: 0px !important;
+            margin-bottom: 2px !important;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
         }
 
         /* 1. \uc0c1\ub2e8 \ud589: \ub2ec\ub825(\uc88c) + \ud544\ud130(\uc911) + \ud2b9\uc774\uc0ac\ud56d/\ud560\uc778\uadf8\ub9b0\ud53c(\uc6b0) 3\uce74\ub4dc \ub098\ub780\ud788 \ubc30\uce58 */
@@ -1830,7 +1832,8 @@ style.textContent=`
             min-height: 235px !important;
             max-height: 235px !important;
             overflow: visible !important;
-            margin-bottom: 4px !important;
+            margin-top: 0px !important;
+            margin-bottom: 2px !important;
         }
 
         /* [\uc0c1\ub2e8 \uc88c\uce21 \uc804\uccb4 \ucee8\ud14c\uc774\ub108]: \ub2ec\ub825 \ubc0f \uc794\uc5ec\ud0c0\uc784 \ud544\ud130 \ub798\ud37c (Column 1) */
@@ -1926,7 +1929,7 @@ style.textContent=`
             display: none !important;
         }
 
-        /* [\ud558\ub2e8/\uc911\ub2e8 \uc804\uccb4\ud3ed]: \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d (\uc0c1\ub2e8 \ud589\uacfc \ud558\ub2e8 \uc608\uc57d \ud3fc \uc0ac\uc774\uc5d0 \ub3c5\ub9bd \ube14\ub85d\uc73c\ub85c \ubb3c\ub9ac\uc801 \ubc30\uce58) */
+        /* [\uc911\ub2e8/\ud558\ub2e8 \uc804\uccb4\ud3ed]: \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d (\uc0c1\ub2e8 \ud589\uacfc \ud558\ub2e8 \uc608\uc57d \ud3fc \uc0ac\uc774\uc5d0 \ub3c5\ub9bd \ube14\ub85d\uc73c\ub85c \ubb3c\ub9ac\uc801 \ubc30\uce58) */
         body.gtp-smart-layout-active #gtp_smart_course_wrapper,
         body.gtp-smart-layout-active #gtp_smart_course_tr,
         body.gtp-smart-layout-active .gtp-smart-col-course,
@@ -1937,8 +1940,8 @@ style.textContent=`
             max-width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
-            margin-top: 4px !important;
-            margin-bottom: 6px !important;
+            margin-top: 2px !important;
+            margin-bottom: 2px !important;
             padding: 4px 6px !important;
             background: #ffffff !important;
             border-radius: 8px !important;
@@ -1985,7 +1988,7 @@ style.textContent=`
         body.gtp-smart-layout-active .gtp-smart-top-row + * {
             clear: both !important;
             position: relative !important;
-            margin-top: 4px !important;
+            margin-top: 2px !important;
             margin-bottom: 4px !important;
             padding-top: 0px !important;
             padding-bottom: 2px !important;
@@ -2987,10 +2990,10 @@ wrapper.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x63\x6f\x75\x72\x73\x65\x5f
 wrapper.appendChild(colCourse);
 }
 if(resvBlock&&resvBlock.parentElement){
-if(resvBlock.nextElementSibling!==wrapper){
-resvBlock.insertAdjacentElement('\x61\x66\x74\x65\x72\x65\x6e\x64',wrapper);
+if(resvBlock.previousElementSibling!==wrapper){
+resvBlock.insertAdjacentElement('\x62\x65\x66\x6f\x72\x65\x62\x65\x67\x69\x6e',wrapper);
 }
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc608\uc57d \uba54\ub274 \ubc14\ub85c \ub4a4 [\ud558\ub2e8]\uc73c\ub85c \ubc30\uce58 \uc644\ub8cc");
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc608\uc57d \uba54\ub274 \ubc14\ub85c \uc55e [\uc911\ub2e8]\uc73c\ub85c \ubc30\uce58 \uc644\ub8cc (\uc21c\uc11c\x3a \uc0c1\ub2e8 -> \uc911\ub2e8\x3a\uace8\ud504\uc7a5\uc120\ud0dd -> \ud558\ub2e8\x3a\uc608\uc57d\uc2e0\uccad\ub780)");
 return wrapper;
 }
 let topBlock=topTable;
@@ -3000,7 +3003,7 @@ topBlock=topBlock.parentElement;
 if(topBlock.nextElementSibling!==wrapper){
 topBlock.insertAdjacentElement('\x61\x66\x74\x65\x72\x65\x6e\x64',wrapper);
 }
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc0c1\ub2e8 \ube14\ub85d \ubc14\ub85c \ub4a4\ub85c \ubc30\uce58 \uc644\ub8cc (\x66\x61\x6c\x6c\x62\x61\x63\x6b)");
+console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d\uc744 \uc0c1\ub2e8 \ube14\ub85d \ubc14\ub85c \ub4a4 [\uc911\ub2e8]\uc73c\ub85c \ubc30\uce58 \uc644\ub8cc (\x66\x61\x6c\x6c\x62\x61\x63\x6b)");
 return wrapper;
 }
 function _0x1036(colCourse){
@@ -3041,11 +3044,33 @@ rowContainer.style.setProperty('\x66\x6c\x65\x78-\x77\x72\x61\x70','\x6e\x6f\x77
 rowContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x67\x61\x70','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x66\x6c\x65\x78-\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x33\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+const topTable=rowContainer.closest('\x74\x61\x62\x6c\x65')||rowContainer;
+let cur=topTable;
+while(cur&&cur!==document.body&&cur.id!=='\x66\x6f\x72\x6d\x31'&&!cur.classList.contains('\x6d\x61\x69\x6e\x5f\x63\x6f\x6e\x74\x65\x6e\x74')){
+cur.removeAttribute('\x68\x65\x69\x67\x68\x74');
+cur.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+cur=cur.parentElement;
+}
+Array.from(topTable.querySelectorAll('\x74\x72, \x74\x64, \x74\x62\x6f\x64\x79')).forEach(el=>{
+el.removeAttribute('\x68\x65\x69\x67\x68\x74');
+if(el!==rowContainer&&!rowContainer.contains(el)){
+if((el.innerText||el.textContent||'').trim()===''&&el.children.length===0){
+el.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+}
+});
 }
 const resvBlock=_0x1034(rowContainer);
 if(resvBlock){
@@ -3053,7 +3078,7 @@ __gtp_cached_form_container=resvBlock;
 resvBlock.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x72\x65\x73\x76-\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72');
 resvBlock.style.setProperty('\x63\x6c\x65\x61\x72','\x62\x6f\x74\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvBlock.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-resvBlock.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+resvBlock.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvBlock.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvBlock.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x74\x6f\x70','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 resvBlock.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67-\x62\x6f\x74\x74\x6f\x6d','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -3117,8 +3142,8 @@ colCourse.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%',
 colCourse.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x62\x6c\x6f\x63\x6b','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x36\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x23\x66\x66\x66\x66\x66\x66','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72','\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x38\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');

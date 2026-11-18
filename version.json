@@ -1,9 +1,10 @@
 {
-    "version":  "2.6.8",
+    "version":  "2.6.9",
     "releaseDate":  "2026-11-18",
-    "title":  "골프탑 스마트뷰 예약메뉴 순서 정상화",
+    "title":  "골프탑 스마트뷰 중단 골프장선택 하단 예약신청란 여백 최소화",
     "releaseNotes":  [
-                         "- 상단(달력/필터/특이사항) -\u003e 중단(예약메뉴 전체 100% 온전 유지) -\u003e 하단(골프장선택 3열)"
+                         "- 상단(달력/필터/특이사항) -\u003e 중단(골프장선택) -\u003e 하단(예약신청란)",
+                         "- 상단/중단/하단 사이 빈 여백 최소화 및 밀착"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
