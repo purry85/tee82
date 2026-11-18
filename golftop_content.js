@@ -1799,6 +1799,16 @@ document.head.appendChild(style);
 style.textContent=`
         /* ===== \uace8\ud504\ud0d1 \uace8\ud504\ub77d \uc644\ubcbd \uc77c\uce58 \uc2a4\ub9c8\ud2b8 \ub808\uc774\uc544\uc6c3 CSS ===== */
 
+        /* 0. \ud14c\uc774\ube14 \ubc0f tbody display block \ubcc0\ud658 (flex \uc790\uc2dd\uc758 \uba40\ud2f0\ub77c\uc778 \uc904\ubc14\uafc8 \ub192\uc774 \ubd95\uad34 \uc6d0\ucc9c \ubc29\uc9c0) */
+        body.gtp-smart-layout-active table:has(.gtp-smart-top-row),
+        body.gtp-smart-layout-active tbody:has(.gtp-smart-top-row) {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
         /* 1. \uc0c1\ub2e8 \ud589: \ub2ec\ub825(\uc88c) + \ud544\ud130(\uc911) + \ud2b9\uc774\uc0ac\ud56d/\ud560\uc778\uadf8\ub9b0\ud53c(\uc6b0) 3\uce74\ub4dc \ub098\ub780\ud788 \ubc30\uce58 */
         body.gtp-smart-layout-active .gtp-smart-top-row,
         body.gtp-smart-layout-active tr.gtp-smart-top-row {
@@ -1936,8 +1946,11 @@ style.textContent=`
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
             display: block !important;
             height: auto !important;
-            max-height: 320px !important;
-            overflow: hidden !important;
+            max-height: none !important;
+            overflow: visible !important;
+            position: relative !important;
+            z-index: 10 !important;
+            visibility: visible !important;
         }
 
         /* \uace8\ud504\uc7a5 \uc120\ud0dd \ub0b4\ubd80 \ubaa8\ub4e0 \ub798\ud37c 100% \uac00\ub85c\ud3ed \uac15\uc81c (250px \uc881\ud798 \ucc28\ub2e8) */
@@ -1953,10 +1966,12 @@ style.textContent=`
             box-sizing: border-box !important;
         }
 
-        /* 2. \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d: \uace8\ud504\ub77d\ucc98\ub7fc 3\uac1c \uad8c\uc5ed\uc529 \ub098\ub780\ud788 \uadf8\ub9ac\ub4dc \ubc30\uce58:
-           [\uacbd\uae30\ubd81\ubd80] [\uacbd\uae30\ub0a8\ubd80] [\ucda9\uccad\ub3c4]
-           [\uac15\uc6d0\ub3c4]   [\uacbd\uc0c1\ub3c4]   [\uc804\ub77c\ub3c4]
-           [\uc81c\uc8fc\ub3c4]
+        /* 2. \uace8\ud504\uc7a5 \uc120\ud0dd \ubaa9\ub85d: \uace8\ud504\ub77d\ucc98\ub7fc 3\uac1c \uc5f4\ub85c \ub098\ub780\ud788 \ubc30\uce58:
+           [\uc5f41]: [\uacbd\uae30\ubd81\ubd80] -> [\uac15\uc6d0\ub3c4] -> [\uc81c\uc8fc\ub3c4]
+           [\uc5f42]: [\uacbd\uae30\ub0a8\ubd80] (\ud558\ub2e8 \ud655\uc7a5) -> [\uacbd\uc0c1\ub3c4]
+           [\uc5f43]: [\ucda9\uccad\ub3c4]   (\ud558\ub2e8 \ud655\uc7a5) -> [\uc804\ub77c\ub3c4]
+           - \uac01 \uc9c0\uc5ed \uce74\ub4dc\ub294 \uad6c\uc7a5 \uc218\uc5d0 \ub530\ub77c \ud558\ub2e8\uc73c\ub85c \uc790\uc5f0\uc2a4\ub7fd\uac8c \ub298\uc5b4\ub098\uba70 \ub0b4\ubd80 \uc2a4\ud06c\ub864\uc774 \uc5c6\uc74c!
+           - \uc804\uccb4 \uadf8\ub9ac\ub4dc \uc6b0\uce21\uc5d0\ub9cc \ub2e8\uc77c \uc2a4\ud06c\ub864\ubc14\uac00 \ub9e4\ub044\ub7fd\uac8c \ub3d9\uc791!
         */
         body.gtp-smart-layout-active #gtp_smart_regions_grid,
         body.gtp-smart-layout-active .gtp-regions-grid {
@@ -1967,13 +1982,23 @@ style.textContent=`
             max-width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
-            align-items: stretch !important;
-            max-height: 280px !important;
+            align-items: start !important;
+            max-height: 480px !important;
             overflow-y: auto !important;
-            padding: 2px 2px 6px 2px !important;
+            padding: 2px 4px 6px 2px !important;
         }
 
-        /* \uad8c\uc5ed\ubcc4 \uce74\ub4dc \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c\uc758 \ub3c5\ub9bd \uad8c\uc5ed \ubc15\uc2a4 - 1/3 \ub108\ube44 \uade0\ub4f1 \uaf49 \ucc44\uc6c0) */
+        /* 3\uac1c \ub3c5\ub9bd \uc138\ub85c \uc5f4 \ucee8\ud14c\uc774\ub108 (\uac01 \uc5f4\ubcc4\ub85c \uce74\ub4dc\uac00 \uc704\uc5d0\uc11c \uc544\ub798\ub85c \ubb3c \ud750\ub974\ub4ef \uc790\uc5f0\uc2a4\ub7fd\uac8c \ubc30\uce58) */
+        body.gtp-smart-layout-active .gtp-region-col {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* \uad8c\uc5ed\ubcc4 \uce74\ub4dc \uc2a4\ud0c0\uc77c (\uace8\ud504\ub77d \uc2a4\ud0c0\uc77c - \uad6c\uc7a5 \uc218\uc5d0 \ub9de\ucdb0 \ud558\ub2e8\uc73c\ub85c \uc790\uc5f0\uc2a4\ub7fd\uac8c \ub298\uc5b4\ub0a8, \ub0b4\ubd80 \uc2a4\ud06c\ub864 \uc5c6\uc74c) */
         body.gtp-smart-layout-active .gtp-region-card {
             background: #f8fafc !important;
             border: 1px solid #cbd5e1 !important;
@@ -1984,8 +2009,9 @@ style.textContent=`
             flex-direction: column !important;
             min-width: 0 !important;
             width: 100% !important;
-            max-height: 260px !important;
-            overflow: hidden !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
             box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
         }
 
@@ -2007,7 +2033,7 @@ style.textContent=`
             flex-shrink: 0 !important;
         }
 
-        /* \uad8c\uc5ed \ub0b4\ubd80\uc758 \ubc84\ud2bc \uadf8\ub9ac\ub4dc (3\uac1c\uc529 \uade0\ub4f1 \ubc30\uce58 + \uce74\ub4dc \ub0b4\ubd80 \uc138\ub85c \uc2a4\ud06c\ub864) */
+        /* \uad8c\uc5ed \ub0b4\ubd80\uc758 \ubc84\ud2bc \uadf8\ub9ac\ub4dc (3\uac1c\uc529 \ubc30\uce58, \ub0b4\ubd80 \uc2a4\ud06c\ub864 \uc5c6\uc774 \ud558\ub2e8\uc73c\ub85c 100% \ud3bc\uccd0\uc9d0) */
         body.gtp-smart-layout-active .gtp-region-buttons-wrap {
             display: grid !important;
             grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -2015,9 +2041,10 @@ style.textContent=`
             width: 100% !important;
             min-width: 100% !important;
             box-sizing: border-box !important;
-            max-height: 210px !important;
-            overflow-y: auto !important;
-            padding-right: 2px !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            padding-right: 0px !important;
             align-content: start !important;
         }
 
@@ -2087,71 +2114,55 @@ style.textContent=`
             border-radius: 4px !important;
         }
 
-        /* \ubaa8\ubc14\uc77c \ubd84\ud560\ud654\uba74 \ubbf8\ub514\uc5b4 \ucffc\ub9ac (\uac00\ub85c\ud3ed 900px \uc774\ud558) */
-        @media (max-width: 900px) {
+        /* \ubaa8\ubc14\uc77c \ubc0f \ubd84\ud560\ud654\uba74 \ubbf8\ub514\uc5b4 \ucffc\ub9ac (\ud654\uba74 \uac00\ub85c\ud3ed 1100px \uc774\ud558) */
+        @media (max-width: 1100px) {
             body.gtp-smart-layout-active {
                 font-size: 11px !important;
             }
-            body.gtp-smart-layout-active .gtp-smart-top-row {
-                gap: 6px !important;
+            body.gtp-smart-layout-active .gtp-smart-col-date {
+                flex-wrap: wrap !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                max-height: none !important;
             }
             body.gtp-smart-layout-active #gtp_smart_cal_box,
             body.gtp-smart-layout-active .gtp-smart-cal-card {
-                flex: 1 1 200px !important;
-                max-width: 240px !important;
-                min-width: 190px !important;
+                flex: 1 1 230px !important;
+                max-width: 100% !important;
+                width: auto !important;
                 height: 250px !important;
-                max-height: 250px !important;
-                padding: 4px 6px !important;
             }
             body.gtp-smart-layout-active #gtp_smart_filter_box,
             body.gtp-smart-layout-active .gtp-smart-filter-card {
-                flex: 1 1 170px !important;
-                max-width: 220px !important;
-                min-width: 160px !important;
+                flex: 1 1 200px !important;
+                max-width: 100% !important;
+                width: auto !important;
                 height: 250px !important;
-                max-height: 250px !important;
-                padding: 4px 6px !important;
             }
             body.gtp-smart-layout-active .gtp-smart-col-detail {
-                flex: 0 0 100% !important;
+                order: 2 !important;
                 width: 100% !important;
                 min-width: 100% !important;
+                flex: 0 0 100% !important;
                 height: auto !important;
-                min-height: 80px !important;
-                max-height: 130px !important;
-                margin-top: 4px !important;
-                padding: 4px 8px !important;
+                min-height: 120px !important;
+                max-height: 180px !important;
             }
             body.gtp-smart-layout-active .gtp-smart-col-course {
-                flex: 0 0 100% !important;
+                order: 3 !important;
                 width: 100% !important;
-                margin-top: 6px !important;
-                padding: 6px 8px !important;
-                min-height: 180px !important;
-                max-height: 280px !important;
+                min-width: 100% !important;
+                flex: 0 0 100% !important;
+                height: auto !important;
+                max-height: none !important;
                 display: block !important;
                 visibility: visible !important;
+                position: relative !important;
+                z-index: 10 !important;
             }
-            body.gtp-smart-layout-active #gtp_smart_regions_grid,
-            body.gtp-smart-layout-active .gtp-regions-grid {
-                display: grid !important;
-                visibility: visible !important;
-                gap: 6px !important;
-                max-height: 250px !important;
-            }
-            body.gtp-smart-layout-active .gtp-region-card {
-                padding: 4px 6px !important;
-                max-height: 240px !important;
-            }
-            body.gtp-smart-layout-active .gtp-region-buttons-wrap {
-                gap: 3px !important;
-                max-height: 195px !important;
-            }
-            body.gtp-smart-layout-active .gtp-smart-course-btn {
-                font-size: 10px !important;
-                min-height: 30px !important;
-                padding: 1px 1px !important;
+            body.gtp-smart-layout-active #gtp_smart_regions_grid {
+                max-height: 520px !important;
             }
         }
     `;
@@ -2164,8 +2175,7 @@ let __gtp_cached_common_parent=null;
 let __gtp_cached_form_container=null;
 let __gtp_cached_detected_regions=[];
 let __gtp_cached_optimized_btns=[];
-let __gtp_cached_scroll_el=null;
-let __gtp_cached_orig_btns=[];
+let __gtp_cached_orig_scroll_el=null;
 function _0x1029(rawTxt,titleVal){
 let text=rawTxt;
 if(titleVal&&titleVal.length>rawTxt.length&&!titleVal.includes('\ud074\ub9ad')){
@@ -2334,11 +2344,23 @@ return clean.slice(0,-2)+'\n\x63\x63';
 return clean;
 }
 function _0x102a(){
+const cachedCourse=document.querySelector('[\x64\x61\x74\x61-\x67\x74\x70-\x6e\x61\x74\x69\x76\x65-\x63\x6f\x75\x72\x73\x65="\x74\x72\x75\x65"]');
+const cachedDate=document.querySelector('[\x64\x61\x74\x61-\x67\x74\x70-\x6e\x61\x74\x69\x76\x65-\x64\x61\x74\x65="\x74\x72\x75\x65"]');
+const cachedDetail=document.querySelector('[\x64\x61\x74\x61-\x67\x74\x70-\x6e\x61\x74\x69\x76\x65-\x64\x65\x74\x61\x69\x6c="\x74\x72\x75\x65"]');
+const cachedRow=document.querySelector('[\x64\x61\x74\x61-\x67\x74\x70-\x6e\x61\x74\x69\x76\x65-\x72\x6f\x77="\x74\x72\x75\x65"]');
+if(cachedCourse&&cachedDate&&cachedRow&&document.body.contains(cachedRow)){
+return{
+rowContainer:cachedRow,
+colDate:cachedDate,
+colCourse:cachedCourse,
+colDetail:cachedDetail
+};
+}
 const allHeaders=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x64\x69\x76, \x73\x70\x61\x6e, \x68\x31, \x68\x32, \x68\x33, \x68\x34, \x68\x35, \x68\x36, \x62, \x73\x74\x72\x6f\x6e\x67, \x70'));
 const courseHeader=allHeaders.find(el=>{
-if(el.children.length>2)return false;
-const t=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return t==='\uace8\ud504\uc7a5\uc120\ud0dd'||t.startsWith('\uace8\ud504\uc7a5\uc120\ud0dd');
+if(el.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'))return false;
+const t=(el.textContent||'').trim().replace(/\s+/g,'');
+return t==='\uace8\ud504\uc7a5\uc120\ud0dd'||t==='\uace8\ud504\uc7a5\uc120\ud0dd\uc9c0\uc5ed\ubcc4'||(t.startsWith('\uace8\ud504\uc7a5\uc120\ud0dd')&&t.length<=15);
 });
 if(!courseHeader){
 return null;
@@ -2352,32 +2374,39 @@ for(let step=0;step<8&&cur&&cur.parentElement&&cur.parentElement!==document.body
 const parent=cur.parentElement;
 const children=Array.from(parent.children);
 const dateChild=children.find(c=>{
-const txt=c.innerText||c.textContent||'';
+const txt=c.textContent||'';
 return(txt.includes('\ub0a0\uc9dc \uc120\ud0dd')||txt.includes('\ub0a0\uc9dc\uc120\ud0dd'))&&!txt.includes('\uace8\ud504\uc7a5 \uc120\ud0dd');
 });
 const courseChild=children.find(c=>{
-const txt=c.innerText||c.textContent||'';
+const txt=c.textContent||'';
 return(txt.includes('\uace8\ud504\uc7a5 \uc120\ud0dd')||txt.includes('\uace8\ud504\uc7a5\uc120\ud0dd')||txt.includes('\uacbd\uae30\ubd81\ubd80'))&&!txt.includes('\ub0a0\uc9dc \uc120\ud0dd');
 });
 if(dateChild&&courseChild){
 rowContainer=parent;
 colDate=dateChild;
 colCourse=courseChild;
+try{
+rowContainer.dataset.gtpNativeRow="\x74\x72\x75\x65";
+colDate.dataset.gtpNativeDate="\x74\x72\x75\x65";
+colCourse.dataset.gtpNativeCourse="\x74\x72\x75\x65";
+}catch(e){}
 const detailChild=children.find(c=>{
 if(c===colDate||c===colCourse)return false;
-const txt=c.innerText||c.textContent||'';
+const txt=c.textContent||'';
 return(txt.includes('\ub0b4\uc6a9')&&txt.includes('\uc791\uc131\uc77c'))||txt.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd')||txt.includes('\uace8\ud504\uc7a5\uc744\uc120\ud0dd')||txt.includes('\ud2b9\uc774\uc0ac\ud56d')||txt.includes('\ud560\uc778');
 });
 if(detailChild){
 colDetail=detailChild;
+try{colDetail.dataset.gtpNativeDetail="\x74\x72\x75\x65";}catch(e){}
 }else{
 const courseIdx=children.indexOf(colCourse);
 if(courseIdx!==-1&&courseIdx+1<children.length){
 for(let i=courseIdx+1;i<children.length;i++){
 const next=children[i];
-const nextTxt=next.innerText||next.textContent||'';
+const nextTxt=next.textContent||'';
 if(!nextTxt.includes('\uc794\uc5ec\ud0c0\uc784')&&!nextTxt.includes('\uc2e0\uccad\uc77c\uc790')&&!nextTxt.includes('\uc2e0\uccad\uad6c\ubd84')&&!nextTxt.includes('\uc2e0\uccad \uad6c\ubd84')){
 colDetail=next;
+try{colDetail.dataset.gtpNativeDetail="\x74\x72\x75\x65";}catch(e){}
 break;
 }
 }
@@ -2392,7 +2421,7 @@ const candidates=Array.from(rowContainer.querySelectorAll('\x74\x64, \x64\x69\x7
 if(el===colDate||el===colCourse)return false;
 if(colDate&&colDate.contains(el))return false;
 if(colCourse&&colCourse.contains(el))return false;
-const t=el.innerText||el.textContent||'';
+const t=el.textContent||'';
 return((t.includes('\ub0b4\uc6a9')&&t.includes('\uc791\uc131\uc77c'))||t.includes('\uace8\ud504\uc7a5\uc744 \uc120\ud0dd')||t.includes('\uace8\ud504\uc7a5\uc744\uc120\ud0dd'))&&!t.includes('\uc794\uc5ec\ud0c0\uc784');
 });
 if(candidates.length>0){
@@ -2401,10 +2430,11 @@ while(best.parentElement&&best.parentElement!==rowContainer){
 best=best.parentElement;
 }
 colDetail=best;
+try{colDetail.dataset.gtpNativeDetail="\x74\x72\x75\x65";}catch(e){}
 }
 }
 if(colDetail){
-const dTxt=colDetail.innerText||colDetail.textContent||'';
+const dTxt=colDetail.textContent||'';
 if(colDetail===colDate||colDetail===colCourse||dTxt.includes('\uacbd\uae30\ubd81\ubd80')||dTxt.includes('\uacbd\uae30\ub0a8\ubd80')){
 colDetail=null;
 }
@@ -2507,43 +2537,36 @@ parent.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
 }
 function _0x102d(colCourse){
 if(!colCourse)return null;
-if(__gtp_cached_scroll_el&&colCourse.contains(__gtp_cached_scroll_el)&&__gtp_cached_scroll_el!==colCourse&&__gtp_cached_scroll_el.id!=='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'){
-return __gtp_cached_scroll_el;
+if(__gtp_cached_orig_scroll_el&&colCourse.contains(__gtp_cached_orig_scroll_el)){
+return __gtp_cached_orig_scroll_el;
 }
-const candidates=[colCourse,...Array.from(colCourse.querySelectorAll('\x64\x69\x76, \x75\x6c, \x73\x65\x63\x74\x69\x6f\x6e'))];
+const candidates=Array.from(colCourse.querySelectorAll('\x64\x69\x76, \x75\x6c, \x73\x65\x63\x74\x69\x6f\x6e, \x74\x61\x62\x6c\x65'));
 let best=null;
 for(const el of candidates){
 if(el.id==='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'||el.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'))continue;
-const txt=el.innerText||el.textContent||'';
+const txt=el.textContent||'';
 if(txt.includes('\uacbd\uae30\ubd81\ubd80')&&txt.includes('\uacbd\uae30\ub0a8\ubd80')){
 if(!best||best.contains(el)){
 best=el;
 }
 }
 }
-if(best&&best!==colCourse&&best.id!=='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'){
-__gtp_cached_scroll_el=best;
+if(best){
+__gtp_cached_orig_scroll_el=best;
 }
-return best||colCourse;
+return best;
 }
 function _0x102e(colCourse){
 if(!colCourse)return[];
-const scrollEl=_0x102d(colCourse)||colCourse;
-let candidateElements=Array.from(scrollEl.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x62\x74\x6e'));
-if(candidateElements.length===0){
-candidateElements=Array.from(scrollEl.querySelectorAll('\x74\x64, \x73\x70\x61\x6e, \x64\x69\x76, \x6c\x69, \x6c\x61\x62\x65\x6c'));
-}
+const candidateElements=Array.from(colCourse.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x62\x74\x6e, \x73\x70\x61\x6e, \x74\x64, \x64\x69\x76, \x6c\x69, \x6c\x61\x62\x65\x6c'))
+.filter(el=>!el.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'));
 const uniqueSet=new Set();
 const result=[];
 candidateElements.forEach(el=>{
-if(el.id==='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'||el.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'))return;
+if(el.children.length>=3)return;
 const btn=el.closest('\x62\x75\x74\x74\x6f\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x62\x74\x6e')||el;
 if(uniqueSet.has(btn))return;
-if(!btn.dataset.gtpOrigText){
-const initialTxt=(btn.innerText||btn.textContent||'').trim();
-if(initialTxt)btn.dataset.gtpOrigText=initialTxt;
-}
-const rawTxt=(btn.dataset.gtpOrigText||btn.innerText||btn.textContent||'').trim();
+const rawTxt=(btn.dataset.gtpOrigText||btn.textContent||'').trim();
 if(rawTxt.length<2||rawTxt.length>30)return;
 const cleanT=rawTxt.replace(/\s+/g,'');
 if(cleanT.includes('\uace8\ud504\uc7a5\uc120\ud0dd')||cleanT.includes('\uc9c0\uc5ed\ubcc4')||cleanT==='\uace8\ud504\uc7a5\uc120\ud0dd\uc9c0\uc5ed\ubcc4')return;
@@ -2559,55 +2582,16 @@ return result;
 }
 function _0x102f(colCourse){
 if(!colCourse)return 0;
-const scrollEl=_0x102d(colCourse);
-let allBtns=_0x102e(colCourse);
-if(allBtns.length===0&&__gtp_cached_orig_btns.length>0){
-allBtns=__gtp_cached_orig_btns;
-}else if(allBtns.length>0){
-__gtp_cached_orig_btns=allBtns;
-}
+const allBtns=_0x102e(colCourse);
 if(allBtns.length===0){
-console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u23f3 \uad6c\uc7a5 \ubc84\ud2bc \ub85c\ub529 \ub300\uae30 \uc911\x2e\x2e\x2e (\x30\uac1c \uac10\uc9c0)");
+console.warn("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26a0\ufe0f \uad6c\uc7a5 \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud558\uc5ec \uc6d0\ubcf8 \uc720\uc9c0");
 return 0;
 }
-const regionList=[
-{name:'\uacbd\uae30\ubd81\ubd80',match:(t)=>t.includes('\uacbd\uae30\ubd81\ubd80')||t==='\ubd81\ubd80'},
-{name:'\uacbd\uae30\ub0a8\ubd80',match:(t)=>t.includes('\uacbd\uae30\ub0a8\ubd80')||t==='\ub0a8\ubd80'},
-{name:'\ucda9\uccad\ub3c4',match:(t)=>t.includes('\ucda9\uccad')},
-{name:'\uac15\uc6d0\ub3c4',match:(t)=>t.includes('\uac15\uc6d0')},
-{name:'\uacbd\uc0c1\ub3c4',match:(t)=>t.includes('\uacbd\uc0c1')||t.includes('\uc601\ub0a8')},
-{name:'\uc804\ub77c\ub3c4',match:(t)=>t.includes('\uc804\ub77c')||t.includes('\ud638\ub0a8')},
-{name:'\uc81c\uc8fc\ub3c4',match:(t)=>t.includes('\uc81c\uc8fc')}
-];
-const detectedHeaders=[];
-if(scrollEl){
-const allTextEls=Array.from(scrollEl.querySelectorAll('\x68\x31, \x68\x32, \x68\x33, \x68\x34, \x68\x35, \x68\x36, \x74\x68, \x74\x64, \x64\x69\x76, \x73\x70\x61\x6e, \x70, \x62, \x73\x74\x72\x6f\x6e\x67, \x64\x74, \x6c\x69'));
-for(const el of allTextEls){
-if(el.id==='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'||el.closest('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'))continue;
-if(el.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x61\x2e\x62\x74\x6e, \x2e\x62\x74\x6e').length>0)continue;
-if(el.children.length>2)continue;
-const cleanT=(el.innerText||el.textContent||'').trim().replace(/[\s\[\]\-:_]/g,'');
-for(const def of regionList){
-if(def.match(cleanT)){
-if(!detectedHeaders.some(d=>d.name===def.name)){
-detectedHeaders.push({name:def.name,el});
-}
-break;
-}
-}
-}
-}
-detectedHeaders.sort((a,b)=>{
-const pos=a.el.compareDocumentPosition(b.el);
-if(pos&Node.DOCUMENT_POSITION_FOLLOWING)return-1;
-if(pos&Node.DOCUMENT_POSITION_PRECEDING)return 1;
-return 0;
-});
-__gtp_cached_detected_regions=detectedHeaders;
+const scrollEl=_0x102d(colCourse);
 if(scrollEl&&scrollEl!==colCourse){
 if(!scrollEl.__gtp_orig_style){
 scrollEl.__gtp_orig_style={
-visibility:scrollEl.style.visibility||'',
+opacity:scrollEl.style.opacity||'',
 height:scrollEl.style.height||'',
 maxHeight:scrollEl.style.maxHeight||'',
 overflow:scrollEl.style.overflow||'',
@@ -2617,7 +2601,7 @@ border:scrollEl.style.border||'',
 pointerEvents:scrollEl.style.pointerEvents||''
 };
 }
-scrollEl.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x68\x69\x64\x64\x65\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+scrollEl.style.setProperty('\x6f\x70\x61\x63\x69\x74\x79','\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 scrollEl.style.setProperty('\x68\x65\x69\x67\x68\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 scrollEl.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 scrollEl.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x68\x69\x64\x64\x65\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2628,7 +2612,8 @@ scrollEl.style.setProperty('\x70\x6f\x69\x6e\x74\x65\x72-\x65\x76\x65\x6e\x74\x7
 }
 Array.from(colCourse.children).forEach(child=>{
 if(child!==scrollEl&&child.id!=='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x6e\x73\x5f\x67\x72\x69\x64'){
-const txt=(child.innerText||child.textContent||'').trim();
+if(scrollEl&&child.contains(scrollEl))return;
+const txt=(child.textContent||'').trim();
 const isHeader=(txt.includes('\uace8\ud504\uc7a5 \uc120\ud0dd')||txt.includes('\uace8\ud504\uc7a5\uc120\ud0dd'))&&!txt.includes('\uacbd\uae30\ubd81\ubd80')&&!txt.includes('\uacbd\uae30\ub0a8\ubd80');
 if(!isHeader){
 if(child.__gtp_orig_display===undefined){
@@ -2645,40 +2630,58 @@ gridContainer.id='\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72\x65\x67\x69\x6f\x
 gridContainer.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e\x73-\x67\x72\x69\x64';
 }
 gridContainer.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x67\x72\x69\x64','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x67\x72\x69\x64-\x74\x65\x6d\x70\x6c\x61\x74\x65-\x63\x6f\x6c\x75\x6d\x6e\x73','\x72\x65\x70\x65\x61\x74(\x33, \x6d\x69\x6e\x6d\x61\x78(\x30, \x31\x66\x72))','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x73\x74\x72\x65\x74\x63\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x32\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x34\x38\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 gridContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x32\x70\x78 \x36\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x32\x70\x78 \x34\x70\x78 \x36\x70\x78 \x32\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+const colDefs=[
+{colIndex:1,regions:['\uacbd\uae30\ubd81\ubd80','\uac15\uc6d0\ub3c4','\uc81c\uc8fc\ub3c4']},
+{colIndex:2,regions:['\uacbd\uae30\ub0a8\ubd80','\uacbd\uc0c1\ub3c4']},
+{colIndex:3,regions:['\ucda9\uccad\ub3c4','\uc804\ub77c\ub3c4']}
+];
 const regionCardsMap=new Map();
-regionList.forEach(reg=>{
-let card=gridContainer.querySelector(`.gtp-region-card[data-gtp-region="${reg.name}"]`);
+colDefs.forEach(cDef=>{
+let colEl=gridContainer.querySelector(`.gtp-region-col[data-gtp-col="${cDef.colIndex}"]`);
+if(!colEl){
+colEl=document.createElement('\x64\x69\x76');
+colEl.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x63\x6f\x6c';
+colEl.dataset.gtpCol=String(cDef.colIndex);
+colEl.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x63\x6f\x6c\x75\x6d\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colEl.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+gridContainer.appendChild(colEl);
+}
+cDef.regions.forEach(regName=>{
+let card=colEl.querySelector(`.gtp-region-card[data-gtp-region="${regName}"]`);
 let headerBadge;
 let btnsWrap;
 if(!card){
 card=document.createElement('\x64\x69\x76');
 card.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x63\x61\x72\x64';
-card.dataset.gtpRegion=reg.name;
+card.dataset.gtpRegion=regName;
 headerBadge=document.createElement('\x64\x69\x76');
 headerBadge.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64';
-headerBadge.innerText=`[${reg.name}]`;
+headerBadge.innerText=`[${regName}]`;
 card.appendChild(headerBadge);
 btnsWrap=document.createElement('\x64\x69\x76');
 btnsWrap.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x62\x75\x74\x74\x6f\x6e\x73-\x77\x72\x61\x70';
 card.appendChild(btnsWrap);
-gridContainer.appendChild(card);
+colEl.appendChild(card);
 }else{
 headerBadge=card.querySelector('\x2e\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64');
 if(!headerBadge){
 headerBadge=document.createElement('\x64\x69\x76');
 headerBadge.className='\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x68\x65\x61\x64\x65\x72-\x73\x74\x79\x6c\x65\x64';
-headerBadge.innerText=`[${reg.name}]`;
+headerBadge.innerText=`[${regName}]`;
 card.insertBefore(headerBadge,card.firstChild);
 }
 btnsWrap=card.querySelector('\x2e\x67\x74\x70-\x72\x65\x67\x69\x6f\x6e-\x62\x75\x74\x74\x6f\x6e\x73-\x77\x72\x61\x70');
@@ -2690,10 +2693,13 @@ card.appendChild(btnsWrap);
 }
 headerBadge.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x62\x6c\x6f\x63\x6b','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 headerBadge.style.setProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-headerBadge.innerText=`[${reg.name}]`;
+headerBadge.innerText=`[${regName}]`;
 card.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 card.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 card.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+card.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+card.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+card.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x67\x72\x69\x64','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x67\x72\x69\x64-\x74\x65\x6d\x70\x6c\x61\x74\x65-\x63\x6f\x6c\x75\x6d\x6e\x73','\x72\x65\x70\x65\x61\x74(\x33, \x6d\x69\x6e\x6d\x61\x78(\x30, \x31\x66\x72))','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x67\x61\x70','\x34\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2701,27 +2707,20 @@ btnsWrap.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\
 btnsWrap.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x62\x6f\x72\x64\x65\x72-\x62\x6f\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 btnsWrap.style.setProperty('\x61\x6c\x69\x67\x6e-\x63\x6f\x6e\x74\x65\x6e\x74','\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-regionCardsMap.set(reg.name,{card,btnsWrap});
+btnsWrap.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+btnsWrap.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+btnsWrap.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+regionCardsMap.set(regName,{card,btnsWrap});
+});
 });
 function _0x1030(btn){
-const rawTxt=(btn.dataset.gtpOrigText||btn.innerText||btn.textContent||'').trim().replace(/\s+/g,'');
+const rawTxt=(btn.dataset.gtpOrigText||btn.textContent||'').trim().replace(/\s+/g,'');
 if(rawTxt.includes('\uc601\uad11'))return'\uc804\ub77c\ub3c4';
 if(rawTxt.includes('\uc2a4\ud504\ub9c1\ub370\uc77c')||rawTxt.includes('\uc5d8\ub9ac\uc2dc\uc548')||rawTxt.includes('\ub77c\uc628')||rawTxt.includes('\ud0c0\ubbf8\uc6b0\uc2a4')||rawTxt.includes('\uc5d0\ucf54\ub79c\ub4dc')||rawTxt.includes('\uc81c\uc8fc'))return'\uc81c\uc8fc\ub3c4';
 if(rawTxt.includes('\ubca8\ub77c\uc2a4\ud1a4')||rawTxt.includes('\ube14\ub799\ubc38\ub9ac')||rawTxt.includes('\uc0e4\uc778\ub370\uc77c')||rawTxt.includes('\ub3d9\uc6d0\uc36c\ubc38\ub9ac')||rawTxt.includes('\uc36c\ubc38\ub9ac')||rawTxt.includes('\ube44\ucf58\ud790\uc2a4')||rawTxt.includes('\uc124\uc545')||rawTxt.includes('\uc54c\ud39c\uc2dc\uc544')||rawTxt.includes('\uc5d0\uc2a4\ud30c\ud06c\ub0a8\ud55c\uac15')||rawTxt.includes('\uc625\uc2a4\ud544\ub4dc')||rawTxt.includes('\uc6f0\ub9ac\ud790\ub9ac')||rawTxt.includes('\ud30c\uc778\ubc38\ub9ac'))return'\uac15\uc6d0\ub3c4';
 if(rawTxt.includes('\uac00\uc0b0')||rawTxt.includes('\uc5d0\uc2a4\ud30c\ud06c\ubc00\uc591')||rawTxt.includes('\uc5e0\uc2a4\ud074\ub7fd')||rawTxt.includes('\uc2a4\ud1a4\ube44\uce58')||rawTxt.includes('\uc2a4\ud504\ub9c1\ud790')||rawTxt.includes('\ud074\ub7fd\ub514\uac70\ucc3d')||rawTxt.includes('\ub9c8\uc6b0\ub098'))return'\uacbd\uc0c1\ub3c4';
 if(rawTxt.includes('\uace8\ud504\uc874\uc9c4\ucc9c')||rawTxt.includes('\uace8\ud504\uc874\ucc9c\uc548')||rawTxt.includes('\uace8\ud504\uc874\ud654\ub791')||rawTxt.includes('\ub300\uc601')||rawTxt.includes('\ub85c\uc584\ud3ec\ub808')||rawTxt.includes('\uc18d\ub9ac\uc0b0')||rawTxt.includes('\uc194\ub77c\uace0')||rawTxt.includes('\uc62c\ub370\uc774')||rawTxt.includes('\ud50c\ub77c\ubc0d\uace0')||rawTxt.includes('\ud788\ub4e0\ubc38\ub9ac')||rawTxt.includes('\ub808\uc778\ubcf4\uc6b0')||rawTxt.includes('\ubcf4\ub839')||rawTxt.includes('\ubaa8\uce74')||rawTxt.includes('\uc784\ud398\ub9ac\uc5bc')||rawTxt.includes('\uc9c4\ucc9c')||rawTxt.includes('\ucc9c\uc548')||rawTxt.includes('\ud654\ub791')||rawTxt.includes('\ub5bc\uc81c\ubca0')||rawTxt.includes('\uc54c\ud504\uc2a4\ub300\uc601')||rawTxt.includes('\ud074\ub7fd\ub514\ubcf4\uc740')||rawTxt.includes('\uac10\uace1')||rawTxt.includes('\uadf8\ub79c\ub4dc\uccad\uc8fc')||rawTxt.includes('\ub3d9\ucd0c')||rawTxt.includes('\ub85c\uc584\ub9c1\uc2a4')||rawTxt.includes('\ub9c8\ub860\ub274\ub370\uc774')||rawTxt.includes('\ubc31\uc81c')||rawTxt.includes('\ube14\ub799\uc2a4\ud1a4\ubca8\ud3ec\ub808')||rawTxt.includes('\uc138\ub808\ub2c8\ud2f0')||rawTxt.includes('\uc544\ub984\ub2e4\uc6b4'))return'\ucda9\uccad\ub3c4';
 if(rawTxt.includes('\uace0\uc591')||rawTxt.includes('\ub0a8\uc591\uc8fc')||rawTxt.includes('\ubca0\uc2a4\ud2b8\ubc38\ub9ac')||rawTxt.includes('\ube44\uc804\ud790\uc2a4')||rawTxt.includes('\uc11c\uc6b8\ud55c\uc591')||rawTxt.includes('\ud30c\uc8fc')||rawTxt.includes('\ud3ec\ub808\uc2a4\ud2b8\ud790')||rawTxt.includes('\ud55c\uc591\ud30c\uc778')||rawTxt.includes('\ub9ac\uc2f8')||rawTxt.includes('\ub9ac\uc564\ub9ac')||rawTxt.includes('\ubca0\ub274\uc9c0')||rawTxt.includes('\uc0bc\ubc1c\ub77c')||rawTxt.includes('\uc11c\uc11c\uc6b8')||rawTxt.includes('\uc2a4\ub9c8\ud2b8\x4b\x55')||rawTxt.includes('\uc36c\ud790')||rawTxt.includes('\uc790\uc720\ub85c')||rawTxt.includes('\uc81c\uc774\ud37c\ube14\ub9ad')||rawTxt.includes('\ud06c\ub9ac\uc2a4\ud0c8\ubc38\ub9ac')||rawTxt.includes('\ud3ec\ucc9c\ud790\uc2a4')||rawTxt.includes('\ud544\ub85c\uc2a4')||rawTxt.includes('\ud55c\ub9bc\uad11\ub989'))return'\uacbd\uae30\ubd81\ubd80';
-if(detectedHeaders.length>0){
-let assigned=detectedHeaders[0].name;
-for(let i=0;i<detectedHeaders.length;i++){
-const h=detectedHeaders[i].el;
-const pos=h.compareDocumentPosition(btn);
-if(pos&Node.DOCUMENT_POSITION_FOLLOWING){
-assigned=detectedHeaders[i].name;
-}
-}
-return assigned;
-}
 return'\uacbd\uae30\ub0a8\ubd80';
 }
 regionCardsMap.forEach(regData=>{
@@ -2729,7 +2728,7 @@ regData.btnsWrap.innerHTML='';
 });
 const createdBtns=[];
 allBtns.forEach(origBtn=>{
-const rawTxt=(origBtn.dataset.gtpOrigText||origBtn.innerText||origBtn.textContent||'').trim();
+const rawTxt=(origBtn.dataset.gtpOrigText||origBtn.textContent||'').trim();
 const regName=_0x1030(origBtn);
 const regData=regionCardsMap.get(regName);
 if(!regData)return;
@@ -2785,7 +2784,7 @@ __gtp_cached_common_parent=colCourse;
 if(gridContainer.parentElement!==colCourse){
 colCourse.appendChild(gridContainer);
 }
-console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \uad8c\uc5ed \uadf8\ub9ac\ub4dc \uc0dd\uc131 \uc644\ub8cc (7\uac1c \uad8c\uc5ed \uaf49 \ucc44\uc6c0, \uad6c\uc7a5 ${createdBtns.length}\uac1c)`);
+console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \uad8c\uc5ed \uadf8\ub9ac\ub4dc \uc0dd\uc131 \uc644\ub8cc (3\uac1c \uc138\ub85c \uc5f4, \ub0b4\ubd80 \uc2a4\ud06c\ub864 \uc5c6\uc74c, \uad6c\uc7a5 ${createdBtns.length}\uac1c)`);
 return createdBtns.length;
 }
 function _0x1031(){
@@ -2793,51 +2792,60 @@ const grid=document.getElementById('\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x72
 if(grid){
 grid.remove();
 }
-const scrollEl=__gtp_cached_scroll_el;
-if(scrollEl){
-scrollEl.style.removeProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79');
-scrollEl.style.removeProperty('\x68\x65\x69\x67\x68\x74');
-scrollEl.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
-scrollEl.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
-scrollEl.style.removeProperty('\x6d\x61\x72\x67\x69\x6e');
-scrollEl.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67');
-scrollEl.style.removeProperty('\x62\x6f\x72\x64\x65\x72');
-scrollEl.style.removeProperty('\x70\x6f\x69\x6e\x74\x65\x72-\x65\x76\x65\x6e\x74\x73');
-if(scrollEl.__gtp_orig_style){
-Object.keys(scrollEl.__gtp_orig_style).forEach(k=>{
-const val=scrollEl.__gtp_orig_style[k];
-if(val){
-scrollEl.style[k]=val;
+const colCourse=__gtp_cached_course_col||(_0x102a()||{}).colCourse;
+if(colCourse){
+const allDescendants=colCourse.querySelectorAll('*');
+allDescendants.forEach(el=>{
+if(el.__gtp_orig_style){
+const s=el.style;
+const o=el.__gtp_orig_style;
+s.opacity=o.opacity||'';
+s.height=o.height||'';
+s.maxHeight=o.maxHeight||'';
+s.overflow=o.overflow||'';
+s.margin=o.margin||'';
+s.padding=o.padding||'';
+s.border=o.border||'';
+s.pointerEvents=o.pointerEvents||'';
+delete el.__gtp_orig_style;
 }
+if(el.__gtp_orig_display!==undefined){
+el.style.display=el.__gtp_orig_display;
+delete el.__gtp_orig_display;
+}
+if(el.style.opacity==='\x30')el.style.removeProperty('\x6f\x70\x61\x63\x69\x74\x79');
+if(el.style.height==='\x30\x70\x78')el.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+if(el.style.maxHeight==='\x30\x70\x78')el.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+if(el.style.overflow==='\x68\x69\x64\x64\x65\x6e')el.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
+if(el.style.pointerEvents==='\x6e\x6f\x6e\x65')el.style.removeProperty('\x70\x6f\x69\x6e\x74\x65\x72-\x65\x76\x65\x6e\x74\x73');
+if(el.style.display==='\x6e\x6f\x6e\x65')el.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
 });
-delete scrollEl.__gtp_orig_style;
-}
-}
-const courseCol=__gtp_cached_course_col;
-if(courseCol){
-Array.from(courseCol.children).forEach(child=>{
-child.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
-child.style.removeProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79');
+Array.from(colCourse.children).forEach(child=>{
 if(child.__gtp_orig_display!==undefined){
-if(child.__gtp_orig_display){
 child.style.display=child.__gtp_orig_display;
-}
 delete child.__gtp_orig_display;
+}else if(child.style.display==='\x6e\x6f\x6e\x65'){
+child.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
 }
 });
-const propsToRemove=[
-'\x6f\x72\x64\x65\x72','\x66\x6c\x65\x78','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67',
-'\x64\x69\x73\x70\x6c\x61\x79','\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x6d\x61\x72\x67\x69\x6e','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64',
-'\x62\x6f\x72\x64\x65\x72','\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x70\x61\x64\x64\x69\x6e\x67','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6f\x76\x65\x72\x66\x6c\x6f\x77'
-];
-propsToRemove.forEach(p=>courseCol.style.removeProperty(p));
-courseCol.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
+}
+if(__gtp_cached_orig_scroll_el&&__gtp_cached_orig_scroll_el.__gtp_orig_style){
+const s=__gtp_cached_orig_scroll_el.style;
+const o=__gtp_cached_orig_scroll_el.__gtp_orig_style;
+s.opacity=o.opacity||'';
+s.height=o.height||'';
+s.maxHeight=o.maxHeight||'';
+s.overflow=o.overflow||'';
+s.margin=o.margin||'';
+s.padding=o.padding||'';
+s.border=o.border||'';
+s.pointerEvents=o.pointerEvents||'';
+delete __gtp_cached_orig_scroll_el.__gtp_orig_style;
 }
 __gtp_cached_optimized_btns=[];
 __gtp_cached_detected_regions=[];
 __gtp_cached_common_parent=null;
-__gtp_cached_scroll_el=null;
-__gtp_cached_orig_btns=[];
+__gtp_cached_orig_scroll_el=null;
 }
 function _0x1032(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u26f3 \uace8\ud504\ub77d \uc2a4\ud0c0\uc77c \ucd5c\uc801\ud654 \uc2dc\uc791\x2e\x2e\x2e");
@@ -2856,6 +2864,23 @@ rowContainer.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\
 rowContainer.style.setProperty('\x67\x61\x70','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x66\x6c\x65\x78-\x73\x74\x61\x72\x74','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 rowContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d','\x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+rowContainer.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+let p=rowContainer.parentElement;
+while(p&&p!==document.body){
+if(p.tagName==='\x54\x42\x4f\x44\x59'||p.tagName==='\x54\x41\x42\x4c\x45'){
+if(p.dataset.gtpOrigDisplay===undefined){
+p.dataset.gtpOrigDisplay=p.style.display||'';
+}
+p.style.setProperty('\x64\x69\x73\x70\x6c\x61\x79','\x62\x6c\x6f\x63\x6b','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+p.style.setProperty('\x77\x69\x64\x74\x68','\x31\x30\x30%','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+p.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+p.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+p.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+}
+p=p.parentElement;
+}
 }
 if(colDate){
 __gtp_cached_date_col=colDate;
@@ -2866,7 +2891,7 @@ if(colDetail){
 __gtp_cached_detail_col=colDetail;
 colDetail.classList.add('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
 colDetail.style.setProperty('\x6f\x72\x64\x65\x72','\x32','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colDetail.style.setProperty('\x66\x6c\x65\x78','\x31 \x31 \x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colDetail.style.setProperty('\x66\x6c\x65\x78','\x31 \x31 \x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x32\x36\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x77\x69\x64\x74\x68','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colDetail.style.setProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -2928,9 +2953,11 @@ colCourse.style.setProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x23\x66
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72','\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x63\x62\x64\x35\x65\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x38\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 colCourse.style.setProperty('\x70\x61\x64\x64\x69\x6e\x67','\x38\x70\x78 \x31\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x32\x30\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x33\x32\x30\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-colCourse.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x68\x69\x64\x64\x65\x6e','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x68\x65\x69\x67\x68\x74','\x61\x75\x74\x6f','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6e\x6f\x6e\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77','\x76\x69\x73\x69\x62\x6c\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+colCourse.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31\x30','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 const count=_0x102f(colCourse)||0;
 console.log(`[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u2705 \uad6c\uc7a5 \ubc84\ud2bc ${count}\uac1c 2\uc904 \uc904\ubc14\uafc8 \ubc0f \ud074\ub9ad \ud578\ub4e4\ub7ec \uc5f0\ub3d9 \uc644\ub8cc`);
@@ -2953,7 +2980,7 @@ __gtp_cached_form_container=formContainer;
 formContainer.style.setProperty('\x63\x6c\x65\x61\x72','\x62\x6f\x74\x68','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 formContainer.style.setProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e','\x72\x65\x6c\x61\x74\x69\x76\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 formContainer.style.setProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x31\x35\x70\x78','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-formContainer.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x35','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+formContainer.style.setProperty('\x7a-\x69\x6e\x64\x65\x78','\x31','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 }
 }
 return{success:true,buttonCount:count};
@@ -2961,71 +2988,110 @@ return{success:true,buttonCount:count};
 function _0x1033(){
 console.log("[\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0] \u21a9\ufe0f \uc6d0\ub798 \uc21c\uc815 \ubdf0 \ubcf5\uc6d0 \uc2dc\uc791\x2e\x2e\x2e");
 _0x1031();
-if(__gtp_cached_date_col){
-_0x102c(__gtp_cached_date_col);
+const cols=_0x102a()||{};
+const rowContainer=__gtp_cached_row||cols.rowContainer;
+const colDate=__gtp_cached_date_col||cols.colDate;
+const colCourse=__gtp_cached_course_col||cols.colCourse;
+const colDetail=__gtp_cached_detail_col||cols.colDetail;
+const formContainer=__gtp_cached_form_container;
+if(colDate){
+_0x102c(colDate);
+colDate.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
+colDate.style.removeProperty('\x6f\x72\x64\x65\x72');
+colDate.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+colDate.style.removeProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e');
+colDate.style.removeProperty('\x66\x6c\x65\x78');
+colDate.style.removeProperty('\x67\x61\x70');
+colDate.style.removeProperty('\x77\x69\x64\x74\x68');
+colDate.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
+colDate.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+colDate.style.removeProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74');
+colDate.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+colDate.style.removeProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64');
+colDate.style.removeProperty('\x62\x6f\x72\x64\x65\x72');
+colDate.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67');
+colDate.style.removeProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77');
+colDate.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
+colDate.style.removeProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67');
 }
-if(__gtp_cached_row){
-__gtp_cached_row.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x74\x6f\x70-\x72\x6f\x77');
-const rowProps=['\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x77\x72\x61\x70','\x77\x69\x64\x74\x68','\x67\x61\x70','\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d'];
-rowProps.forEach(p=>__gtp_cached_row.style.removeProperty(p));
-__gtp_cached_row=null;
+if(rowContainer){
+rowContainer.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x74\x6f\x70-\x72\x6f\x77');
+rowContainer.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+rowContainer.style.removeProperty('\x66\x6c\x65\x78-\x77\x72\x61\x70');
+rowContainer.style.removeProperty('\x77\x69\x64\x74\x68');
+rowContainer.style.removeProperty('\x67\x61\x70');
+rowContainer.style.removeProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73');
+rowContainer.style.removeProperty('\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d');
+rowContainer.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+rowContainer.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+rowContainer.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
+let p=rowContainer.parentElement;
+while(p&&p!==document.body){
+if(p.tagName==='\x54\x42\x4f\x44\x59'||p.tagName==='\x54\x41\x42\x4c\x45'){
+if(p.dataset.gtpOrigDisplay!==undefined){
+p.style.display=p.dataset.gtpOrigDisplay;
+delete p.dataset.gtpOrigDisplay;
+}else{
+p.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
 }
-if(__gtp_cached_date_col){
-__gtp_cached_date_col.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
-const dateProps=['\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x67\x61\x70','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74'];
-dateProps.forEach(p=>__gtp_cached_date_col.style.removeProperty(p));
-__gtp_cached_date_col=null;
+p.style.removeProperty('\x77\x69\x64\x74\x68');
+p.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+p.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+p.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
 }
-if(__gtp_cached_detail_col){
-__gtp_cached_detail_col.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
-const detailHeader=__gtp_cached_detail_col.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72');
+p=p.parentElement;
+}
+}
+if(colDetail){
+colDetail.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
+const detailHeader=colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72');
 if(detailHeader)detailHeader.remove();
-const detailProps=[
-'\x6f\x72\x64\x65\x72','\x66\x6c\x65\x78','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74',
-'\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x62\x6f\x72\x64\x65\x72','\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x70\x61\x64\x64\x69\x6e\x67','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79',
-'\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79'
-];
-detailProps.forEach(p=>__gtp_cached_detail_col.style.removeProperty(p));
-__gtp_cached_detail_col=null;
+colDetail.style.removeProperty('\x6f\x72\x64\x65\x72');
+colDetail.style.removeProperty('\x66\x6c\x65\x78');
+colDetail.style.removeProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68');
+colDetail.style.removeProperty('\x77\x69\x64\x74\x68');
+colDetail.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
+colDetail.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+colDetail.style.removeProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74');
+colDetail.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+colDetail.style.removeProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64');
+colDetail.style.removeProperty('\x62\x6f\x72\x64\x65\x72');
+colDetail.style.removeProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73');
+colDetail.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67');
+colDetail.style.removeProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67');
+colDetail.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79');
+colDetail.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
+colDetail.style.removeProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77');
+colDetail.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+colDetail.style.removeProperty('\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e');
+colDetail.style.removeProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79');
 }
-if(__gtp_cached_course_col){
-__gtp_cached_course_col.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
-const courseProps=[
-'\x6f\x72\x64\x65\x72','\x66\x6c\x65\x78','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67',
-'\x64\x69\x73\x70\x6c\x61\x79','\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x6d\x61\x72\x67\x69\x6e','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64',
-'\x62\x6f\x72\x64\x65\x72','\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x70\x61\x64\x64\x69\x6e\x67','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6f\x76\x65\x72\x66\x6c\x6f\x77'
-];
-courseProps.forEach(p=>__gtp_cached_course_col.style.removeProperty(p));
-__gtp_cached_course_col=null;
+if(colCourse){
+colCourse.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
+colCourse.style.removeProperty('\x6f\x72\x64\x65\x72');
+colCourse.style.removeProperty('\x66\x6c\x65\x78');
+colCourse.style.removeProperty('\x77\x69\x64\x74\x68');
+colCourse.style.removeProperty('\x6d\x61\x78-\x77\x69\x64\x74\x68');
+colCourse.style.removeProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68');
+colCourse.style.removeProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67');
+colCourse.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+colCourse.style.removeProperty('\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79');
+colCourse.style.removeProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70');
+colCourse.style.removeProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64');
+colCourse.style.removeProperty('\x62\x6f\x72\x64\x65\x72');
+colCourse.style.removeProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73');
+colCourse.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67');
+colCourse.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+colCourse.style.removeProperty('\x6d\x61\x78-\x68\x65\x69\x67\x68\x74');
+colCourse.style.removeProperty('\x6f\x76\x65\x72\x66\x6c\x6f\x77');
+colCourse.style.removeProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e');
+colCourse.style.removeProperty('\x7a-\x69\x6e\x64\x65\x78');
 }
-if(__gtp_cached_form_container){
-__gtp_cached_form_container.style.removeProperty('\x63\x6c\x65\x61\x72');
-__gtp_cached_form_container.style.removeProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e');
-__gtp_cached_form_container.style.removeProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70');
-__gtp_cached_form_container.style.removeProperty('\x7a-\x69\x6e\x64\x65\x78');
-__gtp_cached_form_container=null;
-}
-const cols=_0x102a();
-if(cols){
-if(cols.rowContainer){
-cols.rowContainer.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x74\x6f\x70-\x72\x6f\x77');
-['\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x77\x72\x61\x70','\x77\x69\x64\x74\x68','\x67\x61\x70','\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73','\x6d\x61\x72\x67\x69\x6e-\x62\x6f\x74\x74\x6f\x6d'].forEach(p=>cols.rowContainer.style.removeProperty(p));
-}
-if(cols.colDate){
-cols.colDate.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x61\x74\x65');
-['\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x67\x61\x70','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74'].forEach(p=>cols.colDate.style.removeProperty(p));
-_0x102c(cols.colDate);
-}
-if(cols.colDetail){
-cols.colDetail.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x64\x65\x74\x61\x69\x6c');
-const detailHeader=cols.colDetail.querySelector('\x23\x67\x74\x70\x5f\x73\x6d\x61\x72\x74\x5f\x64\x65\x74\x61\x69\x6c\x5f\x68\x65\x61\x64\x65\x72');
-if(detailHeader)detailHeader.remove();
-['\x6f\x72\x64\x65\x72','\x66\x6c\x65\x78','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x62\x6f\x72\x64\x65\x72','\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x70\x61\x64\x64\x69\x6e\x67','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x6f\x76\x65\x72\x66\x6c\x6f\x77-\x79','\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x64\x69\x73\x70\x6c\x61\x79','\x66\x6c\x65\x78-\x64\x69\x72\x65\x63\x74\x69\x6f\x6e','\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79'].forEach(p=>cols.colDetail.style.removeProperty(p));
-}
-if(cols.colCourse){
-cols.colCourse.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x6c-\x63\x6f\x75\x72\x73\x65');
-['\x6f\x72\x64\x65\x72','\x66\x6c\x65\x78','\x77\x69\x64\x74\x68','\x6d\x61\x78-\x77\x69\x64\x74\x68','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x64\x69\x73\x70\x6c\x61\x79','\x76\x69\x73\x69\x62\x69\x6c\x69\x74\x79','\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70','\x6d\x61\x72\x67\x69\x6e','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64','\x62\x6f\x72\x64\x65\x72','\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73','\x70\x61\x64\x64\x69\x6e\x67','\x68\x65\x69\x67\x68\x74','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x6d\x61\x78-\x68\x65\x69\x67\x68\x74','\x6f\x76\x65\x72\x66\x6c\x6f\x77'].forEach(p=>cols.colCourse.style.removeProperty(p));
-}
+if(formContainer){
+formContainer.style.removeProperty('\x63\x6c\x65\x61\x72');
+formContainer.style.removeProperty('\x70\x6f\x73\x69\x74\x69\x6f\x6e');
+formContainer.style.removeProperty('\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70');
+formContainer.style.removeProperty('\x7a-\x69\x6e\x64\x65\x78');
 }
 if(__gtp_cached_optimized_btns&&__gtp_cached_optimized_btns.length>0){
 __gtp_cached_optimized_btns.forEach(btn=>{
@@ -3034,11 +3100,35 @@ btn.innerText=btn.dataset.gtpOrigText;
 delete btn.dataset.gtpOrigText;
 }
 btn.classList.remove('\x67\x74\x70-\x73\x6d\x61\x72\x74-\x63\x6f\x75\x72\x73\x65-\x62\x74\x6e');
-const btnProps=['\x77\x69\x64\x74\x68','\x6d\x69\x6e-\x77\x69\x64\x74\x68','\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67','\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74','\x68\x65\x69\x67\x68\x74','\x66\x6f\x6e\x74-\x73\x69\x7a\x65','\x6c\x69\x6e\x65-\x68\x65\x69\x67\x68\x74','\x77\x68\x69\x74\x65-\x73\x70\x61\x63\x65','\x77\x6f\x72\x64-\x62\x72\x65\x61\x6b'];
-btnProps.forEach(p=>btn.style.removeProperty(p));
+btn.style.removeProperty('\x77\x69\x64\x74\x68');
+btn.style.removeProperty('\x6d\x69\x6e-\x77\x69\x64\x74\x68');
+btn.style.removeProperty('\x62\x6f\x78-\x73\x69\x7a\x69\x6e\x67');
+btn.style.removeProperty('\x6d\x69\x6e-\x68\x65\x69\x67\x68\x74');
+btn.style.removeProperty('\x68\x65\x69\x67\x68\x74');
+btn.style.removeProperty('\x66\x6f\x6e\x74-\x73\x69\x7a\x65');
+btn.style.removeProperty('\x6c\x69\x6e\x65-\x68\x65\x69\x67\x68\x74');
+btn.style.removeProperty('\x77\x68\x69\x74\x65-\x73\x70\x61\x63\x65');
+btn.style.removeProperty('\x77\x6f\x72\x64-\x62\x72\x65\x61\x6b');
+btn.style.removeProperty('\x70\x61\x64\x64\x69\x6e\x67');
+btn.style.removeProperty('\x64\x69\x73\x70\x6c\x61\x79');
+btn.style.removeProperty('\x61\x6c\x69\x67\x6e-\x69\x74\x65\x6d\x73');
+btn.style.removeProperty('\x6a\x75\x73\x74\x69\x66\x79-\x63\x6f\x6e\x74\x65\x6e\x74');
+btn.style.removeProperty('\x74\x65\x78\x74-\x61\x6c\x69\x67\x6e');
+btn.style.removeProperty('\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73');
+btn.style.removeProperty('\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64');
+btn.style.removeProperty('\x62\x6f\x72\x64\x65\x72');
+btn.style.removeProperty('\x63\x6f\x6c\x6f\x72');
 });
 __gtp_cached_optimized_btns=[];
 }
+__gtp_cached_row=null;
+__gtp_cached_date_col=null;
+__gtp_cached_course_col=null;
+__gtp_cached_detail_col=null;
+__gtp_cached_form_container=null;
+__gtp_cached_detected_regions=[];
+__gtp_cached_common_parent=null;
+__gtp_cached_orig_scroll_el=null;
 }
 function _0x1034(msg){
 let toast=document.getElementById('\x67\x74\x70\x5f\x6c\x61\x79\x6f\x75\x74\x5f\x74\x6f\x61\x73\x74');
