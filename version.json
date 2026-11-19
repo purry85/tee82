@@ -1,10 +1,9 @@
 {
-    "version":  "2.9.1",
+    "version":  "2.9.2",
     "releaseDate":  "2026-11-19",
-    "title":  "v2.9.1",
+    "title":  "v2.9.2",
     "releaseNotes":  [
-                         "- 부부커플 매칭오류 수정",
-                         "- 스마트뷰 제거 및 별도화"
+                         "- 알펜시아700-알펜시아명문 매칭실패 수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

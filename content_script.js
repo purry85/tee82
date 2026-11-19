@@ -1098,9 +1098,9 @@ const tSig=t.includes('\uc2dc\uadf8\ub2c8\ucc98');
 const cSig=c.includes('\uc2dc\uadf8\ub2c8\ucc98');
 if(tSig!==cSig)return true;
 }
-if(t.includes('\uc54c\ud39c\uc2dc\uc544')||c.includes('\uc54c\ud39c\uc2dc\uc544')){
-const t700=t.includes('\x37\x30\x30');
-const c700=c.includes('\x37\x30\x30');
+if(t.includes('\uc54c\ud39c\uc2dc\uc544')||c.includes('\uc54c\ud39c\uc2dc\uc544')||t.includes('\uc54c\ud39c')||c.includes('\uc54c\ud39c')){
+const t700=/(?:알펜시아|알펜)\s*700(?!\d)/i.test(target)||/(?:^|[^\d])700(?!\d)/.test(target);
+const c700=/(?:알펜시아|알펜)\s*700(?!\d)/i.test(candidate);
 if(t700!==c700)return true;
 }
 if(t.includes('\ubca8\ub77c\x34\x35')||c.includes('\ubca8\ub77c\x34\x35')){
@@ -1160,6 +1160,17 @@ const normItem=_0x1048(itemText);
 if(normItem&&(normItem===normTarget||normItem.includes(normTarget)||normTarget.includes(normItem))){
 return item;
 }
+}
+}
+if(/알펜(?:시아)?\s*700/.test(cleanTarget)){
+for(const item of items){
+const itemText=(item.innerText||item.textContent||'').trim().toLowerCase();
+if(itemText.includes('\x37\x30\x30')&&(itemText.includes('\uc54c\ud39c\uc2dc\uc544')||itemText.includes('\uc54c\ud39c')))return item;
+}
+}else if(/알펜시아|알펜/.test(cleanTarget)){
+for(const item of items){
+const itemText=(item.innerText||item.textContent||'').trim().toLowerCase();
+if((itemText.includes('\uc54c\ud39c\uc2dc\uc544')||itemText.includes('\uc54c\ud39c'))&&!itemText.includes('\x37\x30\x30'))return item;
 }
 }
 if(/엠스/.test(cleanTarget)&&/의성/.test(cleanTarget)){
@@ -3173,6 +3184,8 @@ s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/
 .replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
 .replace(/떼제베\s*[\(\[]?\s*(?:서남(?:서)?|누리\/?가람)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\uc11c\ub0a8')
 .replace(/떼제베\s*[\(\[]?\s*(?:동북(?:동)?|한울\/?마루)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\ub3d9\ubd81');
+s=s.replace(/알펜시아\s*700(?:\s*[\(\[]?(?:대중제|퍼블릭|gc|cc)?[\)\]]?)?|알펜\s*700/gi,'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')
+.replace(/알펜시아\s*[\(\[]?\s*(?:명문|회원제)\s*[\)\]]?|알펜시아\s*(?:cc|gc)?|알펜\s*[\(\[]?\s*(?:명문|회원제)\s*[\)\]]?/gi,'\uc54c\ud39c\uc2dc\uc544\uba85\ubb38');
 s=s.replace(/엠스클럽\s*(?:의성)?/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131')
 .replace(/엠스\s*의성/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131');
 s=s.replace(/남양주\s*(?:cc)?(?:\s*[\(\[]?\s*(?:9홀(?:\s*[x*X]\s*2)?|p9|p18|18홀|퍼블릭)\s*[\)\]]?)?/gi,'\ub0a8\uc591\uc8fc');
@@ -3291,6 +3304,9 @@ normCard.includes('\ud074\ub7fd\x37\x32')&&!normCard.includes('\uc624\uc158')&&!
 return 100;
 }
 const specialMatchList=[
+{key:'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30',card:['\uc54c\ud39c\uc2dc\uc544\x37\x30\x30','\uc54c\ud39c\x37\x30\x30']},
+{key:'\uc54c\ud39c\uc2dc\uc544\uba85\ubb38',card:['\uc54c\ud39c\uc2dc\uc544\uba85\ubb38','\uc54c\ud39c\uc2dc\uc544\x63\x63','\uc54c\ud39c\uc2dc\uc544\ud68c\uc6d0\uc81c','\uc54c\ud39c\uc2dc\uc544']},
+{key:'\uc54c\ud39c\uc2dc\uc544',card:['\uc54c\ud39c\uc2dc\uc544\uba85\ubb38','\uc54c\ud39c\uc2dc\uc544\x63\x63','\uc54c\ud39c\uc2dc\uc544\ud68c\uc6d0\uc81c','\uc54c\ud39c\uc2dc\uc544']},
 {key:'\ub0a8\uc591\uc8fc',card:'\ub0a8\uc591\uc8fc'},
 {key:'\ubcf4\ub839\ubca0\uc774\uc2a4',card:'\ubcf4\ub839\ubca0\uc774\uc2a4'},
 {key:'\ub354\ubc18',card:'\ub354\ubc18'},
@@ -3402,7 +3418,13 @@ const timeMatches=(colonTime&&rawTxt.includes(colonTime))||
 (shortColonTime&&rawTxt.includes(shortColonTime))||
 (digitsOnlyTime&&digitsInCard.includes(digitsOnlyTime));
 if(!timeMatches)continue;
-const golfScore=_0x104b(normCard,normG1,normG2);
+const cardCourseName=_0x104e(el);
+const normCardCourse=cardCourseName?_0x1048(cardCourseName):'';
+let golfScore=_0x104b(normCard,normG1,normG2);
+if(normCardCourse&&golfScore<90){
+const courseScore=_0x104b(normCardCourse,normG1,normG2);
+if(courseScore>golfScore)golfScore=courseScore;
+}
 if(golfScore<90)continue;
 const isTargetTransfer=(targetRoomType||'').includes('\uc591\ub3c4');
 const isTargetJoin=(targetRoomType||'').includes('\uc870\uc778')||

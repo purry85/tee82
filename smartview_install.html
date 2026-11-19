@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>골프탑 스마트뷰 모바일 초간편 설치 가이드</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: #090d16;
+      color: #f1f5f9;
+      padding: 24px 16px 60px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    
+    /* 상단 헤더 */
+    .header {
+      text-align: center;
+      padding: 12px 0 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      font-size: 13.5px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* 4단계 대형 가이드 카드 */
+    .step-section {
+      margin-bottom: 24px;
+    }
+    .step-card {
+      background: #131b2e;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 22px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+    .step-card.active {
+      border-color: #10b981;
+      background: linear-gradient(180deg, #16253b 0%, #131b2e 100%);
+      box-shadow: 0 12px 36px rgba(16, 185, 129, 0.2);
+    }
+
+    /* 스텝 헤더 (크고 시원하게) */
+    .step-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .step-badge {
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 14px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #10b981, #059669);
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+    .step-badge.blue {
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    }
+    .step-badge.purple {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+    }
+    .step-badge.amber {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+    .step-main-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .step-text {
+      font-size: 15px;
+      color: #cbd5e1;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .step-text b {
+      color: #38bdf8;
+      font-weight: 800;
+    }
+    .step-text mark {
+      background: rgba(250, 204, 21, 0.25);
+      color: #fef08a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+    }
+
+    /* 스마트폰 인터페이스 시각 모의 박스 (모바일 화면을 그대로 큼직하게 묘사) */
+    .phone-mockup {
+      background: #0b111e;
+      border: 2px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .phone-mockup-header {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .phone-mockup-body {
+      font-size: 14.5px;
+      color: #f1f5f9;
+    }
+
+    /* 시각 UI 엘리먼트 */
+    .ui-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ui-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ui-switch-on {
+      background: #10b981;
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+    .ui-btn-action {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.4);
+    }
+
+    /* 실제 터치 가능한 대형 버튼 */
+    .btn-touch {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-size: 16.5px;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .btn-green {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+    }
+    .btn-green:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+    .btn-blue {
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(14, 165, 233, 0.4);
+    }
+    .btn-blue:active {
+      transform: scale(0.98);
+    }
+    .btn-dark {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    /* 편의 팁 박스 */
+    .tip-card {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1.5px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 20px 18px;
+      margin-top: 24px;
+    }
+    .tip-header {
+      font-size: 16px;
+      font-weight: 900;
+      color: #34d399;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tip-list {
+      list-style: none;
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+    .tip-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 10px;
+    }
+    .tip-list li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: 900;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 36px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- 1. 헤더 -->
+    <div class="header">
+      <div class="badge">📱 안드로이드 · 갤럭시 폴드 전용</div>
+      <h1 class="title">골프탑 스마트뷰<br>모바일 4단계 초간편 설치</h1>
+      <p class="subtitle">작아서 안 보이던 화면은 이제 그만!<br>순서대로 터치하시면 10초 만에 설치가 완료됩니다.</p>
+    </div>
+
+    <div class="step-section">
+
+      <!-- ============================================== -->
+      <!-- [STEP 1] Lemur 브라우저 설치 -->
+      <!-- ============================================== -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge">STEP 1</div>
+          <div class="step-main-title">Lemur(리머) 브라우저 설치</div>
+        </div>
+        <p class="step-text">
+          모바일에서 확장프로그램을 완벽 지원하는 전용 브라우저입니다.<br>
+          아래 <b>초록색 버튼</b>을 눌러 구글 플레이스토어에서 무료 설치하세요.
+        </p>
+
+        <!-- 스마트폰 모의 화면 -->
+        <div class="phone-mockup">
+          <div class="phone-mockup-header">
+            <span>GOOGLE PLAY스토어 검색화면 예시</span>
+            <span>무료 앱</span>
+          </div>
+          <div class="ui-row">
+            <div class="ui-label">
+              <span style="font-size: 22px;">🦥</span>
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #fff;">Lemur Browser</div>
+                <div style="font-size: 12px; color: #94a3b8;">확장프로그램 지원 모바일 브라우저</div>
+              </div>
+            </div>
+            <span style="background: #10b981; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 800;">설치</span>
+          </div>
+        </div>
+
+        <a href="https://play.google.com/store/apps/details?id=com.lemurbrowser.exts" target="_blank" class="btn-touch btn-green">
+          <span>▶ Google Play스토어에서 Lemur 설치하기</span>
+        </a>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- [STEP 2] 스마트뷰 ZIP 다운로드 -->
+      <!-- ============================================== -->
+      <div class="step-card active">
+        <div class="step-top">
+          <div class="step-badge blue">STEP 2</div>
+          <div class="step-main-title">스마트뷰 설치파일(ZIP) 다운로드</div>
+        </div>
+        <p class="step-text">
+          아래 <b>파란색 버튼</b>을 터치하여 스마트뷰 설치용 ZIP 파일을 받습니다.<br>
+          <mark>※ 다운로드 후 압축을 풀지 마세요!</mark> ZIP 파일 통째로 등록합니다.
+        </p>
+
+        <!-- 스마트폰 모의 화면 -->
+        <div class="phone-mockup" style="border-color: rgba(14, 165, 233, 0.4);">
+          <div class="phone-mockup-header" style="color: #38bdf8;">
+            <span>휴대폰 [다운로드(Download)] 저장 확인</span>
+            <span>압축 풀기 금지</span>
+          </div>
+          <div class="ui-row">
+            <div class="ui-label">
+              <span style="font-size: 22px;">📦</span>
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #fff;">Golftop_SmartView_설치용.zip</div>
+                <div style="font-size: 12px; color: #34d399;">다운로드 완료 ➔ 내 파일 폴더에 저장됨</div>
+              </div>
+            </div>
+            <span style="color: #38bdf8; font-size: 13px; font-weight: 800;">준비 완료</span>
+          </div>
+        </div>
+
+        <a href="Golftop_SmartView_설치용.zip" download="Golftop_SmartView_설치용.zip" class="btn-touch btn-blue" id="btnDownloadZip">
+          <span>📥 골프탑 스마트뷰 ZIP 다운로드 터치</span>
+        </a>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- [STEP 3] 확장 프로그램 관리 & 개발자 모드 ON -->
+      <!-- ============================================== -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge purple">STEP 3</div>
+          <div class="step-main-title">Lemur 브라우저 [개발자 모드] 켜기</div>
+        </div>
+        <p class="step-text">
+          1. 방금 설치한 <b>Lemur 브라우저</b> 앱을 실행합니다.<br>
+          2. 화면 하단(또는 상단)의 <b>퍼즐 아이콘(🧩)</b> ➔ <b>[확장 프로그램 관리]</b> 터치<br>
+          3. 우측 상단의 <b>[개발자 모드]</b> 스위치를 터치해 <b>파란색(ON)</b>으로 켭니다.
+        </p>
+
+        <!-- 스마트폰 모의 화면 -->
+        <div class="phone-mockup" style="border-color: rgba(168, 85, 247, 0.4);">
+          <div class="phone-mockup-header" style="color: #c084fc;">
+            <span>확장 프로그램 관리 (chrome://extensions)</span>
+            <span>스위치 터치</span>
+          </div>
+          <div class="ui-row" style="background: rgba(168, 85, 247, 0.1);">
+            <div class="ui-label">
+              <span style="font-size: 18px;">⚙️</span>
+              <span style="font-size: 15px; font-weight: 800;">개발자 모드 (Developer mode)</span>
+            </div>
+            <div class="ui-switch-on">● ON (켜짐)</div>
+          </div>
+          <div style="font-size: 12.5px; color: #a78bfa; text-align: right; padding-top: 4px;">
+            ▲ 이 스위치를 켜야 아래 ZIP 파일 로드 버튼이 나타납니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- [STEP 4] ZIP 파일 로드 및 골프탑 접속 -->
+      <!-- ============================================== -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge amber">STEP 4</div>
+          <div class="step-main-title">ZIP 파일 선택 및 설치 완료!</div>
+        </div>
+        <p class="step-text">
+          1. 상단에 나타난 <b>[(zip/.crx/.user.js)에서 로드]</b> 버튼을 누릅니다.<br>
+          2. 파일 선택 창에서 <b>Golftop_SmartView_설치용.zip</b> 파일을 터치하면 끝!<br>
+          3. 아래 <b>골프탑 바로가기</b>를 눌러 인트라넷에 접속하세요.
+        </p>
+
+        <!-- 스마트폰 모의 화면 -->
+        <div class="phone-mockup" style="border-color: rgba(245, 158, 11, 0.4);">
+          <div class="phone-mockup-header" style="color: #fbbf24;">
+            <span>ZIP 파일 로드 화면</span>
+            <span>터치 1번</span>
+          </div>
+          <div style="margin-bottom: 10px;">
+            <div class="ui-btn-action" style="width: 100%; justify-content: center;">
+              <span>📂 (zip/.crx/.user.js)에서 로드 터치</span>
+            </div>
+          </div>
+          <div class="ui-row" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3);">
+            <div class="ui-label">
+              <span>⛳</span>
+              <span style="color: #34d399; font-weight: 800;">골프탑 스마트뷰 (Golftop SmartView)</span>
+            </div>
+            <span style="color: #34d399; font-weight: 900; font-size: 13px;">장착 완료!</span>
+          </div>
+        </div>
+
+        <a href="https://intra.golftop.kr/Manage/Main?pc=1" target="_blank" class="btn-touch btn-green">
+          <span>⛳ 골프탑 인트라넷 바로 접속하기</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 핵심 편의 기능 안내 -->
+    <div class="tip-card">
+      <div class="tip-header">
+        <span>✨</span> 골프탑 스마트뷰 3대 혁신 기능 완벽 활용법
+      </div>
+      <ul class="tip-list">
+        <li>
+          <b>카톡/문자 분할화면 완벽 대응:</b><br>
+          화면을 절반으로 줄여 문자창을 옆에 띄워도 상단의 <b>[날짜선택]</b>, <b>[잔여타임 필터]</b>, <b>[할인그린피/골프장 특이사항]</b>이 아래로 사라지지 않고 나란히 완벽하게 유지됩니다.
+        </li>
+        <li>
+          <b>화면 전체 세로 스크롤바 지원:</b><br>
+          단독 전체화면으로 볼 때도 화면 오른쪽의 부드러운 스크롤바를 내려 하단의 <b>예약신청 및 타임목록</b>까지 한 번에 시원하게 확인할 수 있습니다.
+        </li>
+        <li>
+          <b>우측 하단 미니 배율 조절기:</b><br>
+          우측 하단의 <b>[ － ] [ ＋ ]</b> 버튼을 터치하여 85%~100% 등 내 눈에 가장 편한 크기로 즉시 확대/축소할 수 있으며, 구장 선택 버튼을 절대 가리지 않습니다.
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      골프탑 스마트뷰 (Golftop SmartView) 모바일 솔루션 © 2026<br>
+      AutomaTee 고객지원팀
+    </div>
+
+  </div>
+</body>
+</html>
