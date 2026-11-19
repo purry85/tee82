@@ -1,7 +1,7 @@
 {
-    "version":  "2.9.2",
+    "version":  "2.9.3",
     "releaseDate":  "2026-11-19",
-    "title":  "v2.9.2",
+    "title":  "v2.9.3",
     "releaseNotes":  [
                          "- 알펜시아700-알펜시아명문 매칭실패 수정"
                      ],

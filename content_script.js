@@ -1099,8 +1099,10 @@ const cSig=c.includes('\uc2dc\uadf8\ub2c8\ucc98');
 if(tSig!==cSig)return true;
 }
 if(t.includes('\uc54c\ud39c\uc2dc\uc544')||c.includes('\uc54c\ud39c\uc2dc\uc544')||t.includes('\uc54c\ud39c')||c.includes('\uc54c\ud39c')){
-const t700=/(?:알펜시아|알펜)\s*700(?!\d)/i.test(target)||/(?:^|[^\d])700(?!\d)/.test(target);
-const c700=/(?:알펜시아|알펜)\s*700(?!\d)/i.test(candidate);
+const normT=(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1048(target):t;
+const normC=(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1048(candidate):c;
+const t700=normT.includes('\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')||/(?:알펜시아|알펜)\s*700(?!\d)/i.test(target);
+const c700=normC.includes('\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')||/(?:알펜시아|알펜)\s*700(?!\d)/i.test(candidate);
 if(t700!==c700)return true;
 }
 if(t.includes('\ubca8\ub77c\x34\x35')||c.includes('\ubca8\ub77c\x34\x35')){
@@ -3184,8 +3186,10 @@ s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/
 .replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
 .replace(/떼제베\s*[\(\[]?\s*(?:서남(?:서)?|누리\/?가람)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\uc11c\ub0a8')
 .replace(/떼제베\s*[\(\[]?\s*(?:동북(?:동)?|한울\/?마루)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\ub3d9\ubd81');
-s=s.replace(/알펜시아\s*700(?:\s*[\(\[]?(?:대중제|퍼블릭|gc|cc)?[\)\]]?)?|알펜\s*700/gi,'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')
-.replace(/알펜시아\s*[\(\[]?\s*(?:명문|회원제)\s*[\)\]]?|알펜시아\s*(?:cc|gc)?|알펜\s*[\(\[]?\s*(?:명문|회원제)\s*[\)\]]?/gi,'\uc54c\ud39c\uc2dc\uc544\uba85\ubb38');
+s=s.replace(/(?:알펜시아|알펜)\s*700(?:\s*[\(\[]?(?:대중제|퍼블릭|gc|cc)?[\)\]]?)?/gi,'\x23\x23\x23\x41\x4c\x50\x45\x4e\x37\x30\x30\x23\x23\x23')
+.replace(/(?:알펜시아|알펜)\s*[\(\[]?\s*(?:명문|회원제)?\s*[\)\]]?(?:\s*(?:cc|gc))?/gi,'\x23\x23\x23\x41\x4c\x50\x45\x4e\x4d\x45\x4d\x4f\x4f\x4e\x23\x23\x23')
+.replace(/###ALPEN700###/g,'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')
+.replace(/###ALPENMEMOON###/g,'\uc54c\ud39c\uc2dc\uc544\uba85\ubb38');
 s=s.replace(/엠스클럽\s*(?:의성)?/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131')
 .replace(/엠스\s*의성/gi,'\uc5e0\uc2a4\ud074\ub7fd\uc758\uc131');
 s=s.replace(/남양주\s*(?:cc)?(?:\s*[\(\[]?\s*(?:9홀(?:\s*[x*X]\s*2)?|p9|p18|18홀|퍼블릭)\s*[\)\]]?)?/gi,'\ub0a8\uc591\uc8fc');
@@ -5055,7 +5059,16 @@ const rawTxt=(el.innerText||el.textContent||'').toLowerCase();
 if((rawTxt.match(/\d[\d,]*\s*원/g)||[]).length>1)continue;
 if((rawTxt.match(/진행중|마감/g)||[]).length>1)continue;
 const normCard=_0x1048(rawTxt);
-const golfScore=_0x104b(normCard,normG1,normG2);
+let golfScore=_0x104b(normCard,normG1,normG2);
+if(golfScore===0){
+const cardCourseName=_0x104e(el);
+if(cardCourseName){
+const normCardCourse=_0x1048(cardCourseName);
+if(normCardCourse){
+golfScore=_0x104b(normCardCourse,normG1,normG2);
+}
+}
+}
 if(golfScore===0)continue;
 if(targetDay){
 const cleanDateTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
