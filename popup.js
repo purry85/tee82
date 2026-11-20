@@ -831,6 +831,10 @@ coursePriceAdj:tr.dataset.coursePriceAdj||'',
 waitGender:tr.dataset.waitGender||'',
 waitPax:tr.dataset.waitPax||'',
 sizenum:tr.dataset.sizenum||cells[7]?.textContent?.trim()||'',
+manualFeeEdited:tr.dataset.manualFeeEdited==='\x74\x72\x75\x65',
+isPriceDropped:tr.dataset.isPriceDropped==='\x74\x72\x75\x65',
+prevFee:tr.dataset.prevFee||'',
+priceDiff:tr.dataset.priceDiff||'',
 source:tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b',
 selected:tr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64')
 };
@@ -899,6 +903,10 @@ if(item.coursePriceAdj)tr.dataset.coursePriceAdj=item.coursePriceAdj;
 if(item.waitGender)tr.dataset.waitGender=item.waitGender;
 if(item.waitPax)tr.dataset.waitPax=item.waitPax;
 if(item.sizenum)tr.dataset.sizenum=item.sizenum;
+if(item.manualFeeEdited)tr.dataset.manualFeeEdited='\x74\x72\x75\x65';
+if(item.isPriceDropped)tr.dataset.isPriceDropped='\x74\x72\x75\x65';
+if(item.prevFee)tr.dataset.prevFee=item.prevFee;
+if(item.priceDiff)tr.dataset.priceDiff=item.priceDiff;
 tr.dataset.source=item.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 if(item.selected)tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
 const stdRegion=getRegion(item.region,(item.rawGolf||'')+' '+(item.golf||''));
@@ -5181,6 +5189,9 @@ const matchedCourses=new Set();
 trs.forEach(tr=>{
 const cells=tr.querySelectorAll('\x74\x64');
 if(cells.length<5)return;
+if(tr.dataset.manualFeeEdited==='\x74\x72\x75\x65'){
+return;
+}
 const origTotalFeeStr=tr.dataset.origTotalFee||tr.dataset.origBaseFee||cells[4].textContent.trim();
 tr.dataset.totalFee=origTotalFeeStr;
 tr.dataset.baseFee=origTotalFeeStr;
@@ -5631,6 +5642,7 @@ if(!tbody)return;
 const trs=Array.from(tbody.querySelectorAll('\x74\x72'));
 let revertCount=0;
 trs.forEach(tr=>{
+if(tr.dataset.manualFeeEdited==='\x74\x72\x75\x65')return;
 if(tr.dataset.noticeAdjusted==='\x74\x72\x75\x65'||tr.dataset.origBaseFee){
 revertCount++;
 const origTotal=tr.dataset.origTotalFee||tr.dataset.origBaseFee||tr.dataset.baseFee;
@@ -7387,6 +7399,11 @@ tr.dataset.prevFee=prevFee.toString();
 tr.dataset.priceDiff=priceDiff.toString();
 const sign=priceDiff>0?`+${priceDiff}`:`${priceDiff}`;
 priceDropTagHtml=`<span class="card-tag price-dropped" title="\uc774\uc804 \ub4f1\ub85d/\uae30\uc900\uac00 ${prevFee}\ub9cc -> \ud604\uc7ac ${totalFee}\ub9cc (${sign}\ub9cc \uc778\ud558)">${prevFee}\ub9cc->${totalFee}\ub9cc (${sign}\ub9cc)</span>`;
+}else if(tr.dataset.isPriceDropped==='\x74\x72\x75\x65'&&tr.dataset.prevFee){
+const pFee=tr.dataset.prevFee;
+const diff=tr.dataset.priceDiff||(Math.round((currentFeeNum-parseFloat(pFee))*10)/10);
+const sign=diff>0?`+${diff}`:`${diff}`;
+priceDropTagHtml=`<span class="card-tag price-dropped" title="\uc774\uc804 \ub4f1\ub85d/\uae30\uc900\uac00 ${pFee}\ub9cc -> \ud604\uc7ac ${totalFee}\ub9cc (${sign}\ub9cc \uc778\ud558)">${pFee}\ub9cc->${totalFee}\ub9cc (${sign}\ub9cc)</span>`;
 }else{
 delete tr.dataset.isPriceDropped;
 delete tr.dataset.prevFee;
@@ -8439,12 +8456,27 @@ const oldFee=parseFloat(tr.dataset.totalFee||tr.dataset.baseFee||cells[4]?.textC
 if(newFee>0){
 tr.dataset.totalFee=newFee.toString();
 tr.dataset.baseFee=newFee.toString();
+tr.dataset.origTotalFee=newFee.toString();
+tr.dataset.origBaseFee=newFee.toString();
+tr.dataset.manualFeeEdited='\x74\x72\x75\x65';
 if(fieldFeeInput&&fieldFeeInput.value.trim()){
 tr.dataset.fieldFee=fieldFeeInput.value.trim();
+tr.dataset.origFieldFee=fieldFeeInput.value.trim();
+}else{
+delete tr.dataset.origFieldFee;
 }
 if(prepaidFeeInput&&prepaidFeeInput.value.trim()){
 tr.dataset.prepaidFee=prepaidFeeInput.value.trim();
+tr.dataset.origPrepaidFee=prepaidFeeInput.value.trim();
+}else{
+delete tr.dataset.origPrepaidFee;
 }
+delete tr.dataset.noticeAdjusted;
+delete tr.dataset.noticePrice;
+delete tr.dataset.noticeDiscount;
+delete tr.dataset.noticeTagDesc;
+delete tr.dataset.noticeType;
+delete tr.dataset.coursePriceAdj;
 if(oldFee>0&&oldFee>newFee){
 const diff=Math.round((newFee-oldFee)*10)/10;
 tr.dataset.isPriceDropped='\x74\x72\x75\x65';
@@ -8478,6 +8510,20 @@ tr.dataset.manualSeonti=chkSeonti.checked?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x
 if(chkSeonti.checked){
 tr.dataset.isSeontiOrDaegi='\x74\x72\x75\x65';
 }
+}
+if(Array.isArray(lastSelectedResetItems)&&lastSelectedResetItems.length>0){
+const curDate=cells[0]?.textContent?.trim()||tr.dataset.date||'';
+const curGolf=tr.dataset.golfmonGolf||tr.dataset.golf||'';
+const curTime=cells[3]?.textContent?.trim()||tr.dataset.time||'';
+const curRegId=tr.dataset.regId||'';
+lastSelectedResetItems.forEach(it=>{
+if((curRegId&&it.regId===curRegId)||(it.date===curDate&&(it.golf===curGolf||it.rawGolf===tr.dataset.rawGolf)&&it.time===curTime)){
+if(newFee>0)it.fee=newFee.toString();
+if(selectedPax)it.sizenum=selectedPax;
+if(selectedGender)it.condition=selectedGender;
+it.roomType=(selectedRoom==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
+}
+});
 }
 renderCardList(false);
 saveCurrentTableState();

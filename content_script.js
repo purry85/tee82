@@ -1044,18 +1044,22 @@ const tPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에�
 const cPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에이비스타p|퍼블릭.*비에이비스타/i.test(c);
 if(tPublic!==cPublic)return true;
 }
-if(t.includes('\ud074\ub7fd\x37\x32')||c.includes('\ud074\ub7fd\x37\x32')){
-const tOcean=t.includes('\uc624\uc158');
-const cOcean=c.includes('\uc624\uc158');
+if(t.includes('\ud074\ub7fd\x37\x32')||c.includes('\ud074\ub7fd\x37\x32')||t.includes('\uc624\uc158')||c.includes('\uc624\uc158')||t.includes('\ub808\ud074')||c.includes('\ub808\ud074')){
+const isOtherOcean=(str)=>/오션(?:힐스|비치|힐|포레|뷰|드라이브|블루)/.test(str);
+if(!isOtherOcean(t)&&!isOtherOcean(c)){
+const tOcean=t.includes('\uc624\uc158')||t.includes('\ud074\uc624');
+const cOcean=c.includes('\uc624\uc158')||c.includes('\ud074\uc624');
 if(tOcean!==cOcean)return true;
-const tSky=t.includes('\ud558\ub298');
-const cSky=c.includes('\ud558\ub298');
+const tSky=t.includes('\ud558\ub298')||t.includes('\ud074\ud558');
+const cSky=c.includes('\ud558\ub298')||c.includes('\ud074\ud558');
 if(tSky!==cSky)return true;
-const tLakeClassic=t.includes('\ub808\uc774\ud06c')||t.includes('\ud074\ub798\uc2dd')||t.includes('\ub808\ud074');
-const cLakeClassic=c.includes('\ub808\uc774\ud06c')||c.includes('\ud074\ub798\uc2dd')||c.includes('\ub808\ud074');
+const tLakeClassic=t.includes('\ub808\uc774\ud06c')||t.includes('\ud074\ub798\uc2dd')||t.includes('\ub808\ud074')||(!tOcean&&!tSky&&t.includes('\ud074\ub7fd\x37\x32'));
+const cLakeClassic=c.includes('\ub808\uc774\ud06c')||c.includes('\ud074\ub798\uc2dd')||c.includes('\ub808\ud074')||(!cOcean&&!cSky&&c.includes('\ud074\ub7fd\x37\x32'));
 if(tLakeClassic&&(cOcean||cSky))return true;
 if(cLakeClassic&&(tOcean||tSky))return true;
-if(!tLakeClassic&&!tOcean&&!tSky&&(cOcean||cSky))return true;
+if(tOcean&&(cLakeClassic||cSky))return true;
+if(cOcean&&(tLakeClassic||tSky))return true;
+}
 }
 if(t.includes('\ub5bc\uc81c\ubca0')||c.includes('\ub5bc\uc81c\ubca0')){
 const tSeonam=t.includes('\uc11c\ub0a8')||t.includes('\ub204\ub9ac')||t.includes('\uac00\ub78c');
@@ -1160,6 +1164,21 @@ const itemText=(item.innerText||item.textContent||'').trim();
 if(_0x101b(targetText,itemText))continue;
 const normItem=_0x1048(itemText);
 if(normItem&&(normItem===normTarget||normItem.includes(normTarget)||normTarget.includes(normItem))){
+return item;
+}
+}
+}
+if(/클럽\s*72.*오션|오션/.test(cleanTarget)&&!/힐스|비치/.test(cleanTarget)){
+for(const item of items){
+const itemText=(item.innerText||item.textContent||'').trim().toLowerCase();
+if(itemText.includes('\uc624\uc158')&&!itemText.includes('\ud790\uc2a4')&&!itemText.includes('\ube44\uce58')&&!itemText.includes('\ub808\uc774\ud06c')&&!itemText.includes('\ud074\ub798\uc2dd')){
+return item;
+}
+}
+}else if(/클럽\s*72|레이크.*클래식|클래식.*레이크|레\/?클/.test(cleanTarget)){
+for(const item of items){
+const itemText=(item.innerText||item.textContent||'').trim().toLowerCase();
+if((itemText.includes('\ud074\ub7fd\x37\x32')||itemText.includes('\ub808\uc774\ud06c')||itemText.includes('\ud074\ub798\uc2dd'))&&!itemText.includes('\uc624\uc158')&&!itemText.includes('\ud558\ub298')){
 return item;
 }
 }
@@ -3206,13 +3225,14 @@ s=s.replace(/더반\s*(?:cc)?(?:\s*[\(\[]?\s*(?:9홀(?:\s*[x*X]\s*2)?|p9|p18|18�
 .replace(/(?:코브스윙\s*[\(\[]?\s*(?:구\s*)?참밸리(?:cc)?[\)\]]?|참밸리|코브스윙)/gi,'\ucf54\ube0c\uc2a4\uc719\ucc38\ubc38\ub9ac')
 .replace(/(?:모카\s*[\(\[]?\s*(?:구\s*[.:]?)?\s*세일(?:cc)?[\)\]]?|세일|모카)/gi,'\ubaa8\uce74\uc138\uc77c')
 .replace(/소피아그린\s*(?:cc)?(?:\s*[\(\[]?제휴특별가[\)\]]?)?/gi,'\uc18c\ud53c\uc544\uadf8\ub9b0');
-s=s.replace(/클럽\s*72\s*[\(\[]?\s*(?:레이크\s*[\/&,·\s]?\s*클래식|클래식\s*[\/&,·\s]?\s*레이크|레\s*[\/&,·\s]?\s*클|클\s*[\/&,·\s]?\s*레|레이크|클래식)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
-.replace(/club\s*72\s*[\(\[]?\s*(?:lake\s*[\/&,·\s]?\s*classic|classic\s*[\/&,·\s]?\s*lake|lake|classic)\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')
-.replace(/클럽\s*72\s*[\(\[]?\s*오션\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\uc624\uc158')
-.replace(/club\s*72\s*[\(\[]?\s*ocean\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\uc624\uc158')
-.replace(/클럽\s*72\s*[\(\[]?\s*하늘\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ud558\ub298')
-.replace(/club\s*72\s*[\(\[]?\s*sky\s*[\)\]]?/gi,'\ud074\ub7fd\x37\x32\ud558\ub298')
-.replace(/클럽\s*72(?!\s*(?:오션|하늘|ocean|sky|레이크클래식))/gi,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd');
+s=s.replace(/(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?\s*[\(\[]?\s*(?:오션|ocean)(?:\s*코스)?\s*[\)\]]?|(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?\s*(?:오션|ocean)|클오|오션\s*코스|(?<![가-힣a-z0-9])오션(?!\s*(?:힐스|비치|힐|포레|뷰|드라이브|블루))(?![가-힣a-z0-9])/gi,'@@\x43\x37\x32\x4f\x43\x45\x41\x4e@@')
+.replace(/(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?\s*[\(\[]?\s*(?:하늘|sky)(?:\s*코스)?\s*[\)\]]?|(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?\s*(?:하늘|sky)|클하/gi,'@@\x43\x37\x32\x53\x4b\x59@@')
+.replace(/(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?\s*[\(\[]?\s*(?:레이크\s*[\/&,·\s]?\s*클래식|클래식\s*[\/&,·\s]?\s*레이크|레\s*[\/&,·\s]?\s*클|클\s*[\/&,·\s]?\s*레|레이크|클래식|lake\s*[\/&,·\s]?\s*classic|classic\s*[\/&,·\s]?\s*lake|lake|classic)\s*[\)\]]?/gi,'@@\x43\x37\x32\x4c\x41\x4b\x45\x43\x4c\x41\x53\x53\x49\x43@@')
+.replace(/(?:레이크\s*[\/&,·\s]?\s*클래식|클래식\s*[\/&,·\s]?\s*레이크|레\s*[\/&,·\s]?\s*클)/gi,'@@\x43\x37\x32\x4c\x41\x4b\x45\x43\x4c\x41\x53\x53\x49\x43@@')
+.replace(/(?:클럽\s*72|club\s*72)\s*(?:cc|gc)?/gi,'@@\x43\x37\x32\x4c\x41\x4b\x45\x43\x4c\x41\x53\x53\x49\x43@@');
+s=s.replace(/@@C72OCEAN@@/g,'\ud074\ub7fd\x37\x32\uc624\uc158')
+.replace(/@@C72SKY@@/g,'\ud074\ub7fd\x37\x32\ud558\ub298')
+.replace(/@@C72LAKECLASSIC@@/g,'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd');
 s=s.replace(/\(?\s*p?\d+\s*홀(?:\s*[x*]\s*\d+)?\s*\)?/gi,'')
 .replace(/\(?\s*p\d+\s*\)?/gi,'')
 .replace(/\(\s*p\s*\)/gi,'');
@@ -3303,11 +3323,23 @@ function _0x104b(normCard,normG1,normG2){
 if(!normCard)return 0;
 if(normG1&&_0x101b(normG1,normCard))return 0;
 if(normG2&&_0x101b(normG2,normCard))return 0;
-if((normG1==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd'||normG2==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')&&
-normCard.includes('\ud074\ub7fd\x37\x32')&&!normCard.includes('\uc624\uc158')&&!normCard.includes('\ud558\ub298')){
+if(normG1==='\ud074\ub7fd\x37\x32\uc624\uc158'||normG2==='\ud074\ub7fd\x37\x32\uc624\uc158'){
+if(normCard.includes('\ud074\ub7fd\x37\x32\uc624\uc158')||normCard.includes('\uc624\uc158')){
+if(!normCard.includes('\ub808\uc774\ud06c')&&!normCard.includes('\ud074\ub798\uc2dd')&&!normCard.includes('\ub808\ud074')&&!normCard.includes('\ud558\ub298')){
 return 100;
 }
+}
+}
+if(normG1==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd'||normG2==='\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd'){
+if(normCard.includes('\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd')||normCard.includes('\ud074\ub7fd\x37\x32')||normCard.includes('\ub808\uc774\ud06c')||normCard.includes('\ud074\ub798\uc2dd')||normCard.includes('\ub808\ud074')){
+if(!normCard.includes('\uc624\uc158')&&!normCard.includes('\ud558\ub298')){
+return 100;
+}
+}
+}
 const specialMatchList=[
+{key:'\ud074\ub7fd\x37\x32\uc624\uc158',card:['\ud074\ub7fd\x37\x32\uc624\uc158','\uc624\uc158']},
+{key:'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd',card:['\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub7fd\x37\x32','\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub798\uc2dd\ub808\uc774\ud06c','\ub808\ud074']},
 {key:'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30',card:['\uc54c\ud39c\uc2dc\uc544\x37\x30\x30','\uc54c\ud39c\x37\x30\x30']},
 {key:'\uc54c\ud39c\uc2dc\uc544\uba85\ubb38',card:['\uc54c\ud39c\uc2dc\uc544\uba85\ubb38','\uc54c\ud39c\uc2dc\uc544\x63\x63','\uc54c\ud39c\uc2dc\uc544\ud68c\uc6d0\uc81c','\uc54c\ud39c\uc2dc\uc544']},
 {key:'\uc54c\ud39c\uc2dc\uc544',card:['\uc54c\ud39c\uc2dc\uc544\uba85\ubb38','\uc54c\ud39c\uc2dc\uc544\x63\x63','\uc54c\ud39c\uc2dc\uc544\ud68c\uc6d0\uc81c','\uc54c\ud39c\uc2dc\uc544']},

@@ -1,9 +1,9 @@
 {
-    "version":  "2.9.3",
-    "releaseDate":  "2026-11-19",
-    "title":  "v2.9.3",
+    "version":  "2.9.4",
+    "releaseDate":  "2026-11-20",
+    "title":  "v2.9.4",
     "releaseNotes":  [
-                         "- 알펜시아700-알펜시아명문 매칭실패 수정"
+                         "- 수동 변경 가격 원복화 오류 수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
