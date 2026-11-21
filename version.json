@@ -1,9 +1,9 @@
 {
-    "version":  "2.9.7",
+    "version":  "2.9.8",
     "releaseDate":  "2026-11-21",
-    "title":  "v2.9.7",
+    "title":  "v2.9.8",
     "releaseNotes":  [
-                         "- 특정구장 가격변경 - 날짜설정추가"
+                         "- 비에이비스타 매칭오류 수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

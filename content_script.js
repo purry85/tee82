@@ -1039,10 +1039,17 @@ function _0x101b(target,candidate){
 if(!target||!candidate)return false;
 const t=String(target).toLowerCase().replace(/cc|gc|골프장|골프클럽|골프코스/gi,'').replace(/[^가-힣0-9a-z]/gi,'');
 const c=String(candidate).toLowerCase().replace(/cc|gc|골프장|골프클럽|골프코스/gi,'').replace(/[^가-힣0-9a-z]/gi,'');
-if(t.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')||c.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')){
-const tPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에이비스타p|퍼블릭.*비에이비스타/i.test(t);
-const cPublic=/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)|비에이비스타p|퍼블릭.*비에이비스타/i.test(c);
+if(t.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')||c.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')||t.includes('\ube44\uc5d0\uc774')||c.includes('\ube44\uc5d0\uc774')){
+if(!(t==='\uc2a4\ud0c0'||c==='\uc2a4\ud0c0'||t==='\uc2a4\ud0c0\x63\x63'||c==='\uc2a4\ud0c0\x63\x63'||t.includes('\uc544\ub9ac\uc2a4\ud0c0')||c.includes('\uc544\ub9ac\uc2a4\ud0c0'))){
+const isBAPublic=(str)=>{
+if(!str)return false;
+const s=String(str).toLowerCase();
+return/(?:비에이비스타|비에이|ba\s*vista)\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭|대중제)|비에이비스타p|비에이p/i.test(s);
+};
+const tPublic=isBAPublic(target)||isBAPublic(t);
+const cPublic=isBAPublic(candidate)||isBAPublic(c);
 if(tPublic!==cPublic)return true;
+}
 }
 if(t.includes('\ud074\ub7fd\x37\x32')||c.includes('\ud074\ub7fd\x37\x32')||t.includes('\uc624\uc158')||c.includes('\uc624\uc158')||t.includes('\ub808\ud074')||c.includes('\ub808\ud074')){
 const isOtherOcean=(str)=>/오션(?:힐스|비치|힐|포레|뷰|드라이브|블루)/.test(str);
@@ -3200,9 +3207,10 @@ return false;
 function _0x1048(str){
 let s=(str||'').toLowerCase();
 s=s.replace(/골프클럽\s*q|골프클럽\s*큐|안성\s*q|안성\s*큐/gi,'\uace8\ud504\ud074\ub7fd\x71');
-s=s.replace(/비에이비스타\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
-.replace(/비에이\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
-.replace(/ba\s*vista\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭)\s*[\)\]]?/gi,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
+s=s.replace(/(?:비에이비스타|비에이|ba\s*vista)\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭|대중제)\s*[\)\]]?|(?:비에이비스타|비에이)p(?:9|\d+)?/gi,'\x23\x23\x23\x42\x41\x56\x49\x53\x54\x41\x50\x55\x42\x4c\x49\x43\x23\x23\x23')
+.replace(/(?:비에이비스타|비에이|ba\s*vista)\s*[\(\[]?\s*(?:회원제|정규)?\s*[\)\]]?(?:\s*(?:cc|gc))?/gi,'\x23\x23\x23\x42\x41\x56\x49\x53\x54\x41\x4d\x45\x4d\x42\x45\x52\x23\x23\x23')
+.replace(/###BAVISTAPUBLIC###/g,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')
+.replace(/###BAVISTAMEMBER###/g,'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')
 .replace(/떼제베\s*[\(\[]?\s*(?:서남(?:서)?|누리\/?가람)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\uc11c\ub0a8')
 .replace(/떼제베\s*[\(\[]?\s*(?:동북(?:동)?|한울\/?마루)\s*[\)\]]?/gi,'\ub5bc\uc81c\ubca0\ub3d9\ubd81');
 s=s.replace(/(?:알펜시아|알펜)\s*700(?:\s*[\(\[]?(?:대중제|퍼블릭|gc|cc)?[\)\]]?)?/gi,'\x23\x23\x23\x41\x4c\x50\x45\x4e\x37\x30\x30\x23\x23\x23')
@@ -3338,6 +3346,8 @@ return 100;
 }
 }
 const specialMatchList=[
+{key:'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70',card:['\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x70)','\ube44\uc5d0\uc774(\x70)','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ub300\uc911\uc81c','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ud37c\ube14\ub9ad']},
+{key:'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0',card:['\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ud68c\uc6d0\uc81c','\ube44\uc5d0\uc774\ud68c\uc6d0\uc81c']},
 {key:'\ud074\ub7fd\x37\x32\uc624\uc158',card:['\ud074\ub7fd\x37\x32\uc624\uc158','\uc624\uc158']},
 {key:'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd',card:['\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub7fd\x37\x32','\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub798\uc2dd\ub808\uc774\ud06c','\ub808\ud074']},
 {key:'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30',card:['\uc54c\ud39c\uc2dc\uc544\x37\x30\x30','\uc54c\ud39c\x37\x30\x30']},

@@ -601,10 +601,8 @@ const stripSuffix=(s)=>cleanFn(s).replace(/cc|gc|골프장|골프클럽/gi,'');
 const stripParen=(s)=>(s||'').replace(/\([^)]*\)/g,'').replace(/\[[^\]]*\]/g,'').trim();
 const stripEllipsis=(s)=>(s||'').replace(/\.{2,}|…/g,'').trim();
 const combinedGolf=((golfName||'')+' '+(rawGolfName||'')).toLowerCase();
-const isBAPublic=combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x70)')||combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0 (\x70)')||
-combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70')||combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0[\x70]')||
-combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\ud37c\ube14\ub9ad)');
-const isBAStandard=!isBAPublic&&combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0');
+const isBAPublic=/(?:비에이비스타|비에이)\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭|대중제)|비에이비스타p|비에이p/i.test(combinedGolf);
+const isBAStandard=!isBAPublic&&(combinedGolf.includes('\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0')||combinedGolf.includes('\ube44\uc5d0\uc774'));
 const isClub72Ocean=combinedGolf.includes('\ud074\ub7fd\x37\x32(\uc624\uc158)')||combinedGolf.includes('\ud074\ub7fd\x37\x32 (\uc624\uc158)')||
 combinedGolf.includes('\ud074\ub7fd\x37\x32\uc624\uc158')||combinedGolf.includes('\ud074\ub7fd\x37\x32[\uc624\uc158]')||
 (combinedGolf.includes('\ud074\ub7fd\x37\x32')&&combinedGolf.includes('\uc624\uc158'));
