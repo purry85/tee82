@@ -948,12 +948,14 @@ const hasP1=item.hasPart1??true;
 const hasP2=item.hasPart2??true;
 const hasP3=item.hasPart3??true;
 const all=(!hasP1&&!hasP2&&!hasP3);
+const date=item.date?String(item.date).trim():'';
 return{
 course:course,
 diff:diff,
 hasPart1:all?true:Boolean(hasP1),
 hasPart2:all?true:Boolean(hasP2),
-hasPart3:all?true:Boolean(hasP3)
+hasPart3:all?true:Boolean(hasP3),
+date:date
 };
 }
 function getCourseAdjPartDesc(item){
@@ -976,16 +978,17 @@ const p2=item.hasPart2!==false;
 const p3=item.hasPart3!==false;
 const all=(p1&&p2&&p3)||(!p1&&!p2&&!p3);
 const sign=item.diff>0?`+${item.diff}`:`${item.diff}`;
-if(all){
-return`${item.course} ${sign}`;
+const dateStr=(item.date&&item.date!=='\uc804\uccb4')?`${item.date} `:'';
+let partStr='';
+if(!all){
+if(p1&&p2&&!p3)partStr='\x31~\x32\ubd80 ';
+else if(!p1&&p2&&p3)partStr='\x32~\x33\ubd80 ';
+else if(p1&&!p2&&p3)partStr='\x31,\x33\ubd80 ';
+else if(p1&&!p2&&!p3)partStr='\x31\ubd80 ';
+else if(!p1&&p2&&!p3)partStr='\x32\ubd80 ';
+else if(!p1&&!p2&&p3)partStr='\x33\ubd80 ';
 }
-if(p1&&p2&&!p3)return`${item.course} 1~2\ubd80 ${sign}`;
-if(!p1&&p2&&p3)return`${item.course} 2~3\ubd80 ${sign}`;
-if(p1&&!p2&&p3)return`${item.course} 1,3\ubd80 ${sign}`;
-if(p1&&!p2&&!p3)return`${item.course} 1\ubd80 ${sign}`;
-if(!p1&&p2&&!p3)return`${item.course} 2\ubd80 ${sign}`;
-if(!p1&&!p2&&p3)return`${item.course} 3\ubd80 ${sign}`;
-return`${item.course} ${sign}`;
+return`${item.course} ${partStr}${dateStr}${sign}`.replace(/\s+/g,' ').trim();
 }
 function getTimePartNumber(timeStrOrMins){
 const mins=typeof timeStrOrMins==='\x6e\x75\x6d\x62\x65\x72'?timeStrOrMins:timeToMinutes(timeStrOrMins);
@@ -1154,7 +1157,107 @@ return true;
 }
 return false;
 }
-function getCoursePriceAdjustment(golfName,rawGolfName='',golfmonGolfName='',rowTime=''){
+function parseCoursePriceDateCondition(text){
+if(!text)return{dateStr:'',cleanText:text};
+let cleanText=text;
+let dateStr='';
+const rangeMatch=cleanText.match(/(\d{1,2}[./월]\s*\d{1,2}일?)\s*[-~]\s*(\d{1,2}[./월]\s*\d{1,2}일?)(?:까지|는|은)?/);
+if(rangeMatch){
+const d1=rangeMatch[1].replace(/[월일\s]/g,'').replace(/[.]/g,'\x2f');
+const d2=rangeMatch[2].replace(/[월일\s]/g,'').replace(/[.]/g,'\x2f');
+dateStr=d1+'~'+d2;
+cleanText=cleanText.replace(rangeMatch[0],' ');
+return{dateStr,cleanText:cleanText.trim()};
+}
+const untilMatch=cleanText.match(/(?:~\s*(\d{1,2}[./월]\s*\d{1,2}일?)(?:까지|는|은)?|(\d{1,2}[./월]\s*\d{1,2}일?)\s*(?:까지|이전)(?:는|은|도)?)/);
+if(untilMatch){
+const raw=(untilMatch[1]||untilMatch[2]).replace(/[월일\s]/g,'').replace(/[.]/g,'\x2f');
+dateStr='~'+raw;
+cleanText=cleanText.replace(untilMatch[0],' ');
+return{dateStr,cleanText:cleanText.trim()};
+}
+const fromMatch=cleanText.match(/(?:(\d{1,2}[./월]\s*\d{1,2}일?)\s*(?:~|부터|이후)(?:는|은|도)?)/);
+if(fromMatch){
+const raw=fromMatch[1].replace(/[월일\s]/g,'').replace(/[.]/g,'\x2f');
+dateStr=raw+'~';
+cleanText=cleanText.replace(fromMatch[0],' ');
+return{dateStr,cleanText:cleanText.trim()};
+}
+const weekMatch=cleanText.match(/(?:^|[^\w가-힣])(주중|평일|주말|휴일)(?=[^\w가-힣]|$)/);
+if(weekMatch){
+dateStr=weekMatch[1];
+cleanText=cleanText.replace(weekMatch[0],' ');
+return{dateStr,cleanText:cleanText.trim()};
+}
+const singleMatch=cleanText.match(/(?:^|[\s,(\[])(\d{1,2}[./]\d{1,2})(?:[\s,)\]]|$)/);
+if(singleMatch){
+const raw=singleMatch[1].replace(/[.]/g,'\x2f');
+dateStr=raw;
+cleanText=cleanText.replace(singleMatch[1],' ');
+return{dateStr,cleanText:cleanText.trim()};
+}
+return{dateStr:'',cleanText:cleanText.trim()};
+}
+function isCoursePriceDateMatch(ruleDate,rowDate){
+if(!ruleDate||typeof ruleDate!=='\x73\x74\x72\x69\x6e\x67')return true;
+const rDateClean=ruleDate.trim().replace(/\s+/g,'');
+if(!rDateClean||rDateClean==='\uc804\uccb4'||rDateClean==='\uc804\uccb4\ub0a0\uc9dc'||rDateClean==='\uc0c1\uc2dc')return true;
+if(!rowDate)return false;
+const parseMD=(str)=>{
+if(!str)return null;
+const m=String(str).match(/(\d{1,2})[./월\-\s](\d{1,2})/);
+if(!m)return null;
+return{m:parseInt(m[1],10),d:parseInt(m[2],10)};
+};
+const rowMD=parseMD(rowDate);
+if(!rowMD)return false;
+if(/주중|평일/.test(rDateClean)){
+if(typeof isDateWeekend==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')return!isDateWeekend(rowDate);
+return true;
+}
+if(/주말|휴일/.test(rDateClean)){
+if(typeof isDateWeekend==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')return isDateWeekend(rowDate);
+return false;
+}
+const toVal=(m,d,refM=0)=>{
+let month=m;
+if(refM>=10&&m<=3)month+=12;
+return month*100+d;
+};
+if(rDateClean.includes('~')&&!rDateClean.startsWith('~')&&!rDateClean.endsWith('~')){
+const parts=rDateClean.split('~');
+const startMD=parseMD(parts[0]);
+const endMD=parseMD(parts[1]);
+if(!startMD||!endMD)return false;
+const baseM=startMD.m;
+const sVal=toVal(startMD.m,startMD.d,baseM);
+const eVal=toVal(endMD.m,endMD.d,baseM);
+const rVal=toVal(rowMD.m,rowMD.d,baseM);
+return rVal>=sVal&&rVal<=eVal;
+}
+if(rDateClean.startsWith('~')||rDateClean.endsWith('\uae4c\uc9c0')||rDateClean.endsWith('\uc774\uc804')){
+const endMD=parseMD(rDateClean);
+if(!endMD)return false;
+const baseM=endMD.m>=10?10:1;
+const eVal=toVal(endMD.m,endMD.d,baseM);
+const rVal=toVal(rowMD.m,rowMD.d,baseM);
+return rVal<=eVal;
+}
+if(rDateClean.endsWith('~')||rDateClean.endsWith('\ubd80\ud130')||rDateClean.endsWith('\uc774\ud6c4')){
+const startMD=parseMD(rDateClean);
+if(!startMD)return false;
+const baseM=startMD.m;
+const sVal=toVal(startMD.m,startMD.d,baseM);
+const rVal=toVal(rowMD.m,rowMD.d,baseM);
+return rVal>=sVal;
+}
+const singleMD=parseMD(rDateClean);
+if(singleMD){
+return rowMD.m===singleMD.m&&rowMD.d===singleMD.d;
+}
+return false;
+}
+function getCoursePriceAdjustment(golfName,rawGolfName='',golfmonGolfName='',rowTime='',rowDate=''){
 if(!isCoursePriceRulesActive)return 0;
 if(!customCoursePriceAdjustments||customCoursePriceAdjustments.length===0)return 0;
 const partNum=rowTime?getTimePartNumber(rowTime):0;
@@ -1162,9 +1265,11 @@ const matchedAdjs=[];
 for(const adj of customCoursePriceAdjustments){
 if(!adj.course)continue;
 const matched=isCoursePriceExactMatch(adj.course,golfName,rawGolfName,golfmonGolfName);
-if(matched){
-matchedAdjs.push(adj);
+if(!matched)continue;
+if(adj.date){
+if(!isCoursePriceDateMatch(adj.date,rowDate))continue;
 }
+matchedAdjs.push(adj);
 }
 if(matchedAdjs.length===0)return 0;
 const hasExplicitSubCourse=(courseStr)=>/[(\[]/.test(String(courseStr||''))||/\s+(?:오션|하늘|서남|동북|회원제|대중제|듄스)\b/i.test(String(courseStr||''));
@@ -1180,6 +1285,9 @@ return true;
 });
 if(partMatchedAdjs.length>0){
 partMatchedAdjs.sort((a,b)=>{
+const dateA=(a.date&&a.date!=='\uc804\uccb4')?0:1;
+const dateB=(b.date&&b.date!=='\uc804\uccb4')?0:1;
+if(dateA!==dateB)return dateA-dateB;
 const subA=hasExplicitSubCourse(a.course)?0:1;
 const subB=hasExplicitSubCourse(b.course)?0:1;
 if(subA!==subB)return subA-subB;
@@ -1191,7 +1299,12 @@ return partMatchedAdjs[0].diff;
 }
 return 0;
 }
-matchedAdjs.sort((a,b)=>(hasExplicitSubCourse(a.course)?0:1)-(hasExplicitSubCourse(b.course)?0:1));
+matchedAdjs.sort((a,b)=>{
+const dateA=(a.date&&a.date!=='\uc804\uccb4')?0:1;
+const dateB=(b.date&&b.date!=='\uc804\uccb4')?0:1;
+if(dateA!==dateB)return dateA-dateB;
+return(hasExplicitSubCourse(a.course)?0:1)-(hasExplicitSubCourse(b.course)?0:1);
+});
 return matchedAdjs[0].diff;
 }
 function parseDiffValue(valStr){
@@ -1237,36 +1350,43 @@ if(/2부/.test(text)&&!hasP2)hasP2=true;
 }
 return hasExplicit?{hasPart1:hasP1,hasPart2:hasP2,hasPart3:hasP3}:null;
 }
-function parseCoursePriceAdjustmentLine(line,fallbackCourse=''){
+function parseCoursePriceAdjustmentLine(line,fallbackCourse='',fallbackParts=null){
 if(!line||!line.trim())return null;
-const trimmed=line.trim();
+let trimmed=line.trim();
+const dateRes=parseCoursePriceDateCondition(trimmed);
+const dateStr=dateRes.dateStr||'';
+trimmed=dateRes.cleanText;
 const partsInfo=parsePartsFromText(trimmed);
-const hasPart1=partsInfo?partsInfo.hasPart1:true;
-const hasPart2=partsInfo?partsInfo.hasPart2:true;
-const hasPart3=partsInfo?partsInfo.hasPart3:true;
-const diffMatch=trimmed.match(/(?:[:=,]|\s|^)\s*([+-]?\s*\d+(?:\.\d+)?)\s*(?:만|만원)?(?:\s*$|\s*[)\]])/);
+const diffMatch=trimmed.match(/(?:[:=,]|\s|^)\s*([+-]?\s*\d+(?:\.\d+)?)\s*(?:만|만원)?(?:으로|로|[은는을를에]|까지|부터)?(?:\s*$|\s*[)\]])/);
 if(!diffMatch)return null;
 const diffVal=parseFloat(diffMatch[1].replace(/\s+/g,''));
 if(isNaN(diffVal)||diffVal===0)return null;
 let courseCand=trimmed
 .replace(diffMatch[0],'')
 .replace(/1\s*[-~,+/]\s*[23]\s*부|2\s*[-~,+/]\s*3\s*부|[1-3]부|전부|전타임|전체/g,'')
+.replace(/\(\s*\)|\[\s*\]/g,'')
 .replace(/^[●■□★◆▶▷*#•\-\s]+/g,'')
-.replace(/(?:연동가|연동|할인|인하|특가|요금|단가|그린피|적용|추가|가감)/g,'');
+.replace(/(?:연동가|연동|할인|인하|특가|요금|단가|그린피|적용|추가|가감)/g,'')
+.replace(/^[은는을를에로으로만]+|[은는을를에로으로만]+$/g,'');
 courseCand=courseCand.trim();
 if((courseCand.startsWith('[')&&courseCand.endsWith(']'))||
 (courseCand.startsWith('(')&&courseCand.endsWith(')'))){
 courseCand=courseCand.slice(1,-1).trim();
 }
 courseCand=courseCand.replace(/^[:=\-\s]+|[:=\-\s]+$/g,'').trim();
+const isFallback=!courseCand&&Boolean(fallbackCourse);
 const course=courseCand||fallbackCourse;
 if(!course)return null;
+const hasPart1=partsInfo?partsInfo.hasPart1:(isFallback&&fallbackParts?fallbackParts.hasPart1:true);
+const hasPart2=partsInfo?partsInfo.hasPart2:(isFallback&&fallbackParts?fallbackParts.hasPart2:true);
+const hasPart3=partsInfo?partsInfo.hasPart3:(isFallback&&fallbackParts?fallbackParts.hasPart3:true);
 return{
 course,
 diff:diffVal,
 hasPart1,
 hasPart2,
-hasPart3
+hasPart3,
+date:dateStr
 };
 }
 function showToast(msg){
@@ -5305,7 +5425,7 @@ break;
 }
 const hasPrepaidDeposit=rowPrepaidAmount>0;
 const prepaidAddAmount=rowPrepaidAmount;
-const rawCourseAdj=getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime)||0;
+const rawCourseAdj=getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime,rowDate)||0;
 const isClub72=isClub72Course(rowGolf,rowRawGolf,rowGolfmonGolf);
 let matchedRule=null;
 if(isNoticeRulesActive&&isNoticeFeatureAvailable()){
@@ -5687,11 +5807,12 @@ roomType.includes('\uc120\ud2f0')||
 roomType.includes('\ub300\uae30')||
 /^[123]인$/.test(cells[7]?.textContent.trim()||'')
 );
+const rowDate=cells[0]?.textContent.trim()||'';
 const rowGolf=cells[2]?.textContent.trim()||'';
 const rowRawGolf=tr.dataset.rawGolf||rowGolf;
 const rowGolfmonGolf=tr.dataset.golfmonGolf||'';
 const rowTime=cells[3]?.textContent.trim()||'';
-const courseAdj=!isSeontiOrDaegi?getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime):0;
+const courseAdj=!isSeontiOrDaegi?getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime,rowDate):0;
 let finalVal=origVal;
 let adjField=parseFloat(origField)||(origVal-(parseFloat(origPre)||0));
 if(courseAdj!==0){
@@ -12820,6 +12941,7 @@ const btnSaveCoursePriceModal=document.getElementById('\x62\x74\x6e\x53\x61\x76\
 const btnClearCoursePriceAll=document.getElementById('\x62\x74\x6e\x43\x6c\x65\x61\x72\x43\x6f\x75\x72\x73\x65\x50\x72\x69\x63\x65\x41\x6c\x6c');
 const btnAddCoursePriceDiff=document.getElementById('\x62\x74\x6e\x41\x64\x64\x43\x6f\x75\x72\x73\x65\x50\x72\x69\x63\x65\x44\x69\x66\x66');
 const inputNewCourseName=document.getElementById('\x69\x6e\x70\x75\x74\x4e\x65\x77\x43\x6f\x75\x72\x73\x65\x4e\x61\x6d\x65');
+const inputNewCourseDate=document.getElementById('\x69\x6e\x70\x75\x74\x4e\x65\x77\x43\x6f\x75\x72\x73\x65\x44\x61\x74\x65');
 const inputNewCourseDiff=document.getElementById('\x69\x6e\x70\x75\x74\x4e\x65\x77\x43\x6f\x75\x72\x73\x65\x44\x69\x66\x66');
 const btnToggleBatchCoursePrice=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x42\x61\x74\x63\x68\x43\x6f\x75\x72\x73\x65\x50\x72\x69\x63\x65');
 const batchCoursePriceWrap=document.getElementById('\x62\x61\x74\x63\x68\x43\x6f\x75\x72\x73\x65\x50\x72\x69\x63\x65\x57\x72\x61\x70');
@@ -12902,8 +13024,9 @@ const signStr=item.diff>0?`+${item.diff}\ub9cc`:`${item.diff}\ub9cc`;
 const valClass=item.diff>0?'\x61\x64\x6a-\x76\x61\x6c-\x70\x6c\x75\x73':'\x61\x64\x6a-\x76\x61\x6c-\x6d\x69\x6e\x75\x73';
 const partDesc=getCourseAdjPartDesc(item);
 const partBadge=`<span style="font-size: 9px; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; padding: 1px 4px; border-radius: 4px; font-weight: 700; margin-left: 3px;">${partDesc}</span>`;
+const dateBadge=item.date?`<span style="font-size: 9px; background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; padding: 1px 4px; border-radius: 4px; font-weight: 700; margin-left: 3px;">${escapeHtml(item.date)}</span>`:'';
 chip.innerHTML=`
-                <span><strong>${escapeHtml(item.course)}</strong> ${partBadge}: <span class="${valClass}">${signStr}</span></span>
+                <span><strong>${escapeHtml(item.course)}</strong> ${partBadge}${dateBadge}: <span class="${valClass}">${signStr}</span></span>
                 <button type="button" class="prepaid-chip-del" data-idx="${idx}" title="\uc0ad\uc81c">\u2715</button>
             `;
 coursePriceChipContainer.appendChild(chip);
@@ -12922,6 +13045,7 @@ function _0x1040(){
 if(!inputNewCourseName||!inputNewCourseDiff)return;
 const rawName=inputNewCourseName.value.trim();
 const rawDiff=inputNewCourseDiff.value.trim();
+const rawDate=(inputNewCourseDate?inputNewCourseDate.value.trim():'')||'';
 if(!rawName){
 showToast('\uad6c\uc7a5\uba85\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputNewCourseName.focus();
@@ -12940,21 +13064,26 @@ if(!chk1&&!chk2&&!chk3){
 showToast('\uc801\uc6a9\ud560 \ubd80\uc81c(\x31\ubd80, \x32\ubd80, \x33\ubd80)\ub97c \ucd5c\uc18c \x31\uac1c \uc774\uc0c1 \uccb4\ud06c\ud574\uc8fc\uc138\uc694\x2e');
 return;
 }
+const dateRes=parseCoursePriceDateCondition(rawDate);
+const dateStr=dateRes.dateStr||rawDate;
 const cleanNew=rawName.replace(/[\s\-_()\[\]]/g,'').toLowerCase();
 const existingIdx=tempCoursePriceAdjustments.findIndex(item=>{
 const isSame=item.course.replace(/[\s\-_()\[\]]/g,'').toLowerCase()===cleanNew;
 const isSameParts=(item.hasPart1===chk1)&&(item.hasPart2===chk2)&&(item.hasPart3===chk3);
-return isSame&&isSameParts;
+const isSameDate=(item.date||'')===(dateStr||'');
+return isSame&&isSameParts&&isSameDate;
 });
-const newRule={course:rawName,diff:diffVal,hasPart1:chk1,hasPart2:chk2,hasPart3:chk3};
+const newRule={course:rawName,diff:diffVal,hasPart1:chk1,hasPart2:chk2,hasPart3:chk3,date:dateStr};
 const partDesc=getCourseAdjPartDesc(newRule);
+const dateDesc=dateStr?` [${dateStr}]`:'';
 if(existingIdx>=0){
 tempCoursePriceAdjustments[existingIdx]=newRule;
-showToast(`'${rawName}' [${partDesc}] \uae08\uc561 \ubcc0\uacbd \uaddc\uce59\uc774 \uac31\uc2e0\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+showToast(`'${rawName}' [${partDesc}]${dateDesc} \uae08\uc561 \ubcc0\uacbd \uaddc\uce59\uc774 \uac31\uc2e0\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }else{
 tempCoursePriceAdjustments.push(newRule);
-showToast(`'${rawName}' [${partDesc}] (${diffVal>0?`+${diffVal}`:diffVal}\ub9cc) \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+showToast(`'${rawName}' [${partDesc}]${dateDesc} (${diffVal>0?`+${diffVal}`:diffVal}\ub9cc) \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }
+if(inputNewCourseDate)inputNewCourseDate.value='';
 inputNewCourseDiff.value='';
 _0x103f();
 inputNewCourseName.focus();
@@ -12969,6 +13098,7 @@ return;
 const lines=text.split('\n');
 let addedCount=0;
 let lastCourse='';
+let lastParts=null;
 lines.forEach(line=>{
 const trimmed=line.trim();
 if(!trimmed)return;
@@ -12976,17 +13106,20 @@ if(!/\d+(?:\.\d+)?\s*(?:만|만원)?/.test(trimmed)&&!/[-+]\d+/.test(trimmed)){
 const pureName=trimmed.replace(/^[●■□★◆▶▷*#•\-\s]+|[\(\)\[\]]/g,'').trim();
 if(pureName&&!isNonGolfLine(pureName)&&!isNonCourseWord(pureName)){
 lastCourse=pureName;
+lastParts=null;
 return;
 }
 }
-const parsed=parseCoursePriceAdjustmentLine(trimmed,lastCourse);
+const parsed=parseCoursePriceAdjustmentLine(trimmed,lastCourse,lastParts);
 if(parsed){
 if(parsed.course)lastCourse=parsed.course;
+lastParts={hasPart1:parsed.hasPart1,hasPart2:parsed.hasPart2,hasPart3:parsed.hasPart3};
 const cleanNew=parsed.course.replace(/[\s\-_()\[\]]/g,'').toLowerCase();
 const existingIdx=tempCoursePriceAdjustments.findIndex(item=>{
 const isSame=item.course.replace(/[\s\-_()\[\]]/g,'').toLowerCase()===cleanNew;
 const isSameParts=(item.hasPart1===parsed.hasPart1)&&(item.hasPart2===parsed.hasPart2)&&(item.hasPart3===parsed.hasPart3);
-return isSame&&isSameParts;
+const isSameDate=(item.date||'')===(parsed.date||'');
+return isSame&&isSameParts&&isSameDate;
 });
 if(existingIdx>=0){
 tempCoursePriceAdjustments[existingIdx]=parsed;
@@ -13007,6 +13140,7 @@ showToast('\uc778\uc2dd \uac00\ub2a5\ud55c \uad6c\uc7a5\uba85 \ubc0f \uae08\uc56
 function _0x1042(){
 tempCoursePriceAdjustments=JSON.parse(JSON.stringify(customCoursePriceAdjustments||[]));
 if(inputNewCourseName)inputNewCourseName.value='';
+if(inputNewCourseDate)inputNewCourseDate.value='';
 if(inputNewCourseDiff)inputNewCourseDiff.value='';
 const chk1=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x31');
 const chk2=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x32');
@@ -13048,6 +13182,20 @@ btnAddCoursePriceDiff.addEventListener('\x63\x6c\x69\x63\x6b',_0x1040);
 }
 if(inputNewCourseName){
 inputNewCourseName.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e',(e)=>{
+if(e.key==='\x45\x6e\x74\x65\x72'){
+e.preventDefault();
+if(inputNewCourseDate&&!inputNewCourseDate.value.trim()&&inputNewCourseDiff&&!inputNewCourseDiff.value.trim()){
+inputNewCourseDate.focus();
+}else if(inputNewCourseDiff&&!inputNewCourseDiff.value.trim()){
+inputNewCourseDiff.focus();
+}else{
+_0x1040();
+}
+}
+});
+}
+if(inputNewCourseDate){
+inputNewCourseDate.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e',(e)=>{
 if(e.key==='\x45\x6e\x74\x65\x72'){
 e.preventDefault();
 if(inputNewCourseDiff&&!inputNewCourseDiff.value.trim()){
@@ -13144,6 +13292,9 @@ if(inputNewCourseName&&inputNewCourseDiff&&inputNewCourseName.value.trim()&&inpu
 const dVal=parseDiffValue(inputNewCourseDiff.value);
 if(dVal!==null){
 const cName=inputNewCourseName.value.trim();
+const rawDate=(inputNewCourseDate?inputNewCourseDate.value.trim():'')||'';
+const dateRes=parseCoursePriceDateCondition(rawDate);
+const dateStr=dateRes.dateStr||rawDate;
 const chk1=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x31')?.checked??true;
 const chk2=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x32')?.checked??true;
 const chk3=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x33')?.checked??true;
@@ -13152,9 +13303,10 @@ const cleanNew=cName.replace(/[\s\-_()\[\]]/g,'').toLowerCase();
 const existingIdx=tempCoursePriceAdjustments.findIndex(item=>{
 const isSame=item.course.replace(/[\s\-_()\[\]]/g,'').toLowerCase()===cleanNew;
 const isSameParts=(item.hasPart1===chk1)&&(item.hasPart2===chk2)&&(item.hasPart3===chk3);
-return isSame&&isSameParts;
+const isSameDate=(item.date||'')===(dateStr||'');
+return isSame&&isSameParts&&isSameDate;
 });
-const newRule={course:cName,diff:dVal,hasPart1:chk1,hasPart2:chk2,hasPart3:chk3};
+const newRule={course:cName,diff:dVal,hasPart1:chk1,hasPart2:chk2,hasPart3:chk3,date:dateStr};
 if(existingIdx>=0){
 tempCoursePriceAdjustments[existingIdx]=newRule;
 }else{

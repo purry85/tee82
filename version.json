@@ -1,6 +1,6 @@
 {
     "version":  "2.9.4",
-    "releaseDate":  "2026-11-20",
+    "releaseDate":  "2026-11-21",
     "title":  "v2.9.4",
     "releaseNotes":  [
                          "- 수동 변경 가격 원복화 오류 수정"
