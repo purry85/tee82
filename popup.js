@@ -13042,10 +13042,38 @@ _0x103f();
 });
 }
 function _0x1040(){
-if(!inputNewCourseName||!inputNewCourseDiff)return;
-const rawName=inputNewCourseName.value.trim();
-const rawDiff=inputNewCourseDiff.value.trim();
-const rawDate=(inputNewCourseDate?inputNewCourseDate.value.trim():'')||'';
+if(!inputNewCourseName)return;
+let rawName=inputNewCourseName.value.trim();
+let rawDiff=inputNewCourseDiff?inputNewCourseDiff.value.trim():'';
+let rawDate=(inputNewCourseDate?inputNewCourseDate.value.trim():'')||'';
+if(rawName&&(!rawDiff||/[-+]\d+/.test(rawName))){
+const parsedWhole=parseCoursePriceAdjustmentLine(rawName);
+if(parsedWhole&&parsedWhole.course&&parsedWhole.diff){
+rawName=parsedWhole.course;
+rawDiff=String(parsedWhole.diff);
+if(parsedWhole.date&&!rawDate)rawDate=parsedWhole.date;
+const c1=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x31');
+const c2=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x32');
+const c3=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x33');
+if(c1)c1.checked=parsedWhole.hasPart1;
+if(c2)c2.checked=parsedWhole.hasPart2;
+if(c3)c3.checked=parsedWhole.hasPart3;
+}
+}
+if(rawDiff&&!rawDate){
+const dateInDiff=parseCoursePriceDateCondition(rawDiff);
+if(dateInDiff&&dateInDiff.dateStr){
+rawDate=dateInDiff.dateStr;
+rawDiff=dateInDiff.cleanedText;
+}
+}
+if(rawName&&!rawDate){
+const dateInName=parseCoursePriceDateCondition(rawName);
+if(dateInName&&dateInName.dateStr){
+rawDate=dateInName.dateStr;
+rawName=dateInName.cleanedText;
+}
+}
 if(!rawName){
 showToast('\uad6c\uc7a5\uba85\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694\x2e');
 inputNewCourseName.focus();
@@ -13054,7 +13082,7 @@ return;
 const diffVal=parseDiffValue(rawDiff);
 if(diffVal===null||isNaN(diffVal)||diffVal===0){
 showToast('\uac00\uac10\ud560 \uae08\uc561\uc744 \uc22b\uc790\ub85c \uc785\ub825\ud574\uc8fc\uc138\uc694 (\uc608\x3a -\x32, -\x31, +\x31, +\x32)');
-inputNewCourseDiff.focus();
+if(inputNewCourseDiff)inputNewCourseDiff.focus();
 return;
 }
 const chk1=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x31')?.checked??true;
@@ -13084,7 +13112,8 @@ tempCoursePriceAdjustments.push(newRule);
 showToast(`'${rawName}' [${partDesc}]${dateDesc} (${diffVal>0?`+${diffVal}`:diffVal}\ub9cc) \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
 }
 if(inputNewCourseDate)inputNewCourseDate.value='';
-inputNewCourseDiff.value='';
+if(inputNewCourseDiff)inputNewCourseDiff.value='';
+inputNewCourseName.value='';
 _0x103f();
 inputNewCourseName.focus();
 }
@@ -13288,32 +13317,8 @@ _0x103f();
 }
 if(btnSaveCoursePriceModal){
 btnSaveCoursePriceModal.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
-if(inputNewCourseName&&inputNewCourseDiff&&inputNewCourseName.value.trim()&&inputNewCourseDiff.value.trim()){
-const dVal=parseDiffValue(inputNewCourseDiff.value);
-if(dVal!==null){
-const cName=inputNewCourseName.value.trim();
-const rawDate=(inputNewCourseDate?inputNewCourseDate.value.trim():'')||'';
-const dateRes=parseCoursePriceDateCondition(rawDate);
-const dateStr=dateRes.dateStr||rawDate;
-const chk1=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x31')?.checked??true;
-const chk2=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x32')?.checked??true;
-const chk3=document.getElementById('\x63\x68\x6b\x43\x6f\x75\x72\x73\x65\x50\x61\x72\x74\x33')?.checked??true;
-if(chk1||chk2||chk3){
-const cleanNew=cName.replace(/[\s\-_()\[\]]/g,'').toLowerCase();
-const existingIdx=tempCoursePriceAdjustments.findIndex(item=>{
-const isSame=item.course.replace(/[\s\-_()\[\]]/g,'').toLowerCase()===cleanNew;
-const isSameParts=(item.hasPart1===chk1)&&(item.hasPart2===chk2)&&(item.hasPart3===chk3);
-const isSameDate=(item.date||'')===(dateStr||'');
-return isSame&&isSameParts&&isSameDate;
-});
-const newRule={course:cName,diff:dVal,hasPart1:chk1,hasPart2:chk2,hasPart3:chk3,date:dateStr};
-if(existingIdx>=0){
-tempCoursePriceAdjustments[existingIdx]=newRule;
-}else{
-tempCoursePriceAdjustments.push(newRule);
-}
-}
-}
+if(inputNewCourseName&&(inputNewCourseName.value.trim()||(inputNewCourseDiff&&inputNewCourseDiff.value.trim()))){
+_0x1040();
 }
 customCoursePriceAdjustments=[...tempCoursePriceAdjustments];
 saveCoursePriceAdjustments();

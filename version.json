@@ -1,9 +1,9 @@
 {
-    "version":  "2.9.5",
+    "version":  "2.9.6",
     "releaseDate":  "2026-11-21",
-    "title":  "v2.9.5",
+    "title":  "v2.9.6",
     "releaseNotes":  [
-                         "- 테스트-업데이트금지"
+                         "- testing-do not update"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
