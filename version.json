@@ -1,10 +1,9 @@
 {
-    "version":  "2.9.8",
+    "version":  "2.9.9",
     "releaseDate":  "2026-11-22",
     "title":  "2.9.9",
     "releaseNotes":  [
-                         "- 해당날짜 등록건 미발견시, 건너뛰는 현상 수정",
-                         "- Testing [do not update]"
+                         "- 수정시, 해당일자 지역에 글이 없을경우. 건너뛰기하는 현상 수정."
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
