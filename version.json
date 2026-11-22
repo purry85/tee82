@@ -1,9 +1,10 @@
 {
     "version":  "2.9.8",
-    "releaseDate":  "2026-11-21",
-    "title":  "v2.9.8",
+    "releaseDate":  "2026-11-22",
+    "title":  "2.9.9",
     "releaseNotes":  [
-                         "- 비에이비스타 매칭오류 수정"
+                         "- 해당날짜 등록건 미발견시, 건너뛰는 현상 수정",
+                         "- Testing [do not update]"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

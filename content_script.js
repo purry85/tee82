@@ -3040,6 +3040,11 @@ if(!targetDateStr)return true;
 const targetMonth=_0x1037(targetDateStr);
 const targetDay=_0x1036(targetDateStr);
 if(!targetDay)return true;
+const hasDateTab=Boolean(_0x103f(targetDay));
+if(!hasDateTab){
+console.log(`[\ub0a0\uc9dc\ud655\uc778] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \ud0ed\uc774 \ubaa9\ub85d\uc5d0 \uc5c6\uc74c (\ud574\ub2f9 \ub0a0\uc9dc \ub4f1\ub85d\uae00 0\uac74 \uc0c1\ud0dc)`);
+return false;
+}
 for(let r=0;r<maxRetries;r++){
 if(shouldStopRegistration)return false;
 const curScreenDay=_0x1040();
@@ -5486,6 +5491,15 @@ isWrongDay=(finalUrlDay!==targetDayNum)||(targetMonth&&finalUrlMonth&&finalUrlMo
 isWrongDay=(finalScreenDay!==targetDayNum)||(targetMonth&&finalScreenMonth&&finalScreenMonth!==targetMonth);
 }
 }
+let isTabMissingForDate=false;
+if(isWrongDay){
+const dateTabEl=_0x103f(targetDayNum);
+if(!dateTabEl){
+console.log(`[${logTag}] \u2139\ufe0f \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDayNum}\uc77c) \uc0c1\ub2e8 \ud0ed \ubbf8\uc874\uc7ac \ud655\uc778 -> \ud574\ub2f9 \ub0a0\uc9dc \ub4f1\ub85d\uae00 0\uac74\uc73c\ub85c \ud310\uc815\ud558\uc5ec \uc2e0\uaddc \ub4f1\ub85d \ubaa8\ub4dc\ub85c \uc9c4\ud589!`);
+isTabMissingForDate=true;
+isWrongDay=false;
+}
+}
 if(isWrongDay){
 const detectedMonth=finalUrlMonth||finalScreenMonth||'';
 const detectedDay=finalUrlDay||finalScreenDay||'\ubbf8\ud655\uc778';
@@ -5560,6 +5574,9 @@ initialCards.push(c);
 }
 }
 };
+if(isTabMissingForDate){
+console.log(`[${logTag}] \u2139\ufe0f ${group.golf} (${group.date}): \uc0c1\ub2e8 \ub0a0\uc9dc \ud0ed \ubbf8\uc874\uc7ac(\ub4f1\ub85d\uae00 0\uac74 \uc0c1\ud0dc)\uc774\ubbc0\ub85c \uae30\uc874 \uae00 \uce74\ub4dc \ud0d0\uc0c9\uc744 \uc0dd\ub7b5\ud558\uace0 \uc989\uc2dc \uc2e0\uaddc \ub4f1\ub85d \ud50c\ub79c\uc73c\ub85c \uc9c4\ud589\ud569\ub2c8\ub2e4.`);
+}else{
 for(let r=0;r<12;r++){
 if(shouldStopRegistration)break;
 registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
@@ -5587,6 +5604,7 @@ document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f
 el.scrollTop=0;
 });
 await _0x1007(200);
+}
 }
 const hasExactMatch=initialCards.length>0&&initialCards[0].golfScore>=95;
 if(initialCards.length>0&&!hasExactMatch&&confirmMismatch){
@@ -5788,7 +5806,7 @@ await _0x1007(250);
 if(shouldStopRegistration)break;
 await _0x1047(itemTargetCategory);
 if(shouldStopRegistration)break;
-if(itemTargetDate){
+if(itemTargetDate&&!isTabMissingForDate){
 await _0x1044(itemTargetDate);
 }
 if(shouldStopRegistration)break;
