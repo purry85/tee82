@@ -2769,6 +2769,17 @@ return null;
 }
 function splitMultiNoticeBlocks(text){
 if(!text||!text.trim())return[];
+if(/---+|\*\*\*+|===+/i.test(text)&&/추가\s*병합/i.test(text)){
+const mergeParts=text.split(/(?:---+|\*\*\*+|===+)\s*\[추가\s*병합(?:된\s*공지)?\]\s*(?:---+|\*\*\*+|===+)/i);
+const allBlocks=[];
+for(const part of mergeParts){
+const trimmed=part.trim();
+if(trimmed){
+allBlocks.push(...splitMultiNoticeBlocks(trimmed));
+}
+}
+if(allBlocks.length>0)return allBlocks;
+}
 const rawLines=text.split('\n');
 const numberedHeaders=[];
 for(let i=0;i<rawLines.length;i++){
@@ -2816,7 +2827,7 @@ shouldSplit=true;
 }
 else if(isCourseLine){
 const curCourse=findCourseInNoticeBlock(curLines.join('\n'));
-if(curCourse){
+if(curCourse&&detCourse&&!isCourseMatch(curCourse,detCourse)){
 shouldSplit=true;
 }
 }
@@ -3759,6 +3770,17 @@ return rules.filter(r=>r.course&&!isNonCourseWord(r.course));
 function parseNoticeText(text){
 if(!text||!text.trim())return[];
 if(isNonGreenFeeEventNotice(text))return[];
+if(/---+|\*\*\*+|===+/i.test(text)&&/추가\s*병합/i.test(text)){
+const mergeParts=text.split(/(?:---+|\*\*\*+|===+)\s*\[추가\s*병합(?:된\s*공지)?\]\s*(?:---+|\*\*\*+|===+)/i);
+const allRules=[];
+for(const part of mergeParts){
+const trimmed=part.trim();
+if(trimmed){
+allRules.push(...parseNoticeText(trimmed));
+}
+}
+return allRules;
+}
 let messageDefaultDate='';
 let messageDefaultYear=null;
 const topDateDetail=parseNoticeDateDetail(text);
