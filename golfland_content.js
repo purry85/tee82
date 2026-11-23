@@ -1309,13 +1309,39 @@ if((gLow.includes('\uc9c4\ucc9c')!==oLow.includes('\uc9c4\ucc9c'))||(gLow.includ
 return false;
 };
 let matchedGolfIndex=-1;
+const rawLow=String(item.rawGolf||'').toLowerCase();
+if(gLow.includes('\ud074\ub7fd\x37\x32')||rawLow.includes('\ud074\ub7fd\x37\x32')||gLow.includes('\x63\x6c\x75\x62\x37\x32')||rawLow.includes('\x63\x6c\x75\x62\x37\x32')){
+let targetClub72Sub='\ub808\uc774\ud06c\ud074\ub798\uc2dd';
+if(gHasOcean||rawLow.includes('\uc624\uc158'))targetClub72Sub='\uc624\uc158';
+else if(gHasSky||rawLow.includes('\ud558\ub298'))targetClub72Sub='\ud558\ub298';
+for(let i=0;i<golfSelect.options.length;i++){
+const optTxt=golfSelect.options[i].text.trim();
+const oNorm=strictNorm(optTxt);
+if(!oNorm.includes('\ud074\ub7fd\x37\x32'))continue;
+if(targetClub72Sub==='\uc624\uc158'&&oNorm.includes('\uc624\uc158')){
+matchedGolfIndex=i;
+break;
+}else if(targetClub72Sub==='\ud558\ub298'&&oNorm.includes('\ud558\ub298')){
+matchedGolfIndex=i;
+break;
+}else if(targetClub72Sub==='\ub808\uc774\ud06c\ud074\ub798\uc2dd'){
+if(oNorm.includes('\ub808\uc774\ud06c')||oNorm.includes('\ud074\ub798\uc2dd')||optTxt.includes('\ud074\ub808\uc2dd')){
+matchedGolfIndex=i;
+break;
+}
+}
+}
+}
+if(matchedGolfIndex<0){
 for(let i=0;i<golfSelect.options.length;i++){
 const optTxt=golfSelect.options[i].text.trim();
 if(!optTxt||optTxt==='\uc120\ud0dd')continue;
+if(isOptionBranchConflict(optTxt))continue;
 const strictOpt=strictNorm(optTxt);
-if(strictOpt&&(strictOpt===strictItemGolf||(strictRawGolf&&strictOpt===strictRawGolf))){
+if(strictOpt&&strictOpt===strictItemGolf){
 matchedGolfIndex=i;
 break;
+}
 }
 }
 if(matchedGolfIndex<0){
@@ -1338,6 +1364,18 @@ const normOpt=_0x100e(optTxt);
 if(!normOpt||normOpt.length<2)continue;
 if(normOpt.includes(normItemGolf)||normItemGolf.includes(normOpt)||
 rawItemGolf.includes(normOpt)||normOpt.includes(rawItemGolf)){
+matchedGolfIndex=i;
+break;
+}
+}
+}
+if(matchedGolfIndex<0&&strictRawGolf){
+for(let i=0;i<golfSelect.options.length;i++){
+const optTxt=golfSelect.options[i].text.trim();
+if(!optTxt||optTxt==='\uc120\ud0dd')continue;
+if(isOptionBranchConflict(optTxt))continue;
+const strictOpt=strictNorm(optTxt);
+if(strictOpt&&strictOpt===strictRawGolf){
 matchedGolfIndex=i;
 break;
 }

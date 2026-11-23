@@ -1530,13 +1530,22 @@ targetKey='\ud074\ub7fd\x37\x32(\uc624\uc158)';
 }else if(normOrigSimple.includes('\ud558\ub298')||normOrigSimple.includes('\x68\x61\x6e\x65\x75\x6c')||normOrigSimple.includes('\x73\x6b\x79')){
 targetKey='\ud074\ub7fd\x37\x32(\ud558\ub298)';
 }
+let foundKey=null;
 if(dictionary&&dictionary[targetKey]){
-const item=normalizeDictEntry(dictionary[targetKey],targetKey);
+foundKey=targetKey;
+}else if(dictionary&&dictionary[cleanOrig]){
+foundKey=cleanOrig;
+}else if(dictionary&&(targetKey.includes('\ub808\uc774\ud06c')||targetKey.includes('\ud074\ub798\uc2dd'))&&(dictionary['\ud074\ub7fd\x37\x32']||dictionary['\ud074\ub7fd\x37\x32\x63\x63'])){
+foundKey=dictionary['\ud074\ub7fd\x37\x32']?'\ud074\ub7fd\x37\x32':'\ud074\ub7fd\x37\x32\x63\x63';
+}
+if(foundKey&&dictionary&&dictionary[foundKey]){
+const item=normalizeDictEntry(dictionary[foundKey],foundKey);
+const defaultGolfland=targetKey.includes('\uc624\uc158')?'\ud074\ub7fd\x37\x32\x43\x43(\uc624\uc158)':(targetKey.includes('\ud558\ub298')?'\ud074\ub7fd\x37\x32\x43\x43\ud558\ub298':'\ud074\ub7fd\x37\x32\x43\x43(\ub808\uc774\ud06c,\ud074\ub808\uc2dd)');
 let siteName=item.golfmon;
 if(site==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')siteName=item.golmarket;
 else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteName=item.golfpang;
 else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteName=item.golfrock||GOLFROCK_OFFICIAL_NAMES[targetKey]||targetKey;
-else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteName=item.golfland;
+else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteName=item.golfland||defaultGolfland;
 else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteName=item.golftop;
 let siteRegion=item.region;
 if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteRegion=item.golflandRegion||'\uacbd\uae30\ub0a8\ubd80';
@@ -1558,7 +1567,7 @@ golfmon:item.golfmon||targetKey,
 golfpang:item.golfpang||targetKey,
 golmarket:item.golmarket||(targetKey==='\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)'?'\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)':targetKey),
 golfrock:item.golfrock||'\ud074\ub7fd\x37\x32',
-golfland:item.golfland||'\ud074\ub7fd\x37\x32',
+golfland:item.golfland||defaultGolfland,
 golftop:item.golftop||'\ud074\ub7fd\x37\x32',
 mapped:true
 };
