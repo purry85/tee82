@@ -1,9 +1,9 @@
 {
-    "version":  "3.1.1",
+    "version":  "3.2.0",
     "releaseDate":  "2026-11-23",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "- Updating - do not update"
+                         "- 골프랜드 오픈"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
