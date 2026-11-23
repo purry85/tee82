@@ -1,10 +1,9 @@
 {
-    "version":  "3.0.1",
+    "version":  "3.0.2",
     "releaseDate":  "2026-11-23",
-    "title":  "2.9.9",
+    "title":  "3.0.2",
     "releaseNotes":  [
-                         "- 중복 렌더링 및 중복 저장제거",
-                         "- 공지규칙 및 선입금 탐색 연산 대폭축소/상태 저장 디바운스 및 DOM 셀 접근 최적화"
+                         "- Updating - do not update"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
