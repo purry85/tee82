@@ -1,9 +1,9 @@
 {
-    "version":  "3.2.1",
+    "version":  "3.2.2",
     "releaseDate":  "2026-11-23",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "- 클럽72 공지오류 수정"
+                         "- 동기화기능 수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
