@@ -778,11 +778,31 @@ saveDictionary();
 }catch(e){}
 }
 initDictionary();
+let _saveTableStateTimer=null;
+function scheduleSaveCurrentTableState(delay=250){
+if(_saveTableStateTimer)clearTimeout(_saveTableStateTimer);
+_saveTableStateTimer=setTimeout(()=>{
+_saveTableStateTimer=null;
+saveCurrentTableState();
+},delay);
+}
+window.addEventListener('\x70\x61\x67\x65\x68\x69\x64\x65',()=>{
+if(_saveTableStateTimer){
+clearTimeout(_saveTableStateTimer);
+_saveTableStateTimer=null;
+saveCurrentTableState();
+}
+});
 function saveCurrentTableState(){
+if(_saveTableStateTimer){
+clearTimeout(_saveTableStateTimer);
+_saveTableStateTimer=null;
+}
 try{
-const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
+const trs=tbody?Array.from(tbody.rows):Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
 const data=trs.slice(0,1000).map(tr=>{
-const cells=tr.querySelectorAll('\x74\x64');
+const cells=tr.cells;
 return{
 date:cells[0]?.textContent||'',
 region:cells[1]?.textContent||'',
@@ -862,6 +882,7 @@ if(!Array.isArray(data)||data.length===0)return false;
 const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
 if(!tbody)return false;
 tbody.innerHTML='';
+const restoreFrag=document.createDocumentFragment();
 data.forEach(item=>{
 const tr=document.createElement('\x74\x72');
 tr.dataset.roomType=item.roomType||'\ubbf8\ud45c\uc2dc';
@@ -921,8 +942,9 @@ tr.innerHTML=`
                 <td>${item.condition}</td>
                 <td>${item.sizenum}</td>
             `;
-tbody.appendChild(tr);
+restoreFrag.appendChild(tr);
 });
+tbody.appendChild(restoreFrag);
 renderCardList();
 return true;
 }catch(e){
@@ -5315,13 +5337,23 @@ n==='\ub808\ud074'
 function applyAllActiveNoticeRules(){
 pruneExpiredNoticeRules();
 const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
-if(!tbody)return 0;
-const trs=Array.from(tbody.querySelectorAll('\x74\x72'));
+const trs=tbody?Array.from(tbody.rows):Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
 if(trs.length===0)return 0;
 let appliedTotal=0;
 const matchedCourses=new Set();
+const rawInputVal=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74')?.value||'';
+const prepaidCandidateLines=rawInputVal
+?rawInputVal.split('\n').reduce((acc,l)=>{
+if(/(?:선입|선결제|\/)/.test(l)){
+acc.push({raw:l,clean:l.replace('\x3a','')});
+}
+return acc;
+},[])
+:[];
+const courseAdjCache=new Map();
+const club72Cache=new Map();
 trs.forEach(tr=>{
-const cells=tr.querySelectorAll('\x74\x64');
+const cells=tr.cells;
 if(cells.length<5)return;
 if(tr.dataset.manualFeeEdited==='\x74\x72\x75\x65'){
 return;
@@ -5407,14 +5439,13 @@ return;
 let rowPrepaidAmount=parseFloat(tr.dataset.prepaidAmount)||0;
 let hasSlashFee=tr.dataset.hasSlashFee==='\x74\x72\x75\x65';
 let slashBackVal=parseFloat(tr.dataset.slashBackVal)||0;
-if(rowPrepaidAmount<=0){
-const inputVal=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74')?.value||'';
-if(inputVal){
-const lines=inputVal.split('\n');
-for(const l of lines){
+if(rowPrepaidAmount<=0&&prepaidCandidateLines.length>0){
 const cleanT=rowTime.replace('\x3a','');
-const lClean=l.replace('\x3a','');
-if(lClean.includes(cleanT)||(rowTime.includes('\x3a')&&l.includes(rowTime))){
+const hasColonTime=rowTime.includes('\x3a');
+for(let li=0;li<prepaidCandidateLines.length;li++){
+const entry=prepaidCandidateLines[li];
+if(entry.clean.includes(cleanT)||(hasColonTime&&entry.raw.includes(rowTime))){
+const l=entry.raw;
 const plusMatch=l.match(/(?:선입(?:금)?|선결제)\s*[:=\-]?\s*([0-9.]+)\s*(?:만|만원)?/i);
 if(plusMatch){
 rowPrepaidAmount=parseFloat(plusMatch[1])||1.0;
@@ -5436,11 +5467,25 @@ break;
 }
 }
 }
-}
 const hasPrepaidDeposit=rowPrepaidAmount>0;
 const prepaidAddAmount=rowPrepaidAmount;
-const rawCourseAdj=getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime,rowDate)||0;
-const isClub72=isClub72Course(rowGolf,rowRawGolf,rowGolfmonGolf);
+const partNumForCache=typeof getTimePartNumber==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?getTimePartNumber(rowTime):'';
+const adjCacheKey=`${rowGolf}|${rowRawGolf}|${rowGolfmonGolf}|${partNumForCache}|${rowDate}`;
+let rawCourseAdj;
+if(courseAdjCache.has(adjCacheKey)){
+rawCourseAdj=courseAdjCache.get(adjCacheKey);
+}else{
+rawCourseAdj=getCoursePriceAdjustment(rowGolf,rowRawGolf,rowGolfmonGolf,rowTime,rowDate)||0;
+courseAdjCache.set(adjCacheKey,rawCourseAdj);
+}
+const c72Key=`${rowGolf}|${rowRawGolf}|${rowGolfmonGolf}`;
+let isClub72;
+if(club72Cache.has(c72Key)){
+isClub72=club72Cache.get(c72Key);
+}else{
+isClub72=isClub72Course(rowGolf,rowRawGolf,rowGolfmonGolf);
+club72Cache.set(c72Key,isClub72);
+}
 let matchedRule=null;
 if(isNoticeRulesActive&&isNoticeFeatureAvailable()){
 const candidates=activeNoticeRules.filter(rule=>{
@@ -7294,9 +7339,11 @@ return currentSortDir==='\x61\x73\x63'?(tA-tB):(tB-tA);
 return golfA.localeCompare(golfB,'\x6b\x6f');
 }
 });
-trs.forEach(tr=>tbody.appendChild(tr));
+const sortFrag=document.createDocumentFragment();
+trs.forEach(tr=>sortFrag.appendChild(tr));
+tbody.appendChild(sortFrag);
 renderCardList();
-saveCurrentTableState();
+scheduleSaveCurrentTableState();
 updateSortBarUI();
 if(currentSortType==='\x67\x6f\x6c\x66'){
 showToast(currentSortDir==='\x61\x73\x63'?'\uad6c\uc7a5\uba85 \uac00\ub098\ub2e4\uc21c(\u3131\u2192\u314e) \uc815\ub82c':'\uad6c\uc7a5\uba85 \uc5ed\uc21c(\u314e\u2192\u3131) \uc815\ub82c');
@@ -7304,7 +7351,7 @@ showToast(currentSortDir==='\x61\x73\x63'?'\uad6c\uc7a5\uba85 \uac00\ub098\ub2e4
 showToast(currentSortDir==='\x61\x73\x63'?'\u23f0 \uc774\ub978 \uc2dc\uac04\uc21c \uc815\ub82c':'\u23f0 \ub2a6\uc740 \uc2dc\uac04\uc21c \uc815\ub82c');
 }
 }
-function applyParsedData(parsed,type){
+function applyParsedData(parsed,type,options={}){
 try{
 const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
 if(!tbody)return;
@@ -7392,18 +7439,19 @@ if(remIdx>=0)remainingExistingTrs.splice(remIdx,1);
 const pureNewTrs=newItems.filter(it=>it.tr&&!it.isPreservedSelection).map(it=>it.tr);
 const newSelectedCount=pureNewTrs.length>0?applyAutoSelectTwoToTrs(pureNewTrs):0;
 const firstExistingTr=tbody.firstElementChild;
+const prependFrag=document.createDocumentFragment();
 newItems.forEach(item=>{
-if(!item||!item.tr)return;
-if(firstExistingTr){
-tbody.insertBefore(item.tr,firstExistingTr);
-}else{
-tbody.appendChild(item.tr);
-}
+if(item&&item.tr)prependFrag.appendChild(item.tr);
 });
+if(firstExistingTr){
+tbody.insertBefore(prependFrag,firstExistingTr);
+}else{
+tbody.appendChild(prependFrag);
+}
 applyAllActiveNoticeRules();
 renderCardList();
 updateSelectedBadge();
-saveCurrentTableState();
+scheduleSaveCurrentTableState();
 const inputEl=document.getElementById('\x69\x6e\x70\x75\x74\x54\x65\x78\x74');
 if(inputEl)inputEl.value='';
 try{localStorage.removeItem('\x76\x32\x5f\x73\x61\x76\x65\x64\x49\x6e\x70\x75\x74\x54\x65\x78\x74');}catch(e){}
@@ -7414,16 +7462,20 @@ return true;
 }
 tbody.innerHTML='';
 if(newItems.length>0){
+const batchFrag=document.createDocumentFragment();
 newItems.forEach(item=>{
-if(item&&item.tr)tbody.appendChild(item.tr);
+if(item&&item.tr)batchFrag.appendChild(item.tr);
 });
+tbody.appendChild(batchFrag);
 }
 applyAllActiveNoticeRules();
 currentSortType='\x74\x69\x6d\x65';
 currentSortDir='\x61\x73\x63';
 updateSortBarUI();
+if(!options.deferRenderSave){
 renderCardList();
-saveCurrentTableState();
+scheduleSaveCurrentTableState();
+}
 const count=newItems.length;
 if(type==='\x74\x72\x61\x6e\x73\x66\x65\x72'){
 showToast(`\ucd1d ${count}\uac74\uc758 \uc591\ub3c4 \uac74\uc774 \uc120\ubcc4\ub418\uc5c8\uc2b5\ub2c8\ub2e4. (\uc870\uc778 \uac74 \uc81c\uc678)`);
@@ -7460,7 +7512,7 @@ let visibleCardLimit=100;
 const INITIAL_CARD_CHUNK=100;
 const SCROLL_CARD_CHUNK=80;
 function createCardElement(tr,idx,trs){
-const cells=tr.querySelectorAll('\x74\x64');
+const cells=tr.cells;
 const date=cells[0]?.textContent||'';
 const region=cells[1]?.textContent||'';
 const golf=cells[2]?.textContent||'';
@@ -9749,12 +9801,12 @@ saveStickyCourseMap(stickyMap);
 return count;
 }
 function autoSelectTwo(){
-const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+const tbody=document.getElementById('\x74\x61\x62\x6c\x65\x42\x6f\x64\x79');
+const trs=tbody?Array.from(tbody.rows):Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
 const count=applyAutoSelectTwoToTrs(trs);
 renderCardList();
-syncCardsSelection();
 updateSelectedBadge();
-saveCurrentTableState();
+scheduleSaveCurrentTableState();
 if(count>0){
 let pLabel='';
 if(autoSelectPriority==='\x67\x6f\x6c\x66\x74\x6f\x70')pLabel=' (\uace8\ud504\ud0d1 \uc6b0\uc120)';
@@ -10880,10 +10932,10 @@ showUnmappedCourseModal(parsed.unmappedCourses,(didRegister)=>{
 try{
 if(didRegister){
 const reParsed=_0x1013(type);
-const didPrepend=applyParsedData(reParsed,type);
+const didPrepend=applyParsedData(reParsed,type,{deferRenderSave:true});
 if(!didPrepend)autoSelectTwo();
 }else{
-const didPrepend=applyParsedData(parsed,type);
+const didPrepend=applyParsedData(parsed,type,{deferRenderSave:true});
 if(!didPrepend)autoSelectTwo();
 showToast(`\ucd1d ${parsed.rowDataList.length}\uac74 \ubcc0\ud658 \uc644\ub8cc (\ubbf8\ub4f1\ub85d \uad6c\uc7a5 ${parsed.unmappedCourses.length}\uac1c\ub294 \uc120\ud0dd \uc81c\uc678\ub428)`);
 }
@@ -10892,7 +10944,7 @@ console.warn('\x72\x75\x6e\x4d\x61\x63\x72\x6f \x6d\x6f\x64\x61\x6c \x63\x61\x6c
 }
 });
 }else{
-const didPrepend=applyParsedData(parsed,type);
+const didPrepend=applyParsedData(parsed,type,{deferRenderSave:true});
 if(!didPrepend)autoSelectTwo();
 }
 }catch(err){
