@@ -758,7 +758,11 @@ txt.includes('\uace8\ud504\uc7a5 \uc804\uccb4')
 ){
 return false;
 }
-const hasCloseBtn=txt.includes('\ub2eb\uae30');
+const hasCloseBtn=txt.includes('\ub2eb\uae30')||Array.from(el.querySelectorAll('\x69\x6e\x70\x75\x74, \x62\x75\x74\x74\x6f\x6e, \x61, \x73\x70\x61\x6e, \x64\x69\x76')).some(b=>{
+if(!_0x1017(b))return false;
+const v=(b.value||b.textContent||'').trim();
+return v==='\ub2eb\uae30'||v==='\u00d7'||v==='\x58';
+});
 const hasTeeFields=(txt.includes('\uadf8\ub9b0\ud53c'))&&(txt.includes('\ud2f0\uc5c5\uc77c\uc790')||txt.includes('\ud2f0\uc5c5 \uc77c\uc790')||txt.includes('\ud2f0\uc5c5 \uc2dc\uac04')||txt.includes('\ud2f0\uc5c5\uc2dc\uac04'));
 const hasModalMeta=txt.includes('\ub4f1\ub85d\ud558\uae30')||txt.includes('\ub4f1\ub85d\uc790')||txt.includes('\ud734\ub300\ud3f0')||txt.includes('\ud3ec\ud568\uc0ac\ud56d');
 if(!hasCloseBtn||!hasTeeFields||!hasModalMeta)return false;
