@@ -458,36 +458,75 @@ return true;
 }
 async function _0x100b(dateInput,formattedDate){
 if(!dateInput)return false;
+const parts=(formattedDate||'').split('-');
+if(parts.length<3)return false;
+const targetYear=parseInt(parts[0],10);
+const targetMonth=parseInt(parts[1],10);
+const targetDay=parseInt(parts[2],10);
 try{
 dateInput.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x63\x65\x6e\x74\x65\x72'});
 }catch(e){}
-window.postMessage({
-type:'\x5f\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x53\x45\x54\x5f\x44\x41\x54\x45\x5f\x5f',
-date:formattedDate
-},'*');
-console.log(`[\uace8\ud504\ub79c\ub4dc] \ub0a0\uc9dc \uc785\ub825\ucc3d \ud074\ub9ad\ud558\uc5ec \ub2ec\ub825 \ud31d\uc5c5 \uc720\ub3c4: ${formattedDate}`);
+dateInput.setAttribute('\x64\x61\x74\x61-\x67\x6c\x64-\x74\x61\x72\x67\x65\x74-\x64\x61\x74\x65','\x31');
+console.log(`[\uace8\ud504\ub79c\ub4dc] \ud2f0\uc5c5\uc77c\uc790 \uc785\ub825\ucc3d \uc9c1\uc811 \ud074\ub9ad\ud558\uc5ec \ub2ec\ub825 \ud31d\uc5c5 \uc624\ud508: ${formattedDate}`);
+try{dateInput.focus();}catch(e){}
 await _0x1008(dateInput);
-const dayMatch=(formattedDate||'').match(/-(\d{1,2})$/);
-const targetDay=dayMatch?String(parseInt(dayMatch[1],10)):'';
+try{dateInput.click();}catch(e){}
 let dp=document.getElementById('\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x64\x69\x76');
-let matched=null;
-for(let wait=0;wait<8;wait++){
+for(let wait=0;wait<15;wait++){
 dp=document.getElementById('\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x64\x69\x76');
-if(dp&&targetDay){
-const dayLinks=Array.from(dp.querySelectorAll('\x74\x64\x3a\x6e\x6f\x74(\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6f\x74\x68\x65\x72-\x6d\x6f\x6e\x74\x68) \x61\x2e\x75\x69-\x73\x74\x61\x74\x65-\x64\x65\x66\x61\x75\x6c\x74, \x74\x64\x3a\x6e\x6f\x74(\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6f\x74\x68\x65\x72-\x6d\x6f\x6e\x74\x68) \x61, \x61\x2e\x75\x69-\x73\x74\x61\x74\x65-\x64\x65\x66\x61\x75\x6c\x74, \x61'));
-matched=dayLinks.find(a=>a.textContent.trim()===targetDay);
-if(matched)break;
+if(dp&&(dp.style.display!=='\x6e\x6f\x6e\x65'||dp.offsetHeight>0||dp.getClientRects().length>0)){
+break;
 }
 await _0x1005(100);
 }
-if(matched){
-console.log(`[\uace8\ud504\ub79c\ub4dc] \ub2ec\ub825 \ud31d\uc5c5\uc5d0\uc11c ${targetDay}\uc77c \ud074\ub9ad \uc120\ud0dd \uc644\ub8cc!`);
-await _0x1008(matched);
-await _0x1005(150);
-}else{
-console.warn(`[\uace8\ud504\ub79c\ub4dc] \ub2ec\ub825 \ud31d\uc5c5\uc5d0\uc11c ${targetDay}\uc77c \ub9c1\ud06c\ub97c \ucc3e\uc9c0 \ubabb\ud568 (\uc9c1\uc811 \uc124\uc815 \uc801\uc6a9)`);
-}
 if(dp){
+for(let nav=0;nav<12;nav++){
+const monthHeader=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6d\x6f\x6e\x74\x68');
+const yearHeader=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x79\x65\x61\x72');
+const curMonthText=monthHeader?monthHeader.textContent.trim():'';
+const curYearText=yearHeader?yearHeader.textContent.trim():'';
+const curMonthMatch=curMonthText.match(/(\d+)/);
+const curYearMatch=curYearText.match(/(\d+)/);
+const curMonth=curMonthMatch?parseInt(curMonthMatch[1],10):(new Date().getMonth()+1);
+const curYear=curYearMatch?parseInt(curYearMatch[1],10):new Date().getFullYear();
+const curTotalMonths=curYear*12+curMonth;
+const targetTotalMonths=targetYear*12+targetMonth;
+if(curTotalMonths<targetTotalMonths){
+const nextBtn=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6e\x65\x78\x74');
+if(nextBtn){
+await _0x1008(nextBtn);
+await _0x1005(150);
+continue;
+}
+}else if(curTotalMonths>targetTotalMonths){
+const prevBtn=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x70\x72\x65\x76');
+if(prevBtn){
+await _0x1008(prevBtn);
+await _0x1005(150);
+continue;
+}
+}
+break;
+}
+const dayLinks=Array.from(dp.querySelectorAll('\x74\x64\x3a\x6e\x6f\x74(\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6f\x74\x68\x65\x72-\x6d\x6f\x6e\x74\x68) \x61\x2e\x75\x69-\x73\x74\x61\x74\x65-\x64\x65\x66\x61\x75\x6c\x74, \x74\x64\x3a\x6e\x6f\x74(\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x6f\x74\x68\x65\x72-\x6d\x6f\x6e\x74\x68) \x61'));
+const targetLink=dayLinks.find(a=>parseInt(a.textContent.trim(),10)===targetDay);
+if(targetLink){
+console.log(`[\uace8\ud504\ub79c\ub4dc] \ub2ec\ub825 \ud31d\uc5c5\uc5d0\uc11c ${targetDay}\uc77c \uc9c1\uc811 \ud074\ub9ad!`);
+await _0x1008(targetLink);
+try{targetLink.click();}catch(e){}
+await _0x1005(200);
+}else{
+console.warn(`[\uace8\ud504\ub79c\ub4dc] \ub2ec\ub825 \ud31d\uc5c5\uc5d0\uc11c ${targetDay}\uc77c \ub9c1\ud06c\ub97c \ucc3e\uc9c0 \ubabb\ud568 (\ud3f4\ubc31 \uc801\uc6a9)`);
+}
+}
+window.postMessage({
+type:'\x5f\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x53\x45\x54\x5f\x44\x41\x54\x45\x5f\x5f',
+date:formattedDate,
+selector:'[\x64\x61\x74\x61-\x67\x6c\x64-\x74\x61\x72\x67\x65\x74-\x64\x61\x74\x65="\x31"]'
+},'*');
+await _0x1005(_0x1006('\x66\x61\x73\x74',stepPreset));
+await _0x100a(dateInput,formattedDate);
+if(dp&&(dp.style.display!=='\x6e\x6f\x6e\x65'||dp.offsetHeight>0)){
 const closeBtn=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x63\x6c\x6f\x73\x65, \x62\x75\x74\x74\x6f\x6e\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x63\x6c\x6f\x73\x65');
 if(closeBtn){
 await _0x1008(closeBtn);
@@ -495,7 +534,6 @@ await _0x1008(closeBtn);
 dp.style.display='\x6e\x6f\x6e\x65';
 }
 }
-await _0x100a(dateInput,formattedDate);
 return true;
 }
 async function _0x100c(inp,value){
