@@ -1176,42 +1176,66 @@ modal=null;
 if(!modal){
 const tabBtn=_0x1015(isTransfer);
 if(tabBtn){
-console.log(`[\uace8\ud504\ub79c\ub4dc] '${isTransfer?'\uc591\ub3c4':'\uc870\uc778'} \ub4f1\ub85d' \ubc84\ud2bc \ubc1c\uacac:`,tabBtn.tagName,tabBtn.className,tabBtn.textContent?.trim());
+const clickEl=tabBtn.closest('\x2e\x77\x72\x69\x74\x65\x42\x6f\x6f\x6b\x69\x6e\x67, \x62\x75\x74\x74\x6f\x6e, \x61, \x70, \x6c\x69')||tabBtn;
+_0x1003({
+desc:`[${(task.currentIndex||0)+1}/${task.totalCount||1}] '${targetDivision} \ub4f1\ub85d' \ubc84\ud2bc \ud074\ub9ad \uc911...`
+});
+console.log(`[\uace8\ud504\ub79c\ub4dc] '${targetDivision} \ub4f1\ub85d' \ubc84\ud2bc \ubc1c\uacac:`,clickEl.tagName,clickEl.className,clickEl.textContent?.trim());
 try{
 document.querySelectorAll('[\x64\x61\x74\x61-\x67\x6c\x64-\x6f\x70\x65\x6e-\x62\x74\x6e="\x31"]').forEach(el=>el.removeAttribute('\x64\x61\x74\x61-\x67\x6c\x64-\x6f\x70\x65\x6e-\x62\x74\x6e'));
-tabBtn.setAttribute('\x64\x61\x74\x61-\x67\x6c\x64-\x6f\x70\x65\x6e-\x62\x74\x6e','\x31');
-tabBtn.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
+clickEl.setAttribute('\x64\x61\x74\x61-\x67\x6c\x64-\x6f\x70\x65\x6e-\x62\x74\x6e','\x31');
+clickEl.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 }catch(e){}
+await _0x1008(clickEl);
+try{clickEl.click();}catch(e){}
+for(let w=0;w<5&&!modal;w++){
+await _0x1005(200);
+modal=_0x101c();
+}
+if(!modal){
+console.log(`[\uace8\ud504\ub79c\ub4dc] \ubb3c\ub9ac \ud074\ub9ad \ud6c4 \ubaa8\ub2ec \ubbf8\uac10\uc9c0 -> MAIN \uc6d4\ub4dc jQuery \ud074\ub9ad \uc2dc\ub3c4`);
+try{clickEl.setAttribute('\x64\x61\x74\x61-\x67\x6c\x64-\x6f\x70\x65\x6e-\x62\x74\x6e','\x31');}catch(e){}
 window.postMessage({
 type:'\x5f\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x4f\x50\x45\x4e\x5f\x54\x41\x42\x5f\x5f',
 isTransfer:isTransfer
 },'*');
+for(let w=0;w<10&&!modal;w++){
+await _0x1005(200);
+modal=_0x101c();
+}
+}
+if(!modal&&clickEl.parentElement&&(clickEl.parentElement.textContent||'').replace(/\s+/g,'').length<=10){
+await _0x1008(clickEl.parentElement);
+try{clickEl.parentElement.click();}catch(e){}
 for(let w=0;w<6&&!modal;w++){
 await _0x1005(200);
 modal=_0x101c();
 }
-if(!modal){
-console.log(`[\uace8\ud504\ub79c\ub4dc] MAIN \uc6d4\ub4dc \ud074\ub9ad \ud6c4 \ubaa8\ub2ec \ubbf8\uac10\uc9c0 -> humanClick \uc7ac\uc2dc\ub3c4`);
-await _0x1008(tabBtn);
 }
 }else{
 console.warn("[\uace8\ud504\ub79c\ub4dc] \uc0c1\ub2e8 \uc591\ub3c4\x2f\uc870\uc778 \ub4f1\ub85d \ubc84\ud2bc \ud0d0\uc0c9 \uc2e4\ud328, \x4d\x41\x49\x4e \uc6d4\ub4dc \uc9c1\uc811 \uc624\ud508 \uc2dc\ub3c4");
+_0x1003({
+desc:`[${(task.currentIndex||0)+1}/${task.totalCount||1}] '${targetDivision} \ub4f1\ub85d' \ubc84\ud2bc \ud0d0\uc0c9 \uc7ac\uc2dc\ub3c4 \uc911...`
+});
 window.postMessage({
 type:'\x5f\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x4f\x50\x45\x4e\x5f\x54\x41\x42\x5f\x5f',
 isTransfer:isTransfer
 },'*');
-}
-let waitModal=0;
-while(!modal&&waitModal<18){
+for(let w=0;w<12&&!modal;w++){
 await _0x1005(200);
 modal=_0x101c();
-waitModal++;
+}
 }
 }
 if(!modal){
-console.error("\u274c [\uace8\ud504\ub79c\ub4dc] '\ub4f1\ub85d\ud558\uae30' \ubaa8\ub2ec \ucc3d\uc744 \uc5f4 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e");
+const msg=`'${targetDivision} \ub4f1\ub85d' \ucc3d\uc774 \uc5f4\ub9ac\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4. (\ud654\uba74\uc5d0 '${targetDivision} \ub4f1\ub85d' \ubc84\ud2bc\uc774 \ubcf4\uc774\ub294\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694)`;
+console.error("[\uace8\ud504\ub79c\ub4dc]",msg);
+_0x1003({desc:msg});
 return false;
 }
+_0x1003({
+desc:`[${(task.currentIndex||0)+1}/${task.totalCount||1}] ${item.golf} \ub4f1\ub85d\ucc3d \uc785\ub825 \uc911...`
+});
 console.log("\ud83c\udfaf [\uace8\ud504\ub79c\ub4dc] \ub4f1\ub85d \ubaa8\ub2ec \ud3ec\ucee4\uc2a4 \uc131\uacf5\x3a",modal.className);
 const regionSelect=_0x1020(modal);
 if(regionSelect){

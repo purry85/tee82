@@ -76,17 +76,13 @@ break;
 }
 }
 if(targetBtn){
-console.log("[\uace8\ud504\ub79c\ub4dc \x4d\x41\x49\x4e] \ud83c\udfaf \ub4f1\ub85d \ud0ed \ubc1c\uacac \uc131\uacf5\x3a",targetBtn.tagName,targetBtn.className,"\x73\x65\x71\x3a",targetBtn.getAttribute('\x73\x65\x71'));
-if(window.$){
-try{window.$(targetBtn).trigger('\x63\x6c\x69\x63\x6b');}catch(e1){}
-try{window.$(targetBtn).click();}catch(e2){}
-}
+console.log("[\uace8\ud504\ub79c\ub4dc \x4d\x41\x49\x4e] \ub4f1\ub85d \ud0ed \ubc1c\uacac \uc131\uacf5\x3a",targetBtn.tagName,targetBtn.className,"\x73\x65\x71\x3a",targetBtn.getAttribute('\x73\x65\x71'));
+var jq=window.jQuery||window.$;
+if(jq){
+try{jq(targetBtn).trigger('\x63\x6c\x69\x63\x6b');}catch(e1){}
+}else{
 try{targetBtn.click();}catch(e3){}
-try{
-targetBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',{bubbles:true,cancelable:true,view:window}));
-targetBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',{bubbles:true,cancelable:true,view:window}));
-targetBtn.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',{bubbles:true,cancelable:true,view:window}));
-}catch(e4){}
+}
 }else{
 console.warn("[\uace8\ud504\ub79c\ub4dc \x4d\x41\x49\x4e] \u26a0\ufe0f \ub4f1\ub85d \ud0ed \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e \x73\x65\x6c\x65\x63\x74\x6f\x72\x3a",selector);
 }
