@@ -1277,9 +1277,51 @@ waitOpts++;
 console.log(`[\uace8\ud504\ub79c\ub4dc] \uace8\ud504\uc7a5 \uc635\uc158 \uac1c\uc218: ${golfSelect.options.length}\uac1c`);
 const normItemGolf=_0x100e(item.golf);
 const rawItemGolf=String(item.golf||'').replace(/\[.*?\]/g,'').trim().toLowerCase();
+const strictNorm=(s)=>String(s||'')
+.toLowerCase()
+.replace(/클레식/g,'\ud074\ub798\uc2dd')
+.replace(/cc|gc|골프장|골프클럽|컨트리클럽/gi,'')
+.replace(/[\s,·\/\-_()[\]]/g,'');
+const strictItemGolf=strictNorm(item.golf);
+const strictRawGolf=strictNorm(item.rawGolf||'');
+const gLow=String(item.golf||'').toLowerCase();
+const gBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(gLow);
+const gHasLakeClassic=gLow.includes('\ub808\uc774\ud06c')||gLow.includes('\ud074\ub798\uc2dd')||gLow.includes('\ud074\ub808\uc2dd');
+const gHasOcean=gLow.includes('\uc624\uc158');
+const gHasSky=gLow.includes('\ud558\ub298');
+const isOptionBranchConflict=(optTxt)=>{
+const oLow=String(optTxt||'').toLowerCase();
+const oBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(oLow);
+if((gLow.includes('\ube44\uc5d0\uc774')||oLow.includes('\ube44\uc5d0\uc774'))&&gBAP!==oBAP)return true;
+if((gLow.includes('\uc54c\ud39c\uc2dc\uc544')||oLow.includes('\uc54c\ud39c\uc2dc\uc544'))&&gLow.includes('\x37\x30\x30')!==oLow.includes('\x37\x30\x30'))return true;
+if(gLow.includes('\ud074\ub7fd\x37\x32')||oLow.includes('\ud074\ub7fd\x37\x32')){
+const oHasOcean=oLow.includes('\uc624\uc158');
+const oHasSky=oLow.includes('\ud558\ub298');
+const oHasLakeClassic=oLow.includes('\ub808\uc774\ud06c')||oLow.includes('\ud074\ub798\uc2dd')||oLow.includes('\ud074\ub808\uc2dd');
+if(gHasOcean&&!oHasOcean)return true;
+if(gHasSky&&!oHasSky)return true;
+if(gHasLakeClassic&&(oHasOcean||oHasSky||!oHasLakeClassic))return true;
+if(!gHasOcean&&!gHasSky&&!gHasLakeClassic&&(oHasOcean||oHasSky))return true;
+}
+if((gLow.includes('\ub5bc\uc81c\ubca0')||oLow.includes('\ub5bc\uc81c\ubca0'))&&((gLow.includes('\ub3d9\ubd81')||gLow.includes('\ud55c\uc6b8')||gLow.includes('\ub9c8\ub8e8'))!==(oLow.includes('\ub3d9\ubd81')||oLow.includes('\ud55c\uc6b8')||oLow.includes('\ub9c8\ub8e8'))))return true;
+if((gLow.includes('\uc548\uc131')||oLow.includes('\uc548\uc131'))&&(/안성\s*h/i.test(gLow)!==/안성\s*h/i.test(oLow)||/안성\s*w/i.test(gLow)!==/안성\s*w/i.test(oLow)))return true;
+if((gLow.includes('\uc9c4\ucc9c')!==oLow.includes('\uc9c4\ucc9c'))||(gLow.includes('\ucc9c\uc548')!==oLow.includes('\ucc9c\uc548'))||(gLow.includes('\ud654\ub791')!==oLow.includes('\ud654\ub791')))return true;
+return false;
+};
 let matchedGolfIndex=-1;
 for(let i=0;i<golfSelect.options.length;i++){
 const optTxt=golfSelect.options[i].text.trim();
+if(!optTxt||optTxt==='\uc120\ud0dd')continue;
+const strictOpt=strictNorm(optTxt);
+if(strictOpt&&(strictOpt===strictItemGolf||(strictRawGolf&&strictOpt===strictRawGolf))){
+matchedGolfIndex=i;
+break;
+}
+}
+if(matchedGolfIndex<0){
+for(let i=0;i<golfSelect.options.length;i++){
+const optTxt=golfSelect.options[i].text.trim();
+if(isOptionBranchConflict(optTxt))continue;
 const normOpt=_0x100e(optTxt);
 if(!normOpt)continue;
 if(normOpt===normItemGolf){
@@ -1287,21 +1329,13 @@ matchedGolfIndex=i;
 break;
 }
 }
+}
 if(matchedGolfIndex<0){
-const gLow=String(item.golf||'').toLowerCase();
-const gBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(gLow);
 for(let i=0;i<golfSelect.options.length;i++){
 const optTxt=golfSelect.options[i].text.trim();
+if(isOptionBranchConflict(optTxt))continue;
 const normOpt=_0x100e(optTxt);
 if(!normOpt||normOpt.length<2)continue;
-const oLow=optTxt.toLowerCase();
-const oBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(oLow);
-if((gLow.includes('\ube44\uc5d0\uc774')||oLow.includes('\ube44\uc5d0\uc774'))&&gBAP!==oBAP)continue;
-if((gLow.includes('\uc54c\ud39c\uc2dc\uc544')||oLow.includes('\uc54c\ud39c\uc2dc\uc544'))&&gLow.includes('\x37\x30\x30')!==oLow.includes('\x37\x30\x30'))continue;
-if((gLow.includes('\ud074\ub7fd\x37\x32')||oLow.includes('\ud074\ub7fd\x37\x32'))&&(gLow.includes('\uc624\uc158')!==oLow.includes('\uc624\uc158')||gLow.includes('\ud558\ub298')!==oLow.includes('\ud558\ub298')))continue;
-if((gLow.includes('\ub5bc\uc81c\ubca0')||oLow.includes('\ub5bc\uc81c\ubca0'))&&((gLow.includes('\ub3d9\ubd81')||gLow.includes('\ud55c\uc6b8')||gLow.includes('\ub9c8\ub8e8'))!==(oLow.includes('\ub3d9\ubd81')||oLow.includes('\ud55c\uc6b8')||oLow.includes('\ub9c8\ub8e8'))))continue;
-if((gLow.includes('\uc548\uc131')||oLow.includes('\uc548\uc131'))&&(/안성\s*h/i.test(gLow)!==/안성\s*h/i.test(oLow)||/안성\s*w/i.test(gLow)!==/안성\s*w/i.test(oLow)))continue;
-if((gLow.includes('\uc9c4\ucc9c')!==oLow.includes('\uc9c4\ucc9c'))||(gLow.includes('\ucc9c\uc548')!==oLow.includes('\ucc9c\uc548'))||(gLow.includes('\ud654\ub791')!==oLow.includes('\ud654\ub791')))continue;
 if(normOpt.includes(normItemGolf)||normItemGolf.includes(normOpt)||
 rawItemGolf.includes(normOpt)||normOpt.includes(rawItemGolf)){
 matchedGolfIndex=i;

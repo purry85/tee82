@@ -8552,6 +8552,8 @@ const titleEl=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\
 const subTitleEl=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x4d\x6f\x64\x61\x6c\x53\x75\x62\x54\x69\x74\x6c\x65');
 if(titleEl)titleEl.textContent=`[${golf}] ${time} \uc815\ubcf4 \uc218\uc815`;
 if(subTitleEl)subTitleEl.textContent=`\ub0a0\uc9dc: ${date} | \ud604\uc7ac \uad6c\ubd84: ${roomType}`;
+const timeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x69\x6d\x65');
+if(timeInput)timeInput.value=time;
 const totalFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
 const fieldFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
 const prepaidFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
@@ -8622,11 +8624,28 @@ return;
 }
 const tr=currentEditingTr;
 const cells=tr.querySelectorAll('\x74\x64');
+const timeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x69\x6d\x65');
 const totalFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
 const fieldFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
 const prepaidFeeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
 const waitGenderInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x57\x61\x69\x74\x47\x65\x6e\x64\x65\x72\x54\x65\x78\x74');
 const chkSeonti=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x43\x68\x6b\x53\x65\x6f\x6e\x74\x69');
+const oldTime=cells[3]?.textContent?.trim()||tr.dataset.time||'';
+let newTime=oldTime;
+if(timeInput){
+const rawTimeDigits=timeInput.value.trim().replace(/[^\d]/g,'');
+if(rawTimeDigits.length===3){
+newTime='\x30'+rawTimeDigits;
+}else if(rawTimeDigits.length===4){
+newTime=rawTimeDigits;
+}else if(timeInput.value.trim()){
+newTime=timeInput.value.trim();
+}
+if(newTime&&newTime!==oldTime){
+if(cells[3])cells[3].textContent=newTime;
+tr.dataset.time=newTime;
+}
+}
 const activePaxBtn=document.querySelector('\x23\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x61\x78\x47\x72\x6f\x75\x70 \x2e\x62\x74\x6e-\x70\x61\x78-\x63\x68\x6f\x69\x63\x65\x2e\x61\x63\x74\x69\x76\x65');
 const selectedPax=activePaxBtn?activePaxBtn.dataset.pax:(cells[7]?.textContent?.trim()||'\x34\uc778');
 let selectedGender=waitGenderInput?waitGenderInput.value.trim():'';
@@ -8645,17 +8664,21 @@ tr.dataset.baseFee=newFee.toString();
 tr.dataset.origTotalFee=newFee.toString();
 tr.dataset.origBaseFee=newFee.toString();
 tr.dataset.manualFeeEdited='\x74\x72\x75\x65';
-if(fieldFeeInput&&fieldFeeInput.value.trim()){
+const parsedPrepaid=prepaidFeeInput?(parseFloat(prepaidFeeInput.value.trim())||0):0;
+if(fieldFeeInput&&fieldFeeInput.value.trim()&&parsedPrepaid>0){
 tr.dataset.fieldFee=fieldFeeInput.value.trim();
 tr.dataset.origFieldFee=fieldFeeInput.value.trim();
+tr.dataset.prepaidFee=parsedPrepaid.toString();
+tr.dataset.origPrepaidFee=parsedPrepaid.toString();
 }else{
 delete tr.dataset.origFieldFee;
-}
-if(prepaidFeeInput&&prepaidFeeInput.value.trim()){
-tr.dataset.prepaidFee=prepaidFeeInput.value.trim();
-tr.dataset.origPrepaidFee=prepaidFeeInput.value.trim();
-}else{
+delete tr.dataset.prepaidFee;
 delete tr.dataset.origPrepaidFee;
+if(fieldFeeInput&&fieldFeeInput.value.trim()){
+tr.dataset.fieldFee=newFee.toString();
+}else{
+delete tr.dataset.fieldFee;
+}
 }
 delete tr.dataset.noticeAdjusted;
 delete tr.dataset.noticePrice;
@@ -8703,7 +8726,8 @@ const curGolf=tr.dataset.golfmonGolf||tr.dataset.golf||'';
 const curTime=cells[3]?.textContent?.trim()||tr.dataset.time||'';
 const curRegId=tr.dataset.regId||'';
 lastSelectedResetItems.forEach(it=>{
-if((curRegId&&it.regId===curRegId)||(it.date===curDate&&(it.golf===curGolf||it.rawGolf===tr.dataset.rawGolf)&&it.time===curTime)){
+if((curRegId&&it.regId===curRegId)||(it.date===curDate&&(it.golf===curGolf||it.rawGolf===tr.dataset.rawGolf)&&(it.time===oldTime||it.time===curTime))){
+if(newTime)it.time=newTime;
 if(newFee>0)it.fee=newFee.toString();
 if(selectedPax)it.sizenum=selectedPax;
 if(selectedGender)it.condition=selectedGender;
@@ -8728,6 +8752,31 @@ document.getElementById('\x62\x74\x6e\x53\x61\x76\x65\x45\x64\x69\x74\x49\x74\x6
 e.preventDefault();
 saveEditItemModal();
 });
+const syncFieldFeeFromTotal=()=>{
+const feeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
+const fieldInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
+const prepaidInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
+if(!feeInput||!fieldInput||!prepaidInput)return;
+const hasSplit=prepaidInput.value.trim()!==''||fieldInput.value.trim()!=='';
+if(!hasSplit)return;
+const totalVal=parseFloat(feeInput.value);
+if(isNaN(totalVal))return;
+const prepaidVal=parseFloat(prepaidInput.value)||0;
+const newFieldVal=Math.max(0,Math.round((totalVal-prepaidVal)*10)/10);
+fieldInput.value=newFieldVal;
+};
+const syncTotalFromSplit=()=>{
+const feeInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65');
+const fieldInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
+const prepaidInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65');
+if(!feeInput||!fieldInput||!prepaidInput)return;
+const fieldVal=parseFloat(fieldInput.value)||0;
+const prepaidVal=parseFloat(prepaidInput.value)||0;
+feeInput.value=Math.max(0,Math.round((fieldVal+prepaidVal)*10)/10);
+};
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x54\x6f\x74\x61\x6c\x46\x65\x65')?.addEventListener('\x69\x6e\x70\x75\x74',syncFieldFeeFromTotal);
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65')?.addEventListener('\x69\x6e\x70\x75\x74',syncTotalFromSplit);
+document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x50\x72\x65\x70\x61\x69\x64\x46\x65\x65')?.addEventListener('\x69\x6e\x70\x75\x74',syncTotalFromSplit);
 document.querySelectorAll('\x2e\x62\x74\x6e-\x71\x75\x69\x63\x6b-\x61\x64\x6a\x75\x73\x74').forEach(btn=>{
 btn.addEventListener('\x63\x6c\x69\x63\x6b',()=>{
 const adj=parseFloat(btn.dataset.adj)||0;
@@ -8736,12 +8785,7 @@ if(feeInput){
 let cur=parseFloat(feeInput.value)||0;
 cur=Math.max(0,Math.round((cur+adj)*10)/10);
 feeInput.value=cur;
-const fieldInput=document.getElementById('\x65\x64\x69\x74\x49\x74\x65\x6d\x46\x69\x65\x6c\x64\x46\x65\x65');
-if(fieldInput&&fieldInput.value.trim()){
-let curField=parseFloat(fieldInput.value)||0;
-curField=Math.max(0,Math.round((curField+adj)*10)/10);
-fieldInput.value=curField;
-}
+syncFieldFeeFromTotal();
 }
 });
 });
@@ -11437,7 +11481,9 @@ const items=selectedTrs.map(tr=>{
 const cells=tr.querySelectorAll('\x74\x64');
 const origGolf=cells[2].textContent.trim();
 const rawGolf=tr.dataset.rawGolf||origGolf;
-const golflandGolf=tr.dataset.golflandGolf||getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name||origGolf;
+const freshMapped=(getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').isMapped?getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name:'')||
+(getMappedName(origGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').isMapped?getMappedName(origGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name:'');
+const golflandGolf=freshMapped||tr.dataset.golflandGolf||origGolf;
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 const itemMemo=resolveItemRegistrationMemo(golflandGolf||rawGolf||origGolf);
 const waitPax=parseInt(tr.dataset.waitPax,10)||0;
