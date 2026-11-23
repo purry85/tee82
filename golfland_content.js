@@ -456,8 +456,9 @@ el.blur();
 console.log(`[\uace8\ud504\ub79c\ub4dc] \ub0a0\uc9dc \uc124\uc815 \uc644\ub8cc -> \ucd5c\uc885 \ud544\ub4dc value: '${el.value}'`);
 return true;
 }
-async function _0x100b(dateInput,formattedDate){
+async function _0x100b(dateInput,formattedDate,stepPreset='\x66\x61\x73\x74'){
 if(!dateInput)return false;
+try{
 const parts=(formattedDate||'').split('-');
 if(parts.length<3)return false;
 const targetYear=parseInt(parts[0],10);
@@ -524,7 +525,7 @@ type:'\x5f\x5f\x47\x4f\x4c\x46\x4c\x41\x4e\x44\x5f\x53\x45\x54\x5f\x44\x41\x54\x
 date:formattedDate,
 selector:'[\x64\x61\x74\x61-\x67\x6c\x64-\x74\x61\x72\x67\x65\x74-\x64\x61\x74\x65="\x31"]'
 },'*');
-await _0x1005(_0x1006('\x66\x61\x73\x74',stepPreset));
+await _0x1005(150);
 await _0x100a(dateInput,formattedDate);
 if(dp&&(dp.style.display!=='\x6e\x6f\x6e\x65'||dp.offsetHeight>0)){
 const closeBtn=dp.querySelector('\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x63\x6c\x6f\x73\x65, \x62\x75\x74\x74\x6f\x6e\x2e\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x63\x6c\x6f\x73\x65');
@@ -533,6 +534,9 @@ await _0x1008(closeBtn);
 }else{
 dp.style.display='\x6e\x6f\x6e\x65';
 }
+}
+}catch(err){
+console.error("[\uace8\ud504\ub79c\ub4dc] \ub0a0\uc9dc \uc120\ud0dd \uc911 \uc624\ub958 \ubc1c\uc0dd (\uc9c4\ud589 \uc720\uc9c0)\x3a",err);
 }
 return true;
 }
@@ -1441,7 +1445,7 @@ await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 const dateInput=_0x1024(modal);
 if(dateInput){
 const formattedDate=_0x1010(item.date);
-await _0x100b(dateInput,formattedDate);
+await _0x100b(dateInput,formattedDate,stepPreset);
 console.log(`[\uace8\ud504\ub79c\ub4dc] \ud2f0\uc5c5\uc77c\uc790 \uc785\ub825 \uc644\ub8cc: ${formattedDate} (\ud544\ub4dc value: '${dateInput.value}')`);
 await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }else{
