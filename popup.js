@@ -471,12 +471,23 @@ return'\uc81c\uc8fc';
 return'';
 }
 function normalizeDictEntry(entry,key=''){
+const isClub72=(k)=>{
+const s=String(k||'').replace(/[\s\-_()\[\]\/.,]/g,'').toLowerCase();
+return s.includes('\ud074\ub7fd\x37\x32')||s.includes('\x63\x6c\x75\x62\x37\x32')||s==='\ub808\ud074'||s==='\ub808\uc774\ud06c\ud074\ub798\uc2dd';
+};
 if(!entry){
 const grk=GOLFROCK_OFFICIAL_NAMES[key]||key;
 const grkReg=GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[grk]||'';
+const defMonReg=isClub72(key)?'\uc778\ucc9c\uacbd\uc778':'';
+const defLandReg=isClub72(key)?'\uacbd\uae30\ub0a8\ubd80':'';
 return{
-region:'',
+region:defMonReg,
+golfmonRegion:defMonReg,
+golfpangRegion:defMonReg,
+golmarketRegion:defMonReg,
 golfrockRegion:grkReg,
+golflandRegion:defLandReg,
+golftopRegion:defMonReg,
 golfmon:key,
 golfpang:key,
 golmarket:getGolmarketGolfName(key)||key,
@@ -490,9 +501,16 @@ if(typeof entry==='\x73\x74\x72\x69\x6e\x67'){
 const gm=getGolmarketGolfName(entry)||getGolmarketGolfName(key)||entry;
 const grk=GOLFROCK_OFFICIAL_NAMES[entry]||GOLFROCK_OFFICIAL_NAMES[key]||entry;
 const grkReg=GOLFROCK_REGIONS[entry]||GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[grk]||'';
+const defMonReg=isClub72(key)||isClub72(entry)?'\uc778\ucc9c\uacbd\uc778':'';
+const defLandReg=isClub72(key)||isClub72(entry)?'\uacbd\uae30\ub0a8\ubd80':'';
 return{
-region:'',
+region:defMonReg,
+golfmonRegion:defMonReg,
+golfpangRegion:defMonReg,
+golmarketRegion:defMonReg,
 golfrockRegion:grkReg,
+golflandRegion:defLandReg,
+golftopRegion:defMonReg,
 golfmon:entry,
 golfpang:entry,
 golmarket:gm,
@@ -511,10 +529,23 @@ const golfland=entry.golfland||baseName;
 const golftop=entry.golftop||baseName;
 const rawReg=entry.region||'';
 const stdRegion=toStandardRegion(rawReg)||rawReg;
+const club72Flag=isClub72(key)||isClub72(baseName);
+const defMonReg=club72Flag?'\uc778\ucc9c\uacbd\uc778':stdRegion;
+const defLandReg=club72Flag?'\uacbd\uae30\ub0a8\ubd80':stdRegion;
+const golfmonRegion=entry.golfmonRegion||defMonReg;
+const golfpangRegion=entry.golfpangRegion||stdRegion;
+const golmarketRegion=entry.golmarketRegion||stdRegion;
 const golfrockRegion=entry.golfrockRegion||GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[baseName]||GOLFROCK_REGIONS[golfrock]||(stdRegion?toGolfrockRegion(stdRegion):'');
+const golflandRegion=entry.golflandRegion||defLandReg;
+const golftopRegion=entry.golftopRegion||stdRegion;
 return{
-region:stdRegion,
+region:stdRegion||golfmonRegion,
+golfmonRegion:golfmonRegion,
+golfpangRegion:golfpangRegion,
+golmarketRegion:golmarketRegion,
 golfrockRegion:golfrockRegion,
+golflandRegion:golflandRegion,
+golftopRegion:golftopRegion,
 golfmon:golfmon,
 golfpang:golfpang,
 golmarket:golmarket,
@@ -546,13 +577,21 @@ dictionary={};
 for(const[k,v]of Object.entries(saved)){
 dictionary[k]=normalizeDictEntry(v,k);
 if(defaultDict[k]){
-dictionary[k].region=defaultDict[k].region||dictionary[k].region;
-dictionary[k].golfmon=defaultDict[k].golfmon||dictionary[k].golfmon;
-dictionary[k].golfpang=defaultDict[k].golfpang||dictionary[k].golfpang;
-dictionary[k].golmarket=defaultDict[k].golmarket||dictionary[k].golmarket;
-dictionary[k].golfland=defaultDict[k].golfland||dictionary[k].golfland;
-dictionary[k].golftop=defaultDict[k].golftop||dictionary[k].golftop;
-dictionary[k].name=defaultDict[k].name||dictionary[k].name;
+const normDef=normalizeDictEntry(defaultDict[k],k);
+dictionary[k].region=(v.region!==undefined&&v.region!=='')?v.region:normDef.region;
+dictionary[k].golfmonRegion=(v.golfmonRegion!==undefined&&v.golfmonRegion!=='')?v.golfmonRegion:normDef.golfmonRegion;
+dictionary[k].golflandRegion=(v.golflandRegion!==undefined&&v.golflandRegion!=='')?v.golflandRegion:normDef.golflandRegion;
+dictionary[k].golfpangRegion=(v.golfpangRegion!==undefined&&v.golfpangRegion!=='')?v.golfpangRegion:normDef.golfpangRegion;
+dictionary[k].golmarketRegion=(v.golmarketRegion!==undefined&&v.golmarketRegion!=='')?v.golmarketRegion:normDef.golmarketRegion;
+dictionary[k].golfrockRegion=(v.golfrockRegion!==undefined&&v.golfrockRegion!=='')?v.golfrockRegion:normDef.golfrockRegion;
+dictionary[k].golftopRegion=(v.golftopRegion!==undefined&&v.golftopRegion!=='')?v.golftopRegion:normDef.golftopRegion;
+dictionary[k].golfmon=v.golfmon||normDef.golfmon;
+dictionary[k].golfpang=v.golfpang||normDef.golfpang;
+dictionary[k].golmarket=v.golmarket||normDef.golmarket;
+dictionary[k].golfrock=v.golfrock||normDef.golfrock;
+dictionary[k].golfland=v.golfland||normDef.golfland;
+dictionary[k].golftop=v.golftop||normDef.golftop;
+dictionary[k].name=v.name||normDef.name;
 }
 }
 for(const[k,v]of Object.entries(defaultDict)){
@@ -1499,9 +1538,22 @@ else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteName=item.golfpang;
 else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteName=item.golfrock||GOLFROCK_OFFICIAL_NAMES[targetKey]||targetKey;
 else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteName=item.golfland;
 else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteName=item.golftop;
+let siteRegion=item.region;
+if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteRegion=item.golflandRegion||'\uacbd\uae30\ub0a8\ubd80';
+else if(site==='\x67\x6f\x6c\x66\x6d\x6f\x6e')siteRegion=item.golfmonRegion||item.region||'\uc778\ucc9c\uacbd\uc778';
+else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteRegion=item.golfrockRegion||(item.region?toGolfrockRegion(item.region):'');
+else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteRegion=item.golfpangRegion||item.region;
+else if(site==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')siteRegion=item.golmarketRegion||item.region;
+else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteRegion=item.golftopRegion||item.region;
 return{
 name:siteName||item.name||targetKey,
-region:item.region||'\uc778\ucc9c\uacbd\uc778',
+region:siteRegion||'\uc778\ucc9c\uacbd\uc778',
+golfmonRegion:item.golfmonRegion||'\uc778\ucc9c\uacbd\uc778',
+golflandRegion:item.golflandRegion||'\uacbd\uae30\ub0a8\ubd80',
+golfpangRegion:item.golfpangRegion||item.region||'\uc778\ucc9c\uacbd\uc778',
+golmarketRegion:item.golmarketRegion||item.region||'\uc778\ucc9c\uacbd\uc778',
+golfrockRegion:item.golfrockRegion||'',
+golftopRegion:item.golftopRegion||item.region||'\uc778\ucc9c\uacbd\uc778',
 golfmon:item.golfmon||targetKey,
 golfpang:item.golfpang||targetKey,
 golmarket:item.golmarket||(targetKey==='\ud074\ub7fd\x37\x32(\ub808\uc774\ud06c\x2f\ud074\ub798\uc2dd)'?'\ud074\ub7fd\x37\x32(\ud074\ub798\uc2dd\x2f\ub808\uc774\ud06c)':targetKey),
@@ -1615,13 +1667,29 @@ else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteName=item.golfpang;
 else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteName=item.golfrock||GOLFROCK_OFFICIAL_NAMES[matchedKey]||GOLFROCK_OFFICIAL_NAMES[cleanOrig]||cleanOrig;
 else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteName=item.golfland;
 else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteName=item.golftop;
-const effectiveRegion=(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')
-?(item.golfrockRegion||GOLFROCK_REGIONS[matchedKey]||GOLFROCK_REGIONS[cleanOrig]||GOLFROCK_REGIONS[item.golfrock]||(item.region?toGolfrockRegion(item.region):''))
-:item.region;
+let effectiveRegion=item.region;
+if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b'){
+effectiveRegion=item.golfrockRegion||GOLFROCK_REGIONS[matchedKey]||GOLFROCK_REGIONS[cleanOrig]||GOLFROCK_REGIONS[item.golfrock]||(item.region?toGolfrockRegion(item.region):'');
+}else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64'){
+effectiveRegion=item.golflandRegion||item.region;
+}else if(site==='\x67\x6f\x6c\x66\x6d\x6f\x6e'){
+effectiveRegion=item.golfmonRegion||item.region;
+}else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67'){
+effectiveRegion=item.golfpangRegion||item.region;
+}else if(site==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74'){
+effectiveRegion=item.golmarketRegion||item.region;
+}else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70'){
+effectiveRegion=item.golftopRegion||item.region;
+}
 return{
 name:siteName||item.name||cleanOrig,
 region:effectiveRegion||'',
+golfmonRegion:item.golfmonRegion||item.region||'',
+golflandRegion:item.golflandRegion||item.region||'',
+golfpangRegion:item.golfpangRegion||item.region||'',
+golmarketRegion:item.golmarketRegion||item.region||'',
 golfrockRegion:item.golfrockRegion||GOLFROCK_REGIONS[matchedKey]||GOLFROCK_REGIONS[cleanOrig]||'',
+golftopRegion:item.golftopRegion||item.region||'',
 golfmon:item.golfmon||cleanOrig,
 golfpang:item.golfpang||cleanOrig,
 golmarket:item.golmarket||getGolmarketGolfName(cleanOrig)||cleanOrig,
@@ -11130,15 +11198,19 @@ const items=selectedTrs.map(tr=>{
 const cells=tr.querySelectorAll('\x74\x64');
 const origGolf=cells[2].textContent.trim();
 const rawGolf=tr.dataset.rawGolf||origGolf;
-const golfmonGolf=tr.dataset.golfmonGolf||getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6d\x6f\x6e').name||origGolf;
+const mappedMon=getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6d\x6f\x6e');
+const golfmonGolf=tr.dataset.golfmonGolf||(mappedMon.mapped?mappedMon.name:origGolf);
+const golfmonRegion=(mappedMon.mapped?(mappedMon.golfmonRegion||mappedMon.region):'')||
+tr.dataset.golfmonRegion||cells[1].textContent.trim();
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 const itemMemo=resolveItemRegistrationMemo(golfmonGolf||rawGolf||origGolf);
 return{
 regId:tr.dataset.regId,
 date:cells[0].textContent.trim(),
-region:cells[1].textContent.trim(),
+region:golfmonRegion||cells[1].textContent.trim(),
 golf:golfmonGolf,
 rawGolf:rawGolf,
+golfmonRegion:golfmonRegion||cells[1].textContent.trim(),
 time:cells[3].textContent.trim(),
 fee:tr.dataset.totalFee||tr.dataset.baseFee||extractPureFeeMan(cells[4].textContent.trim()),
 fieldFee:tr.dataset.fieldFee||'',
@@ -11481,9 +11553,14 @@ const items=selectedTrs.map(tr=>{
 const cells=tr.querySelectorAll('\x74\x64');
 const origGolf=cells[2].textContent.trim();
 const rawGolf=tr.dataset.rawGolf||origGolf;
-const freshMapped=(getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').isMapped?getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name:'')||
-(getMappedName(origGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').isMapped?getMappedName(origGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64').name:'');
+const mapped1=getMappedName(rawGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64');
+const mapped2=getMappedName(origGolf,'\x67\x6f\x6c\x66\x6c\x61\x6e\x64');
+const freshMapped=(mapped1.mapped?mapped1.name:'')||
+(mapped2.mapped?mapped2.name:'');
 const golflandGolf=freshMapped||tr.dataset.golflandGolf||origGolf;
+const golflandRegion=(mapped1.mapped?(mapped1.golflandRegion||mapped1.region):'')||
+(mapped2.mapped?(mapped2.golflandRegion||mapped2.region):'')||
+tr.dataset.golflandRegion||cells[1].textContent.trim();
 const source=tr.dataset.source||'\x67\x6f\x6c\x66\x72\x6f\x63\x6b';
 const itemMemo=resolveItemRegistrationMemo(golflandGolf||rawGolf||origGolf);
 const waitPax=parseInt(tr.dataset.waitPax,10)||0;
@@ -11491,10 +11568,11 @@ const waitGender=tr.dataset.waitGender||(waitPax===0?'\uc778\uc6d0\uc5c6\uc74c':
 return{
 regId:tr.dataset.regId,
 date:cells[0].textContent.trim(),
-region:cells[1].textContent.trim(),
+region:golflandRegion||cells[1].textContent.trim(),
 golf:golflandGolf,
 rawGolf:rawGolf,
 golflandGolf:golflandGolf,
+golflandRegion:golflandRegion||cells[1].textContent.trim(),
 time:cells[3].textContent.trim(),
 fee:tr.dataset.totalFee||tr.dataset.baseFee||extractPureFeeMan(cells[4].textContent.trim()),
 fieldFee:tr.dataset.fieldFee||'',
@@ -15267,8 +15345,14 @@ keyInp.dataset.oldkey=curKey;
 const existing=normalizeDictEntry(dictionary[curKey],curKey);
 if(currentDictSite==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b'){
 existing.golfrockRegion=toGolfrockRegion(rawReg)||rawReg;
-}else{
+}else if(currentDictSite==='\x61\x6c\x6c'){
 existing.region=toStandardRegion(rawReg)||rawReg;
+}else{
+const stdR=toStandardRegion(rawReg)||rawReg;
+existing[currentDictSite+'\x52\x65\x67\x69\x6f\x6e']=stdR;
+if(!existing.region){
+existing.region=stdR;
+}
 }
 if(currentDictSite==='\x61\x6c\x6c'){
 const gmInp=tr.querySelector('\x2e\x64\x69\x63\x74-\x65\x64\x69\x74-\x67\x6d');
@@ -15368,18 +15452,36 @@ sortDictManager(col);
 });
 let entries=Object.keys(dictionary).map(key=>{
 const norm=normalizeDictEntry(dictionary[key],key);
-const displayRegion=(currentDictSite==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')
-?(norm.golfrockRegion||GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[norm.golfrock]||(norm.region?toGolfrockRegion(norm.region):''))
-:norm.region;
+let displayRegion=norm.region;
+if(currentDictSite==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64'){
+displayRegion=norm.golflandRegion||norm.region||'';
+}else if(currentDictSite==='\x67\x6f\x6c\x66\x6d\x6f\x6e'){
+displayRegion=norm.golfmonRegion||norm.region||'';
+}else if(currentDictSite==='\x67\x6f\x6c\x66\x70\x61\x6e\x67'){
+displayRegion=norm.golfpangRegion||norm.region||'';
+}else if(currentDictSite==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74'){
+displayRegion=norm.golmarketRegion||norm.region||'';
+}else if(currentDictSite==='\x67\x6f\x6c\x66\x74\x6f\x70'){
+displayRegion=norm.golftopRegion||norm.region||'';
+}else if(currentDictSite==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b'){
+displayRegion=norm.golfrockRegion||GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[norm.golfrock]||(norm.region?toGolfrockRegion(norm.region):'');
+}
 return{
 key:key,
 region:displayRegion,
+commonRegion:norm.region,
+golfmonRegion:norm.golfmonRegion,
+golfpangRegion:norm.golfpangRegion,
+golmarketRegion:norm.golmarketRegion,
 golfrockRegion:norm.golfrockRegion||GOLFROCK_REGIONS[key]||GOLFROCK_REGIONS[norm.golfrock]||(norm.region?toGolfrockRegion(norm.region):''),
+golflandRegion:norm.golflandRegion,
+golftopRegion:norm.golftopRegion,
 golfmon:norm.golfmon,
 golfpang:norm.golfpang,
 golmarket:norm.golmarket,
 golfrock:norm.golfrock,
 golfland:norm.golfland,
+golftop:norm.golftop,
 name:norm.name
 };
 });
@@ -15503,7 +15605,7 @@ const golflandColHtml=isGolflandOpen?`
                 `:'';
 tr.innerHTML=`
                     <td><input type="text" value="${escapeAttr(item.key)}" data-oldkey="${escapeAttr(item.key)}" class="${keyClass}" title="${escapeAttr(keyTitle)}"></td>
-                    <td><input type="text" list="regionSuggestions" value="${escapeAttr(item.region)}" data-key="${escapeAttr(item.key)}" class="${regClass}" placeholder="${regPlaceholder}" title="${escapeAttr(regTitle)}"></td>
+                    <td><input type="text" list="regionSuggestions" value="${escapeAttr(item.region)}" data-key="${escapeAttr(item.key)}" data-site="all" class="${regClass}" placeholder="${regPlaceholder}" title="${escapeAttr(regTitle)}"></td>
                     <td><input type="text" value="${escapeAttr(item.golfmon)}" data-key="${escapeAttr(item.key)}" data-site="golfmon" class="dict-edit-sitename dict-edit-gm ${diffCls}" placeholder="\uace8\ud504\ubaac"></td>
                     <td><input type="text" value="${escapeAttr(item.golfpang)}" data-key="${escapeAttr(item.key)}" data-site="golfpang" class="dict-edit-sitename dict-edit-gp ${diffCls}" placeholder="\uace8\ud321"></td>
                     <td><input type="text" value="${escapeAttr(item.golmarket)}" data-key="${escapeAttr(item.key)}" data-site="golmarket" class="dict-edit-sitename dict-edit-gmk ${diffCls}" placeholder="\uace8\ub9c8\ucf13"></td>
@@ -15526,7 +15628,7 @@ nameTitle=`\u26a0\ufe0f \ub3d9\uc77c\ud55c \ubcc0\ud658\uba85('${curVal}')\uc774
 }
 tr.innerHTML=`
                     <td><input type="text" value="${escapeAttr(item.key)}" data-oldkey="${escapeAttr(item.key)}" class="${keyClass}" title="${escapeAttr(keyTitle)}"></td>
-                    <td><input type="text" list="regionSuggestions" value="${escapeAttr(item.region)}" data-key="${escapeAttr(item.key)}" class="${regClass}" placeholder="${regPlaceholder}" title="${escapeAttr(regTitle)}"></td>
+                    <td><input type="text" list="regionSuggestions" value="${escapeAttr(item.region)}" data-key="${escapeAttr(item.key)}" data-site="${currentDictSite}" class="${regClass}" placeholder="${regPlaceholder}" title="${escapeAttr(regTitle)}"></td>
                     <td><input type="text" value="${escapeAttr(curVal)}" data-key="${escapeAttr(item.key)}" data-site="${currentDictSite}" class="${nameClass}" placeholder="${namePlaceholder}" title="${escapeAttr(nameTitle)}"></td>
                     <td style="text-align:center;"><button type="button" class="btn-dict-del" data-key="${escapeAttr(item.key)}">\uc0ad\uc81c</button></td>
                 `;
@@ -15570,12 +15672,19 @@ if(!k)return;
 const rawVal=inp.value.trim();
 const entry=normalizeDictEntry(dictionary[k],k);
 let val='';
-if(currentDictSite==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b'){
+const site=inp.dataset.site||currentDictSite;
+if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b'){
 val=toGolfrockRegion(rawVal)||rawVal;
 entry.golfrockRegion=val;
-}else{
+}else if(site==='\x61\x6c\x6c'){
 val=toStandardRegion(rawVal)||rawVal;
 entry.region=val;
+}else{
+val=toStandardRegion(rawVal)||rawVal;
+entry[site+'\x52\x65\x67\x69\x6f\x6e']=val;
+if(!entry.region){
+entry.region=val;
+}
 }
 inp.value=val;
 dictionary[k]=entry;
@@ -15763,15 +15872,22 @@ const defGp=clean;
 const defGmk=getGolmarketGolfName(clean)||clean;
 const defGrk=clean;
 const defGld=clean;
-dictionary[clean]={
+dictionary[clean]=normalizeDictEntry({
 region:defReg,
+golfmonRegion:defReg,
+golfpangRegion:defReg,
+golmarketRegion:defReg,
+golfrockRegion:toGolfrockRegion(defReg)||'',
+golflandRegion:defReg,
+golftopRegion:defReg,
 golfmon:defGm,
 golfpang:defGp,
 golmarket:defGmk,
 golfrock:defGrk,
 golfland:defGld,
+golftop:clean,
 name:defGm
-};
+},clean);
 saveDictionary();
 if(managerSearch)managerSearch.value=clean;
 renderDictModal();
