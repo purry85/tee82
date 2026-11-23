@@ -1029,6 +1029,16 @@ if(targetTokens.length>0&&optTokens.length>0){
 const hasCommonToken=targetTokens.some(t=>optTokens.some(o=>o.includes(t)||t.includes(o)));
 if(!hasCommonToken)continue;
 }
+const tLow=target.toLowerCase();
+const oLow=optText.toLowerCase();
+const tBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(tLow);
+const oBAP=/(?:비에이비스타|비에이).*(?:p\b|퍼블릭|대중제)/i.test(oLow);
+if((tLow.includes('\ube44\uc5d0\uc774')||oLow.includes('\ube44\uc5d0\uc774'))&&tBAP!==oBAP)continue;
+if((tLow.includes('\uc54c\ud39c\uc2dc\uc544')||oLow.includes('\uc54c\ud39c\uc2dc\uc544'))&&tLow.includes('\x37\x30\x30')!==oLow.includes('\x37\x30\x30'))continue;
+if((tLow.includes('\ud074\ub7fd\x37\x32')||oLow.includes('\ud074\ub7fd\x37\x32'))&&(tLow.includes('\uc624\uc158')!==oLow.includes('\uc624\uc158')||tLow.includes('\ud558\ub298')!==oLow.includes('\ud558\ub298')))continue;
+if((tLow.includes('\ub5bc\uc81c\ubca0')||oLow.includes('\ub5bc\uc81c\ubca0'))&&((tLow.includes('\ub3d9\ubd81')||tLow.includes('\ud55c\uc6b8')||tLow.includes('\ub9c8\ub8e8'))!==(oLow.includes('\ub3d9\ubd81')||oLow.includes('\ud55c\uc6b8')||oLow.includes('\ub9c8\ub8e8'))))continue;
+if((tLow.includes('\uc548\uc131')||oLow.includes('\uc548\uc131'))&&(/안성\s*h/i.test(tLow)!==/안성\s*h/i.test(oLow)||/안성\s*w/i.test(tLow)!==/안성\s*w/i.test(oLow)))continue;
+if((tLow.includes('\uc9c4\ucc9c')!==oLow.includes('\uc9c4\ucc9c'))||(tLow.includes('\ucc9c\uc548')!==oLow.includes('\ucc9c\uc548'))||(tLow.includes('\ud654\ub791')!==oLow.includes('\ud654\ub791')))continue;
 if(targetBase.includes(optBase)||optBase.includes(targetBase)){
 matchedGolfIndex=i;
 break;

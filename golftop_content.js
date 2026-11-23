@@ -610,8 +610,15 @@ const isClub72Haneul=combinedGolf.includes('\ud074\ub7fd\x37\x32(\ud558\ub298)')
 combinedGolf.includes('\ud074\ub7fd\x37\x32\ud558\ub298')||combinedGolf.includes('\ud074\ub7fd\x37\x32[\ud558\ub298]')||
 (combinedGolf.includes('\ud074\ub7fd\x37\x32')&&combinedGolf.includes('\ud558\ub298'));
 const isClub72Standard=!isClub72Ocean&&!isClub72Haneul&&combinedGolf.includes('\ud074\ub7fd\x37\x32');
-const isTejeveDongbuk=combinedGolf.includes('\ub5bc\uc81c\ubca0(\ub3d9\ubd81)')||combinedGolf.includes('\ub5bc\uc81c\ubca0\ub3d9\ubd81')||(combinedGolf.includes('\ub5bc\uc81c\ubca0')&&combinedGolf.includes('\ub3d9\ubd81'));
-const isTejeveSeonam=combinedGolf.includes('\ub5bc\uc81c\ubca0(\uc11c\ub0a8)')||combinedGolf.includes('\ub5bc\uc81c\ubca0\uc11c\ub0a8')||(combinedGolf.includes('\ub5bc\uc81c\ubca0')&&combinedGolf.includes('\uc11c\ub0a8'));
+const isTejeveDongbuk=combinedGolf.includes('\ub5bc\uc81c\ubca0(\ub3d9\ubd81)')||combinedGolf.includes('\ub5bc\uc81c\ubca0\ub3d9\ubd81')||(combinedGolf.includes('\ub5bc\uc81c\ubca0')&&(combinedGolf.includes('\ub3d9\ubd81')||combinedGolf.includes('\ud55c\uc6b8')||combinedGolf.includes('\ub9c8\ub8e8')));
+const isTejeveSeonam=combinedGolf.includes('\ub5bc\uc81c\ubca0(\uc11c\ub0a8)')||combinedGolf.includes('\ub5bc\uc81c\ubca0\uc11c\ub0a8')||(combinedGolf.includes('\ub5bc\uc81c\ubca0')&&(combinedGolf.includes('\uc11c\ub0a8')||combinedGolf.includes('\ub204\ub9ac')||combinedGolf.includes('\uac00\ub78c')));
+const isAlpensia700=/(?:알펜시아|알펜)\s*700(?!\d)/i.test(combinedGolf);
+const isAlpensiaCC=!isAlpensia700&&(combinedGolf.includes('\uc54c\ud39c\uc2dc\uc544')||combinedGolf.includes('\uc54c\ud39c'));
+const isGolfzonAnseongH=/안성\s*h(?![a-z])|골프존.*안성\s*h/i.test(combinedGolf);
+const isGolfzonAnseongW=/안성\s*w(?![a-z])|골프존.*안성\s*w/i.test(combinedGolf);
+const isGolfzonJincheon=combinedGolf.includes('\uc9c4\ucc9c')&&!combinedGolf.includes('\uc544\ud2b8\ubc38\ub9ac');
+const isGolfzonCheonan=combinedGolf.includes('\ucc9c\uc548')&&!combinedGolf.includes('\uc0c1\ub85d');
+const isGolfzonHwarang=combinedGolf.includes('\ud654\ub791');
 if(isBAPublic){
 console.log("[\uace8\ud504\ud0d1] \u26f3 [\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x50)] \uac10\uc9c0 -> \ud654\uba74\uc758 [\ube44\uc5d0\uc774\ube44\uc2a4\x2e\x2e\x2e] \ubc84\ud2bc \uc6b0\uc120 \ub9e4\uce6d \ubaa8\ub4dc \uac00\ub3d9");
 }else if(isBAStandard){
@@ -696,7 +703,7 @@ break;
 }
 continue;
 }else if(isClub72Standard){
-if(cleanTxt.includes('\uc624\uc158')||cleanTxt.includes('\ud558\ub298')){
+if(cleanTxt.includes('\uc624\uc158')||cleanTxt.includes('\ud558\ub298')||rawTxt.startsWith('\ud074\ub7fd\x37\x32(\uc624')||rawTxt.startsWith('\ud074\ub7fd\x37\x32(\ud558')){
 continue;
 }
 if(cleanTxt==='\ud074\ub7fd\x37\x32'||cleanTxt==='\ud074\ub7fd\x37\x32\x63\x63'||cleanTxt.includes('\ub808\uc774\ud06c')||cleanTxt.includes('\ud074\ub798\uc2dd')){
@@ -707,21 +714,51 @@ break;
 }
 }
 if(isTejeveDongbuk){
-if(cleanTxt.includes('\uc11c\ub0a8'))continue;
-if(cleanTxt.includes('\ub3d9\ubd81')){
+if(cleanTxt.includes('\uc11c\ub0a8')||cleanTxt.includes('\ub204\ub9ac')||cleanTxt.includes('\uac00\ub78c'))continue;
+if(cleanTxt.includes('\ub3d9\ubd81')||cleanTxt.includes('\ud55c\uc6b8')||cleanTxt.includes('\ub9c8\ub8e8')){
 bestEl=el;
 bestScore=200;
 bestMatchedText=rawTxt+' (\ub5bc\uc81c\ubca0(\ub3d9\ubd81) \uc804\uc6a9)';
 break;
 }
+if(cleanTxt.includes('\ub5bc\uc81c\ubca0'))continue;
 }else if(isTejeveSeonam){
-if(cleanTxt.includes('\ub3d9\ubd81'))continue;
-if(cleanTxt.includes('\uc11c\ub0a8')){
+if(cleanTxt.includes('\ub3d9\ubd81')||cleanTxt.includes('\ud55c\uc6b8')||cleanTxt.includes('\ub9c8\ub8e8'))continue;
+if(cleanTxt.includes('\uc11c\ub0a8')||cleanTxt.includes('\ub204\ub9ac')||cleanTxt.includes('\uac00\ub78c')){
 bestEl=el;
 bestScore=200;
 bestMatchedText=rawTxt+' (\ub5bc\uc81c\ubca0(\uc11c\ub0a8) \uc804\uc6a9)';
 break;
 }
+if(cleanTxt.includes('\ub5bc\uc81c\ubca0'))continue;
+}
+if(isAlpensia700){
+if(!cleanTxt.includes('\x37\x30\x30'))continue;
+if(cleanTxt.includes('\uc54c\ud39c\uc2dc\uc544')||cleanTxt.includes('\uc54c\ud39c')){
+bestEl=el;
+bestScore=200;
+bestMatchedText=rawTxt+' (\uc54c\ud39c\uc2dc\uc544\x37\x30\x30 \uc804\uc6a9)';
+break;
+}
+}else if(isAlpensiaCC){
+if(cleanTxt.includes('\x37\x30\x30'))continue;
+if(cleanTxt.includes('\uc54c\ud39c\uc2dc\uc544')||cleanTxt.includes('\uc54c\ud39c')){
+bestEl=el;
+bestScore=200;
+bestMatchedText=rawTxt+' (\uc54c\ud39c\uc2dc\uc544\x63\x63\x2f\uba85\ubb38 \uc804\uc6a9)';
+break;
+}
+}
+if(isGolfzonAnseongH){
+if(cleanTxt.includes('\uc548\uc131\x77')||cleanTxt.includes('\uc548\uc131\x71')||!cleanTxt.includes('\uc548\uc131\x68'))continue;
+}else if(isGolfzonAnseongW){
+if(cleanTxt.includes('\uc548\uc131\x68')||cleanTxt.includes('\uc548\uc131\x71')||!cleanTxt.includes('\uc548\uc131\x77'))continue;
+}else if(isGolfzonJincheon){
+if(cleanTxt.includes('\ucc9c\uc548')||cleanTxt.includes('\ud654\ub791')||cleanTxt.includes('\uc544\ud2b8\ubc38\ub9ac')||!cleanTxt.includes('\uc9c4\ucc9c'))continue;
+}else if(isGolfzonCheonan){
+if(cleanTxt.includes('\uc9c4\ucc9c')||cleanTxt.includes('\ud654\ub791')||cleanTxt.includes('\uc0c1\ub85d')||!cleanTxt.includes('\ucc9c\uc548'))continue;
+}else if(isGolfzonHwarang){
+if(cleanTxt.includes('\uc9c4\ucc9c')||cleanTxt.includes('\ucc9c\uc548')||!cleanTxt.includes('\ud654\ub791'))continue;
 }
 for(const t of targetList){
 const cleanT=cleanFn(t);

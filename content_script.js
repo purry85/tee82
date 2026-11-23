@@ -1140,6 +1140,38 @@ const cCp=/혼합|cp/i.test(c);
 if(tCp&&!cCp)return true;
 if(!tCp&&cCp&&(t.includes('\uc624\ub80c\uc9c0')||t.includes('\x39\ud640')||t.includes('\uc815\uaddc')||t.includes('\ud68c\uc6d0\uc81c')))return true;
 }
+if(t.includes('\uc548\uc131')||c.includes('\uc548\uc131')){
+const tH=/안성\s*h\b|안성h/i.test(t);
+const cH=/안성\s*h\b|안성h/i.test(c);
+const tW=/안성\s*w\b|안성w/i.test(t);
+const cW=/안성\s*w\b|안성w/i.test(c);
+const tQ=/안성\s*q\b|안성q|안성큐|골프클럽q/i.test(t);
+const cQ=/안성\s*q\b|안성q|안성큐|골프클럽q/i.test(c);
+const tHanlim=t.includes('\ud55c\ub9bc');
+const cHanlim=c.includes('\ud55c\ub9bc');
+const tBene=t.includes('\ubca0\ub124\uc2a4\ud2b8');
+const cBene=c.includes('\ubca0\ub124\uc2a4\ud2b8');
+if((tH||cH)&&(tH!==cH))return true;
+if((tW||cW)&&(tW!==cW))return true;
+if((tQ||cQ)&&(tQ!==cQ))return true;
+if((tHanlim||cHanlim)&&(tHanlim!==cHanlim))return true;
+if((tBene||cBene)&&(tBene!==cBene))return true;
+}
+const golfzonBranches=['\uc9c4\ucc9c','\ucc9c\uc548','\ud654\ub791','\uc1a1\ub3c4','\uc21c\ucc9c','\uc624\ub77c','\ubb34\uc8fc','\uc0ac\ucc9c','\uad6c\ubbf8','\uccad\ud1b5','\uac10\ud3ec','\uc120\uc6b4','\ub4dc\ub798\uace4','\uc601\uc554','\uc548\uc131\x68','\uc548\uc131\x77','\uc548\uc131\x71'];
+const tHasGolfzon=t.includes('\uace8\ud504\uc874')||golfzonBranches.some(b=>t.includes(b));
+const cHasGolfzon=c.includes('\uace8\ud504\uc874')||golfzonBranches.some(b=>c.includes(b));
+if(tHasGolfzon&&cHasGolfzon){
+if((t.includes('\uc0c1\ub85d')&&!c.includes('\uc0c1\ub85d'))||(!t.includes('\uc0c1\ub85d')&&c.includes('\uc0c1\ub85d')))return true;
+if((t.includes('\uc544\ud2b8\ubc38\ub9ac')&&!c.includes('\uc544\ud2b8\ubc38\ub9ac'))||(!t.includes('\uc544\ud2b8\ubc38\ub9ac')&&c.includes('\uc544\ud2b8\ubc38\ub9ac')))return true;
+const tBranches=golfzonBranches.filter(b=>t.includes(b));
+const cBranches=golfzonBranches.filter(b=>c.includes(b));
+if(tBranches.length>0&&cBranches.length>0){
+const hasOverlap=tBranches.some(b=>cBranches.includes(b));
+if(!hasOverlap)return true;
+}else if(tBranches.length!==cBranches.length&&(t.includes('\uace8\ud504\uc874')&&c.includes('\uace8\ud504\uc874'))){
+return true;
+}
+}
 return false;
 }
 function _0x101c(targetText,container){
@@ -3353,6 +3385,11 @@ return 100;
 const specialMatchList=[
 {key:'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70',card:['\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\x70','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0(\x70)','\ube44\uc5d0\uc774(\x70)','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ub300\uc911\uc81c','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ud37c\ube14\ub9ad']},
 {key:'\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0',card:['\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0','\ube44\uc5d0\uc774\ube44\uc2a4\ud0c0\ud68c\uc6d0\uc81c','\ube44\uc5d0\uc774\ud68c\uc6d0\uc81c']},
+{key:'\uace8\ud504\uc874\uc548\uc131\x68',card:['\uace8\ud504\uc874\uc548\uc131\x68','\uc548\uc131\x68']},
+{key:'\uace8\ud504\uc874\uc548\uc131\x77',card:['\uace8\ud504\uc874\uc548\uc131\x77','\uc548\uc131\x77']},
+{key:'\uace8\ud504\uc874\uc9c4\ucc9c',card:['\uace8\ud504\uc874\uc9c4\ucc9c','\uc9c4\ucc9c']},
+{key:'\uace8\ud504\uc874\ucc9c\uc548',card:['\uace8\ud504\uc874\ucc9c\uc548','\ucc9c\uc548']},
+{key:'\uace8\ud504\uc874\ud654\ub791',card:['\uace8\ud504\uc874\ud654\ub791','\ud654\ub791']},
 {key:'\ud074\ub7fd\x37\x32\uc624\uc158',card:['\ud074\ub7fd\x37\x32\uc624\uc158','\uc624\uc158']},
 {key:'\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd',card:['\ud074\ub7fd\x37\x32\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub7fd\x37\x32','\ub808\uc774\ud06c\ud074\ub798\uc2dd','\ud074\ub798\uc2dd\ub808\uc774\ud06c','\ub808\ud074']},
 {key:'\uc54c\ud39c\uc2dc\uc544\x37\x30\x30',card:['\uc54c\ud39c\uc2dc\uc544\x37\x30\x30','\uc54c\ud39c\x37\x30\x30']},

@@ -758,12 +758,25 @@ const cleanItem=text.replace(/\[\d+\]/g,'').replace(/[\s\-_gcCC\(\)\[\]]/gi,'').
 let score=0;
 if(cleanRaw&&cleanItem===cleanRaw)score+=150;
 if(cleanTarget&&cleanItem===cleanTarget)score+=120;
-const subCourses=['\uc624\uc158','\ud074\ub798\uc2dd','\ub808\uc774\ud06c','\ud558\ub298','\ub3d9\ucf54\uc2a4','\uc11c\ucf54\uc2a4','\ub0a8\ucf54\uc2a4','\ubd81\ucf54\uc2a4','\ub9c8\uc6b4\ud2f4','\ubc38\ub9ac','\ud790','\ub8e8\ube44','\ub2e4\uc774\uc544','\uc0ac\ud30c\uc774\uc5b4','\ud30c\uc778','\ube44\uce58','\uc911','\ub3d9','\uc11c','\ub0a8','\ubd81'];
+const subCourses=[
+'\uc624\uc158','\ud074\ub798\uc2dd','\ub808\uc774\ud06c','\ud558\ub298','\uc11c\ub0a8','\ub3d9\ubd81','\ub204\ub9ac','\uac00\ub78c','\ud55c\uc6b8','\ub9c8\ub8e8',
+'\x37\x30\x30','\uba85\ubb38','\ud68c\uc6d0\uc81c','\ub300\uc911\uc81c','\ud37c\ube14\ub9ad','\uc548\uc131\x68','\uc548\uc131\x77','\uc548\uc131\x71',
+'\uc9c4\ucc9c','\ucc9c\uc548','\ud654\ub791','\ub3d9\ucf54\uc2a4','\uc11c\ucf54\uc2a4','\ub0a8\ucf54\uc2a4','\ubd81\ucf54\uc2a4','\ub9c8\uc6b4\ud2f4','\ubc38\ub9ac','\ud790',
+'\ub8e8\ube44','\ub2e4\uc774\uc544','\uc0ac\ud30c\uc774\uc5b4','\ud30c\uc778','\ube44\uce58','\uc911','\ub3d9','\uc11c','\ub0a8','\ubd81'
+];
 for(const sub of subCourses){
 const inSource=cleanRaw.includes(sub)||cleanTarget.includes(sub);
 const inItem=cleanItem.includes(sub);
-if(inSource&&inItem)score+=80;
-else if(inSource&&!inItem)score-=40;
+if(inSource&&inItem)score+=200;
+else if(inSource&&!inItem)score-=500;
+else if(!inSource&&inItem&&['\uc624\uc158','\ud558\ub298','\uc11c\ub0a8','\ub3d9\ubd81','\x37\x30\x30','\uc548\uc131\x68','\uc548\uc131\x77','\uc548\uc131\x71','\uc9c4\ucc9c','\ucc9c\uc548','\ud654\ub791','\ud37c\ube14\ub9ad','\ub300\uc911\uc81c'].includes(sub)){
+score-=500;
+}
+}
+const srcBAP=/비에이(?:비스타)?.*(?:p|퍼블릭|대중제)/i.test(targetGolf+' '+rawGolf);
+const itemBAP=/비에이(?:비스타)?.*(?:p|퍼블릭|대중제)/i.test(text);
+if(srcBAP!==itemBAP&&(cleanTarget.includes('\ube44\uc5d0\uc774')||cleanItem.includes('\ube44\uc5d0\uc774'))){
+score-=600;
 }
 if(cleanTarget&&cleanItem.includes(cleanTarget))score+=40;
 if(cleanRaw&&cleanItem.includes(cleanRaw))score+=40;
