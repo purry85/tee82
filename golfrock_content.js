@@ -172,19 +172,31 @@ return false;
 },true);
 let isRegistrationRunning=false;
 let shouldStopRegistration=false;
+function _0x1002(active){
+isRegistrationRunning=Boolean(active);
+try{
+if(active){
+document.documentElement.setAttribute('\x64\x61\x74\x61-\x74\x65\x65\x38\x32-\x61\x63\x74\x69\x76\x65','\x74\x72\x75\x65');
+window.postMessage({type:'\x5f\x5f\x53\x45\x54\x5f\x54\x45\x45\x38\x32\x5f\x41\x55\x54\x4f\x5f\x41\x43\x54\x49\x56\x45\x5f\x5f',active:true},'*');
+}else{
+document.documentElement.removeAttribute('\x64\x61\x74\x61-\x74\x65\x65\x38\x32-\x61\x63\x74\x69\x76\x65');
+window.postMessage({type:'\x5f\x5f\x53\x45\x54\x5f\x54\x45\x45\x38\x32\x5f\x41\x55\x54\x4f\x5f\x41\x43\x54\x49\x56\x45\x5f\x5f',active:false},'*');
+}
+}catch(e){}
+}
 window.addEventListener('\x6d\x65\x73\x73\x61\x67\x65',async(e)=>{
 if(e.data&&e.data.type==='\x5f\x5f\x55\x49\x5f\x44\x49\x41\x4c\x4f\x47\x5f\x4e\x4f\x54\x49\x43\x45\x5f\x5f'){
 const alertText=e.data.text||'';
 console.log("[\uace8\ud504\ub77d \x41\x6c\x65\x72\x74 \uc218\uc2e0]\x3a",alertText);
 if(alertText.includes('\ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4')||alertText.includes('\ub4f1\ub85d \uc644\ub8cc')||alertText.includes('\uc131\uacf5')||alertText.includes('\uc644\ub8cc')){
 console.log("\ud83c\udf89 [\uace8\ud504\ub77d] '\ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4' \uac10\uc9c0! \uc131\uacf5 \ucc98\ub9ac \ubc0f \ub2e4\uc74c \uac74 \uc900\ube44\x2e\x2e\x2e");
-await _0x1022('\x64\x69\x61\x6c\x6f\x67\x5f\x6e\x6f\x74\x69\x63\x65');
+await _0x1023('\x64\x69\x61\x6c\x6f\x67\x5f\x6e\x6f\x74\x69\x63\x65');
 return;
 }
 if(alertText.includes('\ucd08\uacfc')||alertText.includes('\uad8c\ud55c')||alertText.includes('\ub85c\uadf8\uc778')||alertText.includes('\uc81c\ud55c')){
 shouldStopRegistration=true;
-isRegistrationRunning=false;
-_0x1003({
+_0x1002(false);
+_0x1004({
 desc:`\u26a0\ufe0f ${alertText}`,
 isStopped:true
 });
@@ -201,7 +213,7 @@ reason:alertText
 }
 }
 });
-function _0x1002(){
+function _0x1003(){
 let hud=document.getElementById('\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c\x5f\x77\x72\x61\x70');
 if(hud)return hud;
 hud=document.createElement('\x64\x69\x76');
@@ -262,7 +274,7 @@ if(stopBtn){
 stopBtn.addEventListener('\x63\x6c\x69\x63\x6b',async()=>{
 console.log("[\uace8\ud504\ub77d \x48\x55\x44] \uc0ac\uc6a9\uc790\uac00 \uc628\uc2a4\ud06c\ub9b0 \uc911\ub2e8 \ud074\ub9ad");
 shouldStopRegistration=true;
-isRegistrationRunning=false;
+_0x1002(false);
 try{
 await new Promise(r=>chrome.storage.local.set({
 golfrock_task:null,
@@ -270,17 +282,17 @@ golfrock_isRegistrationRunning:false
 },r));
 }catch(e){}
 chrome.runtime.sendMessage({type:'\x47\x4f\x4c\x46\x52\x4f\x43\x4b\x5f\x53\x54\x4f\x50\x50\x45\x44'});
-_0x1003({
+_0x1004({
 desc:'\ud83d\uded1 \uc0ac\uc6a9\uc790\uc5d0 \uc758\ud574 \uc790\ub3d9 \ub4f1\ub85d\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e',
 isStopped:true
 });
-setTimeout(_0x1004,1800);
+setTimeout(_0x1005,1800);
 });
 }
 return hud;
 }
-function _0x1003({title,desc,current,total,isCompleted,isStopped}){
-const hud=_0x1002();
+function _0x1004({title,desc,current,total,isCompleted,isStopped}){
+const hud=_0x1003();
 if(!hud)return;
 if(title){
 const titleEl=hud.querySelector('\x23\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c\x5f\x74\x69\x74\x6c\x65');
@@ -304,15 +316,15 @@ const descEl=hud.querySelector('\x23\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f
 if(descEl)descEl.innerText=`\ud83c\udf89 \ucd1d ${total||''}\uac74\uc758 \ub4f1\ub85d\uc774 \ubaa8\ub450 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!`;
 const countEl=hud.querySelector('\x23\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c\x5f\x63\x6f\x75\x6e\x74');
 if(countEl)countEl.innerText=`${total}/${total}\uac74 \uc644\ub8cc (100%)`;
-setTimeout(_0x1004,2600);
+setTimeout(_0x1005,2600);
 }
 if(isStopped){
 const barEl=hud.querySelector('\x23\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c\x5f\x62\x61\x72');
 if(barEl)barEl.style.background='\x23\x45\x46\x34\x34\x34\x34';
-setTimeout(_0x1004,2000);
+setTimeout(_0x1005,2000);
 }
 }
-function _0x1004(){
+function _0x1005(){
 const hud=document.getElementById('\x67\x72\x6b\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c\x5f\x77\x72\x61\x70');
 if(hud){
 hud.style.opacity='\x30';
@@ -320,7 +332,7 @@ hud.style.transform='\x74\x72\x61\x6e\x73\x6c\x61\x74\x65\x59(-\x31\x30\x70\x78)
 setTimeout(()=>hud.remove(),300);
 }
 }
-function _0x1005(ms){
+function _0x1006(ms){
 return new Promise((resolve)=>{
 const start=Date.now();
 const interval=setInterval(()=>{
@@ -331,7 +343,7 @@ resolve();
 },40);
 });
 }
-function _0x1006(actionType='\x6e\x6f\x72\x6d\x61\x6c',stepPreset='\x68\x75\x6d\x61\x6e'){
+function _0x1007(actionType='\x6e\x6f\x72\x6d\x61\x6c',stepPreset='\x68\x75\x6d\x61\x6e'){
 let minMs=380;
 let maxMs=950;
 if(stepPreset==='\x73\x6c\x6f\x77'){
@@ -356,7 +368,7 @@ maxMs=Math.round(maxMs*1.2);
 const rand=(Math.random()+Math.random()+Math.random())/3;
 return Math.floor(rand*(maxMs-minMs)+minMs);
 }
-function _0x1007(preset='\x73\x61\x66\x65'){
+function _0x1008(preset='\x73\x61\x66\x65'){
 let minMs=2000,maxMs=4200;
 if(preset==='\x73\x74\x65\x61\x6c\x74\x68'){
 minMs=3500;maxMs=7000;
@@ -370,7 +382,7 @@ minMs=2000;maxMs=4200;
 const rand=(Math.random()+Math.random())/2;
 return Math.floor(rand*(maxMs-minMs)+minMs);
 }
-async function _0x1008(el){
+async function _0x1009(el){
 if(!el)return;
 try{
 el.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x63\x65\x6e\x74\x65\x72'});
@@ -383,13 +395,13 @@ const y=rect.top+rect.height/2+jitterY;
 const opts={bubbles:true,cancelable:true,view:window,clientX:x,clientY:y};
 el.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x65\x6e\x74\x65\x72',opts));
 el.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x6f\x76\x65\x72',opts));
-await _0x1005(Math.floor(Math.random()*30+20));
+await _0x1006(Math.floor(Math.random()*30+20));
 el.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
-await _0x1005(Math.floor(Math.random()*50+40));
+await _0x1006(Math.floor(Math.random()*50+40));
 el.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
 el.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 }
-async function _0x1009(el,val){
+async function _0x100a(el,val){
 if(!el)return;
 try{
 el.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x63\x65\x6e\x74\x65\x72'});
@@ -402,13 +414,13 @@ el.value=str;
 el.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
 el.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
-async function _0x100a(el,dateStr){
+async function _0x100b(el,dateStr){
 if(!el)return false;
 try{
 el.scrollIntoView({behavior:'\x73\x6d\x6f\x6f\x74\x68',block:'\x63\x65\x6e\x74\x65\x72'});
 }catch(e){}
 el.focus();
-const isoDate=_0x100f(dateStr);
+const isoDate=_0x1010(dateStr);
 if(!isoDate)return false;
 console.log(`[\uace8\ud504\ub77d] \ub0a0\uc9dc \uc124\uc815 \uc2dc\uc791:`,isoDate,`(\ud0dc\uadf8: ${el.tagName}, type: ${el.type})`);
 const isDateType=(el.type==='\x64\x61\x74\x65');
@@ -454,7 +466,7 @@ el.blur();
 console.log(`[\uace8\ud504\ub77d] \ub0a0\uc9dc \uc124\uc815 \uc644\ub8cc -> \ucd5c\uc885 \ud544\ub4dc value: '${el.value}'`);
 return true;
 }
-function _0x100b(name){
+function _0x100c(name){
 if(!name)return'';
 let clean=String(name).toLowerCase();
 clean=clean.replace(/\[.*?\]/g,'').trim();
@@ -463,7 +475,7 @@ clean=clean.replace(/[\s\-_]/g,'');
 clean=clean.replace(/\./g,'\x2f');
 return clean;
 }
-function _0x100c(name){
+function _0x100d(name){
 if(!name)return'';
 let clean=String(name).toLowerCase();
 clean=clean.replace(/\(.*?\)/g,'').replace(/\[.*?\]/g,'').trim();
@@ -471,14 +483,14 @@ clean=clean.replace(/cc|gc|골프장|골프클럽|컨트리클럽/gi,'').trim();
 clean=clean.replace(/[\s\-_]/g,'');
 return clean;
 }
-function _0x100d(name){
+function _0x100e(name){
 if(!name)return[];
 const match=String(name).match(/\((.*?)\)/);
 if(!match)return[];
 return match[1].split(/[\/.,+~_|\s]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);
 }
-const normalizeGolfName=_0x100c;
-function _0x100e(regStr){
+const normalizeGolfName=_0x100d;
+function _0x100f(regStr){
 if(!regStr)return'';
 const s=String(regStr).trim();
 if(s.includes('\ubd81\ubd80'))return'\uacbd\uae30\ubd81\ubd80';
@@ -493,7 +505,7 @@ if(s.includes('\uc81c\uc8fc'))return'\uc81c\uc8fc';
 if(s.includes('\uacbd\uae30'))return'\uacbd\uae30';
 return s;
 }
-function _0x100f(dateStr){
+function _0x1010(dateStr){
 if(!dateStr)return'';
 const now=new Date();
 const currentYear=now.getFullYear();
@@ -516,7 +528,7 @@ return`${currentYear}-${String(mShort[1]).padStart(2,'\x30')}-${String(mShort[2]
 }
 return clean;
 }
-function _0x1010(timeStr){
+function _0x1011(timeStr){
 if(!timeStr)return'';
 const digits=String(timeStr).replace(/\D/g,'');
 if(digits.length>=4){
@@ -526,7 +538,7 @@ return'\x30'+digits;
 }
 return digits.padStart(4,'\x30');
 }
-function _0x1011(feeStr){
+function _0x1012(feeStr){
 if(!feeStr)return{man:'',isInquiry:true};
 const clean=String(feeStr).trim();
 if(clean.includes('\ubb38\uc758')||clean==='\x30'){
@@ -545,7 +557,7 @@ return{man:String(floatVal),isInquiry:false};
 }
 return{man:'',isInquiry:true};
 }
-function _0x1012(){
+function _0x1013(){
 const byName=document.querySelector('\x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x61\x72\x65\x61"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x73\x5f\x61\x72\x65\x61"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x7a\x6f\x6e\x65"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x72\x65\x67\x69\x6f\x6e"], \x73\x65\x6c\x65\x63\x74[\x69\x64="\x61\x72\x65\x61"], \x73\x65\x6c\x65\x63\x74[\x69\x64="\x73\x5f\x61\x72\x65\x61"]');
 if(byName)return byName;
 const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e'));
@@ -560,7 +572,7 @@ if(sel)return sel;
 }
 return document.querySelector('\x66\x6f\x72\x6d \x73\x65\x6c\x65\x63\x74')||document.querySelector('\x73\x65\x6c\x65\x63\x74');
 }
-function _0x1013(){
+function _0x1014(){
 const byName=document.querySelector('\x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x67\x6f\x6c\x66"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x67\x6f\x6c\x66\x5f\x6e\x61\x6d\x65"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x63\x63"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x67\x6f\x6c\x66\x5f\x63\x6f\x64\x65"], \x73\x65\x6c\x65\x63\x74[\x6e\x61\x6d\x65="\x63\x63\x5f\x63\x6f\x64\x65"], \x73\x65\x6c\x65\x63\x74[\x69\x64="\x67\x6f\x6c\x66"], \x73\x65\x6c\x65\x63\x74[\x69\x64="\x67\x6f\x6c\x66\x5f\x6e\x61\x6d\x65"], \x73\x65\x6c\x65\x63\x74[\x69\x64="\x63\x63"]');
 if(byName)return byName;
 const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e'));
@@ -579,7 +591,7 @@ return allSelects[1];
 }
 return null;
 }
-function _0x1014(){
+function _0x1015(){
 const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e'));
 for(const el of allLabels){
 const txt=el.textContent.trim();
@@ -609,7 +621,7 @@ if(inp.type!=='\x68\x69\x64\x64\x65\x6e'&&inp.offsetHeight>0)return inp;
 }
 return document.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x64\x61\x74\x65"]')||document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x64\x61\x74\x65"]');
 }
-function _0x1015(){
+function _0x1016(){
 const byPlaceholder=document.querySelector('\x69\x6e\x70\x75\x74[\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72*="\x30\x38\x33\x30"], \x69\x6e\x70\x75\x74[\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72*="\x34\uc790\ub9ac"], \x69\x6e\x70\x75\x74[\x70\x6c\x61\x63\x65\x68\x6f\x6c\x64\x65\x72*="\uc2dc\ubd84"]');
 if(byPlaceholder)return byPlaceholder;
 const byName=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x74\x69\x6d\x65"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x74\x65\x65"], \x69\x6e\x70\x75\x74[\x69\x64*="\x74\x69\x6d\x65"], \x69\x6e\x70\x75\x74[\x69\x64*="\x74\x65\x65"]');
@@ -626,7 +638,7 @@ if(inp)return inp;
 }
 return null;
 }
-function _0x1016(){
+function _0x1017(){
 let fieldPayInput=null;
 let prePayInput=null;
 let prePayCheckbox=null;
@@ -680,20 +692,20 @@ prePayInput=document.querySelector('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x70
 }
 return{fieldPayInput,prePayInput,prePayCheckbox,inquiryCheckbox};
 }
-async function _0x1017(shouldEnable,prePayCheckbox,prePayInput,stepPreset){
+async function _0x1018(shouldEnable,prePayCheckbox,prePayInput,stepPreset){
 if(prePayCheckbox){
 if(shouldEnable&&!prePayCheckbox.checked){
 prePayCheckbox.checked=true;
 prePayCheckbox.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 prePayCheckbox.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
 try{prePayCheckbox.click();}catch(e){}
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }else if(!shouldEnable&&prePayCheckbox.checked){
 prePayCheckbox.checked=false;
 prePayCheckbox.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 prePayCheckbox.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
 try{prePayCheckbox.click();}catch(e){}
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
 }
 if(shouldEnable&&prePayInput){
@@ -703,7 +715,7 @@ prePayInput.removeAttribute('\x64\x69\x73\x61\x62\x6c\x65\x64');
 prePayInput.removeAttribute('\x72\x65\x61\x64\x6f\x6e\x6c\x79');
 }
 }
-function _0x1018(r){
+function _0x1019(r){
 if(!r)return'';
 if(r.id){
 const lbl=document.querySelector(`label[for="${r.id}"]`);
@@ -731,7 +743,7 @@ return r.parentElement.textContent.trim();
 }
 return(r.value||'').trim();
 }
-function _0x1019(){
+function _0x101a(){
 const radios=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]'));
 let cadyRadio=null;
 let noCadyRadio=null;
@@ -739,7 +751,7 @@ let drivingCadyRadio=null;
 radios.forEach(r=>{
 const name=(r.name||'').toLowerCase();
 const val=(r.value||'').toLowerCase();
-const labelText=_0x1018(r);
+const labelText=_0x1019(r);
 const isCadyRelated=name.includes('\x63\x61\x64')||name.includes('\x63\x61\x64\x79')||name.includes('\x63\x61\x64\x64\x79')||
 labelText.includes('\uce90\ub514')||val.includes('\x63\x61\x64');
 if(!isCadyRelated&&!labelText.includes('\ub178\uce90\ub514')&&!labelText.includes('\ub9c8\uc0ec')&&!labelText.includes('\ub4dc\ub77c\uc774\ube59'))return;
@@ -753,13 +765,13 @@ cadyRadio=r;
 });
 return{cadyRadio,noCadyRadio,drivingCadyRadio};
 }
-function _0x101a(){
+function _0x101b(){
 const radios=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"]'));
 let hole18Radio=null;
 let hole9Radio=null;
 radios.forEach(r=>{
 const val=(r.value||'').trim();
-const labelText=_0x1018(r);
+const labelText=_0x1019(r);
 if(labelText.includes('\x31\x38\ud640')||val==='\x31\x38')hole18Radio=r;
 if(labelText.includes('\x39\ud640')||labelText.includes('\x30\x39\ud640')||val==='\x39'||val==='\x30\x39')hole9Radio=r;
 });
@@ -767,17 +779,17 @@ const checkboxes=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74
 let mealCheckbox=null;
 let cartCheckbox=null;
 checkboxes.forEach(c=>{
-const labelText=_0x1018(c)||(c.parentElement?.textContent||'').trim();
+const labelText=_0x1019(c)||(c.parentElement?.textContent||'').trim();
 const name=(c.name||'').toLowerCase();
 if(labelText.includes('\uc2dd\uc0ac')||name.includes('\x6d\x65\x61\x6c'))mealCheckbox=c;
 if(labelText.includes('\uce74\ud2b8')||name.includes('\x63\x61\x72\x74'))cartCheckbox=c;
 });
 return{hole18Radio,hole9Radio,mealCheckbox,cartCheckbox};
 }
-function _0x101b(){
+function _0x101c(){
 return document.querySelector('\x74\x65\x78\x74\x61\x72\x65\x61[\x6e\x61\x6d\x65*="\x6d\x65\x6d\x6f"], \x74\x65\x78\x74\x61\x72\x65\x61[\x6e\x61\x6d\x65*="\x63\x6f\x6e\x74\x65\x6e\x74"], \x74\x65\x78\x74\x61\x72\x65\x61[\x69\x64*="\x6d\x65\x6d\x6f"], \x74\x65\x78\x74\x61\x72\x65\x61[\x69\x64*="\x63\x6f\x6e\x74\x65\x6e\x74"], \x74\x65\x78\x74\x61\x72\x65\x61');
 }
-function _0x101c(){
+function _0x101d(){
 const candidates=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x62\x75\x74\x74\x6f\x6e"], \x61\x2e\x62\x74\x6e, \x61[\x68\x72\x65\x66*="\x77\x72\x69\x74\x65"], \x61'));
 for(const btn of candidates){
 const txt=(btn.textContent||btn.value||'').trim();
@@ -787,7 +799,7 @@ if(btn.offsetHeight>0)return btn;
 }
 return document.querySelector('\x62\x75\x74\x74\x6f\x6e[\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"]')||document.querySelector('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x73\x75\x62\x6d\x69\x74"]');
 }
-function _0x101d(){
+function _0x101e(){
 let container=null;
 const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x73\x74\x72\x6f\x6e\x67, \x62'));
 for(const el of allLabels){
@@ -805,7 +817,7 @@ if(radios.length===0){
 radios=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"][\x6e\x61\x6d\x65*="\x77\x61\x69\x74"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"][\x6e\x61\x6d\x65*="\x77\x5f\x73\x65\x78"], \x69\x6e\x70\x75\x74[\x74\x79\x70\x65="\x72\x61\x64\x69\x6f"][\x6e\x61\x6d\x65*="\x77\x73\x65\x78"]'));
 }
 return radios.map(r=>{
-let label=_0x1018(r).replace(/\s+/g,'');
+let label=_0x1019(r).replace(/\s+/g,'');
 if(!label&&r.value)label=r.value.trim();
 return{
 element:r,
@@ -814,10 +826,10 @@ value:(r.value||'').trim()
 };
 });
 }
-async function _0x101e(targetSex,stepPreset){
+async function _0x101f(targetSex,stepPreset){
 if(!targetSex)return false;
 const normTarget=targetSex.replace(/\s+/g,'');
-const radios=_0x101d();
+const radios=_0x101e();
 if(radios.length===0){
 console.warn(`[\uace8\ud504\ub77d] \ub300\uae30\uc131\ubcc4 \ub77c\ub514\uc624 \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`);
 return false;
@@ -842,7 +854,7 @@ targetRadio=radios.find(r=>r.label.includes(normTarget)||normTarget.includes(r.l
 }
 if(targetRadio){
 if(!targetRadio.checked){
-await _0x1008(targetRadio);
+await _0x1009(targetRadio);
 }
 targetRadio.checked=true;
 targetRadio.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
@@ -851,14 +863,14 @@ if(typeof targetRadio.onclick==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 try{targetRadio.onclick();}catch(e){}
 }
 console.log(`[\uace8\ud504\ub77d] \ub300\uae30\uc131\ubcc4 \uc120\ud0dd \uc644\ub8cc: [${targetSex}]`);
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 return true;
 }else{
 console.warn(`[\uace8\ud504\ub77d] \ub300\uae30\uc131\ubcc4 '${targetSex}'\uc5d0 \ud574\ub2f9\ud558\ub294 \ub77c\ub514\uc624 \ubc84\ud2bc \ub9e4\uce6d \uc2e4\ud328`);
 return false;
 }
 }
-function _0x101f(){
+function _0x1020(){
 let container=null;
 const allLabels=Array.from(document.querySelectorAll('\x74\x68, \x74\x64, \x6c\x61\x62\x65\x6c, \x64\x69\x76, \x73\x70\x61\x6e, \x73\x74\x72\x6f\x6e\x67, \x62'));
 for(const el of allLabels){
@@ -876,7 +888,7 @@ if(inputs.length===0){
 inputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x72\x65\x71"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x72\x65\x71\x5f\x73\x65\x78"], \x69\x6e\x70\x75\x74[\x6e\x61\x6d\x65*="\x72\x5f\x73\x65\x78"]'));
 }
 return inputs.map(inp=>{
-let label=_0x1018(inp).replace(/\s+/g,'');
+let label=_0x1019(inp).replace(/\s+/g,'');
 if(!label&&inp.value)label=inp.value.trim();
 return{
 element:inp,
@@ -886,8 +898,8 @@ value:(inp.value||'').trim()
 };
 });
 }
-async function _0x1020(item,stepPreset){
-const fields=_0x101f();
+async function _0x1021(item,stepPreset){
+const fields=_0x1020();
 if(fields.length===0)return false;
 const condition=String(item.condition||'').replace(/\s+/g,'');
 let targetReqRadio=null;
@@ -899,15 +911,15 @@ targetReqRadio=fields.find(f=>f.type==='\x72\x61\x64\x69\x6f'&&(f.label.includes
 targetReqRadio=fields.find(f=>f.type==='\x72\x61\x64\x69\x6f'&&(f.label.includes('\uc0c1\uad00\uc5c6\uc74c')||f.value.includes('\uc0c1\uad00\uc5c6\uc74c')||f.value==='\x30'));
 }
 if(targetReqRadio&&!targetReqRadio.element.checked){
-await _0x1008(targetReqRadio.element);
+await _0x1009(targetReqRadio.element);
 targetReqRadio.element.checked=true;
 targetReqRadio.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
 if(condition.includes('\x33\uc778\ubd88\uac00')){
 const f3=fields.find(f=>f.label.includes('\x33\uc778\ubd88\uac00'));
 if(f3&&!f3.element.checked){
-await _0x1008(f3.element);
+await _0x1009(f3.element);
 f3.element.checked=true;
 f3.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
@@ -915,7 +927,7 @@ f3.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 if(condition.includes('\uc5ec\uc5ec\ubd88\uac00')){
 const ff=fields.find(f=>f.label.includes('\uc5ec\uc5ec\ubd88\uac00'));
 if(ff&&!ff.element.checked){
-await _0x1008(ff.element);
+await _0x1009(ff.element);
 ff.element.checked=true;
 ff.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
@@ -923,24 +935,24 @@ ff.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 if(condition.includes('\ub0a8\uc5ec\ubd88\uac00')){
 const fm=fields.find(f=>f.label.includes('\ub0a8\uc5ec\ubd88\uac00'));
 if(fm&&!fm.element.checked){
-await _0x1008(fm.element);
+await _0x1009(fm.element);
 fm.element.checked=true;
 fm.element.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
 }
 }
 return true;
 }
-async function _0x1021(item,task){
+async function _0x1022(item,task){
 if(!item)return false;
 console.log(`[\uace8\ud504\ub77d \uc790\ub3d9\ub4f1\ub85d] \uc791\uc131 \uc2dc\uc791: [${item.golf}] ${item.date} ${item.time} (${item.fee}\ub9cc / ${item.cady||'\uce90\ub514'})`);
 const stepPreset=task.stepPreset||'\x68\x75\x6d\x61\x6e';
-const regSelect=_0x1012();
+const regSelect=_0x1013();
 if(regSelect){
-const targetRegNorm=_0x100e(item.region);
+const targetRegNorm=_0x100f(item.region);
 let matchedIndex=-1;
 for(let i=0;i<regSelect.options.length;i++){
 const optText=regSelect.options[i].text.trim();
-const optNorm=_0x100e(optText);
+const optNorm=_0x100f(optText);
 if(targetRegNorm&&(optNorm===targetRegNorm||optText.includes(targetRegNorm)||targetRegNorm.includes(optNorm))){
 matchedIndex=i;
 break;
@@ -954,24 +966,24 @@ if(typeof regSelect.onchange==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 try{regSelect.onchange();}catch(e){}
 }
 console.log(`[\uace8\ud504\ub77d] \uc9c0\uc5ed \uc120\ud0dd \uc644\ub8cc: ${regSelect.options[matchedIndex].text}`);
-await _0x1005(_0x1006('\x61\x6a\x61\x78\x5f\x77\x61\x69\x74',stepPreset));
+await _0x1006(_0x1007('\x61\x6a\x61\x78\x5f\x77\x61\x69\x74',stepPreset));
 }
 }
-const golfSelect=_0x1013();
+const golfSelect=_0x1014();
 if(golfSelect){
 let waitCount=0;
 while(golfSelect.options.length<=1&&waitCount<8){
-await _0x1005(250);
+await _0x1006(250);
 waitCount++;
 }
 const targets=[item.golf,item.rawGolf].filter(Boolean);
 let matchedGolfIndex=-1;
 for(const target of targets){
-const targetStrict=_0x100b(target);
+const targetStrict=_0x100c(target);
 if(!targetStrict)continue;
 for(let i=1;i<golfSelect.options.length;i++){
 const optText=golfSelect.options[i].text.trim();
-const optStrict=_0x100b(optText);
+const optStrict=_0x100c(optText);
 if(optStrict&&optStrict===targetStrict){
 matchedGolfIndex=i;
 break;
@@ -981,14 +993,14 @@ if(matchedGolfIndex>=0)break;
 }
 if(matchedGolfIndex<0){
 for(const target of targets){
-const targetBase=_0x100c(target);
-const targetTokens=_0x100d(target);
+const targetBase=_0x100d(target);
+const targetTokens=_0x100e(target);
 if(!targetBase||targetTokens.length===0)continue;
 for(let i=1;i<golfSelect.options.length;i++){
 const optText=golfSelect.options[i].text.trim();
-const optBase=_0x100c(optText);
+const optBase=_0x100d(optText);
 if(optBase!==targetBase)continue;
-const optTokens=_0x100d(optText);
+const optTokens=_0x100e(optText);
 const hasTokenMatch=targetTokens.some(t=>optTokens.some(o=>o.includes(t)||t.includes(o)));
 if(hasTokenMatch){
 matchedGolfIndex=i;
@@ -1000,13 +1012,13 @@ if(matchedGolfIndex>=0)break;
 }
 if(matchedGolfIndex<0){
 for(const target of targets){
-const targetTokens=_0x100d(target);
+const targetTokens=_0x100e(target);
 if(targetTokens.length>0)continue;
-const targetBase=_0x100c(target);
+const targetBase=_0x100d(target);
 if(!targetBase)continue;
 for(let i=1;i<golfSelect.options.length;i++){
 const optText=golfSelect.options[i].text.trim();
-const optBase=_0x100c(optText);
+const optBase=_0x100d(optText);
 if(optBase===targetBase){
 matchedGolfIndex=i;
 break;
@@ -1017,14 +1029,14 @@ if(matchedGolfIndex>=0)break;
 }
 if(matchedGolfIndex<0){
 for(const target of targets){
-const targetTokens=_0x100d(target);
-const targetBase=_0x100c(target);
+const targetTokens=_0x100e(target);
+const targetBase=_0x100d(target);
 if(!targetBase||targetBase.length<2)continue;
 for(let i=1;i<golfSelect.options.length;i++){
 const optText=golfSelect.options[i].text.trim();
-const optBase=_0x100c(optText);
+const optBase=_0x100d(optText);
 if(!optBase||optBase.length<2)continue;
-const optTokens=_0x100d(optText);
+const optTokens=_0x100e(optText);
 if(targetTokens.length>0&&optTokens.length>0){
 const hasCommonToken=targetTokens.some(t=>optTokens.some(o=>o.includes(t)||t.includes(o)));
 if(!hasCommonToken)continue;
@@ -1058,103 +1070,103 @@ console.log(`[\uace8\ud504\ub77d] \uace8\ud504\uc7a5 \uc120\ud0dd \uc644\ub8cc: 
 }else{
 console.warn(`[\uace8\ud504\ub77d] \uad6c\uc7a5 \ub4dc\ub86d\ub2e4\uc6b4\uc5d0\uc11c '${item.golf}' \ub9e4\uce6d \uc2e4\ud328 (\uc218\ub3d9 \ud655\uc778 \ud544\uc694)`);
 }
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
-const dateInput=_0x1014();
+const dateInput=_0x1015();
 if(dateInput){
-const formattedDate=_0x100f(item.date);
-await _0x100a(dateInput,formattedDate);
+const formattedDate=_0x1010(item.date);
+await _0x100b(dateInput,formattedDate);
 console.log(`[\uace8\ud504\ub77d] \ub0a0\uc9dc \uc785\ub825 \uc644\ub8cc: ${formattedDate}`);
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }else{
 console.warn(`[\uace8\ud504\ub77d] \ub0a0\uc9dc \uc785\ub825 \ud544\ub4dc\ub97c \ucc3e\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.`);
 }
-const timeInput=_0x1015();
+const timeInput=_0x1016();
 if(timeInput){
-const time4=_0x1010(item.time);
-await _0x1009(timeInput,time4);
+const time4=_0x1011(item.time);
+await _0x100a(timeInput,time4);
 console.log(`[\uace8\ud504\ub77d] \ud2f0\uc5c5\uc2dc\uac04 \uc785\ub825 \uc644\ub8cc: ${time4}`);
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
-const{fieldPayInput,prePayInput,prePayCheckbox,inquiryCheckbox}=_0x1016();
-const fieldObj=_0x1011(item.fieldFee||(!item.isPrepaid?item.fee:''));
-const preObj=_0x1011(item.prepaidFee||(item.isPrepaid?item.fee:''));
+const{fieldPayInput,prePayInput,prePayCheckbox,inquiryCheckbox}=_0x1017();
+const fieldObj=_0x1012(item.fieldFee||(!item.isPrepaid?item.fee:''));
+const preObj=_0x1012(item.prepaidFee||(item.isPrepaid?item.fee:''));
 const hasFieldAmount=!fieldObj.isInquiry&&parseFloat(fieldObj.man)>0;
 const hasPreAmount=!preObj.isInquiry&&parseFloat(preObj.man)>0;
 if(fieldObj.isInquiry&&preObj.isInquiry){
-await _0x1017(false,prePayCheckbox,prePayInput,stepPreset);
+await _0x1018(false,prePayCheckbox,prePayInput,stepPreset);
 if(inquiryCheckbox&&!inquiryCheckbox.checked){
-await _0x1008(inquiryCheckbox);
+await _0x1009(inquiryCheckbox);
 }
 }else if(hasFieldAmount&&hasPreAmount){
-await _0x1017(true,prePayCheckbox,prePayInput,stepPreset);
+await _0x1018(true,prePayCheckbox,prePayInput,stepPreset);
 if(prePayInput){
-await _0x1009(prePayInput,preObj.man);
+await _0x100a(prePayInput,preObj.man);
 }
 if(fieldPayInput){
-await _0x1009(fieldPayInput,fieldObj.man);
+await _0x100a(fieldPayInput,fieldObj.man);
 }
 console.log(`[\uace8\ud504\ub77d] \ud604\uc7a5\uacb0\uc81c(${fieldObj.man}\ub9cc\uc6d0) \ubc0f \uc120\uacb0\uc81c(${preObj.man}\ub9cc\uc6d0) \uac01\uac01 \ubd84\ub9ac \uc785\ub825 \uc644\ub8cc`);
 }else if(item.isPrepaid||(hasPreAmount&&!hasFieldAmount)){
-await _0x1017(true,prePayCheckbox,prePayInput,stepPreset);
+await _0x1018(true,prePayCheckbox,prePayInput,stepPreset);
 const valToType=preObj.man||fieldObj.man;
 if(prePayInput){
-await _0x1009(prePayInput,valToType);
+await _0x100a(prePayInput,valToType);
 }else if(fieldPayInput){
-await _0x1009(fieldPayInput,valToType);
+await _0x100a(fieldPayInput,valToType);
 }
 console.log(`[\uace8\ud504\ub77d] \uc120\uacb0\uc81c \ub2e8\ub3c5 \uae08\uc561 \uc785\ub825: ${valToType}\ub9cc\uc6d0`);
 }else{
-await _0x1017(false,prePayCheckbox,prePayInput,stepPreset);
+await _0x1018(false,prePayCheckbox,prePayInput,stepPreset);
 if(fieldPayInput){
-await _0x1009(fieldPayInput,fieldObj.man);
+await _0x100a(fieldPayInput,fieldObj.man);
 }
 console.log(`[\uace8\ud504\ub77d] \ud604\uc7a5\uacb0\uc81c \uae08\uc561 \uc785\ub825: ${fieldObj.man}\ub9cc\uc6d0`);
 }
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
-const{hole18Radio,hole9Radio,mealCheckbox,cartCheckbox}=_0x101a();
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+const{hole18Radio,hole9Radio,mealCheckbox,cartCheckbox}=_0x101b();
 const is9Hole=item.roomType?.includes('\x39')||item.golf?.includes('\x39\ud640')||item.golf?.includes('\x50\x39');
 if(is9Hole&&hole9Radio){
-await _0x1008(hole9Radio);
+await _0x1009(hole9Radio);
 }else if(hole18Radio){
-await _0x1008(hole18Radio);
+await _0x1009(hole18Radio);
 }
 if(mealCheckbox){
 const shouldMeal=!!item.isMeal;
 if(mealCheckbox.checked!==shouldMeal){
-await _0x1008(mealCheckbox);
+await _0x1009(mealCheckbox);
 }
 }
 if(cartCheckbox){
 const isCartIncluded=!!(item.isCartFree||item.condition?.includes('\uce74\ud3ec')||item.fee?.includes('\uce74\ud3ec'));
 if(cartCheckbox.checked!==isCartIncluded){
-await _0x1008(cartCheckbox);
+await _0x1009(cartCheckbox);
 }
 }
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
-const{cadyRadio,noCadyRadio,drivingCadyRadio}=_0x1019();
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+const{cadyRadio,noCadyRadio,drivingCadyRadio}=_0x101a();
 const cadyStr=String(item.cady||'').trim();
 if(cadyStr.includes('\ub178\uce90\ub514')){
 if(noCadyRadio){
-await _0x1008(noCadyRadio);
+await _0x1009(noCadyRadio);
 console.log("[\uace8\ud504\ub77d] \uce90\ub514\uc120\ud0dd\x3a \u25b6 \ub178\uce90\ub514 \ub77c\ub514\uc624 \uc120\ud0dd");
 }else if(cadyRadio){
-await _0x1008(cadyRadio);
+await _0x1009(cadyRadio);
 }
 }else if(cadyStr.includes('\ub4dc\ub77c\uc774\ube59')||cadyStr.includes('\ub9c8\uc0ec')||cadyStr.includes('\uc6b4\uc804')){
 if(drivingCadyRadio){
-await _0x1008(drivingCadyRadio);
+await _0x1009(drivingCadyRadio);
 console.log("[\uace8\ud504\ub77d] \uce90\ub514\uc120\ud0dd\x3a \u25b6 \ub4dc\ub77c\uc774\ube59\uce90\ub514 \ub77c\ub514\uc624 \uc120\ud0dd");
 }else if(cadyRadio){
-await _0x1008(cadyRadio);
+await _0x1009(cadyRadio);
 }
 }else{
 if(cadyRadio){
-await _0x1008(cadyRadio);
+await _0x1009(cadyRadio);
 console.log("[\uace8\ud504\ub77d] \uce90\ub514\uc120\ud0dd\x3a \u25b6 \uc77c\ubc18 \uce90\ub514 \ub77c\ub514\uc624 \uc120\ud0dd");
 }
 }
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 const isTransferMode=Boolean(task.isTransferMode||task.mode==='\x74\x72\x61\x6e\x73\x66\x65\x72'||(item&&item.roomType==='\uc591\ub3c4')||window.location.href.includes('\x74\x72\x61\x6e\x5f\x64\x69\x76=\x31'));
 if(!isTransferMode){
 const waitPax=parseInt(item.waitPax,10)||0;
@@ -1163,19 +1175,19 @@ if(!targetWaitSex){
 targetWaitSex=(waitPax===0)?'\uc778\uc6d0\uc5c6\uc74c':'\ub0a8';
 }
 console.log(`[\uace8\ud504\ub77d] \ub300\uae30\uc131\ubcc4 \uc124\uc815 \uc9c4\ud589: waitPax=${waitPax}, targetWaitSex='${targetWaitSex}'`);
-await _0x101e(targetWaitSex,stepPreset);
-await _0x1020(item,stepPreset);
+await _0x101f(targetWaitSex,stepPreset);
+await _0x1021(item,stepPreset);
 }
-const memoEl=_0x101b();
+const memoEl=_0x101c();
 const finalMemo=(item.memo||task.memo||'').trim();
 if(memoEl&&finalMemo){
-await _0x1009(memoEl,finalMemo);
+await _0x100a(memoEl,finalMemo);
 console.log(`[\uace8\ud504\ub77d] \ub4f1\ub85d \ub0b4\uc6a9(\uba54\ubaa8) \uc791\uc131 \uc644\ub8cc (${finalMemo.length}\uc790)`);
-await _0x1005(_0x1006('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
+await _0x1006(_0x1007('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
 }
-const submitBtn=_0x101c();
+const submitBtn=_0x101d();
 if(submitBtn){
-_0x1003({
+_0x1004({
 desc:`[${task.currentIndex+1}/${task.totalCount}] ${item.golf} (${item.date} ${item.time}) \ub4f1\ub85d \uc81c\ucd9c \uc911...`
 });
 task.status='\x73\x75\x62\x6d\x69\x74\x74\x69\x6e\x67';
@@ -1183,13 +1195,13 @@ try{
 await new Promise(r=>chrome.storage.local.set({golfrock_task:task},r));
 }catch(e){}
 console.log("\ud83d\ude80 [\uace8\ud504\ub77d] \ub4f1\ub85d\ud558\uae30 \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589!");
-await _0x1008(submitBtn);
+await _0x1009(submitBtn);
 setTimeout(async()=>{
 const check=await new Promise(r=>chrome.storage.local.get(['\x67\x6f\x6c\x66\x72\x6f\x63\x6b\x5f\x74\x61\x73\x6b'],r));
 const curTask=check?.golfrock_task;
 if(curTask&&curTask.isRunning&&curTask.status==='\x73\x75\x62\x6d\x69\x74\x74\x69\x6e\x67'){
 console.log("[\uace8\ud504\ub77d] \ud0c0\uc784\uc544\uc6c3 \ud6c4\uc18d \uccb4\ud06c -> \x61\x64\x76\x61\x6e\x63\x65\x54\x6f\x4e\x65\x78\x74\x49\x74\x65\x6d \uc2e4\ud589");
-await _0x1022('\x73\x75\x62\x6d\x69\x74\x5f\x74\x69\x6d\x65\x6f\x75\x74');
+await _0x1023('\x73\x75\x62\x6d\x69\x74\x5f\x74\x69\x6d\x65\x6f\x75\x74');
 }
 },3500);
 return true;
@@ -1199,7 +1211,7 @@ return false;
 }
 }
 let isHandlingNextItem=false;
-async function _0x1022(trigger='\x75\x6e\x6b\x6e\x6f\x77\x6e'){
+async function _0x1023(trigger='\x75\x6e\x6b\x6e\x6f\x77\x6e'){
 if(isHandlingNextItem)return;
 isHandlingNextItem=true;
 try{
@@ -1233,7 +1245,7 @@ const nextIdx=curIdx+1;
 task.currentIndex=nextIdx;
 if(nextIdx>=task.totalCount){
 console.log("\ud83c\udf89 [\uace8\ud504\ub77d] \ubaa8\ub4e0 \ud56d\ubaa9\uc758 \uc790\ub3d9 \ub4f1\ub85d\uc774 \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4!");
-_0x1003({
+_0x1004({
 current:task.totalCount,
 total:task.totalCount,
 isCompleted:true
@@ -1255,10 +1267,10 @@ const nextItem=task.items[nextIdx];
 const isNextTransfer=Boolean(task.mode==='\x74\x72\x61\x6e\x73\x66\x65\x72'||nextItem.roomType==='\uc591\ub3c4');
 const targetTranDiv=isNextTransfer?'\x31':'\x32';
 const targetUrl=`https://m.golfrock.co.kr/tran_write.asp?tran_div=${targetTranDiv}&latitude=null&longitude=null`;
-const cooldownMs=_0x1007(task.delayPreset||'\x73\x61\x66\x65');
+const cooldownMs=_0x1008(task.delayPreset||'\x73\x61\x66\x65');
 const cooldownSec=(cooldownMs/1000).toFixed(1);
 console.log(`[\uace8\ud504\ub77d] \ub2e4\uc74c \ud56d\ubaa9 \uc900\ube44 \uc911 (${nextIdx+1}/${task.totalCount})... ${cooldownSec}\ucd08 \ub300\uae30 \ud6c4 \uc774\ub3d9`);
-_0x1003({
+_0x1004({
 title:isNextTransfer?'\ud83e\udea8 \uace8\ud504\ub77d \uc591\ub3c4 \ub4f1\ub85d \ub300\uae30 \uc911':'\ud83e\udea8 \uace8\ud504\ub77d \uc870\uc778 \ub4f1\ub85d \ub300\uae30 \uc911',
 current:nextIdx,
 total:task.totalCount,
@@ -1279,7 +1291,7 @@ if(descEl&&!shouldStopRegistration){
 descEl.innerText=`\u23f3 \uc0ac\ub78c\ucc98\ub7fc \ub300\uae30 \uc911... [${nextItem.golf}] \uc900\ube44 (${leftSec.toFixed(1)}\ucd08)`;
 }
 },400);
-await _0x1005(cooldownMs);
+await _0x1006(cooldownMs);
 clearInterval(timer);
 if(shouldStopRegistration)return;
 task.status='\x6e\x61\x76\x69\x67\x61\x74\x69\x6e\x67';
@@ -1291,17 +1303,18 @@ window.location.href=targetUrl;
 isHandlingNextItem=false;
 }
 }
-async function _0x1023(){
+async function _0x1024(){
 try{
 const res=await new Promise(r=>chrome.storage.local.get(['\x67\x6f\x6c\x66\x72\x6f\x63\x6b\x5f\x74\x61\x73\x6b'],r));
 const task=res?.golfrock_task;
 if(!task||!task.isRunning||!task.items||task.items.length===0)return;
 if(task.currentIndex>=task.totalCount){
+_0x1002(false);
 await new Promise(r=>chrome.storage.local.set({golfrock_task:null,isRegistrationRunning:false},r));
-_0x1003({isCompleted:true,total:task.totalCount});
+_0x1004({isCompleted:true,total:task.totalCount});
 return;
 }
-isRegistrationRunning=true;
+_0x1002(true);
 shouldStopRegistration=false;
 const currentPath=window.location.pathname;
 const currentSearch=window.location.search;
@@ -1309,15 +1322,15 @@ const isListPage=currentPath.includes('\x74\x72\x61\x6e\x5f\x6c\x69\x73\x74\x2e\
 const hasJustSubmitted=(task.status==='\x73\x75\x62\x6d\x69\x74\x74\x69\x6e\x67')||(isListPage&&task.status!=='\x70\x65\x6e\x64\x69\x6e\x67'&&task.status!=='\x63\x6f\x6f\x6c\x64\x6f\x77\x6e\x5f\x77\x61\x69\x74\x69\x6e\x67'&&task.status!=='\x6e\x61\x76\x69\x67\x61\x74\x69\x6e\x67');
 if(hasJustSubmitted){
 console.log(`[\uace8\ud504\ub77d] \uc9c1\uc804 \ud0c0\uc784([${task.currentIndex+1}/${task.totalCount}] ${task.items[task.currentIndex]?.golf}) \ub4f1\ub85d \uc644\ub8cc \uac10\uc9c0 -> \ub2e4\uc74c \uac74\uc73c\ub85c \uc9c4\ud589!`);
-await _0x1022(isListPage?'\x6c\x69\x73\x74\x5f\x70\x61\x67\x65\x5f\x72\x65\x64\x69\x72\x65\x63\x74':'\x73\x75\x62\x6d\x69\x74\x74\x69\x6e\x67\x5f\x70\x61\x67\x65\x5f\x6c\x6f\x61\x64');
+await _0x1023(isListPage?'\x6c\x69\x73\x74\x5f\x70\x61\x67\x65\x5f\x72\x65\x64\x69\x72\x65\x63\x74':'\x73\x75\x62\x6d\x69\x74\x74\x69\x6e\x67\x5f\x70\x61\x67\x65\x5f\x6c\x6f\x61\x64');
 return;
 }
 const curItem=task.items[task.currentIndex];
 if(!curItem)return;
 const isTransfer=Boolean(task.mode==='\x74\x72\x61\x6e\x73\x66\x65\x72'||curItem.roomType==='\uc591\ub3c4');
 const targetTranDiv=isTransfer?'\x31':'\x32';
-_0x1002();
-_0x1003({
+_0x1003();
+_0x1004({
 title:isTransfer?'\ud83e\udea8 \uace8\ud504\ub77d \uc591\ub3c4 \ub4f1\ub85d \uc9c4\ud589 \uc911':'\ud83e\udea8 \uace8\ud504\ub77d \uc870\uc778 \ub4f1\ub85d \uc9c4\ud589 \uc911',
 desc:`[${task.currentIndex+1}/${task.totalCount}] ${curItem.golf} (${curItem.date} ${curItem.time}) \uc900\ube44 \uc911...`,
 current:task.currentIndex,
@@ -1337,9 +1350,9 @@ task.status='\x66\x69\x6c\x6c\x69\x6e\x67';
 try{
 await new Promise(r=>chrome.storage.local.set({golfrock_task:task},r));
 }catch(e){}
-await _0x1005(_0x1006('\x6e\x6f\x72\x6d\x61\x6c',task.stepPreset||'\x68\x75\x6d\x61\x6e'));
+await _0x1006(_0x1007('\x6e\x6f\x72\x6d\x61\x6c',task.stepPreset||'\x68\x75\x6d\x61\x6e'));
 if(shouldStopRegistration)return;
-await _0x1021(curItem,task);
+await _0x1022(curItem,task);
 }catch(err){
 console.error("[\uace8\ud504\ub77d] \ud0dc\uc2a4\ud06c \uc7ac\uac1c \uc5d0\ub7ec\x3a",err);
 }
@@ -1354,32 +1367,32 @@ try{console.clear();}catch(e){}
 if(msg.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x52\x4f\x43\x4b\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
 console.log("[\uace8\ud504\ub77d] \ub4f1\ub85d \uc2dc\uc791 \uba54\uc2dc\uc9c0 \uc218\uc2e0\x3a",msg);
 shouldStopRegistration=false;
-isRegistrationRunning=true;
+_0x1002(true);
 const isFirstTransfer=Boolean((msg.items&&msg.items[0]&&msg.items[0].roomType==='\uc591\ub3c4')||msg.mode==='\x74\x72\x61\x6e\x73\x66\x65\x72');
 const targetTranDiv=isFirstTransfer?'\x31':'\x32';
 const currentPath=window.location.pathname;
 if(!currentPath.includes('\x74\x72\x61\x6e\x5f\x77\x72\x69\x74\x65\x2e\x61\x73\x70')||!window.location.search.includes(`tran_div=${targetTranDiv}`)){
 window.location.href=`https://m.golfrock.co.kr/tran_write.asp?tran_div=${targetTranDiv}&latitude=null&longitude=null`;
 }else{
-_0x1023();
+_0x1024();
 }
 sendResponse({success:true});
 }else if(msg.action==='\x53\x54\x4f\x50\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'||msg.action==='\x53\x54\x4f\x50\x5f\x47\x4f\x4c\x46\x52\x4f\x43\x4b\x5f\x52\x45\x47\x49\x53\x54\x52\x41\x54\x49\x4f\x4e'){
 console.log("[\uace8\ud504\ub77d] \ub4f1\ub85d \uc911\ub2e8 \uba54\uc2dc\uc9c0 \uc218\uc2e0");
 shouldStopRegistration=true;
-isRegistrationRunning=false;
-_0x1003({
+_0x1002(false);
+_0x1004({
 desc:'\ud83d\uded1 \uc790\ub3d9\ub4f1\ub85d\uc774 \uc911\ub2e8\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e',
 isStopped:true
 });
-_0x1004();
+_0x1005();
 sendResponse({success:true});
 }
 });
 if(document.readyState==='\x6c\x6f\x61\x64\x69\x6e\x67'){
 document.addEventListener('\x44\x4f\x4d\x43\x6f\x6e\x74\x65\x6e\x74\x4c\x6f\x61\x64\x65\x64',()=>{
-setTimeout(_0x1023,400);
+setTimeout(_0x1024,400);
 });
 }else{
-setTimeout(_0x1023,400);
+setTimeout(_0x1024,400);
 }
