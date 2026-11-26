@@ -2932,6 +2932,27 @@ return`[${c}]\n`+blockText;
 }
 return blockText;
 }
+function __t82MergeTimeListWithNextPrice(lines){
+const timeTok='(?\x3a(?\x3a\x30?[\x34-\x39]|\x31\\\x64|\x32[\x30-\x33])[\x30-\x35]\\\x64|(?\x3a\x30?[\x34-\x39]|\x31\\\x64|\x32[\x30-\x33])\x3a[\x30-\x35]\\\x64)';
+const timeOnlyRe=new RegExp('^(?\x3a\uc794\uc5ec|\ub0a8\uc740\\\x73*\ud0c0\uc784|\ud0c0\uc784)?\\\x73*[\x3a\uff1a]?\\\x73*'+timeTok+'(?\x3a\\\x73*[,\x2f\u00b7\\\x73]\\\x73*'+timeTok+')*\\\x73*$');
+const priceOnlyRe=/^[\s→⇒➡▶>\-=:：]*(?:현장(?:결제)?|그린피|요금|가격|금액)?\s*[:：]?\s*[0-9]+(?:\.[0-9]+)?\s*(?:만원|만|원)\s*(?:\([^)]*\))?\s*$/;
+for(let i=0;i<lines.length;i++){
+if(!timeOnlyRe.test(lines[i]||''))continue;
+let j=i;
+const timeLines=[];
+while(j<lines.length&&(timeOnlyRe.test(lines[j]||'')||!(lines[j]||'').trim())){
+if((lines[j]||'').trim())timeLines.push(lines[j].trim());
+j++;
+}
+if(j<lines.length&&priceOnlyRe.test(lines[j]||'')){
+const merged=timeLines.join(' ')+' '+lines[j].trim();
+lines.splice(i,j-i+1,merged);
+}else{
+i=j-1;
+}
+}
+return lines;
+}
 function parseSingleNoticeBlock(text,fallbackDate='',fallbackYear=null){
 if(!text||!text.trim())return[];
 if(isNonGreenFeeEventNotice(text))return[];
@@ -2949,6 +2970,7 @@ continue;
 }
 lines.push(l);
 }
+__t82MergeTimeListWithNextPrice(lines);
 const rules=[];
 const sameAsDirectives=[];
 let primaryCourse='';
