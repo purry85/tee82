@@ -1,18 +1,5 @@
 async function _0x1000(){
-if(!chrome.action||!chrome.action.setIcon)return;
-try{
-await chrome.action.setIcon({
-path:{
-16:"\x69\x63\x6f\x6e\x2e\x70\x6e\x67",
-32:"\x69\x63\x6f\x6e\x2e\x70\x6e\x67",
-48:"\x69\x63\x6f\x6e\x2e\x70\x6e\x67",
-128:"\x69\x63\x6f\x6e\x2e\x70\x6e\x67"
-}
-});
-console.log("[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65] \ud234\ubc14 \uc544\uc774\ucf58(\x69\x63\x6f\x6e\x2e\x70\x6e\x67)\uc774 \uc131\uacf5\uc801\uc73c\ub85c \uc801\uc6a9\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e");
-}catch(err){
-console.error("[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65] \ud234\ubc14 \uc544\uc774\ucf58 \uc801\uc6a9 \uc2e4\ud328\x3a",err);
-}
+return;
 }
 function _0x1001(size){
 const canvas=new OffscreenCanvas(size,size);

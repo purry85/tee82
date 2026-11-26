@@ -1,9 +1,9 @@
 {
-    "version":  "3.3.1",
+    "version":  "3.4.0",
     "releaseDate":  "2026-11-26",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "-긴급- 신규등록 오류 해결"
+                         "- test"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

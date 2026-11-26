@@ -4198,6 +4198,22 @@ if(badgeWrapper){
 badgeWrapper.style.color='\x23\x30\x35\x39\x36\x36\x39';
 }
 }
+function updateHeaderNoticeBadge(){
+try{
+const badge=document.getElementById('\x68\x65\x61\x64\x65\x72\x4e\x6f\x74\x69\x63\x65\x42\x61\x64\x67\x65');
+const wrapper=document.getElementById('\x68\x65\x61\x64\x65\x72\x4e\x6f\x74\x69\x63\x65\x43\x6f\x75\x6e\x74\x57\x72\x61\x70\x70\x65\x72');
+const count=Array.isArray(activeNoticeRules)?activeNoticeRules.length:0;
+if(badge&&wrapper){
+if(count>0){
+badge.textContent=count.toString();
+wrapper.style.display='\x69\x6e\x6c\x69\x6e\x65';
+}else{
+wrapper.style.display='\x6e\x6f\x6e\x65';
+}
+}
+updateNoticeHeaderUI();
+}catch(e){}
+}
 function setNoticeRulesActive(active=true,notify=false){
 isNoticeRulesActive=true;
 try{
@@ -18103,7 +18119,9 @@ if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
 },{passive:true});
 inp.addEventListener('\x66\x6f\x63\x75\x73',()=>{
 activeTargetInput=inp;
-document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
+const isTouchFocus=(Date.now()-lastTouchTs)<1500||
+(window.matchMedia&&window.matchMedia('(\x70\x6f\x69\x6e\x74\x65\x72\x3a \x63\x6f\x61\x72\x73\x65)').matches);
+if(isTouchFocus)document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
 highlightActiveInput();
 if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
 });
