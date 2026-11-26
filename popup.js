@@ -9834,6 +9834,7 @@ tryPickFromPart(part3List,3);
 }
 if(picked.length===0&&part1List.length>0){
 tryPickFromPart(part1List,1);
+if(picked.length<maxTargetCount)tryPickFromPart(part1List,1);
 }
 }
 else if(p1&&p2&&!p3){
@@ -9888,8 +9889,7 @@ break;
 }
 if(picked.length>=maxTargetCount)break;
 }
-const hasSpecificPartFilter=(p1||p2||p3);
-if(picked.length<maxTargetCount&&!hasSpecificPartFilter){
+if(picked.length<maxTargetCount){
 const allRemaining=list.filter(tr=>!picked.includes(tr));
 while(picked.length<maxTargetCount&&allRemaining.length>0){
 const partNum=getTrPart(allRemaining[0])||2;
@@ -10297,17 +10297,17 @@ resolvedRoomType='\uc591\ub3c4';
 }else if(roomTypeRaw==='\uc870\uc778'||roomTypeRaw==='\uc120\ud2f0\ubc29'||roomTypeRaw.includes('\uc120\ud2f0')||roomTypeRaw.includes('\ub300\uae30')){
 resolvedRoomType='\uc870\uc778';
 }
-else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x6a\x6f\x69\x6e'){
-resolvedRoomType='\uc870\uc778';
-}else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x74\x72\x61\x6e\x73\x66\x65\x72'){
+else if(sizenumRaw==='\x34\uc778'&&roomTypeRaw!=='\uc870\uc778'){
 resolvedRoomType='\uc591\ub3c4';
-}
-else if(sizenumRaw&&/^[123]인$/.test(sizenumRaw)){
+}else if(sizenumRaw&&/^[123]인$/.test(sizenumRaw)){
 resolvedRoomType='\uc870\uc778';
 }else if(conditionRaw&&conditionRaw!=='\ubb34\uad00'){
 resolvedRoomType='\uc870\uc778';
-}else if(sizenumRaw==='\x34\uc778'&&roomTypeRaw!=='\uc870\uc778'){
+}
+else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x74\x72\x61\x6e\x73\x66\x65\x72'){
 resolvedRoomType='\uc591\ub3c4';
+}else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x6a\x6f\x69\x6e'){
+resolvedRoomType='\uc870\uc778';
 }else{
 resolvedRoomType='\uc870\uc778';
 }
@@ -10436,17 +10436,17 @@ resolvedRoomType='\uc591\ub3c4';
 }else if(roomTypeRaw==='\uc870\uc778'||roomTypeRaw==='\uc120\ud2f0\ubc29'||roomTypeRaw.includes('\uc120\ud2f0')||roomTypeRaw.includes('\ub300\uae30')){
 resolvedRoomType='\uc870\uc778';
 }
-else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x6a\x6f\x69\x6e'){
-resolvedRoomType='\uc870\uc778';
-}else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x74\x72\x61\x6e\x73\x66\x65\x72'){
+else if(sizenumRaw==='\x34\uc778'&&roomTypeRaw!=='\uc870\uc778'){
 resolvedRoomType='\uc591\ub3c4';
-}
-else if(sizenumRaw&&/^[123]인$/.test(sizenumRaw)){
+}else if(sizenumRaw&&/^[123]인$/.test(sizenumRaw)){
 resolvedRoomType='\uc870\uc778';
 }else if(conditionRaw&&conditionRaw!=='\ubb34\uad00'){
 resolvedRoomType='\uc870\uc778';
-}else if(sizenumRaw==='\x34\uc778'&&roomTypeRaw!=='\uc870\uc778'){
+}
+else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x74\x72\x61\x6e\x73\x66\x65\x72'){
 resolvedRoomType='\uc591\ub3c4';
+}else if(typeof lastUsedMacroType!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&lastUsedMacroType==='\x6a\x6f\x69\x6e'){
+resolvedRoomType='\uc870\uc778';
 }else{
 resolvedRoomType='\uc870\uc778';
 }

@@ -1,10 +1,9 @@
 {
-    "version":  "3.2.4",
-    "releaseDate":  "2026-11-24",
+    "version":  "3.2.5",
+    "releaseDate":  "2026-11-26",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "-긴급- 전체수정 동시실행 플래그 충돌 문제 해결",
-                         "- 보안 문제 업데이트"
+                         "- 스마트등록시 신규등록안되는 오류수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

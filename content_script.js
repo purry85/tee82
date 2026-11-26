@@ -694,7 +694,7 @@ const rect=el.getBoundingClientRect();
 if(rect.top<winHeight*0.5)return false;
 if(rect.width<24||rect.width>180||rect.height<22||rect.height>110)return false;
 const text=(el.innerText||el.textContent||'').trim().replace(/\s+/g,'');
-return text==='\ub4f1\ub85d';
+return text==='\ub4f1\ub85d'||text==='+\ub4f1\ub85d'||text==='\x61\x64\x64\ub4f1\ub85d'||text==='\uc0c1\ud488\ub4f1\ub85d';
 });
 if(targets.length===0)return null;
 targets.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
@@ -843,7 +843,7 @@ await _0x100e(clickTarget);
 for(let w=0;w<25;w++){
 await _0x1007(150);
 if(shouldStopRegistration)return true;
-const myBtn=_0x1030();
+const myBtn=_0x1031();
 if(myBtn&&myBtn.offsetHeight>0){
 console.log("[\ub9e4\ud06c\ub85c] \ud558\ub2e8 '\ub9c8\uc774\ud398\uc774\uc9c0' \ud074\ub9ad \ud6c4 '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubc84\ud2bc \ud45c\uc2dc \ud655\uc778 \uc644\ub8cc!");
 await _0x1007(150);
@@ -865,7 +865,7 @@ const regBtn=_0x1010();
 if(regBtn&&regBtn.offsetHeight>0){
 return false;
 }
-if(typeof _0x1033==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1033()){
+if(typeof _0x1034==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&_0x1034()){
 return false;
 }
 const bodyTxt=(document.body?document.body.innerText||'':'').replace(/\s+/g,'');
@@ -874,16 +874,27 @@ return true;
 }
 return true;
 }
-async function _0x1016(maxAttempts=15){
+function _0x1016(){
+return Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x6c\x69, \x62\x75\x74\x74\x6f\x6e')).some(el=>{
+const t=(el.textContent||'').trim();
+return(t==='\uc870\uc778 \ub4f1\ub85d'||t==='\uc591\ub3c4 \ub4f1\ub85d')&&el.getBoundingClientRect().height>0;
+});
+}
+async function _0x1017(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ud0d0\uc0c9 \uc911\x2e\x2e\x2e");
+if(_0x1016()){
+console.log("[\ub9e4\ud06c\ub85c] '\uc870\uc778 \ub4f1\ub85d \x2f \uc591\ub3c4 \ub4f1\ub85d' \uba54\ub274\uac00 \uc774\ubbf8 \uc5f4\ub824 \uc788\uc2b5\ub2c8\ub2e4\x2e");
+return true;
+}
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
+if(_0x1016())return true;
 const listRegBtn=_0x1011();
 const mainRegBtn=!listRegBtn?_0x1010():null;
 const regBtn=listRegBtn||mainRegBtn;
 if(regBtn){
 regBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x35\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1007(100);
+await _0x1007(80);
 const rect=regBtn.getBoundingClientRect();
 const cx=rect.left+rect.width/2;
 const cy=rect.top+rect.height/2;
@@ -892,18 +903,29 @@ try{
 regBtn.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x64\x6f\x77\x6e',opts));
 regBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
 }catch(e){}
-await _0x1007(80);
+await _0x1007(60);
 try{
 regBtn.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
 regBtn.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
-regBtn.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 }catch(e){}
 try{regBtn.click();}catch(e){}
-await _0x100e(regBtn);
-console.log(listRegBtn?"[\ub9e4\ud06c\ub85c] \ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ud074\ub9ad \uc644\ub8cc":"[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d \u00b7 \ub0b4\uae00\ubcf4\uae30' \ud074\ub9ad \uc644\ub8cc");
+for(let w=0;w<5;w++){
+await _0x1007(70);
+if(_0x1016()){
+console.log(listRegBtn?"[\ub9e4\ud06c\ub85c] \ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ud074\ub9ad \ubc0f \uba54\ub274 \uc624\ud508 \ud655\uc778 \uc644\ub8cc":"[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d \u00b7 \ub0b4\uae00\ubcf4\uae30' \ud074\ub9ad \ubc0f \uba54\ub274 \uc624\ud508 \ud655\uc778 \uc644\ub8cc");
 return true;
 }
-if(attempt===1&&_0x1033()){
+}
+if(!_0x1016()){
+await _0x100e(regBtn);
+await _0x1007(200);
+}
+if(_0x1016()){
+console.log(listRegBtn?"[\ub9e4\ud06c\ub85c] \ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ubcf4\uc870 \ud074\ub9ad \ud6c4 \uba54\ub274 \uc624\ud508 \uc644\ub8cc":"[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d \u00b7 \ub0b4\uae00\ubcf4\uae30' \ubcf4\uc870 \ud074\ub9ad \ud6c4 \uba54\ub274 \uc624\ud508 \uc644\ub8cc");
+return true;
+}
+}
+if(attempt===1&&_0x1034()){
 window.scrollBy(0,180);
 document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
 el.scrollTop+=180;
@@ -919,9 +941,9 @@ console.log("[\ub9e4\ud06c\ub85c] \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ubbf
 await _0x100e(topPlazaBtn);
 try{topPlazaBtn.click();}catch(e){}
 await _0x1007(350);
-}else if(!_0x1033()){
+}else if(!_0x1034()){
 console.log("[\ub9e4\ud06c\ub85c] \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ubbf8\ubc1c\uacac -> '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ud654\uba74\uc73c\ub85c \uc774\ub3d9 \uc2dc\ub3c4\x2e\x2e\x2e");
-await _0x1035();
+await _0x1036();
 }
 }
 await _0x1007(250);
@@ -929,7 +951,7 @@ await _0x1007(250);
 console.warn("[\ub9e4\ud06c\ub85c] \ub4f1\ub85d \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\uc774\ubbf8 \ub4f1\ub85d \ud3fc\uc77c \uc218 \uc788\uc74c)");
 return false;
 }
-async function _0x1017(maxAttempts=15){
+async function _0x1018(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x32\ub2e8\uacc4\x3a '\uc870\uc778 \ub4f1\ub85d' \uba54\ub274 \ud0d0\uc0c9 \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
@@ -952,7 +974,7 @@ await _0x1007(200);
 console.warn("[\ub9e4\ud06c\ub85c] '\uc870\uc778 \ub4f1\ub85d' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\uc774\ubbf8 \ub4f1\ub85d \ud3fc\uc77c \uc218 \uc788\uc74c)");
 return false;
 }
-async function _0x1018(maxAttempts=15){
+async function _0x1019(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x32\ub2e8\uacc4\x3a '\uc591\ub3c4 \ub4f1\ub85d' \uba54\ub274 \ud0d0\uc0c9 \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
@@ -975,7 +997,7 @@ await _0x1007(200);
 console.warn("[\ub9e4\ud06c\ub85c] '\uc591\ub3c4 \ub4f1\ub85d' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\uc774\ubbf8 \ub4f1\ub85d \ud3fc\uc77c \uc218 \uc788\uc74c)");
 return false;
 }
-async function _0x1019(targetRegion,maxAttempts=15){
+async function _0x101a(targetRegion,maxAttempts=15){
 if(!targetRegion)return false;
 console.log(`[\ub9e4\ud06c\ub85c] 3\ub2e8\uacc4: \uc9c0\uc5ed(${targetRegion}) \uc120\ud0dd \uc911...`);
 for(let attempt=0;attempt<maxAttempts;attempt++){
@@ -1000,7 +1022,7 @@ await _0x1007(250);
 console.error(`[\ub9e4\ud06c\ub85c] \uc9c0\uc5ed(${targetRegion}) \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
 return false;
 }
-async function _0x101a(maxAttempts=15){
+async function _0x101b(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x34\ub2e8\uacc4\x3a '\uace8\ud504\uc7a5\uc744 \uc120\ud0dd\ud558\uc138\uc694' \ub4dc\ub86d\ub2e4\uc6b4 \ud638\ucd9c \uc911\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
@@ -1035,7 +1057,7 @@ await _0x1007(250);
 console.error("[\ub9e4\ud06c\ub85c] '\uace8\ud504\uc7a5\uc744 \uc120\ud0dd\ud558\uc138\uc694' \uc694\uc18c\ub97c \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-function _0x101b(target,candidate){
+function _0x101c(target,candidate){
 if(!target||!candidate)return false;
 const t=String(target).toLowerCase().replace(/cc|gc|골프장|골프클럽|골프코스/gi,'').replace(/[^가-힣0-9a-z]/gi,'');
 const c=String(candidate).toLowerCase().replace(/cc|gc|골프장|골프클럽|골프코스/gi,'').replace(/[^가-힣0-9a-z]/gi,'');
@@ -1110,8 +1132,8 @@ const cSig=c.includes('\uc2dc\uadf8\ub2c8\ucc98');
 if(tSig!==cSig)return true;
 }
 if(t.includes('\uc54c\ud39c\uc2dc\uc544')||c.includes('\uc54c\ud39c\uc2dc\uc544')||t.includes('\uc54c\ud39c')||c.includes('\uc54c\ud39c')){
-const normT=(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1048(target):t;
-const normC=(typeof _0x1048==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1048(candidate):c;
+const normT=(typeof _0x1049==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1049(target):t;
+const normC=(typeof _0x1049==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1049(candidate):c;
 const t700=normT.includes('\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')||/(?:알펜시아|알펜)\s*700(?!\d)/i.test(target);
 const c700=normC.includes('\uc54c\ud39c\uc2dc\uc544\x37\x30\x30')||/(?:알펜시아|알펜)\s*700(?!\d)/i.test(candidate);
 if(t700!==c700)return true;
@@ -1174,7 +1196,7 @@ return true;
 }
 return false;
 }
-function _0x101c(targetText,container){
+function _0x101d(targetText,container){
 if(!targetText)return null;
 const root=container||document.body;
 const cleanTarget=targetText.replace(/\s+/g,'').toLowerCase();
@@ -1189,19 +1211,19 @@ return lines.length<=2;
 for(const item of items){
 const itemText=(item.innerText||item.textContent||'').trim();
 const cleanItem=itemText.replace(/\s+/g,'').toLowerCase();
-if(cleanItem===cleanTarget&&!_0x101b(cleanTarget,cleanItem))return item;
+if(cleanItem===cleanTarget&&!_0x101c(cleanTarget,cleanItem))return item;
 }
 for(const item of items){
 const itemText=(item.innerText||item.textContent||'').trim();
 const cleanItem=itemText.replace(/\s+/g,'').toLowerCase();
-if(!_0x101b(cleanTarget,cleanItem)&&(cleanItem.includes(cleanTarget)||cleanTarget.includes(cleanItem)))return item;
+if(!_0x101c(cleanTarget,cleanItem)&&(cleanItem.includes(cleanTarget)||cleanTarget.includes(cleanItem)))return item;
 }
-const normTarget=_0x1048(targetText);
+const normTarget=_0x1049(targetText);
 if(normTarget&&normTarget.length>=2){
 for(const item of items){
 const itemText=(item.innerText||item.textContent||'').trim();
-if(_0x101b(targetText,itemText))continue;
-const normItem=_0x1048(itemText);
+if(_0x101c(targetText,itemText))continue;
+const normItem=_0x1049(itemText);
 if(normItem&&(normItem===normTarget||normItem.includes(normTarget)||normTarget.includes(normItem))){
 return item;
 }
@@ -1347,15 +1369,15 @@ if(!parent||parent.offsetHeight===0||parent.offsetHeight>85)continue;
 if(parent.tagName==='\x53\x43\x52\x49\x50\x54'||parent.tagName==='\x53\x54\x59\x4c\x45')continue;
 if(parent.closest('\x23\x67\x6f\x6c\x66\x6d\x6f\x6e-\x6d\x61\x63\x72\x6f-\x68\x75\x64, [\x69\x64*="\x74\x65\x65\x38\x32"]'))continue;
 const cleanNode=text.replace(/\s+/g,'').toLowerCase();
-if(cleanNode===cleanTarget&&!_0x101b(cleanTarget,cleanNode)){
+if(cleanNode===cleanTarget&&!_0x101c(cleanTarget,cleanNode)){
 exactFound=parent;
 break;
 }
-if(!partialFound&&!_0x101b(cleanTarget,cleanNode)&&(cleanNode.includes(cleanTarget)||cleanTarget.includes(cleanNode))){
+if(!partialFound&&!_0x101c(cleanTarget,cleanNode)&&(cleanNode.includes(cleanTarget)||cleanTarget.includes(cleanNode))){
 partialFound=parent;
 }
-if(normTarget&&normTarget.length>=2&&!partialFound&&!_0x101b(targetText,text)){
-const normNode=_0x1048(text);
+if(normTarget&&normTarget.length>=2&&!partialFound&&!_0x101c(targetText,text)){
+const normNode=_0x1049(text);
 if(normNode&&(normNode===normTarget||normNode.includes(normTarget)||normTarget.includes(normNode))){
 partialFound=parent;
 }
@@ -1370,7 +1392,7 @@ partialFound=parent;
 }
 return exactFound||partialFound;
 }
-async function _0x101d(foundEl){
+async function _0x101e(foundEl){
 if(!foundEl)return false;
 let targetRow=foundEl;
 let p=foundEl.parentElement;
@@ -1407,7 +1429,7 @@ targetRow.dispatchEvent(new KeyboardEvent('\x6b\x65\x79\x64\x6f\x77\x6e',{key:'\
 await _0x1007(350);
 return true;
 }
-async function _0x101e(targetText,maxAttempts=15){
+async function _0x101f(targetText,maxAttempts=15){
 if(!targetText)return false;
 console.log(`[\ub9e4\ud06c\ub85c] 5\ub2e8\uacc4: \uace8\ud504\uc7a5(${targetText}) \ud0d0\uc0c9 \ubc0f \uc120\ud0dd \uc2dc\uc791...`);
 let dialogEl=null;
@@ -1420,10 +1442,10 @@ await _0x1007(150);
 const searchScope=dialogEl||document.body;
 for(let check=0;check<5;check++){
 if(shouldStopRegistration)return false;
-const found=_0x101c(targetText,searchScope);
+const found=_0x101d(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc989\uc2dc \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-const ok=await _0x101d(found);
+const ok=await _0x101e(found);
 if(ok)return true;
 }
 await _0x1007(150);
@@ -1432,10 +1454,10 @@ let scrollBox=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x2e\x73
 Array.from(document.querySelectorAll('\x2e\x71-\x64\x69\x61\x6c\x6f\x67 \x64\x69\x76, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"] \x64\x69\x76, \x64\x69\x76')).find(el=>el.scrollHeight>el.clientHeight&&el.offsetHeight>0);
 for(let i=0;i<40;i++){
 if(shouldStopRegistration)return false;
-const found=_0x101c(targetText,searchScope);
+const found=_0x101d(targetText,searchScope);
 if(found){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \uc2a4\ud06c\ub864 \uc911 \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-const ok=await _0x101d(found);
+const ok=await _0x101e(found);
 if(ok)return true;
 }
 if(scrollBox){
@@ -1444,20 +1466,19 @@ scrollBox.dispatchEvent(new Event('\x73\x63\x72\x6f\x6c\x6c',{bubbles:true}));
 }
 await _0x1007(250);
 }
-const lastChance=_0x101c(targetText,document.body);
+const lastChance=_0x101d(targetText,document.body);
 if(lastChance){
 console.log(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ucd5c\uc885 \uac80\uc0c9\uc5d0\uc11c \ubc1c\uacac! \uc120\ud0dd \ud074\ub9ad \uc9c4\ud589...`);
-return await _0x101d(lastChance);
+return await _0x101e(lastChance);
 }
 console.error(`[\ub9e4\ud06c\ub85c] \uace8\ud504\uc7a5(${targetText}) \ubaa9\ub85d \ub0b4 \ubbf8\ubc1c\uacac`);
 return false;
 }
-async function _0x101f(rawDate){
+async function _0x1020(rawDate){
 if(!rawDate)return false;
-const parts=rawDate.split('\x2e');
-const targetMonth=parts[0];
-const targetDay=parts[1];
-console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd (${targetMonth}\uc6d4 ${targetDay}\uc77c)...`);
+const targetMonth=(typeof _0x1038==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1038(rawDate):'')||rawDate.split(/[./\-]/)[0];
+const targetDay=(typeof _0x1037==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1037(rawDate):'')||rawDate.split(/[./\-]/)[1];
+console.log(`[\ub9e4\ud06c\ub85c] 6\ub2e8\uacc4: \ub0a0\uc9dc \uc120\ud0dd (${targetMonth}\uc6d4 ${targetDay}\uc77c, \uc6d0\ubcf8:${rawDate})...`);
 const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c'))
 .sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top);
 if(fields.length>0){
@@ -1495,7 +1516,7 @@ return true;
 console.error(`[\ub9e4\ud06c\ub85c] \ub0a0\uc9dc(${rawDate}) \uc120\ud0dd \uc2e4\ud328`);
 return false;
 }
-async function _0x1020(selectedTime){
+async function _0x1021(selectedTime){
 if(!selectedTime)return false;
 console.log(`[\ub9e4\ud06c\ub85c] 7\ub2e8\uacc4: \uc2dc\uac04(${selectedTime}) \uc785\ub825 \uc911...`);
 const fields=Array.from(document.querySelectorAll('\x2e\x71-\x66\x69\x65\x6c\x64, \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x63\x6f\x6e\x74\x72\x6f\x6c'))
@@ -1533,7 +1554,7 @@ return true;
 console.error(`[\ub9e4\ud06c\ub85c] \uc2dc\uac04 \uc785\ub825\uce78 \ud0d0\uc0c9 \uc2e4\ud328`);
 return false;
 }
-async function _0x1021(feeValue,isPrepaidParam=false){
+async function _0x1022(feeValue,isPrepaidParam=false){
 if(!feeValue)return false;
 let isPrepaid=isPrepaidParam;
 let actualFee=feeValue.toString().trim();
@@ -1607,7 +1628,7 @@ break;
 }
 return true;
 }
-async function _0x1022(isMealParam=false){
+async function _0x1023(isMealParam=false){
 console.log(`[\ub9e4\ud06c\ub85c] 8-2\ub2e8\uacc4: \uc2dd\uc0ac\ud3ec\ud568 \ucc98\ub9ac \uc5ec\ubd80: ${isMealParam?'\uc2dd\uc0ac\ud3ec\ud568 \uccb4\ud06c \uc9c4\ud589':'\uccb4\ud06c \uc548 \ud568'}`);
 const dialog=document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74([\x73\x74\x79\x6c\x65*="\x64\x69\x73\x70\x6c\x61\x79\x3a \x6e\x6f\x6e\x65"]), \x2e\x71-\x63\x61\x72\x64, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')||document.body;
 const walker=document.createTreeWalker(dialog,NodeFilter.SHOW_TEXT,null,false);
@@ -1667,11 +1688,11 @@ console.warn("[\ub9e4\ud06c\ub85c] '\uc2dd\uc0ac\ud3ec\ud568' \uccb4\ud06c\ubc15
 }
 return false;
 }
-function _0x1023(el){
+function _0x1024(el){
 if(!el)return null;
 return el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, \x6c\x61\x62\x65\x6c, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el;
 }
-function _0x1024(el){
+function _0x1025(el){
 if(!el)return false;
 return el.classList.contains('\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78--\x74\x72\x75\x74\x68\x79')||
 el.classList.contains('\x71-\x62\x74\x6e--\x61\x63\x74\x69\x76\x65')||
@@ -1681,7 +1702,7 @@ el.getAttribute('\x61\x72\x69\x61-\x63\x68\x65\x63\x6b\x65\x64')==='\x74\x72\x75
 el.getAttribute('\x61\x72\x69\x61-\x70\x72\x65\x73\x73\x65\x64')==='\x74\x72\x75\x65'||
 el.getAttribute('\x61\x72\x69\x61-\x73\x65\x6c\x65\x63\x74\x65\x64')==='\x74\x72\x75\x65';
 }
-async function _0x1025(clickTarget,label=''){
+async function _0x1026(clickTarget,label=''){
 if(!clickTarget)return false;
 clickTarget.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
@@ -1705,7 +1726,7 @@ try{topEl.click();}catch(e){}
 await _0x100e(clickTarget);
 return true;
 }
-async function _0x1026(cadyValue,forceCheck=false){
+async function _0x1027(cadyValue,forceCheck=false){
 let raw=(cadyValue||'\uce90\ub514').toString().trim();
 let targetCady='\uce90\ub514';
 if(raw.includes('\uc2e0\uc785')||raw.includes('\uad50\uc721\uc0dd')){
@@ -1758,7 +1779,7 @@ return isMatchCady(el.textContent);
 if(candidates.length>0){
 const directBtn=candidates.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
 const bestCandidate=directBtn||candidates.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length)[0];
-targetBtn=_0x1023(bestCandidate);
+targetBtn=_0x1024(bestCandidate);
 break;
 }
 container=container.parentElement;
@@ -1774,7 +1795,7 @@ return isMatchCady(el.textContent);
 if(allElements.length>0){
 const btnMatch=allElements.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
 const best=btnMatch||allElements.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length)[0];
-targetBtn=_0x1023(best);
+targetBtn=_0x1024(best);
 }
 }
 if(!targetBtn){
@@ -1785,20 +1806,20 @@ if(isMatchCady(node.textContent)){
 const p=node.parentElement;
 if(p&&p.offsetHeight>0&&!['\x53\x43\x52\x49\x50\x54','\x53\x54\x59\x4c\x45'].includes(p.tagName)){
 if(p.closest('\x2e\x71-\x63\x61\x72\x64')&&!p.closest('\x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]'))continue;
-targetBtn=_0x1023(p);
+targetBtn=_0x1024(p);
 break;
 }
 }
 }
 }
 if(targetBtn){
-const clickTarget=_0x1023(targetBtn);
-if(_0x1024(clickTarget)){
+const clickTarget=_0x1024(targetBtn);
+if(_0x1025(clickTarget)){
 console.log(`[\ub9e4\ud06c\ub85c] \uce90\ub514 [${targetCady}] \uc774\ubbf8 \uc120\ud0dd(\ud65c\uc131)\ub418\uc5b4 \uc788\uc5b4 \ud074\ub9ad\uc744 \uac74\ub108\ub701\ub2c8\ub2e4.`);
 return false;
 }
 console.log(`[\ub9e4\ud06c\ub85c] \uce90\ub514 [${targetCady}] \uc815\ubc00 \ud074\ub9ad \uc2e4\ud589!`);
-await _0x1025(clickTarget,`\uce90\ub514:${targetCady}`);
+await _0x1026(clickTarget,`\uce90\ub514:${targetCady}`);
 await _0x1007(150);
 return true;
 }else{
@@ -1806,7 +1827,7 @@ console.warn(`[\ub9e4\ud06c\ub85c] \uce90\ub514 [${targetCady}] \ubc84\ud2bc\uc7
 }
 return false;
 }
-async function _0x1027(conditionValue){
+async function _0x1028(conditionValue){
 let raw=(conditionValue||'\ubb34\uad00').toString().trim();
 let targetCondition='\ubb34\uad00';
 if(raw==='\ub0a8\uc790'||raw==='\ub0a8\uc790\ub9cc'||raw==='\ub0a8\uc131\ub9cc'||raw==='\ub0a8\uc790 \uc804\uc6a9'||raw==='\ub0a8\uc131 \uc804\uc6a9'||raw==='\ub0a8\ub0a8\ub9cc'){
@@ -1870,7 +1891,7 @@ console.warn(`[\ub9e4\ud06c\ub85c] \uc870\uac74 [${targetCondition}] \ubc84\ud2b
 }
 return false;
 }
-async function _0x1028(sizenum,maxAttempts=2){
+async function _0x1029(sizenum,maxAttempts=2){
 const match=(sizenum||'\x34').toString().match(/\d+/);
 const pNum=match?match[0]:'\x34';
 const targetText=`${pNum}\uba85`;
@@ -1971,7 +1992,7 @@ await _0x1007(80);
 console.warn(`[\ub9e4\ud06c\ub85c] \uc694\uccad \uc778\uc6d0(${targetText}) \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\uc591\ub3c4 \ub4f1\ub85d\uc774\uac70\ub098 \ud654\uba74\uc5d0 \uc5c6\ub294 \uacbd\uc6b0 \ud1b5\uacfc)`);
 return false;
 }
-async function _0x1029(customMemo,maxAttempts=10){
+async function _0x102a(customMemo,maxAttempts=10){
 const val=(customMemo!==undefined&&customMemo!==null)?String(customMemo):"";
 if(!val.trim()){
 console.log("[\ub9e4\ud06c\ub85c] \x31\x32\ub2e8\uacc4\x3a \ub4f1\ub85d\ubb38\uad6c\uac00 \ube44\uc5b4\uc788\uc5b4 \uc0c1\uc138 \ub0b4\uc6a9 \uc785\ub825 \uc0dd\ub7b5");
@@ -2002,26 +2023,41 @@ await _0x1007(200);
 console.warn("[\ub9e4\ud06c\ub85c] \uc5d0\ub514\ud130\ub97c \ucc3e\uc9c0 \ubabb\ud568 (\ud1b5\uacfc)");
 return false;
 }
-async function _0x102a(maxAttempts=15){
+async function _0x102b(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x31\x33\ub2e8\uacc4\x3a '\ub4f1\ub85d\ud558\uae30' \ubc84\ud2bc \ud0d0\uc0c9 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const btn=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
-.find(el=>el.textContent.trim()==='\ub4f1\ub85d\ud558\uae30'&&el.offsetHeight>0);
-if(btn){
-const finalTarget=btn.closest('\x62\x75\x74\x74\x6f\x6e')||btn.closest('\x2e\x71-\x62\x74\x6e')||btn;
+const candidates=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76'))
+.filter(el=>el.offsetHeight>0&&el.offsetWidth>0&&(el.innerText||el.textContent||'').trim().replace(/\s+/g,'')==='\ub4f1\ub85d\ud558\uae30');
+if(candidates.length>0){
+const realBtn=candidates.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'))||
+candidates.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight))[0];
+const finalTarget=realBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||realBtn.querySelector('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||realBtn;
 finalTarget.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72'});
 finalTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x38\x70\x78 \x73\x6f\x6c\x69\x64 \x62\x6c\x75\x65','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1007(300);
+await _0x1007(250);
+try{
+if(document.activeElement&&typeof document.activeElement.blur==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+document.activeElement.blur();
+}
+}catch(e){}
+await _0x1007(80);
 const rect=finalTarget.getBoundingClientRect();
 const x=rect.left+rect.width/2;
 const y=rect.top+rect.height/2;
 const topElement=document.elementFromPoint(x,y)||finalTarget;
 const opts={clientX:x,clientY:y,bubbles:true,cancelable:true,view:window};
+try{
+topElement.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x64\x6f\x77\x6e',opts));
 topElement.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
-await _0x1007(100);
+}catch(e){}
+await _0x1007(80);
+try{
+topElement.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
 topElement.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
 topElement.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
+}catch(e){}
+try{finalTarget.click();}catch(e){}
 console.log("[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d\ud558\uae30' \ud074\ub9ad \uc644\ub8cc!");
 return true;
 }
@@ -2030,7 +2066,7 @@ await _0x1007(250);
 console.error("[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d\ud558\uae30' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-function _0x102b(){
+function _0x102c(){
 const notifs=Array.from(document.querySelectorAll('\x2e\x71-\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e, \x2e\x71-\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e\x73, \x2e\x71-\x62\x61\x6e\x6e\x65\x72, \x2e\x71-\x73\x6e\x61\x63\x6b\x62\x61\x72, [\x63\x6c\x61\x73\x73*="\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e"], [\x63\x6c\x61\x73\x73*="\x6e\x6f\x74\x69\x66\x79"]'))
 .filter(el=>el.offsetHeight>0);
 for(const notif of notifs){
@@ -2103,7 +2139,7 @@ if(!/수정|등록/.test(targetTxt))return targetBtn;
 }
 return null;
 }
-async function _0x102c(targetEl){
+async function _0x102d(targetEl){
 if(!targetEl)return false;
 const realBtn=(targetEl.tagName==='\x42\x55\x54\x54\x4f\x4e'||targetEl.classList.contains('\x71-\x62\x74\x6e')||targetEl.getAttribute('\x72\x6f\x6c\x65')==='\x62\x75\x74\x74\x6f\x6e')
 ?targetEl
@@ -2140,14 +2176,14 @@ realBtn.click();
 console.log(`[\ub9e4\ud06c\ub85c] \ud31d\uc5c5/\ud558\ub2e8 \uc54c\ub9bc '\ud655\uc778' \ubc84\ud2bc \uc815\ubc00 \ud074\ub9ad \uc644\ub8cc (${realBtn.tagName}, class=${realBtn.className})`);
 return true;
 }
-async function _0x102d(maxWaitAttempts=25){
+async function _0x102e(maxWaitAttempts=25){
 console.log("[\ub9e4\ud06c\ub85c] \ud31d\uc5c5\x2f\ud558\ub2e8 \uc54c\ub9bc '\ud655\uc778' \ubc84\ud2bc \ub300\uae30 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxWaitAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const confirmBtn=_0x102b();
+const confirmBtn=_0x102c();
 if(confirmBtn){
 console.log(`[\ub9e4\ud06c\ub85c] '\ud655\uc778' \ubc84\ud2bc \uac10\uc9c0 (\uc2dc\ub3c4 ${attempt+1}/${maxWaitAttempts}) -> \uc815\ubc00 \ud074\ub9ad \uc2e4\ud589`);
-await _0x102c(confirmBtn);
+await _0x102d(confirmBtn);
 await _0x1007(300);
 return true;
 }
@@ -2156,7 +2192,7 @@ await _0x1007(200);
 console.warn("[\ub9e4\ud06c\ub85c] \ud31d\uc5c5\x2f\ud558\ub2e8 \uc54c\ub9bc '\ud655\uc778' \ubc84\ud2bc \ubbf8\ubc1c\uc0dd (\uc790\ub3d9 \ub2eb\ud798 \ub610\ub294 \ud31d\uc5c5 \uc5c6\uc74c)");
 return false;
 }
-async function _0x102e(items,customMemo,mode='\x6a\x6f\x69\x6e',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x102f(items,customMemo,mode='\x6a\x6f\x69\x6e',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
 shouldStopRegistration=false;
@@ -2195,86 +2231,86 @@ try{
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)break;
-if(!_0x1033()&&!_0x1011()&&!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
+if(!_0x1034()&&!_0x1011()&&!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
 console.log(`[\ub9e4\ud06c\ub85c] [${i+1}/${items.length}] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ud654\uba74\uc73c\ub85c \uc774\ub3d9\ud558\uc5ec \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc\uc73c\ub85c \uc2dc\uc791\ud569\ub2c8\ub2e4...`);
-await _0x1035();
+await _0x1036();
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
-await _0x1016();
+await _0x1017();
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)break;
 if(isItemTransfer){
-await _0x1018();
+await _0x1019();
 }else{
-await _0x1017();
+await _0x1018();
 }
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
-await _0x1019(item.region);
+await _0x101a(item.region);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
-await _0x101a();
+await _0x101b();
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x62\x72\x6f\x77\x73\x65\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e',stepPreset));
 if(shouldStopRegistration)break;
-await _0x101e(item.golf);
+await _0x101f(item.golf);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x62\x72\x6f\x77\x73\x65\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e',stepPreset));
 if(shouldStopRegistration)break;
-await _0x101f(item.date);
+await _0x1020(item.date);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x63\x61\x6c\x65\x6e\x64\x61\x72',stepPreset));
 if(shouldStopRegistration)break;
-await _0x1020(item.time);
+await _0x1021(item.time);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)break;
-await _0x1021(item.fee,item.isPrepaid);
+await _0x1022(item.fee,item.isPrepaid);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)break;
 if(item.isMeal){
-const mealClicked=await _0x1022(true);
+const mealClicked=await _0x1023(true);
 if(shouldStopRegistration)break;
 if(mealClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
 }
 }
-const cadyClicked=await _0x1026(item.cady);
+const cadyClicked=await _0x1027(item.cady);
 if(shouldStopRegistration)break;
 if(cadyClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
 }
 if(!isItemTransfer){
-const conditionClicked=await _0x1027(item.condition||'\ubb34\uad00');
+const conditionClicked=await _0x1028(item.condition||'\ubb34\uad00');
 if(shouldStopRegistration)break;
 if(conditionClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
 }
-const peopleClicked=await _0x1028(item.sizenum||'\x34\uc778',2);
+const peopleClicked=await _0x1029(item.sizenum||'\x34\uc778',2);
 if(shouldStopRegistration)break;
 if(peopleClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)break;
 }
 }
-await _0x1029(item.memo||customMemo);
+await _0x102a(item.memo||customMemo);
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
 if(shouldStopRegistration)break;
-await _0x102a();
+await _0x102b();
 if(shouldStopRegistration)break;
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)break;
-await _0x102d();
+await _0x102e();
 console.log(`\u2705 [${i+1}/${items.length}] ${item.golf} [${itemModeLabel}\ub4f1\ub85d] \uc644\ub8cc!`);
 try{
 const res=await new Promise(r=>chrome.storage.local.get(['\x63\x6f\x6d\x70\x6c\x65\x74\x65\x64\x49\x74\x65\x6d\x73'],r));
@@ -2333,7 +2369,7 @@ chrome.runtime.sendMessage({type:'\x52\x45\x47\x49\x53\x54\x45\x52\x5f\x43\x4f\x
 console.log(`\ud83c\udf89 [\uace8\ud504\ubaac ${modeLabel} \ub9e4\ud06c\ub85c \uc885\ub8cc]`);
 }
 }
-async function _0x102f(maxAttempts=15){
+async function _0x1030(maxAttempts=15){
 console.log("[\ubcf5\uadc0] \ud31d\uc5c5\x2f\ud50c\ub85c\ud305 \ubaa8\ub2ec\uc5d0\uc11c '\ub0b4\uae00 \ubcf4\uae30' \x2f '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ud0d0\uc0c9 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
@@ -2388,7 +2424,7 @@ await _0x1007(200);
 console.warn("[\ubcf5\uadc0] '\ub0b4\uae00 \ubcf4\uae30' \ud56d\ubaa9\uc744 \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-function _0x1030(){
+function _0x1031(){
 const candidates=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76, \x73\x70\x61\x6e, \x61'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -2406,16 +2442,16 @@ candidates.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').le
 const leaf=candidates[0];
 return leaf.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76')||leaf;
 }
-function _0x1031(){
+function _0x1032(){
 if(isEditPage()||isDetailPage())return false;
-if(_0x1033())return false;
+if(_0x1034())return false;
 const bodyTxt=document.body?(document.body.innerText||'').replace(/\s+/g,''):'';
 if(bodyTxt.includes('\ucc1c\ud55c\ub9e4\ub2c8\uc800')||bodyTxt.includes('\uace8\ud504\ubaac\uc5d0\uc694\uccad')||bodyTxt.includes('\ud68c\uc6d0\uc815\ubcf4\uc218\uc815')||bodyTxt.includes('\ub85c\uadf8\uc544\uc6c3')){
 return true;
 }
-const myPostsBtn=_0x1030();
+const myPostsBtn=_0x1031();
 if(myPostsBtn&&myPostsBtn.offsetHeight>0){
-const catBtn=_0x1046();
+const catBtn=_0x1047();
 const hasTabs=Boolean(document.querySelector('\x2e\x71-\x74\x61\x62\x73, [\x72\x6f\x6c\x65="\x74\x61\x62\x6c\x69\x73\x74"]'));
 if(!catBtn&&!hasTabs){
 return true;
@@ -2423,9 +2459,9 @@ return true;
 }
 return false;
 }
-function _0x1032(){
+function _0x1033(){
 if(isEditPage()||isDetailPage())return false;
-if(_0x1033())return false;
+if(_0x1034())return false;
 const bodyTxt=document.body?(document.body.innerText||'').replace(/\s+/g,''):'';
 if(bodyTxt.includes('\ub4f1\ub85d\ud55c\uc591\ub3c4\uc218')||bodyTxt.includes('\ub4f1\ub85d\ud55c\uc870\uc778\uc218')||bodyTxt.includes('\ucd1d\ub4f1\ub85d\uac74\uc218')){
 return true;
@@ -2434,7 +2470,7 @@ const regBtn=_0x1010();
 if(regBtn&&regBtn.offsetHeight>0)return true;
 return false;
 }
-function _0x1033(){
+function _0x1034(){
 if(isEditPage()||isDetailPage())return false;
 const headerEl=document.querySelector('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72');
 const hTxt=(headerEl?headerEl.textContent:'').replace(/\s+/g,'');
@@ -2453,27 +2489,27 @@ return false;
 }
 const regBtn=_0x1010();
 if(regBtn&&regBtn.offsetHeight>0)return false;
-const catBtn=_0x1046();
+const catBtn=_0x1047();
 const hasTabs=Boolean(document.querySelector('\x2e\x71-\x74\x61\x62\x73, [\x72\x6f\x6c\x65="\x74\x61\x62\x6c\x69\x73\x74"]'));
 if(catBtn&&hasTabs){
 return true;
 }
 return false;
 }
-function _0x1034(){
-return _0x1033();
+function _0x1035(){
+return _0x1034();
 }
-async function _0x1035(filterType=''){
+async function _0x1036(filterType=''){
 console.log(`[\ubcf5\uadc0] '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \ud654\uba74 \ubcf5\uadc0 \uc2dc\ub3c4... (\ud544\ud130: ${filterType||'\uc720\uc9c0'})`);
-if(_0x1033()){
+if(_0x1034()){
 console.log("[\ubcf5\uadc0] \uc774\ubbf8 '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \ud654\uba74\uc5d0 \uc704\uce58\ud574 \uc788\uc2b5\ub2c8\ub2e4\x2e (\uc989\uc2dc \uc9c4\ud589)");
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
 const regBtn=_0x1010();
-if(regBtn||_0x1032()){
+if(regBtn||_0x1033()){
 console.log("[\ubcf5\uadc0] \ubd80\ud0b9\ud504\ub77c\uc790(\x53\x63\x72\x65\x65\x6e \x41) \ud654\uba74 \uac10\uc9c0 -> '\ub4f1\ub85d \u00b7 \ub0b4\uae00\ubcf4\uae30' \ud074\ub9ad \ud6c4 \ud558\ub2e8 \ud50c\ub85c\ud305 '\ub0b4\uae00 \ubcf4\uae30' \uc5f0\ub3d9 \uc2dc\uc791!");
 for(let attempt=0;attempt<3;attempt++){
 if(shouldStopRegistration)return false;
@@ -2483,15 +2519,15 @@ console.log(`[\ubcf5\uadc0] (${attempt+1}/3) '\ub4f1\ub85d \u00b7 \ub0b4\uae00\u
 await _0x1012(liveRegBtn);
 await _0x1007(400);
 }
-const clickedFloating=await _0x102f(12);
+const clickedFloating=await _0x1030(12);
 if(clickedFloating){
 for(let w=0;w<35;w++){
 await _0x1007(150);
-if(_0x1033()){
+if(_0x1034()){
 console.log("\u2705 [\ubcf5\uadc0] '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \uc9c4\uc785 \uc131\uacf5 (\ud50c\ub85c\ud305 '\ub0b4\uae00 \ubcf4\uae30' \uacbd\uc720)!");
 await _0x1007(350);
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
@@ -2500,18 +2536,18 @@ return true;
 await _0x1007(300);
 }
 }
-if(isEditPage()||isDetailPage()){
-console.log("[\ubcf5\uadc0] \uc218\uc815\x2f\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589");
+for(let backStep=0;backStep<2&&(isEditPage()||isDetailPage());backStep++){
+console.log(`[\ubcf5\uadc0] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/2)`);
 await executeSingleBack();
-await _0x1007(350);
-if(_0x1033()){
+await _0x1007(400);
+if(_0x1034()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
 }
-let myPostsBtn=_0x1030();
+let myPostsBtn=_0x1031();
 if(myPostsBtn){
 console.log("[\ubcf5\uadc0] \ub9c8\uc774\ud398\uc774\uc9c0 \uac10\uc9c0\x3a '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubc84\ud2bc \ud074\ub9ad \uc2e4\ud589");
 myPostsBtn.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
@@ -2521,23 +2557,23 @@ await _0x100e(myPostsBtn);
 try{myPostsBtn.click();}catch(e){}
 for(let w=0;w<35;w++){
 await _0x1007(150);
-if(_0x1033()){
+if(_0x1034()){
 console.log("[\ubcf5\uadc0] '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \uc9c4\uc785 \uc131\uacf5 (\ub9c8\uc774\ud398\uc774\uc9c0 \uacbd\uc720)!");
 await _0x1007(350);
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
 }
 }
-if(!_0x1033()){
+if(!_0x1034()){
 console.log("[\ubcf5\uadc0] \ud558\ub2e8 '\ub9c8\uc774\ud398\uc774\uc9c0' \ud0ed \ud074\ub9ad \ud6c4 '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \uc9c4\uc785 \uc2dc\ub3c4\x2e\x2e\x2e");
 const myTabClicked=await _0x1014(8);
 if(myTabClicked){
 for(let w=0;w<25;w++){
 await _0x1007(150);
-myPostsBtn=_0x1030();
+myPostsBtn=_0x1031();
 if(myPostsBtn&&myPostsBtn.offsetHeight>0)break;
 }
 if(myPostsBtn){
@@ -2547,11 +2583,11 @@ await _0x100e(myPostsBtn);
 try{myPostsBtn.click();}catch(e){}
 for(let w=0;w<35;w++){
 await _0x1007(150);
-if(_0x1033()){
+if(_0x1034()){
 console.log("[\ubcf5\uadc0] '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \uc9c4\uc785 \uc131\uacf5 (\ud558\ub2e8 \ub9c8\uc774\ud398\uc774\uc9c0 \ud0ed \uacbd\uc720)!");
 await _0x1007(350);
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
@@ -2559,7 +2595,7 @@ return true;
 }
 }
 }
-if(!_0x1033()){
+if(!_0x1034()){
 console.log("[\ubcf5\uadc0] \ucd5c\uc885 \x66\x61\x6c\x6c\x62\x61\x63\x6b\x3a \ud558\ub2e8 '\ubd80\ud0b9' \ud0ed \ubcf5\uadc0 \ud6c4 \uc7ac\uc2dc\ub3c4\x2e\x2e\x2e");
 await _0x1013(5);
 await _0x1007(350);
@@ -2567,13 +2603,13 @@ const retryRegBtn=_0x1010();
 if(retryRegBtn){
 await _0x1012(retryRegBtn);
 await _0x1007(350);
-const ok=await _0x102f(10);
+const ok=await _0x1030(10);
 if(ok){
 for(let w=0;w<30;w++){
 await _0x1007(150);
-if(_0x1033()){
+if(_0x1034()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
@@ -2581,9 +2617,9 @@ return true;
 }
 }
 }
-return _0x1033();
+return _0x1034();
 }
-function _0x1036(dateStr){
+function _0x1037(dateStr){
 if(!dateStr)return'';
 const clean=dateStr.toString().trim();
 const m=clean.match(/(\d{1,2})(?=[^\d]*$)/);
@@ -2592,7 +2628,7 @@ return parseInt(m[1],10).toString();
 }
 return'';
 }
-function _0x1037(dateStr){
+function _0x1038(dateStr){
 if(!dateStr)return'';
 const clean=dateStr.toString().trim();
 const m=clean.match(/(?:^|[^\d])(\d{1,2})[./\-](\d{1,2})/);
@@ -2601,7 +2637,7 @@ return parseInt(m[1],10).toString();
 }
 return'';
 }
-function _0x1038(dateStr){
+function _0x1039(dateStr){
 if(!dateStr)return'';
 const clean=dateStr.toString().trim();
 const ymdM=clean.match(/(\d{4})[./\-](\d{1,2})[./\-](\d{1,2})/);
@@ -2617,8 +2653,8 @@ return`${year}-${mdM[1].padStart(2,'\x30')}-${mdM[2].padStart(2,'\x30')}`;
 }
 return'';
 }
-function _0x1039(){
-const maxBottom=typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103b():450;
+function _0x103a(){
+const maxBottom=typeof _0x103c==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103c():450;
 const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x71-\x66\x69\x65\x6c\x64\x5f\x5f\x6e\x61\x74\x69\x76\x65, \x2e\x71-\x73\x65\x6c\x65\x63\x74, \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -2657,18 +2693,18 @@ return parseInt(m[1],10).toString();
 }
 }
 }
-const urlDate=typeof _0x1041==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1041():'';
+const urlDate=typeof _0x1042==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1042():'';
 if(urlDate){
-const urlM=typeof _0x1037==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1037(urlDate):'';
+const urlM=typeof _0x1038==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x1038(urlDate):'';
 if(urlM)return urlM;
 }
 return'';
 }
-async function _0x103a(targetMonth){
+async function _0x103b(targetMonth){
 if(!targetMonth)return true;
 const cleanTargetMonth=parseInt(targetMonth,10).toString();
-const maxBottom=typeof _0x103b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103b():450;
-const curMonthCheck=_0x1039();
+const maxBottom=typeof _0x103c==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x103c():450;
+const curMonthCheck=_0x103a();
 if(curMonthCheck===cleanTargetMonth){
 console.log(`[\uc6d4\ubcc0\uacbd] \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc774\ubbf8 \uc77c\uce58\ud568`);
 return true;
@@ -2735,7 +2771,7 @@ await _0x1007(700);
 }else{
 console.warn(`[\uc6d4\ubcc0\uacbd] \ubaa8\ub2ec \ud558\ub2e8 [\uc120\ud0dd] \ud655\uc778 \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
 }
-const afterMonth=_0x1039();
+const afterMonth=_0x103a();
 if(afterMonth===cleanTargetMonth){
 console.log(`[\uc6d4\ubcc0\uacbd] \u2705 \uc0c1\ub2e8 \uc6d4 (${cleanTargetMonth}\uc6d4) \uc804\ud658 \ubc0f \ubaa8\ub2ec \uc801\uc6a9 \uc644\ub8cc!`);
 return true;
@@ -2743,7 +2779,7 @@ return true;
 console.warn(`[\uc6d4\ubcc0\uacbd] UI \uc6d4 \ubcc0\uacbd \ud6c4\uc5d0\ub3c4 \uc0c1\ub2e8 \uc6d4\uc774 ${afterMonth||'\ubbf8\ud655\uc778'}\uc6d4 \uc0c1\ud0dc\uc784`);
 return false;
 }
-function _0x103b(){
+function _0x103c(){
 const cards=Array.from(document.querySelectorAll('\x2e\x71-\x63\x61\x72\x64, \x2e\x70\x72\x6f\x64\x75\x63\x74-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"]'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -2756,7 +2792,7 @@ return Math.max(minCardTop-5,450);
 }
 return 550;
 }
-function _0x103c(){
+function _0x103d(){
 const regionNames=['\uc804\uccb4','\uc778\ucc9c\uacbd\uc778','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub3d9\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc'];
 const candidates=Array.from(document.querySelectorAll('\x2e\x71-\x74\x61\x62, [\x72\x6f\x6c\x65="\x74\x61\x62"], \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
 .filter(el=>{
@@ -2772,7 +2808,7 @@ return Math.min(...tops);
 }
 return 260;
 }
-function _0x103d(el,cleanDay){
+function _0x103e(el,cleanDay){
 if(!el)return false;
 const raw=(el.innerText||el.textContent||'').trim();
 if(!raw)return false;
@@ -2787,7 +2823,7 @@ return true;
 }
 return false;
 }
-function _0x103e(el){
+function _0x103f(el){
 if(!el)return false;
 const nodes=[el,...Array.from(el.querySelectorAll('*'))].filter(Boolean);
 for(const node of nodes){
@@ -2816,10 +2852,10 @@ if(b>120&&b>r+30&&b>g+30)return true;
 }
 return false;
 }
-function _0x103f(cleanDay){
+function _0x1040(cleanDay){
 if(!cleanDay)return null;
 const cleanDayNum=parseInt(cleanDay,10).toString();
-const maxBottom=_0x103b();
+const maxBottom=_0x103c();
 const regionNames=['\uc804\uccb4','\uc778\ucc9c\uacbd\uc778','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub3d9\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc'];
 console.log(`[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub0a0\uc9dc(${cleanDayNum}\uc77c) \ud0d0\uc0c9 \ubc94\uc704: Y=0px ~ ${maxBottom}px`);
 const topElements=Array.from(document.querySelectorAll('*'))
@@ -2832,7 +2868,7 @@ const txt=(el.innerText||el.textContent||'').trim();
 if(regionNames.includes(txt))return false;
 return true;
 });
-const matched=topElements.filter(el=>_0x103d(el,cleanDayNum));
+const matched=topElements.filter(el=>_0x103e(el,cleanDayNum));
 if(matched.length>0){
 matched.sort((a,b)=>(a.offsetWidth*a.offsetHeight)-(b.offsetWidth*b.offsetHeight));
 const leaf=matched[0];
@@ -2876,21 +2912,21 @@ return r.top>=0&&r.bottom<=maxBottom&&c.scrollWidth>c.clientWidth;
 for(const sc of scrollContainers){
 sc.scrollLeft=0;
 for(const el of sc.querySelectorAll('*')){
-if(_0x103d(el,cleanDayNum)){
+if(_0x103e(el,cleanDayNum)){
 return el.closest('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x6f\x6c')||el;
 }
 }
 sc.scrollLeft=sc.scrollWidth;
 for(const el of sc.querySelectorAll('*')){
-if(_0x103d(el,cleanDayNum)){
+if(_0x103e(el,cleanDayNum)){
 return el.closest('\x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x6f\x6c')||el;
 }
 }
 }
 return null;
 }
-function _0x1040(){
-const maxBottom=_0x103b();
+function _0x1041(){
+const maxBottom=_0x103c();
 const regionNames=['\uc804\uccb4','\uc778\ucc9c\uacbd\uc778','\uacbd\uae30\ubd81\ubd80','\uacbd\uae30\ub3d9\ubd80','\uacbd\uae30\ub0a8\ubd80','\ucda9\uccad','\uac15\uc6d0','\uc804\ub77c','\uacbd\uc0c1','\uc81c\uc8fc'];
 const topElements=Array.from(document.querySelectorAll('*'))
 .filter(el=>{
@@ -2903,7 +2939,7 @@ if(regionNames.includes(txt))return false;
 return true;
 });
 for(const el of topElements){
-if(_0x103e(el)){
+if(_0x103f(el)){
 const raw=(el.innerText||el.textContent||'').trim();
 if(raw.includes('\x3a')||raw.includes('\uc6d0')||raw.includes('\ub9cc')||raw.includes('\uc6d4'))continue;
 const nums=raw.match(/\b\d{1,2}\b/g);
@@ -2917,7 +2953,7 @@ return val.toString();
 }
 return null;
 }
-function _0x1041(){
+function _0x1042(){
 try{
 const u=new URL(window.location.href);
 const qDate=u.searchParams.get('\x71\x44\x61\x74\x65');
@@ -2925,7 +2961,7 @@ if(qDate)return qDate;
 }catch(e){}
 return null;
 }
-async function _0x1042(dateEl,attempt=0){
+async function _0x1043(dateEl,attempt=0){
 if(!dateEl)return false;
 try{
 dateEl.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
@@ -2964,23 +3000,23 @@ try{parentCol.click();}catch(e){}
 }
 return true;
 }
-async function _0x1043(targetDateStr,maxAttempts=5){
+async function _0x1044(targetDateStr,maxAttempts=5){
 if(!targetDateStr)return true;
 try{
 window.scrollTo({top:0,left:0,behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
 }catch(e){}
-const targetMonth=_0x1037(targetDateStr);
-const cleanDay=_0x1036(targetDateStr);
-const targetYmd=_0x1038(targetDateStr);
+const targetMonth=_0x1038(targetDateStr);
+const cleanDay=_0x1037(targetDateStr);
+const targetYmd=_0x1039(targetDateStr);
 if(!cleanDay){
 console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ub0a0\uc9dc \ud30c\uc2f1 \uc2e4\ud328 (\uc785\ub825: ${targetDateStr})`);
 return true;
 }
-let curActiveMonth=_0x1039();
-let curActiveDay=_0x1040();
-let curUrlDate=_0x1041();
-let curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
-let curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
+let curActiveMonth=_0x103a();
+let curActiveDay=_0x1041();
+let curUrlDate=_0x1042();
+let curUrlMonth=curUrlDate?_0x1038(curUrlDate):'';
+let curUrlDay=curUrlDate?_0x1037(curUrlDate):'';
 const isUrlMatch=Boolean(curUrlDate&&(!targetMonth||curUrlMonth===targetMonth)&&curUrlDay===cleanDay);
 const isScreenMatch=Boolean((!targetMonth||(curActiveMonth&&curActiveMonth===targetMonth))&&curActiveDay===cleanDay);
 if(isUrlMatch||(!curUrlDay&&isScreenMatch)){
@@ -2990,11 +3026,11 @@ return true;
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc \uc77c\uce58 \uc120\ud0dd \uc2dc\ub3c4 -> \ubaa9\ud45c: [${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c] (\ud604\uc7ac \ud654\uba74: ${curActiveMonth||'?'}\uc6d4 ${curActiveDay||'?'}\uc77c, URL: ${curUrlDate||'\ubbf8\ud655\uc778'})`);
 if(targetMonth&&(curActiveMonth!==targetMonth||(curUrlMonth&&curUrlMonth!==targetMonth))){
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc6d4 \ubd88\uc77c\uce58 \uac10\uc9c0 (\ud604\uc7ac: \ud654\uba74 ${curActiveMonth||'?'}\uc6d4 / URL ${curUrlMonth||'?'}\uc6d4 -> \ubaa9\ud45c: ${targetMonth}\uc6d4) -> \ub4dc\ub86d\ub2e4\uc6b4 \uc804\ud658 \uc2dc\ub3c4...`);
-const switched=await _0x103a(targetMonth);
+const switched=await _0x103b(targetMonth);
 await _0x1007(400);
-curActiveMonth=_0x1039();
-curUrlDate=_0x1041();
-curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
+curActiveMonth=_0x103a();
+curUrlDate=_0x1042();
+curUrlMonth=curUrlDate?_0x1038(curUrlDate):'';
 if(targetYmd&&(curActiveMonth!==targetMonth||(curUrlMonth&&curUrlMonth!==targetMonth))){
 console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udd04 \ub4dc\ub86d\ub2e4\uc6b4 \uc6d4 \ubcc0\uacbd \ubbf8\ubc18\uc601 (\ud604\uc7ac: ${curActiveMonth}\uc6d4) -> URL qDate\ub97c [${targetYmd}]\ub85c \uac15\uc81c \uc804\ud658\ud569\ub2c8\ub2e4...`);
 try{
@@ -3006,36 +3042,36 @@ return true;
 }catch(e){}
 }
 }
-curActiveMonth=_0x1039();
+curActiveMonth=_0x103a();
 if(targetMonth&&curActiveMonth&&curActiveMonth!==targetMonth){
 console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \ud83d\udea8 \uce58\uba85\uc801 \uc704\ud5d8 \uc6d0\ucc9c \ucc28\ub2e8: \ud654\uba74 \uc6d4(${curActiveMonth}\uc6d4)\uc774 \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4)\uacfc \ubd88\uc77c\uce58! \ub0a0\uc9dc \ubc84\ud2bc \ud074\ub9ad\uc744 \ucc28\ub2e8\ud558\uace0 \uc0dd\ub7b5\ud569\ub2c8\ub2e4.`);
 return false;
 }
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
-const dateEl=_0x103f(cleanDay);
+const dateEl=_0x1040(cleanDay);
 if(dateEl){
-const isAlreadyActive=_0x103e(dateEl);
-curActiveMonth=_0x1039();
+const isAlreadyActive=_0x103f(dateEl);
+curActiveMonth=_0x103a();
 const monthMatches=!targetMonth||(curActiveMonth&&curActiveMonth===targetMonth);
 if(isAlreadyActive&&isUrlMatch&&monthMatches){
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \uc774\ubbf8 \ud65c\uc131 \ud074\ub798\uc2a4 \ud655\uc778\ub428 -> \uc644\ub8cc`);
 return true;
 }
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] [${attempt+1}/${maxAttempts}] \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \uc694\uc18c \ubc1c\uacac -> \uc815\ubc00 \ud074\ub9ad \uc2e4\ud589`);
-await _0x1042(dateEl,attempt);
+await _0x1043(dateEl,attempt);
 let verified=false;
 for(let wait=0;wait<20;wait++){
 await _0x1007(100);
-const activeNow=_0x1040();
-const activeMonthNow=_0x1039();
-const urlNow=_0x1041();
-const urlMonthNow=urlNow?_0x1037(urlNow):'';
-const urlDayNow=urlNow?_0x1036(urlNow):'';
+const activeNow=_0x1041();
+const activeMonthNow=_0x103a();
+const urlNow=_0x1042();
+const urlMonthNow=urlNow?_0x1038(urlNow):'';
+const urlDayNow=urlNow?_0x1037(urlNow):'';
 const monthOk=!targetMonth||(activeMonthNow&&activeMonthNow===targetMonth)||(urlMonthNow&&urlMonthNow===targetMonth);
 const urlDayMatch=Boolean(urlDayNow===cleanDay&&(!targetMonth||urlMonthNow===targetMonth));
 const screenDayMatch=Boolean(activeNow===cleanDay&&monthOk);
-if(urlDayMatch||(!urlNow&&screenDayMatch&&(!activeMonthNow||activeMonthNow===targetMonth))){
+if(urlDayMatch||(screenDayMatch&&(!activeMonthNow||activeMonthNow===targetMonth))){
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ud65c\uc131\ud654 \uc131\uacf5 \ud655\uc778\ub428! (\ud654\uba74: ${activeMonthNow}\uc6d4 ${activeNow}\uc77c, URL: ${urlNow})`);
 verified=true;
 break;
@@ -3054,59 +3090,65 @@ break;
 }
 await _0x1007(250);
 }
-const finalActiveDay=_0x1040();
-const finalActiveMonth=_0x1039();
-const finalUrlDate=_0x1041();
-const finalUrlMonth=finalUrlDate?_0x1037(finalUrlDate):'';
-const finalUrlDay=finalUrlDate?_0x1036(finalUrlDate):'';
+const finalActiveDay=_0x1041();
+const finalActiveMonth=_0x103a();
+const finalUrlDate=_0x1042();
+const finalUrlMonth=finalUrlDate?_0x1038(finalUrlDate):'';
+const finalUrlDay=finalUrlDate?_0x1037(finalUrlDate):'';
 if((finalUrlDay===cleanDay&&(!targetMonth||finalUrlMonth===targetMonth))||
-(!finalUrlDay&&finalActiveDay===cleanDay&&(!targetMonth||(finalActiveMonth&&finalActiveMonth===targetMonth)))){
+(finalActiveDay===cleanDay&&(!targetMonth||!finalActiveMonth||finalActiveMonth===targetMonth))){
 console.log(`[\ub0a0\uc9dc\uc120\ud0dd] \u2705 \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${cleanDay}\uc77c) \ucd5c\uc885 \ud655\uc778 \uc131\uacf5`);
 return true;
 }
 console.warn(`[\ub0a0\uc9dc\uc120\ud0dd] \u26a0\ufe0f \uc0c1\ub2e8 \ub0a0\uc9dc (${cleanDay}\uc77c) \ud0ed\uc774 \uc5c6\uac70\ub098 \uc120\ud0dd \ubd88\uac00 (\ud654\uba74: ${finalActiveMonth||'?'}\uc6d4 ${finalActiveDay||'\ubbf8\ud655\uc778'}\uc77c) -> \ub4f1\ub85d\uae00 \uc5c6\uc74c \ucc98\ub9ac`);
 return false;
 }
-async function _0x1044(targetDateStr,maxRetries=3){
+async function _0x1045(targetDateStr,maxRetries=3){
 if(!targetDateStr)return true;
-const targetMonth=_0x1037(targetDateStr);
-const targetDay=_0x1036(targetDateStr);
+const targetMonth=_0x1038(targetDateStr);
+const targetDay=_0x1037(targetDateStr);
 if(!targetDay)return true;
-const hasDateTab=Boolean(_0x103f(targetDay));
+const initScreenMonth=_0x103a();
+if(targetMonth&&initScreenMonth&&initScreenMonth!==targetMonth){
+console.log(`[\ub0a0\uc9dc\ud655\uc778] \ud654\uba74 \uc6d4(${initScreenMonth}\uc6d4) != \ubaa9\ud45c \uc6d4(${targetMonth}\uc6d4) -> \uc6d4 \uc804\ud658 \uba3c\uc800 \uc2e4\ud589...`);
+await _0x103b(targetMonth);
+await _0x1007(400);
+}
+const hasDateTab=Boolean(_0x1040(targetDay));
 if(!hasDateTab){
 console.log(`[\ub0a0\uc9dc\ud655\uc778] \uc0c1\ub2e8 \ub0a0\uc9dc (${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \ud0ed\uc774 \ubaa9\ub85d\uc5d0 \uc5c6\uc74c (\ud574\ub2f9 \ub0a0\uc9dc \ub4f1\ub85d\uae00 0\uac74 \uc0c1\ud0dc)`);
 return false;
 }
 for(let r=0;r<maxRetries;r++){
 if(shouldStopRegistration)return false;
-const curScreenDay=_0x1040();
-const curScreenMonth=_0x1039();
-const curUrlDate=_0x1041();
-const curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
-const curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
+const curScreenDay=_0x1041();
+const curScreenMonth=_0x103a();
+const curUrlDate=_0x1042();
+const curUrlMonth=curUrlDate?_0x1038(curUrlDate):'';
+const curUrlDay=curUrlDate?_0x1037(curUrlDate):'';
 const urlMatches=Boolean(curUrlDay&&curUrlDay===targetDay&&(!targetMonth||curUrlMonth===targetMonth));
-const screenMatches=Boolean(curScreenDay&&curScreenDay===targetDay&&(!targetMonth||curScreenMonth===targetMonth));
-if(urlMatches||(!curUrlDay&&screenMatches)){
+const screenMatches=Boolean(curScreenDay&&curScreenDay===targetDay&&(!targetMonth||!curScreenMonth||curScreenMonth===targetMonth));
+if(screenMatches||urlMatches){
 return true;
 }
 console.log(`[\ub0a0\uc9dc\ud655\uc778] [${r+1}/${maxRetries}] \ud604\uc7ac \ud654\uba74/URL \ub0a0\uc9dc(\ud654\uba74:${curScreenMonth||'?'}\uc6d4 ${curScreenDay||'?'}\uc77c, URL:${curUrlDate||'\ubbf8\ud655\uc778'}) -> \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c)\ub85c \uc804\ud658 \uc2e4\ud589...`);
-await _0x1043(targetDateStr,5);
+await _0x1044(targetDateStr,5);
 await _0x1007(350);
-const postUrlDate=_0x1041();
-const postUrlMonth=postUrlDate?_0x1037(postUrlDate):'';
-const postUrlDay=postUrlDate?_0x1036(postUrlDate):'';
-const postScreenDay=_0x1040();
-const postScreenMonth=_0x1039();
-if((postUrlDay===targetDay&&(!targetMonth||postUrlMonth===targetMonth))||
-(!postUrlDate&&postScreenDay===targetDay&&(!targetMonth||postScreenMonth===targetMonth))){
+const postUrlDate=_0x1042();
+const postUrlMonth=postUrlDate?_0x1038(postUrlDate):'';
+const postUrlDay=postUrlDate?_0x1037(postUrlDate):'';
+const postScreenDay=_0x1041();
+const postScreenMonth=_0x103a();
+if((postScreenDay===targetDay&&(!targetMonth||!postScreenMonth||postScreenMonth===targetMonth))||
+(postUrlDay===targetDay&&(!targetMonth||postUrlMonth===targetMonth))){
 console.log(`[\ub0a0\uc9dc\ud655\uc778] \u2705 \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \uc804\ud658 \ubc0f \ud65c\uc131\ud654 \uc131\uacf5 \ud655\uc778!`);
 return true;
 }
 }
-console.warn(`[\ub0a0\uc9dc\ud655\uc778] \u26a0\ufe0f \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \uc804\ud658 \uc2dc\ub3c4 \uc644\ub8cc (\ud654\uba74:${_0x1039()||'?'}\uc6d4 ${_0x1040()||'\ubbf8\ud655\uc778'}\uc77c, URL:${_0x1041()||'\ubbf8\ud655\uc778'})`);
+console.warn(`[\ub0a0\uc9dc\ud655\uc778] \u26a0\ufe0f \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \uc804\ud658 \uc2dc\ub3c4 \uc644\ub8cc (\ud654\uba74:${_0x103a()||'?'}\uc6d4 ${_0x1041()||'\ubbf8\ud655\uc778'}\uc77c, URL:${_0x1042()||'\ubbf8\ud655\uc778'})`);
 return false;
 }
-async function _0x1045(regionName){
+async function _0x1046(regionName){
 if(!regionName)return true;
 const cleanReg=regionName.trim();
 if(!cleanReg)return true;
@@ -3140,7 +3182,7 @@ console.warn(`[\uac00\uaca9\uc218\uc815] \uc9c0\uc5ed \ud0ed (${cleanReg})\uc744
 }
 return true;
 }
-function _0x1046(){
+function _0x1047(){
 const allBtns=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x64\x69\x76'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
@@ -3184,12 +3226,12 @@ return categoryPills[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e
 }
 return null;
 }
-async function _0x1047(targetType){
+async function _0x1048(targetType){
 if(!targetType||(targetType!=='\uc591\ub3c4'&&targetType!=='\uc870\uc778'&&targetType!=='\uc804\uccb4'))return false;
 console.log(`[\ud544\ud130] \uad6c\ubd84(\uc591\ub3c4/\uc870\uc778/\uc804\uccb4) \ud544\ud130 \ud655\uc778 -> \ubaa9\ud45c: [${targetType}]`);
 let categoryBtn=null;
 for(let attempt=0;attempt<5;attempt++){
-categoryBtn=_0x1046();
+categoryBtn=_0x1047();
 if(categoryBtn)break;
 await _0x1007(150);
 }
@@ -3241,7 +3283,7 @@ return true;
 console.warn(`[\ud544\ud130] \uad6c\ubd84 \ud544\ud130 \ubaa8\ub2ec \ub0b4\uc5d0\uc11c [${targetType}] \uc635\uc158\uc744 \ucc3e\uc9c0 \ubabb\ud568`);
 return false;
 }
-function _0x1048(str){
+function _0x1049(str){
 let s=(str||'').toLowerCase();
 s=s.replace(/골프클럽\s*q|골프클럽\s*큐|안성\s*q|안성\s*큐/gi,'\uace8\ud504\ud074\ub7fd\x71');
 s=s.replace(/(?:비에이비스타|비에이|ba\s*vista)\s*[\(\[]?\s*(?:p(?:9|\d+)?|퍼블릭|대중제)\s*[\)\]]?|(?:비에이비스타|비에이)p(?:9|\d+)?/gi,'\x23\x23\x23\x42\x41\x56\x49\x53\x54\x41\x50\x55\x42\x4c\x49\x43\x23\x23\x23')
@@ -3299,7 +3341,7 @@ s=s.replace(/club\s*d/gi,'\ud074\ub7fd\ub514')
 s=s.replace(/[^a-z0-9가-힣]/g,'');
 return s;
 }
-async function _0x1049(el,customX=null,customY=null){
+async function _0x104a(el,customX=null,customY=null){
 if(!el)return;
 const rect=el.getBoundingClientRect();
 const x=customX!==null?customX:(rect.left+rect.width/2);
@@ -3329,7 +3371,7 @@ el.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
 el.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 try{el.click();}catch(e){}
 }
-function _0x104a(cardEl,rawTxt=''){
+function _0x104b(cardEl,rawTxt=''){
 const text=(rawTxt||cardEl.innerText||cardEl.textContent||'').toLowerCase();
 const badgeElements=Array.from(cardEl.querySelectorAll('\x2e\x71-\x62\x61\x64\x67\x65, [\x63\x6c\x61\x73\x73*="\x62\x61\x64\x67\x65"], \x2e\x71-\x63\x68\x69\x70, \x73\x70\x61\x6e, \x64\x69\x76'))
 .filter(el=>el.offsetHeight>0&&el.children.length<=1);
@@ -3364,10 +3406,10 @@ if(hasTransferBadge&&!hasJoinBadge)return'\uc591\ub3c4';
 if(hasJoinBadge&&!hasTransferBadge)return'\uc870\uc778';
 return isTransfer?'\uc591\ub3c4':(isJoin?'\uc870\uc778':'\x75\x6e\x6b\x6e\x6f\x77\x6e');
 }
-function _0x104b(normCard,normG1,normG2){
+function _0x104c(normCard,normG1,normG2){
 if(!normCard)return 0;
-if(normG1&&_0x101b(normG1,normCard))return 0;
-if(normG2&&_0x101b(normG2,normCard))return 0;
+if(normG1&&_0x101c(normG1,normCard))return 0;
+if(normG2&&_0x101c(normG2,normCard))return 0;
 if(normG1==='\ud074\ub7fd\x37\x32\uc624\uc158'||normG2==='\ud074\ub7fd\x37\x32\uc624\uc158'){
 if(normCard.includes('\ud074\ub7fd\x37\x32\uc624\uc158')||normCard.includes('\uc624\uc158')){
 if(!normCard.includes('\ub808\uc774\ud06c')&&!normCard.includes('\ud074\ub798\uc2dd')&&!normCard.includes('\ub808\ud074')&&!normCard.includes('\ud558\ub298')){
@@ -3433,7 +3475,7 @@ return 80;
 }
 return 0;
 }
-function _0x104c(){
+function _0x104d(){
 const allNodes=Array.from(document.querySelectorAll('\x2e\x71-\x63\x61\x72\x64, [\x63\x6c\x61\x73\x73*="\x71-\x63\x61\x72\x64"], \x2e\x71-\x69\x74\x65\x6d, \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x63\x61\x72\x64"], \x64\x69\x76[\x63\x6c\x61\x73\x73*="\x62\x6f\x72\x64\x65\x72"], \x64\x69\x76'))
 .filter(el=>{
 if(el.offsetHeight<65||el.offsetHeight>550)return false;
@@ -3486,31 +3528,31 @@ return rA.left-rB.left;
 });
 return uniqueCardEls;
 }
-function _0x104d(golfName,rawGolfName,timeStr,targetRoomType='',prevFee='',targetFee=''){
+function _0x104e(golfName,rawGolfName,timeStr,targetRoomType='',prevFee='',targetFee=''){
 const digitsOnlyTime=(timeStr||'').replace(/[^\d]/g,'');
 const hh=digitsOnlyTime.length===4?digitsOnlyTime.substring(0,2):(digitsOnlyTime.length===3?'\x30'+digitsOnlyTime[0]:'');
 const mm=digitsOnlyTime.length>=3?digitsOnlyTime.slice(-2):'';
 const colonTime=(hh&&mm)?`${hh}:${mm}`:'';
 const shortColonTime=(hh&&mm)?`${parseInt(hh,10)}:${mm}`:'';
-const normG1=_0x1048(golfName);
-const normG2=_0x1048(rawGolfName);
+const normG1=_0x1049(golfName);
+const normG2=_0x1049(rawGolfName);
 const cleanPrevNum=(prevFee||'').toString().replace(/[^\d.]/g,'');
 const cleanTargetNum=(targetFee||'').toString().replace(/[^\d.]/g,'');
-const allDivs=_0x104c();
+const allDivs=_0x104d();
 const matched=[];
 for(const el of allDivs){
 const rawTxt=(el.innerText||el.textContent||'').toLowerCase();
-const normCard=_0x1048(rawTxt);
+const normCard=_0x1049(rawTxt);
 const digitsInCard=rawTxt.replace(/[^\d]/g,'');
 const timeMatches=(colonTime&&rawTxt.includes(colonTime))||
 (shortColonTime&&rawTxt.includes(shortColonTime))||
 (digitsOnlyTime&&digitsInCard.includes(digitsOnlyTime));
 if(!timeMatches)continue;
-const cardCourseName=_0x104e(el);
-const normCardCourse=cardCourseName?_0x1048(cardCourseName):'';
-let golfScore=_0x104b(normCard,normG1,normG2);
+const cardCourseName=_0x104f(el);
+const normCardCourse=cardCourseName?_0x1049(cardCourseName):'';
+let golfScore=_0x104c(normCard,normG1,normG2);
 if(normCardCourse&&golfScore<90){
-const courseScore=_0x104b(normCardCourse,normG1,normG2);
+const courseScore=_0x104c(normCardCourse,normG1,normG2);
 if(courseScore>golfScore)golfScore=courseScore;
 }
 if(golfScore<90)continue;
@@ -3518,7 +3560,7 @@ const isTargetTransfer=(targetRoomType||'').includes('\uc591\ub3c4');
 const isTargetJoin=(targetRoomType||'').includes('\uc870\uc778')||
 (targetRoomType||'').includes('\uc120\ud2f0')||
 (targetRoomType||'').includes('\ub300\uae30');
-const cardType=_0x104a(el,rawTxt);
+const cardType=_0x104b(el,rawTxt);
 if(isTargetTransfer){
 if(cardType==='\uc870\uc778')continue;
 }else if(isTargetJoin){
@@ -3547,7 +3589,7 @@ const candidates=leafCards.length>0?leafCards:matched;
 candidates.sort((a,b)=>b.totalScore-a.totalScore);
 return candidates[0].el;
 }
-function _0x104e(cardEl){
+function _0x104f(cardEl){
 if(!cardEl)return'';
 const rawTxt=(cardEl.innerText||cardEl.textContent||'').trim();
 const lines=rawTxt.split('\n').map(l=>l.trim()).filter(Boolean);
@@ -3578,15 +3620,15 @@ return cleaned;
 }
 return'';
 }
-function _0x104f(targetRoomType=''){
-const leafCandidates=_0x104c();
+function _0x1050(targetRoomType=''){
+const leafCandidates=_0x104d();
 const list=[];
 for(const el of leafCandidates){
 const rawTxt=(el.innerText||el.textContent||'').trim();
-const postType=_0x104a(el,rawTxt);
+const postType=_0x104b(el,rawTxt);
 if(targetRoomType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(targetRoomType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
-const courseName=_0x104e(el);
+const courseName=_0x104f(el);
 const teeTime=typeof extractTeeTimeFromResetCard==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?extractTeeTimeFromResetCard(rawTxt):'';
 const timeMatch=rawTxt.match(/(\d{1,2}:\d{2})/);
 const timeStr=teeTime||(timeMatch?timeMatch[1]:'');
@@ -3603,7 +3645,7 @@ rawTxt:rawTxt
 }
 return list;
 }
-async function _0x1050(rawGolf,golfmonName){
+async function _0x1051(rawGolf,golfmonName){
 if(!rawGolf||!golfmonName)return;
 try{
 const res=await new Promise(r=>chrome.storage.local.get(['\x76\x32\x5f\x67\x6f\x6c\x66\x44\x69\x63\x74'],r));
@@ -3626,7 +3668,7 @@ console.log(`[\ub9e4\uce6d\uc0ac\uc804] \uc800\uc7a5 \uc644\ub8cc: '${cleanRaw}'
 console.error("[\ub9e4\uce6d\uc0ac\uc804] \uc800\uc7a5 \uc911 \uc624\ub958\x3a",e);
 }
 }
-function _0x1051({mode,rawGolf,targetGolf,date,time,fee,sizenum,roomType,cardsOnScreen}){
+function _0x1052({mode,rawGolf,targetGolf,date,time,fee,sizenum,roomType,cardsOnScreen}){
 return new Promise((resolve)=>{
 const existingModal=document.getElementById('\x71-\x64\x69\x61\x6c\x6f\x67-\x63\x6f\x75\x72\x73\x65-\x76\x65\x72\x69\x66\x79');
 if(existingModal)existingModal.remove();
@@ -3804,9 +3846,9 @@ const bodyText=(document.body.innerText||'').toLowerCase();
 const timeDigits=(item.time||'').replace(/[^\d]/g,'');
 const timeInputs=Array.from(document.querySelectorAll('\x69\x6e\x70\x75\x74')).map(inp=>(inp.value||'').replace(/[^\d]/g,''));
 const timeInputMatched=Boolean(timeDigits&&timeInputs.some(v=>v===timeDigits||v.includes(timeDigits)));
-const normGolf=_0x1048(item.golf);
-const rawGolf=_0x1048(item.rawGolf);
-const normBody=_0x1048(bodyText);
+const normGolf=_0x1049(item.golf);
+const rawGolf=_0x1049(item.rawGolf);
+const normBody=_0x1049(bodyText);
 const golfMatched=Boolean((normGolf&&normBody.includes(normGolf))||(rawGolf&&normBody.includes(rawGolf)));
 const timeMatched=Boolean(timeInputMatched||(timeDigits&&bodyText.replace(/[^\d]/g,'').includes(timeDigits)));
 return Boolean(golfMatched&&timeMatched);
@@ -4065,11 +4107,11 @@ const hh=timeDigits.length===4?timeDigits.substring(0,2):(timeDigits.length===3?
 const mm=timeDigits.length>=3?timeDigits.slice(-2):'';
 const colonTime=(hh&&mm)?`${hh}:${mm}`:'';
 const shortColonTime=(hh&&mm)?`${parseInt(hh,10)}:${mm}`:'';
-const normGolf=_0x1048(item.golf);
-const rawGolf=_0x1048(item.rawGolf);
+const normGolf=_0x1049(item.golf);
+const rawGolf=_0x1049(item.rawGolf);
 const chainPrefixRegex=/^(골프존|클럽디|한림)/;
 const strippedGolf=(normGolf&&chainPrefixRegex.test(normGolf))?normGolf.replace(chainPrefixRegex,''):'';
-const normBody=_0x1048(bodyText);
+const normBody=_0x1049(bodyText);
 const timeMatch=!timeDigits||
 (colonTime&&bodyText.includes(colonTime))||
 (shortColonTime&&bodyText.includes(shortColonTime))||
@@ -4079,7 +4121,7 @@ const golfMatch=(normGolf&&normBody.includes(normGolf))||
 (rawGolf&&normBody.includes(rawGolf))||
 (strippedGolf&&strippedGolf.length>=2&&normBody.includes(strippedGolf));
 if(!timeMatch||!golfMatch)return false;
-if(_0x101b(item.golf||item.rawGolf,bodyText))return false;
+if(_0x101c(item.golf||item.rawGolf,bodyText))return false;
 const isTargetTransfer=(item.roomType||'').includes('\uc591\ub3c4');
 const isTargetJoin=(item.roomType||'').includes('\uc870\uc778')||
 (item.roomType||'').includes('\uc120\ud2f0')||
@@ -4094,7 +4136,7 @@ return true;
 }
 async function findAndClickPostCardByNameOnly(golfName,roomType='',maxScrolls=8){
 console.log(`[\uac00\uaca9\uc218\uc815] \ud83d\udd0d \uad6c\uc7a5\uba85 \ub2e8\ub3c5 \uce74\ub4dc \ud0d0\uc0c9 (\uc2dc\uac04 \ubb34\uc2dc): ${golfName} [\ud0c0\uc785: ${roomType||'\ubbf8\uc9c0\uc815'}]...`);
-const normTarget=_0x1048(golfName);
+const normTarget=_0x1049(golfName);
 if(!normTarget)return false;
 window.scrollTo(0,0);
 document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f\x5f\x63\x6f\x6e\x74\x61\x69\x6e\x65\x72, \x2e\x73\x63\x72\x6f\x6c\x6c, \x2e\x71-\x70\x61\x67\x65, \x62\x6f\x64\x79').forEach(el=>{
@@ -4103,16 +4145,16 @@ el.scrollTop=0;
 await _0x1007(250);
 for(let scroll=0;scroll<maxScrolls;scroll++){
 if(shouldStopRegistration)return false;
-const allDivs=_0x104c();
+const allDivs=_0x104d();
 const matched=[];
 for(const el of allDivs){
 const rawTxt=(el.innerText||el.textContent||'').toLowerCase();
-const normCard=_0x1048(rawTxt);
-const golfScore=_0x104b(normCard,normTarget,'');
+const normCard=_0x1049(rawTxt);
+const golfScore=_0x104c(normCard,normTarget,'');
 if(golfScore<90)continue;
 const isTargetTransfer=(roomType||'').includes('\uc591\ub3c4');
 const isTargetJoin=(roomType||'').includes('\uc870\uc778')||(roomType||'').includes('\uc120\ud2f0')||(roomType||'').includes('\ub300\uae30');
-const cardType=_0x104a(el,rawTxt);
+const cardType=_0x104b(el,rawTxt);
 if(isTargetTransfer&&cardType==='\uc870\uc778')continue;
 if(isTargetJoin&&cardType==='\uc591\ub3c4')continue;
 let roomScore=0;
@@ -4162,7 +4204,7 @@ el.scrollTop=0;
 await _0x1007(250);
 for(let scroll=0;scroll<maxScrolls;scroll++){
 if(shouldStopRegistration)return false;
-const foundCard=_0x104d(golfName,rawGolfName,timeStr,roomType,prevFee,targetFee);
+const foundCard=_0x104e(golfName,rawGolfName,timeStr,roomType,prevFee,targetFee);
 if(foundCard){
 console.log(`[\uac00\uaca9\uc218\uc815] \uc77c\uce58\ud558\ub294 \ub4f1\ub85d \ud0c0\uc784 \uce74\ub4dc \ubc1c\uacac! [${golfName} ${timeStr}]`);
 const ok=await clickPostCardReliably(foundCard);
@@ -4225,7 +4267,7 @@ return true;
 const centerPointEl=document.elementFromPoint(cx,cy);
 if(centerPointEl){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 2\ucc28 \uc911\uc559 \uc88c\ud45c(${Math.round(cx)}, ${Math.round(cy)}) \ud074\ub9ad: <${centerPointEl.tagName}>`);
-await _0x1049(centerPointEl,cx,cy);
+await _0x104a(centerPointEl,cx,cy);
 try{centerPointEl.click();}catch(e){}
 }
 for(let w=0;w<18;w++){
@@ -4240,7 +4282,7 @@ const topCy=rect.top+Math.min(35,rect.height*0.3);
 const topPointEl=document.elementFromPoint(cx,topCy);
 if(topPointEl){
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 3\ucc28 \uc0c1\ub2e8 \ud14d\uc2a4\ud2b8 \uc88c\ud45c(${Math.round(cx)}, ${Math.round(topCy)}) \ud074\ub9ad: <${topPointEl.tagName}>`);
-await _0x1049(topPointEl,cx,topCy);
+await _0x104a(topPointEl,cx,topCy);
 try{topPointEl.click();}catch(e){}
 }
 for(let w=0;w<20;w++){
@@ -4252,7 +4294,7 @@ return true;
 }
 }
 console.log(`[\uce74\ub4dc\ud074\ub9ad] 4\ucc28 \uce74\ub4dc \uc804\uccb4 \uc2dc\ubbac\ub808\uc774\uc158`);
-await _0x1049(actualCard,cx,cy);
+await _0x104a(actualCard,cx,cy);
 try{actualCard.click();}catch(e){}
 for(let w=0;w<20;w++){
 await _0x1007(100);
@@ -4293,7 +4335,7 @@ targetBtn.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \
 const rect=targetBtn.getBoundingClientRect();
 const cx=rect.left+rect.width/2;
 const cy=rect.top+rect.height/2;
-await _0x1049(targetBtn,cx,cy);
+await _0x104a(targetBtn,cx,cy);
 try{targetBtn.click();}catch(e){}
 const innerIcon=targetBtn.querySelector('\x69, \x2e\x71-\x69\x63\x6f\x6e');
 if(innerIcon){
@@ -4322,7 +4364,7 @@ if(editTarget){
 console.log("[\uac00\uaca9\uc218\uc815] \ud31d\uc5c5 \uba54\ub274 \ub0b4 '\uc218\uc815' \ud56d\ubaa9 \ubc1c\uacac! \ud074\ub9ad\ud569\ub2c8\ub2e4\x2e");
 editTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1007(100);
-await _0x1049(editTarget);
+await _0x104a(editTarget);
 try{editTarget.click();}catch(e){}
 for(let w=0;w<25;w++){
 await _0x1007(160);
@@ -4340,7 +4382,7 @@ await _0x1007(250);
 console.error("[\uac00\uaca9\uc218\uc815] \uc6b0\uce21 \uc0c1\ub2e8 \ub354\ubcf4\uae30(\u22ee) -> '\uc218\uc815' \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328");
 return false;
 }
-function _0x1024(el){
+function _0x1025(el){
 if(!el)return false;
 const targets=[
 el,
@@ -4400,7 +4442,7 @@ return true;
 }
 return false;
 }
-function _0x1023(candidate){
+function _0x1024(candidate){
 if(!candidate)return null;
 const closestInteractive=candidate.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], [\x72\x6f\x6c\x65="\x63\x68\x65\x63\x6b\x62\x6f\x78"], [\x72\x6f\x6c\x65="\x72\x61\x64\x69\x6f"]');
 if(closestInteractive)return closestInteractive;
@@ -4410,15 +4452,15 @@ const closestLabel=candidate.closest('\x6c\x61\x62\x65\x6c');
 if(closestLabel)return closestLabel;
 return candidate;
 }
-async function _0x1025(rawTarget,labelForLog=''){
-const clickTarget=_0x1023(rawTarget);
+async function _0x1026(rawTarget,labelForLog=''){
+const clickTarget=_0x1024(rawTarget);
 if(!clickTarget)return false;
 clickTarget.scrollIntoView({behavior:'\x69\x6e\x73\x74\x61\x6e\x74',block:'\x63\x65\x6e\x74\x65\x72'});
 clickTarget.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 clickTarget.style.setProperty('\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77','\x30 \x30 \x31\x30\x70\x78 \x23\x30\x30\x65\x36\x37\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1007(60);
 for(let tryIdx=0;tryIdx<3;tryIdx++){
-if(_0x1024(clickTarget)){
+if(_0x1025(clickTarget)){
 console.log(`[\uc635\uc158\uc120\ud0dd] [${labelForLog}] \ud65c\uc131 \uc0c1\ud0dc \ud655\uc778\ub428 (\uc2dc\ub3c4 ${tryIdx})`);
 return true;
 }
@@ -4446,7 +4488,7 @@ try{
 if(typeof clickTarget.click==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')clickTarget.click();
 }catch(e){}
 await _0x1007(90);
-if(!_0x1024(clickTarget)&&topEl!==clickTarget){
+if(!_0x1025(clickTarget)&&topEl!==clickTarget){
 try{
 if(typeof topEl.click==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')topEl.click();
 }catch(e){}
@@ -4456,7 +4498,7 @@ await _0x1007(90);
 console.log(`[\uc635\uc158\uc120\ud0dd] [${labelForLog}] 1\ucc28 \ud074\ub9ad \ud6c4 \ubbf8\ud65c\uc131 -> 2\ucc28 \uc815\ubc00 \ud074\ub9ad \uc7ac\uc2dc\ub3c4...`);
 try{innerBtn.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',eventOpts));}catch(e){}
 await _0x1007(80);
-if(!_0x1024(clickTarget)){
+if(!_0x1025(clickTarget)){
 await _0x100e(topEl,cx,cy);
 await _0x1007(90);
 }
@@ -4467,10 +4509,10 @@ const subClickables=Array.from(clickTarget.querySelectorAll('\x62\x75\x74\x74\x6
 for(const sub of subClickables){
 try{sub.click();}catch(e){}
 await _0x1007(60);
-if(_0x1024(clickTarget))break;
+if(_0x1025(clickTarget))break;
 }
 }
-if(_0x1024(clickTarget)){
+if(_0x1025(clickTarget)){
 console.log(`[\uc635\uc158\uc120\ud0dd] [${labelForLog}] \ud074\ub9ad \ubc0f \ud65c\uc131\ud654 \uc644\ub8cc! (\uc2dc\ub3c4 ${tryIdx+1}\ud68c)`);
 return true;
 }
@@ -4502,7 +4544,7 @@ return txt===targetText||txt===`${pNum}\uc778`;
 });
 if(candidates.length>0){
 const btnMatch=candidates.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
-found=_0x1023(btnMatch||candidates[0]);
+found=_0x1024(btnMatch||candidates[0]);
 break;
 }
 container=container.parentElement;
@@ -4517,7 +4559,7 @@ return txt===targetText||txt===`${pNum}\uc778`;
 });
 if(allButtons.length>0){
 const btnMatch=allButtons.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
-found=_0x1023(btnMatch||allButtons[0]);
+found=_0x1024(btnMatch||allButtons[0]);
 }
 }
 if(!found){
@@ -4528,7 +4570,7 @@ const txt=node.textContent.trim().replace(/\s+/g,'');
 if(txt===targetText||txt===`${pNum}\uc778`){
 const p=node.parentElement;
 if(p&&p.offsetHeight>0&&!['\x53\x43\x52\x49\x50\x54','\x53\x54\x59\x4c\x45'].includes(p.tagName)){
-found=_0x1023(p);
+found=_0x1024(p);
 break;
 }
 }
@@ -4553,12 +4595,12 @@ break;
 }
 }
 }
-if(_0x1024(clickTarget)){
+if(_0x1025(clickTarget)){
 console.log(`[\uac00\uaca9\uc218\uc815] \uc778\uc6d0 [${targetText}] \uc774\ubbf8 \uc120\ud0dd\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.`);
 return true;
 }
 console.log(`[\uac00\uaca9\uc218\uc815] \uc778\uc6d0 [${targetText}] \ud074\ub9ad\ud558\uc5ec \ubcc0\uacbd\ud569\ub2c8\ub2e4.`);
-await _0x1025(clickTarget,`\uc778\uc6d0:${targetText}`);
+await _0x1026(clickTarget,`\uc778\uc6d0:${targetText}`);
 return true;
 }
 async function updateJoinConditionInEditForm(targetCondition='\ubb34\uad00'){
@@ -4598,7 +4640,7 @@ return matchWords.some(w=>txt===w);
 if(candidates.length>0){
 const directBtn=candidates.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
 const bestCandidate=directBtn||candidates.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length)[0];
-targetBtn=_0x1023(bestCandidate);
+targetBtn=_0x1024(bestCandidate);
 break;
 }
 container=container.parentElement;
@@ -4613,7 +4655,7 @@ return matchWords.some(w=>txt===w);
 });
 if(allCandidates.length>0){
 const directBtn=allCandidates.find(el=>el.matches('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]')||el.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x2e\x71-\x63\x68\x65\x63\x6b\x62\x6f\x78, \x2e\x71-\x72\x61\x64\x69\x6f, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"]'));
-targetBtn=_0x1023(directBtn||allCandidates[0]);
+targetBtn=_0x1024(directBtn||allCandidates[0]);
 }
 }
 if(!targetBtn){
@@ -4624,20 +4666,20 @@ const txt=node.textContent.trim().replace(/\s+/g,'');
 if(matchWords.some(w=>txt===w)){
 const p=node.parentElement;
 if(p&&p.offsetHeight>0&&!['\x53\x43\x52\x49\x50\x54','\x53\x54\x59\x4c\x45'].includes(p.tagName)){
-targetBtn=_0x1023(p);
+targetBtn=_0x1024(p);
 break;
 }
 }
 }
 }
 if(targetBtn){
-const clickTarget=_0x1023(targetBtn);
-if(_0x1024(clickTarget)){
+const clickTarget=_0x1024(targetBtn);
+if(_0x1025(clickTarget)){
 console.log(`[\uc218\uc815] \uc870\uc778 \uc870\uac74 [${cleanTarget}] \uc774\ubbf8 \uc120\ud0dd\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.`);
 return true;
 }
 console.log(`[\uc218\uc815] \uc870\uc778 \uc870\uac74 [${cleanTarget}] \ud074\ub9ad \uc120\ud0dd!`);
-await _0x1025(clickTarget,`\uc870\uc778\uc870\uac74:${cleanTarget}`);
+await _0x1026(clickTarget,`\uc870\uc778\uc870\uac74:${cleanTarget}`);
 await _0x1007(200);
 return true;
 }else{
@@ -4791,11 +4833,11 @@ console.log(`[\uac00\uaca9\uc218\uc815] \ub2ec\ub77c\uc9c4 \uadf8\ub9b0\ud53c(${
 await _0x1007(250);
 }
 if(item.cady){
-await _0x1026(item.cady,true);
+await _0x1027(item.cady,true);
 await _0x1007(200);
 }
 if(item.isMeal!==undefined){
-await _0x1022(Boolean(item.isMeal));
+await _0x1023(Boolean(item.isMeal));
 await _0x1007(150);
 }
 const targetPeopleMatch=(item.sizenum||'').toString().match(/\d+/);
@@ -4825,7 +4867,7 @@ return false;
 console.log(`[\uac00\uaca9\uc218\uc815] live '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ubc1c\uacac (${liveSubmitBtn.tagName}, ${liveSubmitBtn.textContent.trim()}) -> \ub2e8 1\ud68c \ud074\ub9ad \uc2e4\ud589`);
 await clickSubmitButtonReliably(liveSubmitBtn,item);
 await _0x1007(500);
-await _0x102d(25);
+await _0x102e(25);
 await _0x1007(400);
 await _0x1007(350);
 if(isEditPage()||isDetailPage()){
@@ -4886,14 +4928,14 @@ return true;
 async function navigateBackToList(filterType=''){
 console.log("[\uac00\uaca9\uc218\uc815] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \ud654\uba74\uc73c\ub85c \uc548\uc804 \ubcf5\uadc0 \ud655\uc778\x2e\x2e\x2e");
 resetEditSubmitLock();
-if(_0x1033()){
+if(_0x1034()){
 console.log("[\uac00\uaca9\uc218\uc815] \uc774\ubbf8 '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \ud654\uba74\uc785\ub2c8\ub2e4\x2e (\uc989\uc2dc \uc9c4\ud589)");
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
-const myPostsBtn=_0x1030();
+const myPostsBtn=_0x1031();
 if(myPostsBtn){
 console.log("[\uac00\uaca9\uc218\uc815] \ub9c8\uc774\ud398\uc774\uc9c0 \uac10\uc9c0 -> '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \uc989\uc2dc \ud074\ub9ad");
 myPostsBtn.scrollIntoView({block:'\x6e\x65\x61\x72\x65\x73\x74',inline:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
@@ -4903,28 +4945,28 @@ await _0x100e(myPostsBtn);
 try{myPostsBtn.click();}catch(e){}
 for(let w=0;w<35;w++){
 await _0x1007(150);
-if(_0x1033()){
+if(_0x1034()){
 console.log("[\uac00\uaca9\uc218\uc815] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \uc9c4\uc785 \uc131\uacf5 (\ub9c8\uc774\ud398\uc774\uc9c0 \uacbd\uc720)!");
 await _0x1007(350);
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
-await _0x1047(filterType);
+await _0x1048(filterType);
 }
 return true;
 }
 }
 }
-if(isEditPage()||isDetailPage()){
-console.log("[\uac00\uaca9\uc218\uc815] \uc218\uc815\x2f\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \x31\ud68c \uc2e4\ud589");
+for(let backStep=0;backStep<2&&(isEditPage()||isDetailPage());backStep++){
+console.log(`[\uac00\uaca9\uc218\uc815] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/2)`);
 await executeSingleBack();
-await _0x1007(350);
-if(_0x1033()){
-if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778')){
-await _0x1047(filterType);
+await _0x1007(400);
+if(_0x1034()){
+if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
+await _0x1048(filterType);
 }
 return true;
 }
 }
-return await _0x1035(filterType);
+return await _0x1036(filterType);
 }
 async function executeBatchPriceUpdate(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',filterType='',confirmMismatch=true,customMemo=''){
 if(!items||items.length===0)return;
@@ -5047,14 +5089,15 @@ await _0x1007(200);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 if(item.cady){
 console.log(`[\uad50\uccb4\uc218\uc815] \uce90\ub514 \uc635\uc158 \ud655\uc778 \ubc0f \ubcc0\uacbd: [${item.cady}]`);
-await _0x1026(item.cady,true);
+await _0x1027(item.cady,true);
 await _0x1007(200);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 if(item.isMeal!==undefined){
-await _0x1022(Boolean(item.isMeal));
+await _0x1023(Boolean(item.isMeal));
 await _0x1007(150);
 }
+if(item.roomType!=='\uc591\ub3c4'){
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 const targetPeopleMatch=(item.sizenum||'').toString().match(/\d+/);
 const targetPeopleNum=targetPeopleMatch?targetPeopleMatch[0]:'';
@@ -5074,6 +5117,7 @@ console.log(`[\uad50\uccb4\uc218\uc815] \ubaa9\ud45c \uc778\uc6d0 \ubcc0\uacbd: 
 await updatePeopleCountInEditForm(targetPeopleNum);
 await _0x1007(250);
 }
+}
 if(shouldStopRegistration||window.shouldStopRegistration){
 console.warn("[\uad50\uccb4\uc218\uc815] \uc989\uc2dc \uc911\ub2e8 \uac10\uc9c0 -> '\uc218\uc815\ud558\uae30' \ud074\ub9ad \ucde8\uc18c");
 return false;
@@ -5087,7 +5131,7 @@ if(shouldStopRegistration||window.shouldStopRegistration)return false;
 await clickSubmitButtonReliably(liveSubmitBtn,item);
 await _0x1007(500);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
-await _0x102d(25);
+await _0x102e(25);
 await _0x1007(400);
 if(isEditPage()||isDetailPage()){
 await executeSingleBack();
@@ -5097,18 +5141,18 @@ console.log("[\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc0f \ud31d
 return true;
 }
 function findExistingCardsForCourse(golfName,rawGolfName,targetRoomType='',targetDate=''){
-const normG1=_0x1048(golfName);
-const normG2=_0x1048(rawGolfName);
-const cardCandidates=_0x104c();
+const normG1=_0x1049(golfName);
+const normG2=_0x1049(rawGolfName);
+const cardCandidates=_0x104d();
 if(normG1||normG2){
 const textNodes=Array.from(document.querySelectorAll('\x64\x69\x76, \x73\x70\x61\x6e, \x70, \x61, \x73\x74\x72\x6f\x6e\x67, \x62'));
 for(const tn of textNodes){
 if(tn.children.length>6)continue;
 const tTxt=(tn.innerText||tn.textContent||'').trim().toLowerCase();
-const norm=_0x1048(tTxt);
+const norm=_0x1049(tTxt);
 if(!norm)continue;
-if(normG1&&_0x101b(normG1,norm))continue;
-if(normG2&&_0x101b(normG2,norm))continue;
+if(normG1&&_0x101c(normG1,norm))continue;
+if(normG2&&_0x101c(normG2,norm))continue;
 const isMatch=(normG1&&(norm===normG1||norm.includes(normG1)||(normG1.includes(norm)&&norm.length>=2)))||
 (normG2&&(norm===normG2||norm.includes(normG2)||(normG2.includes(norm)&&norm.length>=2)));
 if(isMatch){
@@ -5134,22 +5178,22 @@ cardCandidates.push(foundBox);
 }
 }
 }
-const targetDay=targetDate?_0x1036(targetDate):'';
-const targetMonth=targetDate?_0x1037(targetDate):'';
-const curScreenDay=(typeof _0x1040==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1040():'';
+const targetDay=targetDate?_0x1037(targetDate):'';
+const targetMonth=targetDate?_0x1038(targetDate):'';
+const curScreenDay=(typeof _0x1041==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x1041():'';
 const matched=[];
 for(const el of cardCandidates){
 const rawTxt=(el.innerText||el.textContent||'').toLowerCase();
 if((rawTxt.match(/\d[\d,]*\s*원/g)||[]).length>1)continue;
 if((rawTxt.match(/진행중|마감/g)||[]).length>1)continue;
-const normCard=_0x1048(rawTxt);
-let golfScore=_0x104b(normCard,normG1,normG2);
+const normCard=_0x1049(rawTxt);
+let golfScore=_0x104c(normCard,normG1,normG2);
 if(golfScore===0){
-const cardCourseName=_0x104e(el);
+const cardCourseName=_0x104f(el);
 if(cardCourseName){
-const normCardCourse=_0x1048(cardCourseName);
+const normCardCourse=_0x1049(cardCourseName);
 if(normCardCourse){
-golfScore=_0x104b(normCardCourse,normG1,normG2);
+golfScore=_0x104c(normCardCourse,normG1,normG2);
 }
 }
 }
@@ -5247,7 +5291,7 @@ const clickableEl=(parentCard&&((parentCard.innerText||'').match(/\d[\d,]*\s*원
 const rect=clickableEl.getBoundingClientRect();
 const topY=rect.top;
 const leftX=rect.left;
-const postType=(typeof _0x104a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x104a(clickableEl,rawTxt):'\x75\x6e\x6b\x6e\x6f\x77\x6e';
+const postType=(typeof _0x104b==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')?_0x104b(clickableEl,rawTxt):'\x75\x6e\x6b\x6e\x6f\x77\x6e';
 matched.push({el:clickableEl,golfScore,timeMinutes,timeStr,timeDigits,feeManVal,feeStr,regStamp,peopleStr,topY,leftX,rawTxt,postId:cardPostId,postType});
 }
 if(matched.length===0){
@@ -5285,13 +5329,13 @@ async function registerSingleNewPost(item,customMemo='',stepPreset='\x68\x75\x6d
 const isTransfer=(modeOverride==='\x74\x72\x61\x6e\x73\x66\x65\x72'||modeOverride==='\uc591\ub3c4'||item.roomType==='\uc591\ub3c4');
 const modeLabel=isTransfer?'\uc591\ub3c4':'\uc870\uc778';
 console.log(`[\uc2e0\uaddc\ub4f1\ub85d] ${item.golf} (${item.date} ${item.time}) [${modeLabel}] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed'\uc5d0\uc11c \ubc14\ub85c \uc2e0\uaddc \ub4f1\ub85d \uc2dc\uc791...`);
-if((isEditPage()||isDetailPage()||!_0x1033())&&!_0x1011()){
+if((isEditPage()||isDetailPage()||!_0x1034())&&!_0x1011()){
 console.log("[\uc2e0\uaddc\ub4f1\ub85d] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ud654\uba74 \ud655\uc778 \ubc0f \ubcf5\uadc0 \uc9c4\ud589\x2e\x2e\x2e");
-await _0x1035(modeLabel);
+await _0x1036(modeLabel);
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 }
 if(shouldStopRegistration)return false;
-const regMenuClicked=await _0x1016(10);
+const regMenuClicked=await _0x1017(10);
 if(!regMenuClicked&&!document.querySelector('\x2e\x71-\x64\x69\x61\x6c\x6f\x67\x3a\x6e\x6f\x74(\x2e\x68\x69\x64\x64\x65\x6e), [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"]')){
 console.warn("[\uc2e0\uaddc\ub4f1\ub85d] \ud558\ub2e8 [\ub4f1\ub85d] \ubc84\ud2bc \ud638\ucd9c \uc2e4\ud328");
 return false;
@@ -5299,91 +5343,93 @@ return false;
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)return false;
-if(isTransfer){
-await _0x1018();
-}else{
-await _0x1017();
+let typeMenuClicked=isTransfer?await _0x1019(8):await _0x1018(8);
+if(!typeMenuClicked&&!shouldStopRegistration){
+console.warn(`[\uc2e0\uaddc\ub4f1\ub85d] '${modeLabel} \ub4f1\ub85d' \uba54\ub274 \ubbf8\ub178\ucd9c -> [\ub4f1\ub85d] \ubc84\ud2bc \uc7ac\ud638\ucd9c \ud6c4 \uc7ac\uc2dc\ub3c4...`);
+await _0x1017(8);
+await _0x1007(300);
+typeMenuClicked=isTransfer?await _0x1019(10):await _0x1018(10);
 }
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 if(item.region&&item.region!=='\uc804\uccb4'){
-await _0x1019(item.region);
+await _0x101a(item.region);
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 }
-await _0x101a();
+await _0x101b();
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x62\x72\x6f\x77\x73\x65\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x101e(item.golf);
+await _0x101f(item.golf);
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x62\x72\x6f\x77\x73\x65\x5f\x64\x72\x6f\x70\x64\x6f\x77\x6e',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x101f(item.date);
+await _0x1020(item.date);
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x63\x61\x6c\x65\x6e\x64\x61\x72',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x1020(item.time);
+await _0x1021(item.time);
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x1021(item.fee,item.isPrepaid);
+await _0x1022(item.fee,item.isPrepaid);
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)return false;
 if(item.isMeal){
-const mealClicked=await _0x1022(true);
+const mealClicked=await _0x1023(true);
 if(shouldStopRegistration)return false;
 if(mealClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 }
 }
-const cadyClicked=await _0x1026(item.cady);
+const cadyClicked=await _0x1027(item.cady);
 if(shouldStopRegistration)return false;
 if(cadyClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 }
 if(!isTransfer){
-const conditionClicked=await _0x1027(item.condition||'\ubb34\uad00');
+const conditionClicked=await _0x1028(item.condition||'\ubb34\uad00');
 if(shouldStopRegistration)return false;
 if(conditionClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 }
-const peopleClicked=await _0x1028(item.sizenum||'\x34\uc778',2);
+const peopleClicked=await _0x1029(item.sizenum||'\x34\uc778',2);
 if(shouldStopRegistration)return false;
 if(peopleClicked){
 await _0x1007(_0x100b('\x71\x75\x69\x63\x6b\x5f\x63\x6c\x69\x63\x6b',stepPreset));
 if(shouldStopRegistration)return false;
 }
 }
-await _0x1029(item.memo||customMemo||'');
+await _0x102a(item.memo||customMemo||'');
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x102a();
+await _0x102b();
 if(shouldStopRegistration)return false;
 await _0x1007(_0x100b('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)return false;
-await _0x102d(15);
+await _0x102e(15);
 await _0x1007(500);
 const regBtnStillExists=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
 .some(el=>el.textContent.trim()==='\ub4f1\ub85d\ud558\uae30'&&el.offsetHeight>0);
 if(regBtnStillExists){
 console.warn(`[\uc2e0\uaddc\ub4f1\ub85d] \ub4f1\ub85d \ud3fc\uc774 \ub2eb\ud788\uc9c0 \uc54a\uace0 \uc720\uc9c0\ub428 -> \uc11c\ubc84 \ub4f1\ub85d \uac70\ubd80(\ub3d9\uc77c \uad6c\uc7a5 1\uc77c 2\uac74 \uc81c\ud55c \ub4f1) \uac00\ub2a5\uc131 \uac10\uc9c0`);
-await _0x102d(5);
+await _0x102e(5);
 await _0x1007(300);
 await executeSingleBack();
 await _0x1007(500);
 return false;
 }
-if(!_0x1033()&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
+if(!_0x1034()&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
 console.log("[\uc2e0\uaddc\ub4f1\ub85d] \ub4f1\ub85d \uc644\ub8cc \ud6c4 \uc0c1\uc138\x2f\uc791\uc131 \ud654\uba74 \uac10\uc9c0 -> \ubaa9\ub85d \ubcf5\uadc0\ub97c \uc704\ud574 \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589");
 await executeSingleBack();
 await _0x1007(450);
@@ -5398,6 +5444,7 @@ isRegistrationRunning=true;
 isPostReplacementRunning=true;
 _priceUpdateRunning=isPriceUpdateMode;
 shouldStopRegistration=false;
+window.shouldStopRegistration=false;
 _replacedCardsSet=new WeakSet();
 window._replacedCardsSet=_replacedCardsSet;
 _submittedButtonsSet=new WeakSet();
@@ -5483,83 +5530,58 @@ if(isEditPage()||isDetailPage()){
 await navigateBackToList(groupCategory);
 await _0x1007(350);
 }
-await _0x1035(groupCategory);
+await _0x1036(groupCategory);
 if(shouldStopRegistration)break;
-await _0x1047(groupCategory);
+await _0x1048(groupCategory);
 if(shouldStopRegistration)break;
 if(group.region&&group.region!=='\uc804\uccb4'){
-await _0x1045(group.region);
+await _0x1046(group.region);
 await _0x1007(250);
 }else{
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 await _0x1007(250);
 }
 if(shouldStopRegistration)break;
 if(group.date){
-await _0x1044(group.date);
+await _0x1045(group.date);
 await _0x1007(300);
 }
 if(shouldStopRegistration)break;
-const targetMonth=_0x1037(group.date);
-const targetDayNum=_0x1036(group.date);
-const curUrlDate=_0x1041();
-const curUrlMonth=curUrlDate?_0x1037(curUrlDate):'';
-const curUrlDay=curUrlDate?_0x1036(curUrlDate):'';
-let curScreenDay=_0x1040();
-let curScreenMonth=_0x1039();
+const targetMonth=_0x1038(group.date);
+const targetDayNum=_0x1037(group.date);
+const curUrlDate=_0x1042();
+const curUrlMonth=curUrlDate?_0x1038(curUrlDate):'';
+const curUrlDay=curUrlDate?_0x1037(curUrlDate):'';
+let curScreenDay=_0x1041();
+let curScreenMonth=_0x103a();
 const isUrlMatched=Boolean(curUrlDay&&targetDayNum&&curUrlDay===targetDayNum&&(!targetMonth||curUrlMonth===targetMonth));
 const isMonthMismatch=Boolean(targetMonth&&((curUrlMonth&&curUrlMonth!==targetMonth)||(curScreenMonth&&curScreenMonth!==targetMonth)));
 const isDayMismatch=Boolean(targetDayNum&&((curUrlDay&&curUrlDay!==targetDayNum)||(curScreenDay&&curScreenDay!==targetDayNum)));
 if(!isUrlMatched&&(isMonthMismatch||isDayMismatch)){
 console.warn(`[${logTag}] \u26a0\ufe0f \ud604\uc7ac \ud654\uba74/URL \ub0a0\uc9dc(\ud654\uba74:${curScreenMonth||'?'}\uc6d4 ${curScreenDay||'?'}\uc77c, URL:${curUrlMonth||'?'}\uc6d4 ${curUrlDay||'?'}\uc77c)\uac00 \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDayNum}\uc77c)\uc640 \ubd88\uc77c\uce58! \ub0a0\uc9dc \uc7ac\uc120\ud0dd \uae34\uae09 \uc2e4\ud589...`);
-await _0x1044(group.date,3);
+await _0x1045(group.date,3);
 await _0x1007(350);
 }
-const finalUrlDate=_0x1041();
-const finalUrlMonth=finalUrlDate?_0x1037(finalUrlDate):'';
-const finalUrlDay=finalUrlDate?_0x1036(finalUrlDate):'';
-const finalScreenDay=_0x1040();
-const finalScreenMonth=_0x1039();
+const finalUrlDate=_0x1042();
+const finalUrlMonth=finalUrlDate?_0x1038(finalUrlDate):'';
+const finalUrlDay=finalUrlDate?_0x1037(finalUrlDate):'';
+const finalScreenDay=_0x1041();
+const finalScreenMonth=_0x103a();
+const isFinalScreenMatched=Boolean(finalScreenDay&&finalScreenDay===targetDayNum&&(!targetMonth||!finalScreenMonth||finalScreenMonth===targetMonth));
+const isFinalUrlMatched=Boolean(finalUrlDay&&finalUrlDay===targetDayNum&&(!targetMonth||!finalUrlMonth||finalUrlMonth===targetMonth));
 let isWrongDay=false;
 if(targetDayNum){
-if(finalUrlDay){
-isWrongDay=(finalUrlDay!==targetDayNum)||(targetMonth&&finalUrlMonth&&finalUrlMonth!==targetMonth);
-}else if(finalScreenDay){
-isWrongDay=(finalScreenDay!==targetDayNum)||(targetMonth&&finalScreenMonth&&finalScreenMonth!==targetMonth);
+if(finalScreenDay){
+isWrongDay=!isFinalScreenMatched;
+}else if(finalUrlDay){
+isWrongDay=!isFinalUrlMatched;
 }
 }
 let isTabMissingForDate=false;
 if(isWrongDay){
-const dateTabEl=_0x103f(targetDayNum);
-if(!dateTabEl){
-console.log(`[${logTag}] \u2139\ufe0f \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDayNum}\uc77c) \uc0c1\ub2e8 \ud0ed \ubbf8\uc874\uc7ac \ud655\uc778 -> \ud574\ub2f9 \ub0a0\uc9dc \ub4f1\ub85d\uae00 0\uac74\uc73c\ub85c \ud310\uc815\ud558\uc5ec \uc2e0\uaddc \ub4f1\ub85d \ubaa8\ub4dc\ub85c \uc9c4\ud589!`);
+console.log(`[${logTag}] \u2139\ufe0f \ubaa9\ud45c \ub0a0\uc9dc(${targetMonth?targetMonth+'\uc6d4 ':''}${targetDayNum}\uc77c) \ud0ed \ubbf8\ud65c\uc131/\ubbf8\uc874\uc7ac(\ud654\uba74:${finalScreenMonth||'?'}\uc6d4 ${finalScreenDay||'\uc5c6\uc74c'}\uc77c) -> \ud0c0 \ub0a0\uc9dc \uae00 \ubcf4\ud638\ub97c \uc704\ud574 \uae30\uc874 \uce74\ub4dc \ud0d0\uc0c9\uc744 \uc0dd\ub7b5\ud558\uace0 \uc2e0\uaddc \ub4f1\ub85d \ubaa8\ub4dc\ub85c \uc9c4\ud589\ud569\ub2c8\ub2e4!`);
 isTabMissingForDate=true;
 isWrongDay=false;
-}
-}
-if(isWrongDay){
-const detectedMonth=finalUrlMonth||finalScreenMonth||'';
-const detectedDay=finalUrlDay||finalScreenDay||'\ubbf8\ud655\uc778';
-const detectedStr=detectedMonth?`${detectedMonth}\uc6d4 ${detectedDay}\uc77c`:`${detectedDay}\uc77c`;
-const targetStr=targetMonth?`${targetMonth}\uc6d4 ${targetDayNum}\uc77c`:`${targetDayNum}\uc77c`;
-console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \ubd88\uc77c\uce58(\ud655\uc778\ub41c \ub0a0\uc9dc:${detectedStr} != \ubaa9\ud45c:${targetStr})\ub85c [${group.golf} ${group.date}] ${group.items.length}\uac74 \uc548\uc804 \uc2a4\ud0b5 \uc9c4\ud589`);
-for(const it of group.items){
-globalIndex++;
-_0x1009({
-title:modeTitle,
-desc:`[${globalIndex}/${items.length}] ${it.golf} (${it.date}) \ub0a0\uc9dc \uc120\ud0dd \ubd88\uac00\ub85c \uac74\ub108\ub700`,
-current:globalIndex,
-total:items.length
-});
-chrome.runtime.sendMessage({
-type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
-golf:it.golf,
-date:it.date,
-time:it.time,
-reason:`\ud655\uc778\ub41c \ub0a0\uc9dc(${detectedStr})\uc640 \ubaa9\ud45c \ub0a0\uc9dc(${targetStr}) \ubd88\uc77c\uce58\ub85c \uac74\ub108\ub700`
-});
-}
-continue;
 }
 if(shouldStopRegistration)break;
 const normalizeTimeDigits=(t)=>{
@@ -5598,12 +5620,15 @@ let initialCards=[];
 const seenCardKeys=new Set();
 const seenCardElements=new Set();
 const registerDiscoveredCards=(cards)=>{
+const snapBaseCounts=new Map();
 for(const c of cards){
-if(c.el&&seenCardElements.has(c.el))continue;
-const posKey=(typeof c.topY==='\x6e\x75\x6d\x62\x65\x72'&&typeof c.leftX==='\x6e\x75\x6d\x62\x65\x72')
-?`${Math.round(c.topY)}_${Math.round(c.leftX)}`
-:(c.domOrderIdx!==undefined?`dom_${c.domOrderIdx}`:'');
-const k=c.postId||`${c.timeDigits||'\x6e\x6f\x74\x69\x6d\x65'}_${c.feeManVal??'\x6e\x6f\x66\x65\x65'}_${c.peopleStr||''}_${c.regStamp||''}_${posKey}`;
+if(c.el&&(seenCardElements.has(c.el)||initialCards.some(ic=>ic.el&&(ic.el===c.el||ic.el.contains(c.el)||c.el.contains(ic.el))))){
+continue;
+}
+const baseKey=`${c.timeDigits||'\x6e\x6f\x74\x69\x6d\x65'}_${c.feeManVal??'\x6e\x6f\x66\x65\x65'}_${c.peopleStr||''}_${c.regStamp||''}`;
+const occurIdx=snapBaseCounts.get(baseKey)||0;
+snapBaseCounts.set(baseKey,occurIdx+1);
+const k=c.postId||`${baseKey}#${occurIdx}`;
 if(!seenCardKeys.has(k)){
 seenCardKeys.add(k);
 if(c.el)seenCardElements.add(c.el);
@@ -5645,10 +5670,10 @@ await _0x1007(200);
 }
 const hasExactMatch=initialCards.length>0&&initialCards[0].golfScore>=95;
 if(initialCards.length>0&&!hasExactMatch&&confirmMismatch){
-const allCardsOnScreen=_0x104f(groupCategory);
+const allCardsOnScreen=_0x1050(groupCategory);
 if(allCardsOnScreen.length>0){
 console.log(`[${logTag}] \u26a0\ufe0f ${group.golf} (\uc6d0\ubcf8: ${group.rawGolf}): \uc720\uc0ac \uad6c\uc7a5 \uce74\ub4dc \ubc1c\uacac (\uc810\uc218: ${initialCards[0].golfScore}) -> \uad6c\uc7a5\uba85 \ud655\uc778 \ubaa8\ub2ec \uc624\ud508`);
-const verifyResult=await _0x1051({
+const verifyResult=await _0x1052({
 mode:'\x72\x65\x70\x6c\x61\x63\x65',
 rawGolf:group.rawGolf,
 targetGolf:group.golf,
@@ -5663,7 +5688,7 @@ if(verifyResult.action==='\x70\x72\x6f\x63\x65\x65\x64'){
 const confirmedName=verifyResult.confirmedGolfName;
 console.log(`[${logTag}] \u2705 \uc0ac\uc6a9\uc790\uac00 \uad6c\uc7a5\uba85\uc744 [${confirmedName}]\uc73c\ub85c \ud655\uc778/\uc9c0\uc815\ud568`);
 if(verifyResult.saveToDict){
-await _0x1050(group.rawGolf,confirmedName);
+await _0x1051(group.rawGolf,confirmedName);
 chrome.runtime.sendMessage({
 type:'\x43\x4f\x55\x52\x53\x45\x5f\x4d\x41\x50\x50\x49\x4e\x47\x5f\x55\x50\x44\x41\x54\x45\x44',
 rawGolf:group.rawGolf,
@@ -5681,7 +5706,7 @@ shouldStopRegistration=true;
 break;
 }else{
 if(verifyResult.saveToDict&&verifyResult.confirmedGolfName){
-await _0x1050(group.rawGolf,verifyResult.confirmedGolfName);
+await _0x1051(group.rawGolf,verifyResult.confirmedGolfName);
 chrome.runtime.sendMessage({
 type:'\x43\x4f\x55\x52\x53\x45\x5f\x4d\x41\x50\x50\x49\x4e\x47\x5f\x55\x50\x44\x41\x54\x45\x44',
 rawGolf:group.rawGolf,
@@ -5836,21 +5861,21 @@ await _0x1007(80);
 const itemTargetDate=item.date||group.date;
 const itemTargetCategory=(item.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':((item.roomType==='\uc870\uc778')?'\uc870\uc778':groupCategory);
 const itemTargetRegion=item.region||group.region;
-if(isEditPage()||isDetailPage()||!_0x1033()||_0x1032()||_0x1031()){
+if(isEditPage()||isDetailPage()||!_0x1034()||_0x1033()||_0x1032()){
 await navigateBackToList(itemTargetCategory);
 await _0x1007(250);
 }
 if(shouldStopRegistration)break;
-await _0x1047(itemTargetCategory);
+await _0x1048(itemTargetCategory);
 if(shouldStopRegistration)break;
 if(itemTargetDate&&!isTabMissingForDate){
-await _0x1044(itemTargetDate);
+await _0x1045(itemTargetDate);
 }
 if(shouldStopRegistration)break;
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
-await _0x1045(itemTargetRegion);
+await _0x1046(itemTargetRegion);
 }else{
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 }
 if(shouldStopRegistration)break;
 console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf} (${item.time}): [${itemTargetCategory}] \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud589...`);
@@ -5862,7 +5887,13 @@ const newColon=formatColonTime(item.time);
 groupUpdatedNewTimes.add(newDigits);
 groupUpdatedNewTimes.add(newColon);
 groupUpdatedNewTimes.add(item.time);
-console.log(`\u2705 [${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc131\uacf5! (\ub204\uc801 \uc131\uacf5: ${successCount}\uac74)`);
+console.log(`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc131\uacf5 (\ub204\uc801 \uc131\uacf5: ${successCount}\uac74)`);
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc644\ub8cc`,
+current:globalIndex,
+total:items.length
+});
 chrome.runtime.sendMessage({
 type:itemSuccessMsgType,
 regId:item.regId,
@@ -5872,14 +5903,27 @@ newFee:item.fee
 });
 }else{
 console.warn(`[${logTag}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud328 \ub610\ub294 \ucc28\ub2e8\ub428`);
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \ubbf8\uc644\ub8cc \ud1b5\uacfc`,
+current:globalIndex,
+total:items.length
+});
+chrome.runtime.sendMessage({
+type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
+golf:item.golf,
+date:item.date,
+time:item.time,
+reason:'\ucd94\uac00 \ub4f1\ub85d \ubbf8\uc644\ub8cc \ub610\ub294 \uc81c\ud55c\uc73c\ub85c \uac74\ub108\ub700'
+});
 }
 if(globalIndex<items.length){
 console.log(`[${logTag}] \ucd94\uac00 \ub4f1\ub85d \ud6c4 \ub2e4\uc74c \ucc98\ub9ac\ub97c \uc704\ud574 '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ud654\uba74\uc73c\ub85c \ubcf5\uadc0...`);
-await _0x1035(itemTargetCategory);
+await _0x1036(itemTargetCategory);
 if(pIdx<plan.length-1){
-await _0x1047(itemTargetCategory);
-if(itemTargetDate)await _0x1044(itemTargetDate);
-if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1045(itemTargetRegion);
+await _0x1048(itemTargetCategory);
+if(itemTargetDate)await _0x1045(itemTargetDate);
+if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1046(itemTargetRegion);
 }
 await _0x1007(300);
 }
@@ -5889,21 +5933,21 @@ const itemTargetDate=item.date||group.date;
 const itemTargetCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
 const itemTargetRegion=item.region||group.region;
 console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard?.timeStr||''}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate}, \uce74\ud14c\uace0\ub9ac: [${itemTargetCategory}])...`);
-if(isEditPage()||isDetailPage()||!_0x1033()||_0x1032()||_0x1031()){
+if(isEditPage()||isDetailPage()||!_0x1034()||_0x1033()||_0x1032()){
 await navigateBackToList(itemTargetCategory);
 await _0x1007(250);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
-await _0x1047(itemTargetCategory);
+await _0x1048(itemTargetCategory);
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(itemTargetDate){
-await _0x1044(itemTargetDate);
+await _0x1045(itemTargetDate);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
-await _0x1045(itemTargetRegion);
+await _0x1046(itemTargetRegion);
 }else{
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 window.scrollTo(0,0);
@@ -6028,6 +6072,19 @@ await _0x1007(150);
 }
 if(!liveCardObj){
 console.warn(`[${logTag}] \uc218\uc815 \ub300\uc0c1 \uce74\ub4dc(${targetCard?.timeStr||''})\ub97c \ud654\uba74\uc5d0\uc11c \ucc3e\uc9c0 \ubabb\ud568 -> \ud1b5\uacfc`);
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \uce74\ub4dc \ubbf8\ubc1c\uacac\uc73c\ub85c \uac74\ub108\ub700`,
+current:globalIndex,
+total:items.length
+});
+chrome.runtime.sendMessage({
+type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
+golf:item.golf,
+date:item.date,
+time:item.time,
+reason:`\uace8\ud504\ubaac \ud654\uba74\uc5d0\uc11c \uc218\uc815 \ub300\uc0c1 \uce74\ub4dc(${targetCard?.timeStr||''}) \ubbf8\ubc1c\uacac\uc73c\ub85c \uac74\ub108\ub700`
+});
 continue;
 }
 let targetCardEl=liveCardObj.el;
@@ -6041,16 +6098,16 @@ await navigateBackToList(groupCategory);
 continue;
 }
 const detailBodyTxt=(document.body.innerText||'').toLowerCase();
-const normDetail=_0x1048(detailBodyTxt);
-const normTarget1=_0x1048(group.golf);
-const normTarget2=_0x1048(group.rawGolf);
-if(_0x104b(normDetail,normTarget1,normTarget2)===0){
+const normDetail=_0x1049(detailBodyTxt);
+const normTarget1=_0x1049(group.golf);
+const normTarget2=_0x1049(group.rawGolf);
+if(_0x104c(normDetail,normTarget1,normTarget2)===0){
 console.error(`[${logTag}] \u274c \uc0c1\uc138 \ud398\uc774\uc9c0 \uad6c\uc7a5 \ubd88\uc77c\uce58 \uac10\uc9c0! \ubaa9\ud45c \uad6c\uc7a5(${group.golf})\uc774 \uc544\ub2cc \ud0c0 \uad6c\uc7a5 \uc0c1\uc138 \ud398\uc774\uc9c0\uc774\ubbc0\ub85c \uc218\uc815\uc744 \uc989\uc2dc \ucde8\uc18c\ud558\uace0 \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
 await navigateBackToList(itemTargetCategory);
-await _0x1047(itemTargetCategory);
-if(itemTargetDate)await _0x1044(itemTargetDate);
-if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1045(itemTargetRegion);
+await _0x1048(itemTargetCategory);
+if(itemTargetDate)await _0x1045(itemTargetDate);
+if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1046(itemTargetRegion);
 await _0x1007(300);
 continue;
 }
@@ -6062,12 +6119,12 @@ if((detectedPostId&&processedPostIds.has(detectedPostId))||
 console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
 await navigateBackToList(itemTargetCategory);
-await _0x1047(itemTargetCategory);
-if(itemTargetDate)await _0x1044(itemTargetDate);
+await _0x1048(itemTargetCategory);
+if(itemTargetDate)await _0x1045(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
-await _0x1045(itemTargetRegion);
+await _0x1046(itemTargetRegion);
 }else{
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 }
 await _0x1007(350);
 const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
@@ -6137,7 +6194,13 @@ groupProcessedOldTimes.add(oldDigits);
 groupProcessedOldTimes.add(oldColon);
 groupProcessedOldTimes.add(originalPostTime);
 }
-console.log(`\u2705 [${globalIndex}/${items.length}] ${item.golf} (${originalPostTime} \u2794 ${item.time}, ${item.fee}\ub9cc) ${logTag} \uc644\ub8cc! (\ub204\uc801 \uc131\uacf5: ${successCount}\uac74)`);
+console.log(`[${globalIndex}/${items.length}] ${item.golf} (${originalPostTime} -> ${item.time}, ${item.fee}\ub9cc) ${logTag} \uc644\ub8cc (\ub204\uc801 \uc131\uacf5: ${successCount}\uac74)`);
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${originalPostTime||item.time} -> ${item.time}) ${logTag} \uc644\ub8cc`,
+current:globalIndex,
+total:items.length
+});
 chrome.runtime.sendMessage({
 type:itemSuccessMsgType,
 regId:item.regId,
@@ -6147,8 +6210,21 @@ newFee:item.fee
 });
 }else{
 console.warn(`[${logTag}] \uc218\uc815 \ud3fc \uc81c\ucd9c \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \uc218\uc815 \uc2e4\ud328\ub85c \uac74\ub108\ub700`,
+current:globalIndex,
+total:items.length
+});
+chrome.runtime.sendMessage({
+type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
+golf:item.golf,
+date:item.date,
+time:item.time,
+reason:'\uc218\uc815 \ud3fc \uc81c\ucd9c \uc2e4\ud328'
+});
 }
-if(!_0x1033()||_0x1032()||_0x1031()){
+if(!_0x1034()||_0x1033()||_0x1032()){
 await navigateBackToList(groupCategory);
 await _0x1007(350);
 }
@@ -6197,16 +6273,16 @@ return`${last[1].padStart(2,'\x30')}:${last[2]}`;
 return'';
 }
 function collectResetCandidateCards(filterType='\uc804\uccb4'){
-const leafCandidates=_0x104c();
+const leafCandidates=_0x104d();
 const list=[];
 for(const el of leafCandidates){
 const rawTxt=(el.innerText||el.textContent||'').trim();
 if(!/\d{1,2}:\d{2}/.test(rawTxt)||!/원/.test(rawTxt))continue;
-const postType=_0x104a(el,rawTxt);
+const postType=_0x104b(el,rawTxt);
 if(filterType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(filterType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
-const courseName=_0x104e(el)||'\uad6c\uc7a5';
-const normCourse=_0x1048(courseName)||courseName;
+const courseName=_0x104f(el)||'\uad6c\uc7a5';
+const normCourse=_0x1049(courseName)||courseName;
 const teeTime=extractTeeTimeFromResetCard(rawTxt);
 const feeMatch=rawTxt.match(/([0-9.,]+)\s*(?:만|만원|원)/);
 const feeStr=feeMatch?feeMatch[0].replace(/\s+/g,''):'';
@@ -6262,7 +6338,7 @@ time:cardInfo?.teeTime||'',
 fee:cardInfo?.feeStr||'\x72\x65\x73\x65\x74'
 });
 await _0x1007(500);
-await _0x102d(25);
+await _0x102e(25);
 await _0x1007(400);
 if(isEditPage()||isDetailPage()){
 await executeSingleBack();
@@ -6334,14 +6410,14 @@ break;
 }
 return allCardsOrdered;
 };
-await _0x1035(effectiveFilter);
+await _0x1036(effectiveFilter);
 if(shouldStopRegistration){
 isRegistrationRunning=false;
 isDateResetRunning=false;
 chrome.runtime.sendMessage({type:'\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54\x5f\x53\x54\x4f\x50\x50\x45\x44',targetDate:rangeLabel,successCount:totalSuccessCount});
 return;
 }
-await _0x1047(effectiveFilter);
+await _0x1048(effectiveFilter);
 if(shouldStopRegistration){
 isRegistrationRunning=false;
 isDateResetRunning=false;
@@ -6351,29 +6427,29 @@ return;
 for(let dIdx=0;dIdx<datesList.length;dIdx++){
 if(shouldStopRegistration)break;
 const targetDate=datesList[dIdx];
-const targetMonth=_0x1037(targetDate);
-const targetDay=_0x1036(targetDate);
+const targetMonth=_0x1038(targetDate);
+const targetDay=_0x1037(targetDate);
 console.log(`\n\ud83d\udcc5 [\uc804\uccb4\ub9ac\uc14b \ub0a0\uc9dc ${dIdx+1}/${datesList.length}] [${targetDate}] (${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \ub9ac\uc14b \uc2dc\uc791...`);
-if(!_0x1033()||_0x1032()||_0x1031()||isEditPage()||isDetailPage()){
+if(!_0x1034()||_0x1033()||_0x1032()||isEditPage()||isDetailPage()){
 await navigateBackToList(effectiveFilter);
 await _0x1007(350);
 }
 if(shouldStopRegistration)break;
-await _0x1047(effectiveFilter);
-const dateClicked=await _0x1043(targetDate);
+await _0x1048(effectiveFilter);
+const dateClicked=await _0x1044(targetDate);
 await _0x1007(350);
-const activeDayNow=_0x1040();
-const activeMonthNow=_0x1039();
-const urlDateNow=_0x1041();
-const urlMonthNow=urlDateNow?_0x1037(urlDateNow):'';
-const urlDayNow=urlDateNow?_0x1036(urlDateNow):'';
+const activeDayNow=_0x1041();
+const activeMonthNow=_0x103a();
+const urlDateNow=_0x1042();
+const urlMonthNow=urlDateNow?_0x1038(urlDateNow):'';
+const urlDayNow=urlDateNow?_0x1037(urlDateNow):'';
 const isMonthMatch=Boolean(!targetMonth||(activeMonthNow&&activeMonthNow===targetMonth)||(urlMonthNow&&urlMonthNow===targetMonth));
 const isDayMatch=Boolean(!targetDay||(activeDayNow&&activeDayNow===targetDay)||(urlDayNow&&urlDayNow===targetDay));
 if(!dateClicked||!isMonthMatch||!isDayMatch){
 console.log(`[\uc804\uccb4\ub9ac\uc14b] \u23e9 [${targetDate}] \ud574\ub2f9 \ub0a0\uc9dc\uc5d0 \ub4f1\ub85d\ub41c \uae00/\ud0ed\uc774 \uc5c6\uc2b5\ub2c8\ub2e4 (\uc120\ud0dd\uacb0\uacfc: ${dateClicked}, \ud654\uba74: ${activeMonthNow||'?'}\uc6d4 ${activeDayNow||'?'}\uc77c, URL: ${urlMonthNow||'?'}\uc6d4 ${urlDayNow||'?'}\uc77c). \uc790\ub3d9\uc73c\ub85c \ub2e4\uc74c \ub0a0\uc9dc\ub85c \ub118\uc5b4\uac11\ub2c8\ub2e4.`);
 continue;
 }
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 await _0x1007(350);
 let firstResetSig=null;
 let firstResetSigTotalCount=1;
@@ -6384,19 +6460,19 @@ let dateSuccessCount=0;
 let dateDiscovered=0;
 for(let stepIdx=0;stepIdx<200;stepIdx++){
 if(shouldStopRegistration)break;
-if(!_0x1033()||_0x1032()||_0x1031()||isEditPage()||isDetailPage()){
+if(!_0x1034()||_0x1033()||_0x1032()||isEditPage()||isDetailPage()){
 await navigateBackToList(effectiveFilter);
 await _0x1007(350);
 }
 if(shouldStopRegistration)break;
-await _0x1047(effectiveFilter);
-const curDay=_0x1040();
-const curMonth=_0x1039();
+await _0x1048(effectiveFilter);
+const curDay=_0x1041();
+const curMonth=_0x103a();
 if((targetDay&&curDay!==targetDay)||(targetMonth&&curMonth&&curMonth!==targetMonth)){
-await _0x1043(targetDate);
+await _0x1044(targetDate);
 await _0x1007(250);
 }
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 await _0x1007(200);
 const allCards=await scrollToBottomAndCollectAllCards();
 if(shouldStopRegistration)break;
@@ -6484,7 +6560,7 @@ console.log(`\u2705 [\uc804\uccb4\ub9ac\uc14b \uc644\ub8cc -> \ub9e8 \uc704\ub85
 }else{
 console.warn(`[\uc804\uccb4\ub9ac\uc14b] ${nextCard.courseName} (${nextCard.teeTime}) \uc81c\ucd9c \ubbf8\ud655\uc778 -> \ubaa9\ub85d \ubcf5\uadc0`);
 }
-if(!_0x1033()||_0x1032()||_0x1031()){
+if(!_0x1034()||_0x1033()||_0x1032()){
 await navigateBackToList(effectiveFilter);
 await _0x1007(350);
 }
@@ -6521,7 +6597,7 @@ reason:totalSuccessCount===0?`\uc9c0\uc815\ud55c \uae30\uac04(${rangeLabel})\uc5
 });
 }
 }
-async function _0x1052(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x1053(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
 if(!items||items.length===0)return;
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
@@ -6619,35 +6695,35 @@ if(isEditPage()||isDetailPage()){
 await navigateBackToList(groupCategory);
 await _0x1007(350);
 }
-await _0x1035(groupCategory);
+await _0x1036(groupCategory);
 if(shouldStopRegistration)break;
-await _0x1047(groupCategory);
+await _0x1048(groupCategory);
 if(shouldStopRegistration)break;
 if(group.region&&group.region!=='\uc804\uccb4'){
-await _0x1045(group.region);
+await _0x1046(group.region);
 await _0x1007(250);
 }else{
-await _0x1045('\uc804\uccb4');
+await _0x1046('\uc804\uccb4');
 await _0x1007(250);
 }
 if(shouldStopRegistration)break;
 if(group.date){
-await _0x1044(group.date);
+await _0x1045(group.date);
 await _0x1007(300);
 }
 if(shouldStopRegistration)break;
-const targetDayNum=_0x1036(group.date);
-const curDayNum=_0x1040();
+const targetDayNum=_0x1037(group.date);
+const curDayNum=_0x1041();
 if(targetDayNum&&curDayNum&&targetDayNum!==curDayNum){
-await _0x1043(group.date);
+await _0x1044(group.date);
 await _0x1007(300);
 }
 if(shouldStopRegistration)break;
 const allCards=await scrollToBottomAndCollectAllCards(groupCategory);
 if(shouldStopRegistration)break;
-const normGroupGolf=_0x1048(group.golf)||_0x1048(group.rawGolf)||group.golf;
+const normGroupGolf=_0x1049(group.golf)||_0x1049(group.rawGolf)||group.golf;
 const matchingCourseCards=allCards.filter(c=>{
-const normC=_0x1048(c.courseName)||c.courseName;
+const normC=_0x1049(c.courseName)||c.courseName;
 return(normC===normGroupGolf||c.courseName.includes(normGroupGolf)||normGroupGolf.includes(c.courseName));
 });
 const availableCards=matchingCourseCards.filter(c=>!c.postId||!processedPostIds.has(c.postId));
@@ -6775,7 +6851,7 @@ regId:item.regId
 }else{
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \uc81c\ucd9c \ubbf8\ud655\uc778 -> \ubaa9\ub85d \ubcf5\uadc0`);
 }
-if(!_0x1033()||_0x1032()||_0x1031()){
+if(!_0x1034()||_0x1033()||_0x1032()){
 await navigateBackToList(groupCategory);
 await _0x1007(350);
 }
@@ -6808,7 +6884,7 @@ reason:successCount===0?'\uc120\ud0dd\ud55c \ud2f0\ud0c0\uc784\uc758 \uae00\uc74
 });
 }
 }
-async function _0x1053(targetPost){
+async function _0x1054(targetPost){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -6831,14 +6907,14 @@ total:1
 });
 try{
 const navFilter=(targetRoomType==='\uc804\uccb4'||!targetRoomType)?'\uc804\uccb4':targetRoomType;
-const navOk=await _0x1035(navFilter);
+const navOk=await _0x1036(navFilter);
 if(!navOk){
 throw new Error("\uace8\ud504\ubaac '\ub0b4\uac00 \ub4f1\ub85d\ud55c \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d\uc73c\ub85c \uc9c4\uc785\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4\x2e");
 }
 await _0x1007(400);
 if(targetDate){
 console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] \ub0a0\uc9dc(${targetDate}) \ud0ed \uc120\ud0dd \uc2e4\ud589...`);
-await _0x1043(targetDate);
+await _0x1044(targetDate);
 await _0x1007(500);
 }
 let cards=findExistingCardsForCourse(golfName,rawGolfName,targetRoomType,targetDate);
@@ -6850,7 +6926,7 @@ cards=findExistingCardsForCourse(golfName,rawGolfName,targetRoomType,targetDate)
 }
 if((!cards||cards.length===0)&&targetRoomType&&targetRoomType!=='\uc804\uccb4'){
 console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] '${targetRoomType}' \ud544\ud130\uc5d0\uc11c \uce74\ub4dc\ub97c \ucc3e\uc9c0 \ubabb\ud568 -> '\uc804\uccb4' \ud544\ud130\ub85c \uc804\ud658\ud558\uc5ec \uc7ac\ud0d0\uc0c9...`);
-await _0x1047('\uc804\uccb4');
+await _0x1048('\uc804\uccb4');
 await _0x1007(500);
 cards=findExistingCardsForCourse(golfName,rawGolfName,'\uc804\uccb4',targetDate);
 if(!cards||cards.length===0){
@@ -6936,7 +7012,7 @@ await _0x1007(120);
 const mRect=menuBtn.getBoundingClientRect();
 const cx=mRect.left+mRect.width/2;
 const cy=mRect.top+mRect.height/2;
-await _0x1049(menuBtn,cx,cy);
+await _0x104a(menuBtn,cx,cy);
 try{menuBtn.click();}catch(e){}
 let menuItem=null;
 for(let m=0;m<20;m++){
@@ -6953,14 +7029,14 @@ throw new Error(`\ub354\ubcf4\uae30 \uba54\ub274\uc5d0\uc11c '${isSoldOut?'\ub9c
 }
 menuItem.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x34\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x65\x66\x34\x34\x34\x34','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
 await _0x1007(150);
-await _0x1049(menuItem);
+await _0x104a(menuItem);
 try{menuItem.click();}catch(e){}
 let confirmed=false;
 for(let d=0;d<25;d++){
 await _0x1007(120);
 const confirmBtn=findConfirmDialogButton();
 if(confirmBtn){
-await _0x102c(confirmBtn);
+await _0x102d(confirmBtn);
 confirmed=true;
 break;
 }
@@ -6968,7 +7044,7 @@ break;
 await _0x1007(400);
 for(let w=0;w<25;w++){
 await _0x1007(150);
-if(_0x1033())break;
+if(_0x1034())break;
 }
 _0x1009({
 title:`\uace8\ud504\ubaac \uae00 ${isSoldOut?'\ub9c8\uac10':'\uc0ad\uc81c'} \uc644\ub8cc!`,
@@ -7032,7 +7108,7 @@ desc:`\ucd1d ${request.items?request.items.length:0}\uac74 \uc790\ub3d9\ub4f1\ub
 current:0,
 total:request.items?request.items.length:0
 });
-_0x102e(request.items,request.memo,request.mode||'\x6a\x6f\x69\x6e',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
+_0x102f(request.items,request.memo,request.mode||'\x6a\x6f\x69\x6e',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x46\x4f\x52\x43\x45\x5f\x42\x41\x43\x4b\x5f\x41\x4e\x44\x5f\x52\x45\x53\x55\x4d\x45'){
 const rs=request.resumeState;
@@ -7056,7 +7132,7 @@ await _0x1007(500);
 if(rs.macroType==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45'){
 executeBatchPriceUpdate(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.confirmMismatch!==false,rs.customMemo||'');
 }else if(rs.macroType==='\x52\x45\x47\x49\x53\x54\x45\x52'){
-_0x102e(rs.remainingItems,rs.customMemo||'',rs.mode||'\x6a\x6f\x69\x6e',rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e');
+_0x102f(rs.remainingItems,rs.customMemo||'',rs.mode||'\x6a\x6f\x69\x6e',rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e');
 }else{
 executeBatchPostReplacement(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.customMemo||'',rs.confirmMismatch!==false,false,Boolean(rs.forceAllEdit));
 }
@@ -7077,9 +7153,10 @@ executeBatchPriceUpdate(request.items,request.delayPreset||'\x73\x61\x66\x65',re
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x4d\x45\x4e\x54'){
+shouldStopRegistration=false;
+window.shouldStopRegistration=false;
 if(isPostReplacementRunning||isRegistrationRunning){
-console.log("[\uad50\uccb4\uc218\uc815] \uc774\ubbf8 \uc791\uc5c5\uc774 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc774\uc804 \uc2e4\ud589 \uc815\ub9ac \ubc0f \uc7ac\uc2dc\uc791 \uc900\ube44");
-shouldStopRegistration=true;
+console.log("[\uad50\uccb4\uc218\uc815] \uc774\uc804 \uc2e4\ud589 \uc815\ub9ac \ubc0f \uc0c8 \uc791\uc5c5 \ucd08\uae30\ud654");
 isRegistrationRunning=false;
 isPostReplacementRunning=false;
 }
@@ -7116,11 +7193,11 @@ isDateResetRunning=false;
 isSelectedResetRunning=false;
 }
 setTimeout(()=>{
-_0x1052(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
+_0x1053(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-_0x1053(request.targetPost).then(result=>{
+_0x1054(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uc0ad\uc81c \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});
