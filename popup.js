@@ -17232,7 +17232,9 @@ clearTimeout(timeoutId);
 }
 return lastText;
 }
+var __t82AuthEpoch=0;
 async function verifyAuthWithServer(id,pw,silent=true,isExplicitLogin=false){
+const __epochAtStart=__t82AuthEpoch;
 let apiUrl=getAuthApiUrl();
 if(!apiUrl){
 if(!silent){
@@ -17258,6 +17260,10 @@ try{
 data=JSON.parse(text);
 }catch(e){
 throw new Error('\uc11c\ubc84 \uc751\ub2f5 \uc624\ub958 (\uad6c\uae00 \uc2a4\ud06c\ub9bd\ud2b8 \uad8c\ud55c \uc2b9\uc778 \ud544\uc694)');
+}
+if(__epochAtStart!==__t82AuthEpoch){
+console.log('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65 \x41\x75\x74\x68] \ub85c\uadf8\uc544\uc6c3 \uc774\ud6c4 \ub3c4\ucc29\ud55c \uc778\uc99d \uc751\ub2f5 \ubb34\uc2dc');
+return{success:false,message:'\ub85c\uadf8\uc544\uc6c3\ub418\uc5b4 \uc778\uc99d \uacb0\uacfc\ub97c \ubb34\uc2dc\ud588\uc2b5\ub2c8\ub2e4\x2e'};
 }
 const isAdminUser=_0x102d(data?.id||id,data?.features,!!(data&&data.isAdmin===true));
 if(!isAdminUser&&data&&(data.code==='\x43\x4f\x4e\x43\x55\x52\x52\x45\x4e\x54\x5f\x4c\x4f\x47\x49\x4e'||data.isConcurrentLogin)){
@@ -17363,6 +17369,7 @@ chrome.storage.local.remove(['\x76\x32\x5f\x61\x75\x74\x68\x5f\x69\x6e\x76\x61\x
 }catch(e){}
 }
 function logoutUser(notify=true,preserveSavedPassword=true){
+__t82AuthEpoch++;
 currentAuthUser=null;
 try{
 sessionStorage.removeItem('\x76\x32\x5f\x75\x70\x64\x61\x74\x65\x5f\x64\x69\x73\x6d\x69\x73\x73\x65\x64');
