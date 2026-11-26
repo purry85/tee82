@@ -11988,12 +11988,24 @@ const tableWrap=document.querySelector('\x2e\x74\x61\x62\x6c\x65-\x76\x69\x65\x7
 _0x1019();
 let matchedCard=null;
 let matchedTr=null;
-if(regId){
-if(cardContainer)matchedCard=cardContainer.querySelector(`.tee-card[data-reg-id="${regId}"]`);
-matchedTr=document.querySelector(`#dataTable tbody tr[data-reg-id="${regId}"]`);
-}
-const cards=cardContainer?Array.from(cardContainer.querySelectorAll('\x2e\x74\x65\x65-\x63\x61\x72\x64')):[];
 const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+const cards=trs.map((tr,i)=>({
+tr,
+index:i,
+classList:tr.classList,
+dataset:{
+index:String(i),
+regId:tr.dataset.regId||'',
+golf:tr.cells[2]?.textContent||'',
+rawGolf:tr.dataset.rawGolf||'',
+date:tr.cells[0]?.textContent||'',
+time:tr.cells[3]?.textContent||''
+}
+}));
+if(regId){
+matchedCard=cards.find(c=>c.dataset.regId===String(regId))||null;
+if(matchedCard)matchedTr=matchedCard.tr;
+}
 if(!matchedCard){
 const normTime=(t)=>(t||'').toString().replace(/[^\d]/g,'').padStart(4,'\x30');
 const normDate=(d)=>{
@@ -12053,8 +12065,19 @@ if(!matchedCard&&current>0){
 const selectedCards=cards.filter(c=>c.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64'));
 if(selectedCards.length>0&&current<=selectedCards.length){
 matchedCard=selectedCards[current-1];
-const idx=parseInt(matchedCard.dataset.index,10);
-if(!isNaN(idx)&&trs[idx])matchedTr=trs[idx];
+matchedTr=matchedCard.tr;
+}
+}
+if(matchedCard){
+const idx=matchedCard.index;
+matchedTr=matchedCard.tr;
+matchedCard=null;
+if(cardContainer){
+let guard=0;
+while(visibleCardLimit<=idx&&document.getElementById('\x63\x61\x72\x64\x4c\x6f\x61\x64\x4d\x6f\x72\x65\x53\x65\x6e\x74\x69\x6e\x65\x6c')&&guard++<200){
+loadMoreCards();
+}
+matchedCard=cardContainer.querySelector(`.tee-card[data-index="${idx}"]`);
 }
 }
 const __centerIn=(container,el)=>{
