@@ -2536,10 +2536,10 @@ return true;
 await _0x1007(300);
 }
 }
-for(let backStep=0;backStep<2&&(isEditPage()||isDetailPage());backStep++){
-console.log(`[\ubcf5\uadc0] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/2)`);
+for(let backStep=0;backStep<3&&(isEditPage()||isDetailPage()||window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77'));backStep++){
+console.log(`[\ubcf5\uadc0] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/3)`);
 await executeSingleBack();
-await _0x1007(400);
+await _0x1007(350);
 if(_0x1034()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
 await _0x1048(filterType);
@@ -2660,7 +2660,7 @@ const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
 if(r.top<0||r.top>maxBottom)return false;
-if(r.left<0||r.left>550)return false;
+if(r.left<0)return false;
 const txt=(el.innerText||el.textContent||'').trim();
 if(!txt||txt.length>25)return false;
 return/(\d{1,2})\s*월/.test(txt);
@@ -2717,7 +2717,7 @@ const monthElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
 if(r.top<0||r.top>maxBottom)return false;
-if(r.left<0||r.left>550)return false;
+if(r.left<0)return false;
 const txt=(el.innerText||el.textContent||'').trim();
 if(!txt||txt.length>25)return false;
 return/(\d{1,2})\s*월/.test(txt);
@@ -4069,7 +4069,7 @@ return null;
 }
 function isDetailPage(){
 if(isEditPage())return false;
-if(window.location.href.includes('\x2f\x64\x65\x74\x61\x69\x6c\x2f')||window.location.href.includes('\x2f\x69\x74\x65\x6d\x2f')){
+if(window.location.href.includes('\x2f\x64\x65\x74\x61\x69\x6c\x2f')||window.location.href.includes('\x2f\x69\x74\x65\x6d\x2f')||window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77')){
 return true;
 }
 const curH=document.querySelector('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72');
@@ -4869,48 +4869,98 @@ return true;
 async function executeSingleBack(){
 console.log("[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30(\u2190) \ub2e8 \x31\ud68c \uc2e4\ud589\x2e\x2e\x2e");
 resetEditSubmitLock();
+const prevUrl=window.location.href;
 let backBtn=null;
-const headerCandidates=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, [\x63\x6c\x61\x73\x73*="\x68\x65\x61\x64\x65\x72"], [\x63\x6c\x61\x73\x73*="\x74\x6f\x6f\x6c\x62\x61\x72"]'))
-.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=65);
-for(const h of headerCandidates){
-const clickables=Array.from(h.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x61, \x73\x70\x61\x6e'))
+const isMoreMenuIcon=(el)=>{
+const txt=(el.innerText||el.textContent||'').trim().toLowerCase();
+return txt==='\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74'||txt==='\x6d\x6f\x72\x65'||txt==='\u22ee'||txt==='\ue5d4'||txt.includes('\x6d\x6f\x72\x65\x5f\x76\x65\x72\x74');
+};
+const explicitBackIcons=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x61, \x73\x70\x61\x6e'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-return r.left<80&&r.top<65;
+if(r.top<-5||r.top>90||r.width>90||r.height>90)return false;
+if(isMoreMenuIcon(el))return false;
+const txt=(el.innerText||el.textContent||'').trim().toLowerCase();
+const cls=(typeof el.className==='\x73\x74\x72\x69\x6e\x67'?el.className:'').toLowerCase();
+return txt==='\x61\x72\x72\x6f\x77\x5f\x62\x61\x63\x6b'||txt==='\x77\x65\x73\x74'||txt==='\x6b\x65\x79\x62\x6f\x61\x72\x64\x5f\x62\x61\x63\x6b\x73\x70\x61\x63\x65'||
+txt==='\x63\x68\x65\x76\x72\x6f\x6e\x5f\x6c\x65\x66\x74'||txt==='\x6e\x61\x76\x69\x67\x61\x74\x65\x5f\x62\x65\x66\x6f\x72\x65'||txt==='\u2190'||
+txt==='\x61\x72\x72\x6f\x77\x5f\x62\x61\x63\x6b\x5f\x69\x6f\x73'||cls.includes('\x61\x72\x72\x6f\x77-\x6c\x65\x66\x74')||cls.includes('\x62\x61\x63\x6b');
+});
+if(explicitBackIcons.length>0){
+explicitBackIcons.sort((a,b)=>a.getBoundingClientRect().left-b.getBoundingClientRect().left);
+backBtn=explicitBackIcons[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||explicitBackIcons[0];
+}
+if(!backBtn){
+const headerCandidates=Array.from(document.querySelectorAll('\x2e\x71-\x68\x65\x61\x64\x65\x72, \x68\x65\x61\x64\x65\x72, \x2e\x71-\x74\x6f\x6f\x6c\x62\x61\x72, [\x63\x6c\x61\x73\x73*="\x68\x65\x61\x64\x65\x72"], [\x63\x6c\x61\x73\x73*="\x74\x6f\x6f\x6c\x62\x61\x72"]'))
+.filter(el=>el.offsetHeight>0&&el.getBoundingClientRect().top<=85);
+for(const h of headerCandidates){
+const hRect=h.getBoundingClientRect();
+const maxLeft=hRect.left+Math.min(130,Math.max(85,hRect.width*0.35));
+const clickables=Array.from(h.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, \x73\x76\x67, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72, \x61, \x73\x70\x61\x6e'))
+.filter(el=>{
+if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
+const r=el.getBoundingClientRect();
+if(r.width>90||r.height>90)return false;
+if(isMoreMenuIcon(el))return false;
+return r.left>=hRect.left-10&&r.left<=maxLeft&&r.top>=-5&&r.top<=90;
 });
 if(clickables.length>0){
 clickables.sort((a,b)=>a.getBoundingClientRect().left-b.getBoundingClientRect().left);
-backBtn=clickables[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||clickables[0];
+backBtn=clickables[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||clickables[0];
 break;
 }
 }
+}
 if(!backBtn){
+const winW=window.innerWidth||document.documentElement.clientWidth||1000;
 const topElements=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x69, \x2e\x71-\x69\x63\x6f\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72'))
 .filter(el=>{
 if(el.offsetHeight<=0||el.offsetWidth<=0)return false;
 const r=el.getBoundingClientRect();
-return r.left>=0&&r.left<80&&r.top>=0&&r.top<65;
+if(r.width>85||r.height>85)return false;
+if(isMoreMenuIcon(el))return false;
+return r.left>=0&&r.left<winW*0.55&&r.top>=0&&r.top<=80;
 });
 if(topElements.length>0){
 topElements.sort((a,b)=>a.getBoundingClientRect().left-b.getBoundingClientRect().left);
-backBtn=topElements[0];
+backBtn=topElements[0].closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||topElements[0];
 }
 }
 if(backBtn&&backBtn.offsetHeight>0){
-console.log(`[\uac00\uaca9\uc218\uc815] \uc88c\uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30(\u2190) \ubc84\ud2bc \ubc1c\uacac -> 1\ud68c \ud074\ub9ad (${backBtn.tagName}, class=${backBtn.className})`);
-backBtn.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x33\x42\x38\x32\x46\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
-await _0x1007(100);
+const targetEl=backBtn.closest('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x61, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x2e\x63\x75\x72\x73\x6f\x72-\x70\x6f\x69\x6e\x74\x65\x72')||backBtn;
+console.log(`[\uac00\uaca9\uc218\uc815] \uc88c\uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30(\u2190) \ubc84\ud2bc \ubc1c\uacac -> \uc815\ubc00 \ud074\ub9ad (${targetEl.tagName}, left=${Math.round(targetEl.getBoundingClientRect().left)}px)`);
+targetEl.style.setProperty('\x6f\x75\x74\x6c\x69\x6e\x65','\x33\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x33\x42\x38\x32\x46\x36','\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74');
+await _0x1007(60);
+const rect=targetEl.getBoundingClientRect();
+const cx=rect.left+rect.width/2;
+const cy=rect.top+rect.height/2;
+const opts={clientX:cx,clientY:cy,bubbles:true,cancelable:true,view:window};
 try{
-backBtn.click();
-}catch(e){
-await _0x100e(backBtn);
+targetEl.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x64\x6f\x77\x6e',opts));
+targetEl.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x64\x6f\x77\x6e',opts));
+}catch(e){}
+await _0x1007(40);
+try{
+targetEl.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
+targetEl.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
+targetEl.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
+}catch(e){}
+try{targetEl.click();}catch(e){}
+if(backBtn!==targetEl){
+try{backBtn.click();}catch(e){}
+}
+await _0x1007(450);
+if(window.location.href===prevUrl&&(window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77')||isDetailPage()||isEditPage())){
+console.log("[\uac00\uaca9\uc218\uc815] \ub4a4\ub85c\uac00\uae30(\u2190) \ud074\ub9ad \ud6c4 \x55\x52\x4c \uc720\uc9c0 \uac10\uc9c0 -> \x77\x69\x6e\x64\x6f\x77\x2e\x68\x69\x73\x74\x6f\x72\x79\x2e\x62\x61\x63\x6b() \ubcf4\uc870 \ud638\ucd9c");
+window.history.back();
+await _0x1007(450);
 }
 }else{
 console.log("[\uac00\uaca9\uc218\uc815] \uc88c\uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30 \ubc84\ud2bc \ubbf8\ubc1c\uacac -> \x77\x69\x6e\x64\x6f\x77\x2e\x68\x69\x73\x74\x6f\x72\x79\x2e\x62\x61\x63\x6b() \x31\ud68c \ud638\ucd9c");
 window.history.back();
+await _0x1007(550);
 }
-await _0x1007(600);
 return true;
 }
 async function navigateBackToList(filterType=''){
@@ -4943,10 +4993,10 @@ return true;
 }
 }
 }
-for(let backStep=0;backStep<2&&(isEditPage()||isDetailPage());backStep++){
-console.log(`[\uac00\uaca9\uc218\uc815] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/2)`);
+for(let backStep=0;backStep<3&&(isEditPage()||isDetailPage()||window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77'));backStep++){
+console.log(`[\uac00\uaca9\uc218\uc815] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/3)`);
 await executeSingleBack();
-await _0x1007(400);
+await _0x1007(350);
 if(_0x1034()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
 await _0x1048(filterType);
@@ -5017,7 +5067,7 @@ return false;
 async function editTimeAndFeeAndPeopleAndSubmit(item,maxAttempts=15){
 console.log(`[\uad50\uccb4\uc218\uc815] \uc218\uc815 \ud3fc \ucc98\ub9ac \uc2dc\uc791: \uc0c8 \uc2dc\uac04 [${item.time}], \uc0c8 \uadf8\ub9b0\ud53c [${item.fee}\ub9cc], \uc0c8 \uc778\uc6d0 [${item.sizenum||'\ubbf8\uc9c0\uc815'}]...`);
 const currentUrlKey=window.location.href;
-const hasUniquePostIdInUrl=/\/(?:detail|edit|view|item)\/\d+/.test(currentUrlKey);
+const hasUniquePostIdInUrl=/\/(?:detail|edit|view|item)\/\d+|[?&]id=\d+/.test(currentUrlKey);
 if(hasUniquePostIdInUrl&&_submittedUrls&&_submittedUrls.has(currentUrlKey)){
 console.warn(`[\uad50\uccb4\uc218\uc815] \ud604\uc7ac \ud398\uc774\uc9c0(${currentUrlKey})\ub294 \uc774\ubbf8 \uc81c\ucd9c \uc644\ub8cc\ub41c \uae00\uc785\ub2c8\ub2e4. (\ub3d9\uc77c \uae00 \uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0) -> \ubcf5\uadc0`);
 await executeSingleBack();
@@ -6103,10 +6153,10 @@ await _0x1007(300);
 continue;
 }
 let curUrl=window.location.href;
-let curUrlMatch=curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/);
+let curUrlMatch=curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/)||curUrl.match(/[?&]id=(\d+)/);
 let detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
 if((detectedPostId&&processedPostIds.has(detectedPostId))||
-(/\/(?:detail|item)\/\d+/.test(curUrl)&&processedDetailUrls.has(curUrl))){
+((/\/(?:detail|item)\/\d+|[?&]id=\d+/.test(curUrl))&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
 await navigateBackToList(itemTargetCategory);
@@ -6136,10 +6186,10 @@ await navigateBackToList(groupCategory);
 continue;
 }
 curUrl=window.location.href;
-curUrlMatch=curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/);
+curUrlMatch=curUrl.match(/\/(?:join|transfer)\/(?:detail|edit|view|item)\/(\d+)/)||curUrl.match(/\/(?:detail|item)\/(\d+)/)||curUrl.match(/[?&]id=(\d+)/);
 detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
 if((detectedPostId&&processedPostIds.has(detectedPostId))||
-(/\/(?:detail|item)\/\d+/.test(curUrl)&&processedDetailUrls.has(curUrl))){
+((/\/(?:detail|item)\/\d+|[?&]id=\d+/.test(curUrl))&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc7ac\uc120\ud0dd\ud55c \uce74\ub4dc \uc5ed\uc2dc \uc774\ubbf8 \uc218\uc815\ub41c \uae00(ID: ${detectedPostId})\uc774\ubbc0\ub85c \uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0\ub97c \uc704\ud574 \uac74\ub108\ub701\ub2c8\ub2e4.`);
 await navigateBackToList(groupCategory);
 continue;
@@ -6163,7 +6213,7 @@ _replacedCardsSet.add(targetCardEl);
 if(detectedPostId){
 processedPostIds.add(detectedPostId);
 }
-if(/\/(?:detail|item)\/\d+/.test(curUrl)){
+if(/\/(?:detail|item)\/\d+|[?&]id=\d+/.test(curUrl)){
 processedDetailUrls.add(curUrl);
 }
 const newDigits=normalizeTimeDigits(item.time);
