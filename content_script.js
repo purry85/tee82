@@ -2071,8 +2071,13 @@ await _0x1007(200);
 console.warn("[\ub9e4\ud06c\ub85c] \uc5d0\ub514\ud130\ub97c \ucc3e\uc9c0 \ubabb\ud568 (\ud1b5\uacfc)");
 return false;
 }
+var __t82RegSubmitLock={url:'',ts:0};
 async function _0x102e(maxAttempts=15){
 console.log("[\ub9e4\ud06c\ub85c] \x31\x33\ub2e8\uacc4\x3a '\ub4f1\ub85d\ud558\uae30' \ubc84\ud2bc \ud0d0\uc0c9 \ubc0f \ud074\ub9ad \uc2dc\ub3c4\x2e\x2e\x2e");
+if(__t82RegSubmitLock.url===location.href&&(Date.now()-__t82RegSubmitLock.ts)<5000){
+console.warn("[\ub9e4\ud06c\ub85c] \ubc29\uae08 '\ub4f1\ub85d\ud558\uae30'\ub97c \ub20c\ub800\uc2b5\ub2c8\ub2e4\x2e \uc911\ubcf5 \ud074\ub9ad \ucc28\ub2e8!");
+return true;
+}
 for(let attempt=0;attempt<maxAttempts;attempt++){
 if(shouldStopRegistration)return false;
 const candidates=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, [\x72\x6f\x6c\x65="\x62\x75\x74\x74\x6f\x6e"], \x73\x70\x61\x6e, \x64\x69\x76'))
@@ -2103,10 +2108,12 @@ await _0x1007(80);
 try{
 topElement.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
 topElement.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
-topElement.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 }catch(e){}
-try{finalTarget.click();}catch(e){}
-console.log("[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d\ud558\uae30' \ud074\ub9ad \uc644\ub8cc!");
+__t82RegSubmitLock={url:location.href,ts:Date.now()};
+try{finalTarget.click();}catch(e){
+try{finalTarget.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));}catch(e2){}
+}
+console.log("[\ub9e4\ud06c\ub85c] '\ub4f1\ub85d\ud558\uae30' \ub2e8 \x31\ud68c \ud074\ub9ad \uc644\ub8cc!");
 return true;
 }
 await _0x1007(250);
@@ -2209,18 +2216,12 @@ await _0x1007(60);
 try{
 topElement.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
 topElement.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
-topElement.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 }catch(e){}
 try{
-if(topElement!==realBtn&&typeof topElement.click==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-topElement.click();
-}
-}catch(e){}
-try{
-if(typeof realBtn.click==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
 realBtn.click();
+}catch(e){
+try{realBtn.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));}catch(e2){}
 }
-}catch(e){}
 console.log(`[\ub9e4\ud06c\ub85c] \ud31d\uc5c5/\ud558\ub2e8 \uc54c\ub9bc '\ud655\uc778' \ubc84\ud2bc \uc815\ubc00 \ud074\ub9ad \uc644\ub8cc (${realBtn.tagName}, class=${realBtn.className})`);
 return true;
 }

@@ -1666,11 +1666,6 @@ if(dateInput&&formattedDate){
 dateInput.value=formattedDate;
 dateInput.dispatchEvent(new Event('\x69\x6e\x70\x75\x74',{bubbles:true}));
 dateInput.dispatchEvent(new Event('\x63\x68\x61\x6e\x67\x65',{bubbles:true}));
-try{
-if(window.$&&$(dateInput).datepicker){
-$(dateInput).datepicker('\x73\x65\x74\x44\x61\x74\x65',formattedDate);
-}
-}catch(e){}
 const dp=document.getElementById('\x75\x69-\x64\x61\x74\x65\x70\x69\x63\x6b\x65\x72-\x64\x69\x76');
 if(dp)dp.style.display='\x6e\x6f\x6e\x65';
 }
