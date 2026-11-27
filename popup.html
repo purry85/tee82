@@ -4560,6 +4560,46 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        /* ===== 로그인 화면 흰 배경 테마 (2026-11-27) ===== */
+        .auth-overlay { background: rgba(241, 245, 249, 0.92); }
+        .auth-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.02);
+        }
+        .auth-logo-tile { filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.18)); }
+        .auth-subtitle { color: #64748B; }
+        .auth-card .auth-label { color: #334155; }
+        .auth-card .auth-input {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
+        }
+        .auth-card .auth-input::placeholder { color: #94A3B8; }
+        .auth-card .auth-input:focus {
+            background: #FFFFFF;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        .auth-card .btn-toggle-pw { color: #64748B; }
+        .auth-options-row, .auth-remember-label { color: #475569; }
+        .auth-alert.error { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+        .auth-alert.success { background: #F0FDF4; color: #15803D; border-color: #BBF7D0; }
+        .auth-alert.info { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+        .auth-card .auth-footer { border-top: 1px solid #E2E8F0 !important; }
+        .auth-card #btnOpenRegisterModal, .auth-card #btnOpenChangePwModal { color: #0F172A !important; }
+        .auth-card .btn-auth-admin-gear:hover { color: #0F172A; background: #F1F5F9; }
+        .auth-card #btnOpenAuthAdminModal { color: #64748B !important; }
+        .auth-card #btnToggleAuthVkb {
+            background: #ECFDF5 !important;
+            border: 1px solid #A7F3D0 !important;
+            color: #047857 !important;
+        }
+        .auth-vkb-panel { background: #F8FAFC; border: 1px solid #CBD5E1; }
+        .auth-vkb-key { background: #FFFFFF; border: 1px solid #CBD5E1; color: #0F172A; }
+        .auth-vkb-key.fn-key { background: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8; }
+        .auth-vkb-key.del-key { background: #FEF2F2; border-color: #FECACA; color: #DC2626; }
+
         /* 관리자 구글 시트 URL 설정 모달 */
         .auth-admin-modal {
             position: fixed;
@@ -4701,6 +4741,307 @@
             color: #0F172A;
             font-weight: 700;
         }
+        /* ===== 메인 화면 심플 테마 (로그인 화면과 통일, 2026-11-27) ===== */
+        :root {
+            --primary: #2F7CF6;
+            --primary-hover: #1D4ED8;
+            --primary-light: #EFF6FF;
+            --bg: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 6px 16px -6px rgba(15, 23, 42, 0.18);
+        }
+        .hero-card, .input-card {
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 14px -8px rgba(15, 23, 42, 0.18);
+        }
+        .hero-status-title { color: #0F172A; }
+        .hero-status-title span.count-num { color: #2F7CF6; }
+
+        /* 상단 헤더 */
+        .btn-header-notice-group { border-color: #E2E8F0; border-radius: 6px; }
+        .btn-header-notice-group:hover { border-color: #CBD5E1; }
+        .nav-icon-btn { color: #64748B; border-radius: 6px; }
+        .nav-icon-btn:hover { background: #F1F5F9; color: #0F172A; }
+
+        /* 플랫폼 자동등록 버튼: 흰 바탕 + 얇은 테두리 */
+        .btn-hero-submit {
+            background: #FFFFFF;
+            color: #0F172A;
+            border: 1px solid #E2E8F0;
+            border-radius: 7px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+        .btn-hero-submit:hover {
+            background: #F0FDF9;
+            border-color: #10B981;
+            color: #047857;
+            transform: none;
+            box-shadow: 0 2px 6px -2px rgba(16, 185, 129, 0.35);
+        }
+        .btn-hero-submit:active { background: #DCFCE7; transform: none; box-shadow: none; }
+
+        /* 플랫폼 동시 등록: 로그인 버튼과 같은 그라데이션 */
+        #btnRegisterMultiPlatform {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important;
+            border: none !important;
+            color: #FFFFFF !important;
+            border-radius: 7px !important;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.45) !important;
+        }
+
+        /* 전체리셋 / 선택리셋 / 날짜 */
+        .input-reset-date, .sel-reset-filter, .reset-repeat-group {
+            background: #F8FAFC;
+            border-color: #E2E8F0;
+            color: #0F172A;
+            border-radius: 6px;
+        }
+        .input-reset-date:focus { border-color: #10B981; background: #FFFFFF; }
+        .reset-date-tilde { color: #94A3B8; }
+        .input-reset-custom-min { border-color: #CBD5E1; color: #0F172A; }
+        .reset-repeat-group input[type="radio"] { accent-color: #2F7CF6; }
+        .btn-full-reset-action {
+            background: #0F172A !important;
+            border-radius: 6px !important;
+            box-shadow: none !important;
+        }
+        .btn-full-reset-action:hover { background: #1E293B !important; transform: none; box-shadow: none !important; }
+        .btn-selected-reset-action {
+            background: #2F7CF6 !important;
+            border-radius: 6px !important;
+            box-shadow: none !important;
+        }
+        .btn-selected-reset-action:hover { background: #1D4ED8 !important; transform: none; box-shadow: none !important; }
+
+        /* 부제 선택 줄 */
+        .part-select-strip { background: #F8FAFC; border-color: #E2E8F0; border-radius: 7px; }
+        .part-chk-label { border-color: #E2E8F0; border-radius: 6px; color: #334155; }
+        .part-chk-label input[type="checkbox"] { accent-color: #2F7CF6; }
+        .part-chk-label.active { background: #EFF6FF; border-color: #93C5FD; color: #1D4ED8; }
+
+        /* 붙여넣기 입력창 */
+        textarea#inputText {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 7px;
+        }
+        textarea#inputText:focus {
+            background: #FFFFFF;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        /* 원클릭 버튼 */
+        .btn-macro-action { border-radius: 7px; height: 26px; }
+        .btn-macro-action.join { background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
+        .btn-macro-action.join:hover { background: #DBEAFE; }
+        .btn-macro-action.transfer { background: #F8FAFC; color: #334155; border: 1px solid #E2E8F0; }
+        .btn-macro-action.transfer:hover { background: #F1F5F9; }
+        .btn-macro-action.both {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6);
+            color: #FFFFFF;
+            border: none;
+            box-shadow: 0 4px 10px -5px rgba(16, 185, 129, 0.5);
+        }
+        .btn-macro-action.both:hover { filter: brightness(1.06); background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); }
+
+        /* 탭 */
+        .tab-segmented-control { background: #E2E8F0; border-radius: 8px; padding: 3px; }
+        .tab-btn { border-radius: 6px; color: #64748B; }
+        .tab-btn.active { background: #FFFFFF; color: #0F172A; font-weight: 700; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.10); }
+
+        /* 정렬 바 */
+        .sort-control-bar { background: #FFFFFF; border-color: #E2E8F0; border-radius: 7px; }
+        .check-all-toggle { border-color: #E2E8F0; border-radius: 6px; }
+
+        /* 골프몬 버튼 안 수정 아이콘: 배경 투명, 아이콘만 색 */
+        .btn-refresh-inline {
+            background: transparent;
+            border: none;
+            color: #2F7CF6;
+            box-shadow: none;
+        }
+        .btn-refresh-inline:hover {
+            background: #EFF6FF;
+            border: none;
+            color: #1D4ED8;
+            box-shadow: none;
+        }
+        .btn-refresh-inline.btn-refresh-red {
+            background: transparent;
+            border: none;
+            color: #EF4444;
+        }
+        .btn-refresh-inline.btn-refresh-red:hover {
+            background: #FEF2F2 !important;
+            border: none !important;
+            color: #DC2626 !important;
+            box-shadow: none !important;
+        }
+        /* ===== 공지적용 · 특정구장 가격변경 창 심플 테마 (2026-11-27, 하단 포함) ===== */
+        #noticeModal, #coursePriceModal {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(3px);
+        }
+        #noticeModal .notice-modal-card, #coursePriceModal .prepaid-modal-card {
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35);
+        }
+        #noticeModal .notice-modal-header, #coursePriceModal .prepaid-modal-header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #F1F5F9;
+            padding: 12px 16px;
+        }
+        #noticeModal .notice-modal-title, #coursePriceModal .prepaid-modal-title {
+            color: #0F172A;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+        #noticeModal .unmapped-modal-close, #coursePriceModal .unmapped-modal-close { color: #94A3B8; border-radius: 6px; }
+        #noticeModal .unmapped-modal-close:hover, #coursePriceModal .unmapped-modal-close:hover { background: #F1F5F9; color: #0F172A; }
+        #noticeModal .notice-modal-desc, #coursePriceModal .prepaid-modal-desc {
+            background: #FFFFFF;
+            color: #64748B;
+            border-bottom: 1px solid #F1F5F9;
+            padding: 0 16px 10px 16px;
+        }
+        #noticeModal .notice-modal-desc strong, #coursePriceModal .prepaid-modal-desc strong { color: #0F172A; }
+
+        /* 공통 입력칸 */
+        #noticeModal input[type="text"], #coursePriceModal input[type="text"] {
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 7px !important;
+            background: #FFFFFF !important;
+            color: #0F172A;
+        }
+        #noticeModal input[type="text"]:focus, #coursePriceModal input[type="text"]:focus {
+            border-color: #10B981 !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        #noticeModal input[type="checkbox"], #coursePriceModal input[type="checkbox"] { accent-color: #2F7CF6; }
+
+        /* 공지적용: 적용 중인 공지 */
+        #noticeModal .active-notice-section { background: #FFFFFF; border-bottom: 1px solid #F1F5F9; padding: 10px 16px; }
+        #noticeModal .active-notice-title { color: #0F172A; }
+        #noticeModal .active-notice-chip {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            color: #0F172A;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+        #noticeModal .active-notice-chip:hover { background: #F0FDF9; border-color: #10B981; box-shadow: none; transform: none; }
+
+        /* 공지적용: 붙여넣기 영역 버튼 */
+        #noticeModal .notice-input-wrap { padding: 12px 16px; }
+        #noticeModal #btnNoticeOcrImage {
+            background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; color: #334155 !important;
+            border-radius: 7px !important; box-shadow: none !important;
+        }
+        #noticeModal #btnNoticeOcrImage:hover { background: #F8FAFC !important; border-color: #CBD5E1 !important; }
+        #noticeModal #btnSearchKakaoNotice {
+            background: #2F7CF6 !important; border: 1px solid #2F7CF6 !important; color: #FFFFFF !important;
+            border-radius: 7px !important; box-shadow: none !important;
+        }
+        #noticeModal #btnSearchKakaoNotice:hover { background: #1D4ED8 !important; }
+        #noticeModal #btnPasteNoticeClipboard {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important; border: none !important;
+            color: #FFFFFF !important; border-radius: 7px !important; box-shadow: 0 4px 10px -5px rgba(16, 185, 129, 0.5) !important;
+        }
+        #noticeModal .notice-textarea {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 9px;
+        }
+        #noticeModal .notice-textarea:focus { background: #FFFFFF; border-color: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+
+        /* 공지적용: 수동 추가 */
+        #noticeModal .manual-notice-section {
+            background: #F8FAFC !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 10px !important;
+            margin: 0 16px 12px 16px !important;
+        }
+        #noticeModal #btnAddManualNoticeRule { background: #2F7CF6 !important; border-radius: 7px !important; }
+        #noticeModal #btnAddManualNoticeRule:hover { background: #1D4ED8 !important; }
+
+        /* 공지적용: 하단 */
+        #noticeModal .notice-modal-footer, #coursePriceModal .prepaid-modal-footer {
+            background: #FFFFFF;
+            border-top: 1px solid #F1F5F9;
+            padding: 10px 16px;
+        }
+        #noticeModal .btn-notice-sync {
+            background: #FFFFFF; color: #334155; border: 1px solid #E2E8F0; border-radius: 7px;
+        }
+        #noticeModal .btn-notice-sync:hover { background: #F8FAFC; border-color: #CBD5E1; color: #0F172A; }
+        #noticeModal .btn-dict-cancel, #coursePriceModal .btn-dict-cancel {
+            background: #FFFFFF; color: #334155; border: 1px solid #E2E8F0; border-radius: 7px;
+        }
+        #noticeModal .btn-dict-cancel:hover, #coursePriceModal .btn-dict-cancel:hover { background: #F8FAFC; color: #0F172A; }
+        #noticeModal .btn-notice-apply, #coursePriceModal #btnSaveCoursePriceModal {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important;
+            color: #FFFFFF; border: none; border-radius: 7px;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.5);
+        }
+        #noticeModal .btn-notice-apply:hover, #coursePriceModal #btnSaveCoursePriceModal:hover { filter: brightness(1.06); }
+
+        /* 특정구장 가격변경 */
+        #coursePriceModal #btnAddCoursePriceDiff { background: #2F7CF6 !important; border-radius: 7px !important; }
+        #coursePriceModal #btnAddCoursePriceDiff:hover { background: #1D4ED8 !important; }
+        #coursePriceModal #btnQuickCopyCoursePrice {
+            background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; color: #334155 !important; border-radius: 6px !important; padding: 2px 8px !important;
+        }
+        #coursePriceModal #btnToggleBatchCoursePrice { color: #2F7CF6 !important; }
+        #coursePriceModal #btnApplyBatchCoursePrice { background: #2F7CF6 !important; border-radius: 6px !important; }
+        #coursePriceModal #textBatchCoursePrice { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
+        #coursePriceModal #btnCopyAllCoursePriceRules {
+            background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; color: #334155 !important; border-radius: 7px !important;
+        }
+        #coursePriceModal #btnCopyAllCoursePriceRules:hover { background: #F8FAFC !important; }
+        #coursePriceModal .course-price-chip { border-color: #E2E8F0; border-radius: 8px; background: #F8FAFC; box-shadow: none; }
+        #coursePriceModal .course-price-chip .adj-val-minus { color: #2F7CF6; }
+        /* 특정구장 입력칸이 넘쳐서 [+ 추가] 버튼이 잘리던 문제 */
+        #coursePriceModal #inputNewCourseName, #coursePriceModal #inputNewCourseDate, #coursePriceModal #inputNewCourseDiff { min-width: 0; width: 0; }
+
+        /* ===== 하단(빠른 메뉴 · 푸터 · 회원 정보) 심플 테마 ===== */
+        .action-list-toggle {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 7px;
+            color: #334155;
+        }
+        .action-list-toggle:hover { background: #F8FAFC; border-color: #CBD5E1; color: #0F172A; }
+        .action-list-toggle-arrow { color: #94A3B8; }
+        .action-list { border-radius: 8px; border-color: #E2E8F0; }
+        .action-item:hover { background-color: #F8FAFC; }
+        .footer-copyright { color: #94A3B8; }
+        #btnFooterUpdate { color: #2F7CF6 !important; text-decoration: none !important; }
+        #btnFooterKakao { color: #64748B !important; text-decoration: none !important; }
+        #btnFooterUpdate:hover, #btnFooterKakao:hover { text-decoration: underline !important; }
+        .user-membership-pill {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 999px;
+            color: #0F172A;
+            box-shadow: none;
+            padding: 1px 7px;
+            gap: 5px;
+        }
+        .user-membership-pill .user-name { color: #0F172A; }
+        .user-membership-pill .expire-badge { background: #2F7CF6; border-radius: 999px; padding: 0.5px 5px; }
+        .user-membership-pill .btn-pill-pw { color: #2F7CF6; text-decoration: none; }
+        .user-membership-pill .btn-pill-pw:hover { color: #1D4ED8; text-decoration: underline; }
+        .user-membership-pill .btn-pill-logout { color: #94A3B8; text-decoration: none; }
+        .user-membership-pill .btn-pill-logout:hover { color: #EF4444; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -5176,7 +5517,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.4.8</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.5.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -5659,7 +6000,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.4.8 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.5.0 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
@@ -5844,8 +6185,7 @@
         <div class="auth-card">
             <!-- 상단 로고 및 타이틀 -->
             <div class="auth-header">
-                <img src="automatee_tile.png" alt="AutomaTee" class="auth-logo-tile">
-                <img src="automatee_wordmark_dark.png" alt="AutomaTee" class="auth-wordmark-img">
+                <img src="automatee_wordmark_light.png" alt="AutomaTee" class="auth-wordmark-img">
                 <p class="auth-subtitle">골프 티타임 자동등록 솔루션</p>
             </div>
 
