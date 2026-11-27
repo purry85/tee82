@@ -5347,6 +5347,83 @@
         .card-seonti-pill, .card-seonti-pill.active { background: transparent; }
         .card-seonti-pill.active { border: 1px solid #FECACA; color: #DC2626; }
         .card-seonti-pill:hover { background: transparent; }
+        /* ===== 좁은 너비(사이드패널 기본 너비) 대응 (2026-11-27) ===== */
+        @media (max-width: 460px) {
+            /* 정렬바: 한 줄 유지 */
+            .sort-control-bar { gap: 3px; padding: 2px 4px; flex-wrap: nowrap; }
+            .sort-control-bar > * { flex-shrink: 0; }
+            .sort-control-bar .sort-bar-label, .sort-control-bar .sort-bar-divider { display: none; }
+            .check-all-toggle { padding: 2px 5px; gap: 3px; white-space: nowrap; font-size: 9.5px; }
+            .btn-sort-toggle { padding: 2px 5px; gap: 2px; white-space: nowrap; font-size: 9.5px; }
+            .btn-sort-toggle * { white-space: nowrap; }
+            .btn-seonti-batch, .btn-soldout-open-modal { padding: 2px 4px; font-size: 9px; }
+            .btn-seonti-batch { margin-left: auto; }
+            .btn-seonti-batch input[type="checkbox"] { width: 11px; height: 11px; }
+
+            /* 부제 선택 줄: 한 줄 유지 */
+            .part-select-strip { gap: 3px; padding: 3px 4px; flex-wrap: nowrap; }
+            .part-select-title { font-size: 9.5px; }
+            .part-chk-label { padding: 1px 4px; font-size: 9.5px; gap: 2px; }
+            .part-chk-label input[type="checkbox"] { width: 11px; height: 11px; }
+            .time-adjust-strip-item { gap: 2px !important; padding: 1px 4px !important; font-size: 9.5px !important; flex-shrink: 0; }
+            .time-adjust-strip-item input { width: 26px !important; }
+            .btn-part-time-gear { padding: 1px 4px !important; font-size: 9.5px !important; white-space: nowrap; flex-shrink: 0; }
+
+            /* 티타임 카드: 아랫줄 태그를 촘촘하게 */
+            .tee-card { padding: 4px 6px; gap: 3px; }
+            .card-row-bottom { gap: 3px; }
+            .card-fee { font-size: 9.5px; }
+            .card-fee span { font-size: 9px; }
+            .tee-card .card-tag { font-size: 8.5px; padding: 0 3px; }
+            .card-seonti-pill { padding: 0 4px; font-size: 9px; gap: 2px; }
+            .card-seonti-pill input[type="checkbox"] { width: 10px; height: 10px; }
+            .card-golf { font-size: 11.5px; }
+            .card-meta-group { gap: 3px; }
+            .card-time { font-size: 12px; }
+        }
+        /* ===== 새 버전 / 업데이트 완료 팝업 심플 테마 (2026-11-27) ===== */
+        #newVersionAlertModal { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px); }
+        #newVersionAlertModal .unmapped-modal-card {
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 14px !important;
+            box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35) !important;
+        }
+        #newVersionAlertModal .unmapped-modal-card > div:first-child {
+            background: #FFFFFF !important;
+            color: #0F172A !important;
+            border-bottom: 1px solid #F1F5F9;
+            padding: 13px 16px !important;
+        }
+        #newVersionAlertModal #newVersionModalHeaderTitle { color: #0F172A; font-size: 14px; letter-spacing: -0.2px; }
+        #newVersionAlertModal #btnCloseNewVersionModalX { color: #94A3B8 !important; opacity: 1 !important; border-radius: 6px; }
+        #newVersionAlertModal #btnCloseNewVersionModalX:hover { background: #F1F5F9 !important; color: #0F172A !important; }
+        #newVersionAlertModal .unmapped-modal-card > div:nth-child(2) > div:first-child {
+            background: #F8FAFC !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 10px !important;
+        }
+        #newVersionAlertModal .unmapped-modal-card > div:nth-child(2) > div:first-child > span { color: #94A3B8 !important; }
+        #newVersionAlertModal .unmapped-modal-card > div:nth-child(2) > div:first-child > div:last-child { color: #0F172A !important; }
+        #newVersionAlertModal #lblRemoteVerText { background: #2F7CF6 !important; border-radius: 999px !important; }
+        #newVersionAlertModal #lblReleaseNotesHeader { color: #0F172A !important; }
+        #newVersionAlertModal #newVersionReleaseNotes { border-radius: 10px !important; color: #334155 !important; }
+        #newVersionAlertModal #btnExecuteOneClickUpdate {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.5) !important;
+        }
+        #newVersionAlertModal #btnExecuteOneClickUpdate:hover { filter: brightness(1.06); }
+        #newVersionAlertModal #newVersionUpdateHint { color: #94A3B8 !important; }
+        #newVersionAlertModal #newVersionUpdateHint a { color: #2F7CF6 !important; text-decoration: none !important; }
+        #newVersionAlertModal .unmapped-modal-card > div:last-child {
+            background: #FFFFFF !important;
+            border-top: 1px solid #F1F5F9 !important;
+            padding: 10px 16px !important;
+        }
+        #newVersionAlertModal #btnDismissNewVersionModal {
+            border: 1px solid #E2E8F0 !important; border-radius: 7px !important; color: #334155 !important; font-weight: 700 !important; padding: 5px 12px !important;
+        }
+        #newVersionAlertModal #btnDismissNewVersionModal:hover { background: #F8FAFC !important; }
     </style>
 </head>
 <body>
@@ -5579,7 +5656,7 @@
                 </div>
                 <button type="button" id="btnOpenSoldOutFromDetect" style="background: linear-gradient(135deg, #EF4444, #DC2626); color: white; border: none; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);">글마감/삭제</button>
             </div>
-            <textarea id="inputText" placeholder="카톡/밴드 티타임 텍스트 붙여넣기..."></textarea>
+            <textarea id="inputText" placeholder="티타임 붙여넣기"></textarea>
             <div class="macro-row">
                 <button class="btn-macro-action join" id="btnMacroJoin">조인용 원클릭</button>
                 <button class="btn-macro-action transfer" id="btnMacroTransfer">양도용 원클릭</button>
@@ -5624,7 +5701,7 @@
             <div class="card-list-wrapper" id="cardList">
                 <div class="empty-state">
                     <div class="empty-title">변환된 티타임이 없습니다</div>
-                    <div class="empty-desc">위 입력창에 티타임을 붙여넣고<br>[조인용 원클릭]을 실행해주세요.</div>
+                    <div class="empty-desc">위 입력창에 티타임을 붙여넣고 원클릭을 실행해주세요</div>
                 </div>
             </div>
         </div>
@@ -5862,7 +5939,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.3</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.4</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -6068,8 +6145,8 @@
                 <button class="unmapped-modal-close" id="btnCloseCoursePriceModalX" title="닫기">&times;</button>
             </div>
             <div class="prepaid-modal-desc" style="line-height: 1.5;">
-                지정한 구장의 <strong>최종 금액</strong>에서 입력한 금액만큼 <strong>자동 할인(-) 또는 가산(+)</strong>되어 변환됩니다.<br>
-                (부제별[1부/2부/3부] 및 <strong>적용 날짜(예: ~11/30, 12/1~, 11/20~11/30)</strong>를 각각 다르게 지정할 수 있습니다)
+                지정한 구장의 <strong>최종 금액</strong>에서 입력한 금액만큼<br><strong>자동 할인(-) 또는 가산(+)</strong>되어 변환됩니다.<br>
+                (부제별[1부/2부/3부] 및 <strong>적용 날짜(예: ~11/30, 12/1~, 11/20~11/30)</strong>를<br>각각 다르게 지정할 수 있습니다)
             </div>
 
             <!-- 1. 단건 빠른 추가 영역 (구장명 + 날짜 + 가감액 + 부제 선택) -->
@@ -6155,7 +6232,7 @@
                 <button class="unmapped-modal-close" id="btnCloseNoticeModalX" title="닫기">&times;</button>
             </div>
             <div class="notice-modal-desc">
-                카톡이나 밴드로 전달받은 <strong>구장별 공지</strong>를 복사한 후, <strong>[복사한 내용 바로 적용]</strong> 버튼을 누르거나 <strong>[검색]</strong> 버튼으로 골프탑 공지방의 최신 공지를 즉시 읽어오세요.
+                카톡으로 전달받은 <strong>구장별 공지</strong>를 복사한 후, 붙여넣기해서 적용하세요.
             </div>
 
             <!-- 현재 적용 중인 공지 목록 컨테이너 -->
@@ -6345,7 +6422,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.3 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.4 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
@@ -6566,7 +6643,7 @@
 
                     <!-- 2열: 카피라이트와 관리자설정 (한 칸 아래) -->
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 2px;">
-                        <span style="font-size: 10px; color: #475569; padding-left: 4px;">v2.0 &middot; &copy; AutomaTee</span>
+                        <span id="authFooterVersion" style="font-size: 10px; color: #475569; padding-left: 4px;">AutomaTee</span>
                         <button type="button" class="btn-auth-admin-gear" id="btnOpenAuthAdminModal" title="관리자 설정" style="opacity: 0.65; font-size: 10px; color: #64748B;">관리자 설정</button>
                     </div>
                 </div>

@@ -8033,7 +8033,7 @@ if(trs.length===0){
 cardContainer.innerHTML=`
             <div class="empty-state">
                 <div class="empty-title">\ubcc0\ud658\ub41c \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</div>
-                <div class="empty-desc">\uc704 \uc785\ub825\ucc3d\uc5d0 \ud2f0\ud0c0\uc784\uc744 \ubd99\uc5ec\ub123\uace0<br>[\uc870\uc778\uc6a9 \uc6d0\ud074\ub9ad]\uc744 \uc2e4\ud589\ud574\uc8fc\uc138\uc694.</div>
+                <div class="empty-desc">\uc704 \uc785\ub825\ucc3d\uc5d0 \ud2f0\ud0c0\uc784\uc744 \ubd99\uc5ec\ub123\uace0 \uc6d0\ud074\ub9ad\uc744 \uc2e4\ud589\ud574\uc8fc\uc138\uc694</div>
             </div>`;
 updateSelectedBadge();
 return;
@@ -14568,6 +14568,9 @@ function _0x104e(ver){
 const v=ver||_0x104d();
 document.querySelectorAll('\x23\x66\x6f\x6f\x74\x65\x72\x41\x70\x70\x56\x65\x72\x73\x69\x6f\x6e').forEach(el=>{
 el.textContent=`Ver ${v}`;
+});
+document.querySelectorAll('\x23\x61\x75\x74\x68\x46\x6f\x6f\x74\x65\x72\x56\x65\x72\x73\x69\x6f\x6e').forEach(el=>{
+el.textContent=`v${v} \u00b7 \u00a9 AutomaTee`;
 });
 document.querySelectorAll('\x23\x62\x61\x64\x67\x65\x43\x75\x72\x72\x65\x6e\x74\x56\x65\x72, \x2e\x62\x61\x64\x67\x65-\x76\x65\x72').forEach(el=>{
 el.textContent=`Ver ${v} (\ucd5c\uc2e0)`;
