@@ -18136,23 +18136,29 @@ authInputs.forEach(inp=>{
 inp.addEventListener('\x74\x6f\x75\x63\x68\x73\x74\x61\x72\x74',()=>{
 lastTouchTs=Date.now();
 activeTargetInput=inp;
-document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
 highlightActiveInput();
-if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
 },{passive:true});
 inp.addEventListener('\x66\x6f\x63\x75\x73',()=>{
 activeTargetInput=inp;
 const isTouchFocus=(Date.now()-lastTouchTs)<1500||
 (window.matchMedia&&window.matchMedia('(\x70\x6f\x69\x6e\x74\x65\x72\x3a \x63\x6f\x61\x72\x73\x65)').matches);
-if(isTouchFocus)document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
+if(isTouchFocus&&!document.body.classList.contains('\x6b\x62-\x6f\x70\x65\x6e')){
+setTimeout(()=>{
+if(document.activeElement!==inputId&&document.activeElement!==inputPw)return;
+document.body.classList.add('\x6b\x62-\x6f\x70\x65\x6e');
+try{document.activeElement.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});}catch(e){}
+},400);
+}
 highlightActiveInput();
 if(vkbPanel&&vkbPanel.style.display==='\x66\x6c\x65\x78')renderVirtualKeypad();
 });
 inp.addEventListener('\x62\x6c\x75\x72',()=>{
 const elapsed=Date.now()-lastTouchTs;
-if(elapsed>=0&&elapsed<600){
+if(elapsed>=0&&elapsed<1200){
 setTimeout(()=>{
-if(document.activeElement!==inputId&&document.activeElement!==inputPw){
+const ae=document.activeElement;
+const wentNowhere=!ae||ae===document.body||ae===document.documentElement;
+if(wentNowhere){
 try{inp.focus({preventScroll:true});}catch(err){try{inp.focus();}catch(e2){}}
 if(vkbPanel&&vkbPanel.style.display!=='\x66\x6c\x65\x78'){
 vkbPanel.style.display='\x66\x6c\x65\x78';
