@@ -34,25 +34,12 @@ _0x1000();
 });
 _0x1000();
 if(chrome.sidePanel&&typeof chrome.sidePanel.setPanelBehavior==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:true}).catch((err)=>{
+chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:false}).catch((err)=>{
 console.warn('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65] \x73\x65\x74\x50\x61\x6e\x65\x6c\x42\x65\x68\x61\x76\x69\x6f\x72 \uc124\uc815\x3a',err);
 });
 }
 if(chrome.action&&typeof chrome.action.setPopup==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-if(chrome.sidePanel){
-chrome.action.setPopup({popup:''});
-}
-}
-if(chrome.action&&chrome.action.onClicked){
-chrome.action.onClicked.addListener(async(tab)=>{
-if(chrome.sidePanel&&typeof chrome.sidePanel.open==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'&&tab&&tab.windowId){
-try{
-await chrome.sidePanel.open({windowId:tab.windowId});
-}catch(e){
-console.warn('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65] \x61\x63\x74\x69\x6f\x6e\x2e\x6f\x6e\x43\x6c\x69\x63\x6b\x65\x64 \x73\x69\x64\x65\x50\x61\x6e\x65\x6c\x2e\x6f\x70\x65\x6e \uc2e4\ud328\x3a',e);
-}
-}
-});
+chrome.action.setPopup({popup:'\x70\x6f\x70\x75\x70\x2e\x68\x74\x6d\x6c'});
 }
 chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
 if(message.action==='\x4f\x50\x45\x4e\x5f\x53\x49\x44\x45\x5f\x50\x41\x4e\x45\x4c'){
