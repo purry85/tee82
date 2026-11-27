@@ -5292,6 +5292,26 @@
             line-height: 1.5;
         }
         #btnFooterKakao:hover { background: #F5DC00 !important; text-decoration: none !important; }
+        /* ===== 매핑사전 표 배경색 없애기 (2026-11-27) ===== */
+        .dict-table tr.has-dup, .dict-table tr.has-empty { background-color: transparent; }
+        .dict-table th { background: #FFFFFF; }
+        .dict-table input { background: #FFFFFF; }
+        .dict-table input.input-warning-dup {
+            background-color: #FFFFFF !important;
+            border-color: #FCD34D !important;
+            color: #B45309 !important;
+        }
+        .dict-table input.input-warning-empty {
+            background-color: #FFFFFF !important;
+            border-color: #FCA5A5 !important;
+            color: #DC2626 !important;
+        }
+        .dict-table input.dict-input-diff {
+            background-color: #FFFFFF !important;
+            border-color: #93C5FD !important;
+            color: #1D4ED8 !important;
+        }
+        .btn-dict-del { background: transparent; }
     </style>
 </head>
 <body>
@@ -5767,7 +5787,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.6.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -5808,25 +5828,25 @@
             <!-- 사이트별 사전 분리 탭 (골프몬 / 골팡 / 골마켓 / 골프락 / 골프랜드 / 전체비교) -->
             <div class="dict-site-tabs" id="dictSiteTabs">
                 <button class="dict-site-tab active" id="siteTabGolfmon" data-site="golfmon">
-                    골프몬 사전
+                    골프몬
                 </button>
                 <button class="dict-site-tab" id="siteTabGolfpang" data-site="golfpang">
-                    골팡 사전
+                    골팡
                 </button>
                 <button class="dict-site-tab" id="siteTabGolmarket" data-site="golmarket">
-                    골마켓 사전
+                    골마켓
                 </button>
                 <button class="dict-site-tab" id="siteTabGolfrock" data-site="golfrock">
-                    골프락 사전
+                    골프락
                 </button>
                 <button class="dict-site-tab" id="siteTabGolfland" data-site="golfland">
-                    골프랜드 사전
+                    골프랜드
                 </button>
                 <button class="dict-site-tab" id="siteTabGolftop" data-site="golftop">
-                    골프탑 사전
+                    골프탑
                 </button>
                 <button class="dict-site-tab" id="siteTabAll" data-site="all">
-                    전체 비교
+                    전체비교
                 </button>
             </div>
             <div class="dict-site-desc" id="dictSiteDesc">
@@ -6250,7 +6270,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.6.0 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.0 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
