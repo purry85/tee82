@@ -83,13 +83,13 @@ hud.style.cssText=`
             bottom: 24px;
             right: 24px;
             z-index: 9999999;
-            background: rgba(15, 23, 42, 0.94);
+            background: #FFFFFF;
             backdrop-filter: blur(8px);
-            color: #F8FAFC;
+            color: #0F172A;
             padding: 14px 18px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.35);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             font-size: 13px;
             min-width: 280px;
@@ -98,18 +98,18 @@ hud.style.cssText=`
         `;
 hud.innerHTML=`
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                <div style="font-weight: 700; font-size: 13.5px; color: #F59E0B; display: flex; align-items: center; gap: 6px;">
+                <div style="font-weight: 700; font-size: 13.5px; color: #0F172A; display: flex; align-items: center; gap: 6px;">
                     <span id="gtp_hud_title">\uace8\ud504\ud0d1 \ud64d\ubcf4 \uc790\ub3d9\ub4f1\ub85d</span>
                 </div>
                 <button id="gtp_hud_stop_btn" style="
-                    background: #EF4444; color: white; border: none; padding: 3px 8px; border-radius: 4px;
+                    background: #FFFFFF; color: #DC2626; border: 1px solid #FECACA; padding: 3px 8px; border-radius: 4px;
                     font-size: 11px; font-weight: 700; cursor: pointer;">\uc911\ub2e8</button>
             </div>
-            <div id="gtp_hud_desc" style="font-size: 12px; color: #CBD5E1; margin-bottom: 8px; line-height: 1.4;">
+            <div id="gtp_hud_desc" style="font-size: 12px; color: #475569; margin-bottom: 8px; line-height: 1.4;">
                 \uc900\ube44 \uc911...
             </div>
-            <div style="background: rgba(255, 255, 255, 0.1); height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">
-                <div id="gtp_hud_bar" style="background: #F59E0B; height: 100%; width: 0%; transition: width 0.25s ease;"></div>
+            <div style="background: #F1F5F9; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">
+                <div id="gtp_hud_bar" style="background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); height: 100%; width: 0%; transition: width 0.25s ease;"></div>
             </div>
             <div id="gtp_hud_count" style="font-size: 11px; color: #94A3B8; text-align: right; font-weight: 600;">
                 0 / 0\uac74 (0%)

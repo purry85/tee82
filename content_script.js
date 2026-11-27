@@ -385,15 +385,15 @@ hud.style.cssText=`
         right: 20px !important;
         width: 330px !important;
         max-width: 92vw !important;
-        background: rgba(15, 23, 42, 0.94) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 12px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(245, 158, 11, 0.15) !important;
+        box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.35) !important;
         z-index: 2147483647 !important;
         padding: 14px 16px !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", sans-serif !important;
-        color: #F8FAFC !important;
-        backdrop-filter: blur(8px) !important;
+        color: #0F172A !important;
+        
         pointer-events: auto !important;
         transition: opacity 0.25s ease, transform 0.25s ease !important;
         display: block !important;
@@ -401,32 +401,32 @@ hud.style.cssText=`
     `;
 hud.innerHTML=`
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13.5px; color: #F59E0B;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13.5px; color: #0F172A;">
                 <span id="gm_hud_title">\uace8\ud504\ubaac \uc790\ub3d9\ub4f1\ub85d</span>
             </div>
             <button id="gm_hud_stop_btn" style="
-                background: #EF4444 !important;
-                color: #FFFFFF !important;
-                border: none !important;
+                background: #FFFFFF !important;
+                color: #DC2626 !important;
+                border:  1px solid #FECACA !important;
                 padding: 4px 10px !important;
                 border-radius: 6px !important;
                 font-size: 11px !important;
                 font-weight: 700 !important;
                 cursor: pointer !important;
                 transition: background 0.15s ease !important;
-                box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3) !important;">\uc911\ub2e8</button>
+                box-shadow: none !important;">\uc911\ub2e8</button>
         </div>
         <div id="gm_hud_desc" style="
             font-size: 12px;
-            color: #CBD5E1;
+            color: #475569;
             margin-bottom: 8px;
             line-height: 1.45;
             word-break: break-all;
             min-height: 20px;">
             \uc900\ube44 \uc911...
         </div>
-        <div style="background: rgba(255, 255, 255, 0.1); height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">
-            <div id="gm_hud_bar" style="background: #F59E0B; height: 100%; width: 0%; transition: width 0.25s ease; border-radius: 3px;"></div>
+        <div style="background: #F1F5F9; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">
+            <div id="gm_hud_bar" style="background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); height: 100%; width: 0%; transition: width 0.25s ease; border-radius: 3px;"></div>
         </div>
         <div style="display: flex; justify-content: flex-end; align-items: center;">
             <div id="gm_hud_count" style="font-size: 11px; color: #94A3B8; text-align: right; font-weight: 600;">

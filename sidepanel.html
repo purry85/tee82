@@ -5424,6 +5424,30 @@
             border: 1px solid #E2E8F0 !important; border-radius: 7px !important; color: #334155 !important; font-weight: 700 !important; padding: 5px 12px !important;
         }
         #newVersionAlertModal #btnDismissNewVersionModal:hover { background: #F8FAFC !important; }
+        /* ===== 상단 로고 클릭 시 카피라이트(소개) 창 (2026-11-27) ===== */
+        #aboutModal { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px); }
+        .about-card {
+            position: relative; background: #FFFFFF; width: 88%; max-width: 300px;
+            border: 1px solid #E2E8F0; border-radius: 16px; padding: 26px 22px 18px 22px;
+            box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35);
+            display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
+            animation: modalPop 0.18s ease-out;
+        }
+        .about-card .unmapped-modal-close { position: absolute; top: 10px; right: 10px; color: #94A3B8; border-radius: 6px; }
+        .about-card .unmapped-modal-close:hover { background: #F1F5F9; color: #0F172A; }
+        .about-tile { width: 84px; height: 84px; border-radius: 20px; filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.18)); margin-bottom: 8px; }
+        .about-wordmark { height: 30px; width: auto; }
+        .about-sub { margin: 0; font-size: 11.5px; color: #64748B; }
+        .about-ver { margin-top: 6px; font-size: 11px; font-weight: 700; color: #1D4ED8; border: 1px solid #BFDBFE; border-radius: 999px; padding: 2px 10px; }
+        .about-sites { margin-top: 6px; font-size: 10.5px; color: #475569; line-height: 1.5; }
+        .about-copy { margin-top: 8px; padding-top: 10px; border-top: 1px solid #F1F5F9; width: 100%; font-size: 10px; color: #94A3B8; line-height: 1.5; }
+        .about-actions { display: flex; gap: 6px; margin-top: 10px; width: 100%; }
+        .about-actions button { flex: 1; height: 32px; border-radius: 8px; font-size: 11.5px; font-weight: 800; cursor: pointer; font-family: inherit; }
+        #btnAboutKakao { background: #FEE500; color: #3C1E1E; border: none; }
+        #btnAboutKakao:hover { background: #F5DC00; }
+        #btnAboutClose { background: #FFFFFF; color: #334155; border: 1px solid #E2E8F0; }
+        #btnAboutClose:hover { background: #F8FAFC; }
+        .brand-container { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -5939,7 +5963,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.4</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.8.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -6422,7 +6446,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.4 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.8.0 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
@@ -6581,6 +6605,23 @@
             <div style="background: #F8FAFC; border-top: 1px solid #E2E8F0; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 10px; color: #94A3B8;">업데이트는 권장사항입니다</span>
                 <button type="button" id="btnDismissNewVersionModal" style="padding: 4px 11px; background: white; border: 1px solid #CBD5E1; border-radius: 5px; font-size: 10.5px; color: #64748B; font-weight: 600; cursor: pointer;">나중에 하기 (닫기)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 로고 클릭 시 카피라이트(소개) 창 -->
+    <div class="dict-modal-overlay" id="aboutModal" style="display: none; z-index: 100004;">
+        <div class="about-card">
+            <button type="button" class="unmapped-modal-close" id="btnCloseAboutX" title="닫기">&times;</button>
+            <img src="automatee_tile.png" alt="AutomaTee" class="about-tile">
+            <img src="automatee_wordmark_light.png" alt="AutomaTee" class="about-wordmark">
+            <p class="about-sub">골프 티타임 자동등록 솔루션</p>
+            <div class="about-ver" id="aboutVersion">Ver -</div>
+            <div class="about-sites">골프몬 · 골팡 · 골마켓 · 골프락 · 골프랜드 · 골프탑</div>
+            <div class="about-copy">© 2026 AutomaTee. All rights reserved.<br>Golf Booking Automation</div>
+            <div class="about-actions">
+                <button type="button" id="btnAboutKakao">카톡문의</button>
+                <button type="button" id="btnAboutClose">닫기</button>
             </div>
         </div>
     </div>

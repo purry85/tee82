@@ -3,230 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutomaTee (오토매티) - 원클릭 설치기 다운로드</title>
+    <title>AutomaTee (오토매티) - 골프 티타임 자동등록</title>
+    <meta name="description" content="카톡·밴드로 받은 티타임을 붙여넣으면 골프몬, 골팡, 골프탑, 골마켓, 골프랜드, 골프락에 자동으로 등록합니다.">
     <link rel="icon" type="image/png" href="automatee_tile.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "Segoe UI", Roboto, sans-serif;
+        :root {
+            --ink: #0F172A;
+            --ink-2: #334155;
+            --muted: #64748B;
+            --line: #E5E7EB;
+            --soft: #F8FAFC;
+            --green: #10B981;
+            --blue: #2F7CF6;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            background: linear-gradient(180deg, #12324a 0%, #0d1726 45%, #0a111d 100%);
-            color: #f1f5f9;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+            color: var(--ink);
+            background: #FFFFFF;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            word-break: keep-all;
         }
-        .card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(51, 65, 85, 0.6);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 440px;
-            padding: 38px 28px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+        a { color: inherit; text-decoration: none; }
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+        /* 상단 메뉴 */
+        .nav { position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+        .nav.scrolled { border-bottom-color: var(--line); }
+        .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .nav-logo img { height: 22px; display: block; }
+        .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; color: var(--ink-2); }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-cta { padding: 7px 14px; border: 1px solid var(--line); border-radius: 8px; font-weight: 600; color: var(--ink); }
+        .nav-cta:hover { background: var(--soft); }
+
+        /* 첫 화면 */
+        .hero { padding: 72px 0 88px; }
+        .hero .wrap { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 56px; align-items: center; }
+        .eyebrow { font-size: 14px; font-weight: 600; color: var(--green); margin-bottom: 14px; }
+        .hero h1 { font-size: 46px; line-height: 1.22; letter-spacing: -1.4px; font-weight: 800; margin-bottom: 20px; }
+        .hero p.lead { font-size: 17px; color: var(--muted); max-width: 460px; margin-bottom: 32px; }
+        .cta-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .btn-main {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--ink); color: #FFFFFF; font-weight: 700; font-size: 16px;
+            padding: 15px 24px; border-radius: 10px; transition: background .15s, transform .15s;
         }
-        .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 14px;
+        .btn-main:hover { background: #1E293B; transform: translateY(-1px); }
+        .btn-main small { font-weight: 500; font-size: 13px; color: #94A3B8; }
+        .link-sub { font-size: 15px; font-weight: 600; color: var(--ink-2); border-bottom: 1px solid #CBD5E1; padding-bottom: 1px; }
+        .link-sub:hover { color: var(--ink); border-color: var(--ink); }
+        .meta { margin-top: 18px; font-size: 13px; color: #94A3B8; }
+
+        .shot { position: relative; justify-self: center; }
+        .shot::before {
+            content: ""; position: absolute; inset: 36px -28px -28px 36px; border-radius: 28px;
+            background: linear-gradient(135deg, #ECFDF5, #EFF6FF);
         }
-        .logo-img {
-            width: 84px;
-            height: 84px;
-            border-radius: 18px;
-            display: block;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        .shot img {
+            position: relative; display: block; width: 360px; max-width: 100%; height: auto;
+            border-radius: 16px; border: 1px solid var(--line);
+            box-shadow: 0 30px 60px -30px rgba(15, 23, 42, 0.35);
         }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 11.5px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            letter-spacing: -0.2px;
+
+        /* 섹션 공통 */
+        section.block { padding: 88px 0; }
+        section.block.alt { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .sec-title { font-size: 30px; letter-spacing: -0.8px; font-weight: 800; margin-bottom: 10px; }
+        .sec-desc { font-size: 16px; color: var(--muted); margin-bottom: 44px; }
+
+        /* 설치 3단계 */
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+        .step { border-top: 2px solid var(--ink); padding-top: 18px; }
+        .step .num { font-size: 13px; font-weight: 700; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+        .step h3 { font-size: 18px; margin-bottom: 6px; letter-spacing: -0.3px; }
+        .step p { font-size: 14.5px; color: var(--muted); }
+
+        /* 지원 플랫폼 */
+        .platforms { display: grid; grid-template-columns: repeat(6, 1fr); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #FFFFFF; }
+        .platforms div { padding: 22px 8px; text-align: center; font-weight: 700; font-size: 15px; border-right: 1px solid var(--line); }
+        .platforms div:last-child { border-right: none; }
+        .platforms span { display: block; font-size: 12px; font-weight: 500; color: #94A3B8; margin-top: 2px; }
+
+        /* 지원 */
+        .support { display: grid; grid-template-columns: 1.25fr 1fr; gap: 24px; }
+        .panel { border: 1px solid var(--line); border-radius: 14px; padding: 28px; background: #FFFFFF; }
+        .panel h3 { font-size: 19px; letter-spacing: -0.3px; margin-bottom: 8px; }
+        .panel > p { font-size: 14.5px; color: var(--muted); margin-bottom: 20px; }
+        .panel ol { padding-left: 18px; font-size: 14px; color: var(--ink-2); margin-bottom: 18px; }
+        .panel ol li { margin-bottom: 4px; }
+        .panel ol a { color: var(--blue); font-weight: 600; }
+        .panel ol a:hover { text-decoration: underline; }
+        .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .input {
+            flex: 1; min-width: 0; padding: 11px 12px; font-size: 14px; font-family: inherit;
+            border: 1px solid var(--line); border-radius: 8px; background: #FFFFFF; color: var(--ink); outline: none;
         }
-        h1 {
-            font-size: 25px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
-            color: #ffffff;
+        .input:focus { border-color: var(--ink); }
+        #anydeskNumber { flex: 1.3; letter-spacing: 0.5px; font-weight: 600; }
+        .btn-dark {
+            width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--ink); color: #FFFFFF;
+            font-family: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer;
         }
-        h1.wordmark { line-height: 0; margin: 2px 0 10px; }
-        .wordmark-img { height: 34px; width: auto; display: inline-block; }
-        .subtitle {
-            font-size: 13px;
-            color: #94a3b8;
-            margin-bottom: 26px;
+        .btn-dark:hover { background: #1E293B; }
+        #anydeskSuccessMsg { display: none; margin-top: 12px; font-size: 13.5px; color: #047857; line-height: 1.55; }
+        .btn-kakao {
+            display: flex; align-items: center; justify-content: center; gap: 8px; padding: 13px; border-radius: 8px;
+            background: #FEE500; color: #191919; font-weight: 700; font-size: 15px;
         }
-        .btn-download {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #10b981 0%, #0ea5e9 100%);
-            color: #ffffff;
-            font-size: 15.5px;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 14px;
-            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.35);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
+        .btn-kakao:hover { background: #F5DC00; }
+        .panel .divider { height: 1px; background: var(--line); margin: 22px 0; }
+        .doc-link { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 15px; }
+        .doc-link:hover span:last-child { transform: translateX(3px); }
+        .doc-link span:last-child { transition: transform .15s; color: var(--muted); }
+
+        /* 하단 */
+        footer { padding: 36px 0 48px; }
+        footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #94A3B8; }
+        footer img { height: 16px; display: block; opacity: 0.8; }
+        footer nav { display: flex; gap: 18px; }
+        footer nav a:hover { color: var(--ink); }
+
+        @media (max-width: 860px) {
+            .hero { padding: 40px 0 64px; }
+            .hero .wrap { grid-template-columns: 1fr; gap: 44px; }
+            .hero h1 { font-size: 34px; letter-spacing: -1px; }
+            .hero p.lead { font-size: 16px; }
+            .shot::before { inset: 24px -12px -16px 24px; }
+            .shot img { width: 300px; }
+            section.block { padding: 64px 0; }
+            .sec-title { font-size: 25px; }
+            .steps { grid-template-columns: 1fr; gap: 26px; }
+            .platforms { grid-template-columns: repeat(3, 1fr); }
+            .platforms div:nth-child(3) { border-right: none; }
+            .platforms div:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+            .support { grid-template-columns: 1fr; }
+            .nav-links .hide-sm { display: none; }
         }
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.5);
-            filter: brightness(1.08);
-        }
-        .file-info {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 10px;
-            margin-bottom: 24px;
-        }
-        .guide-box {
-            width: 100%;
-            background: rgba(30, 41, 59, 0.55);
-            border: 1px solid rgba(51, 65, 85, 0.45);
-            border-radius: 14px;
-            padding: 16px 18px;
-            text-align: left;
-        }
-        .guide-title {
-            font-size: 12.5px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 10px;
-        }
-        .guide-step {
-            font-size: 12px;
-            color: #cbd5e1;
-            line-height: 1.65;
-            margin-bottom: 6px;
-        }
-        .guide-step:last-child {
-            margin-bottom: 0;
-        }
-        .footer {
-            margin-top: 24px;
-            font-size: 11.5px;
-            color: #475569;
+        @media (max-width: 420px) {
+            .wrap { padding: 0 18px; }
+            .hero h1 { font-size: 30px; }
+            .btn-main { width: 100%; justify-content: center; }
+            .form-row { flex-direction: column; }
+            .panel { padding: 22px; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <!-- 1. 정중앙 로고 -->
-        <div class="logo-wrapper">
-            <img src="automatee_tile.png" alt="AutomaTee" class="logo-img">
+    <header class="nav" id="nav">
+        <div class="wrap">
+            <a href="#" class="nav-logo"><img src="automatee_wordmark_light.png" alt="AutomaTee"></a>
+            <nav class="nav-links">
+                <a href="manual.html" class="hide-sm">사용설명서</a>
+                <a href="#support" class="hide-sm">원격 지원</a>
+                <a href="http://pf.kakao.com/_RxbSNX/chat" target="_blank" class="nav-cta">문의하기</a>
+            </nav>
         </div>
+    </header>
 
-        <!-- 2. 중앙 정렬 뱃지 -->
-        <div class="badge">Windows 전용 · 원클릭 설치기</div>
-
-        <!-- 3. 타이틀 및 버전 -->
-        <h1 class="wordmark"><img src="automatee_wordmark_dark.png" alt="AutomaTee" class="wordmark-img"></h1>
-        <p class="subtitle">골프 티타임 자동등록 솔루션 Ver 2.1.8</p>
-
-        <!-- 4. 원클릭 다운로드 버튼 -->
-        <a href="Automatee_Setup.exe" download="Automatee_Setup.exe" class="btn-download">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            PC 원클릭 설치 프로그램 다운로드
-        </a>
-        <div class="file-info" style="margin-bottom: 10px;">PC용 파일: Automatee_Setup.exe (Windows 크롬·엣지 자동장착)</div>
-
-        <!-- 4-0. 모바일(Lemur Browser)용 ZIP 다운로드 버튼 -->
-        <a href="GolfTee82_배포용_암호화.zip" download="GolfTee82_배포용_암호화.zip" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%); color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 6px 18px rgba(14, 165, 233, 0.3);">
-            <span>📱 모바일용 (Lemur Browser) ZIP 다운로드</span>
-        </a>
-
-        <!-- 4-1. 공식 사용설명서 바로가기 -->
-        <a href="manual.html" class="btn-manual" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: rgba(30, 41, 59, 0.75); border: 1px solid rgba(56, 189, 248, 0.35); color: #38BDF8; font-size: 13.5px; font-weight: 700; text-decoration: none; border-radius: 12px; margin-bottom: 12px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-            <span style="font-size: 16px;">📖</span> 공식 온라인 사용설명서 보기
-        </a>
-
-        <!-- 4-2. 애니데스크 원격 지원 카드 -->
-        <div class="remote-support-box" style="width: 100%; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(99, 102, 241, 0.45); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; text-align: left; box-shadow: 0 6px 16px rgba(0,0,0,0.25);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                <div style="font-size: 13px; font-weight: 800; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
-                    <span>🖥️ 원격 설치 지원 (AnyDesk)</span>
+    <main>
+        <section class="hero">
+            <div class="wrap">
+                <div>
+                    <div class="eyebrow">골프 부킹매니저를 위한 자동등록 프로그램</div>
+                    <h1>티타임은 붙여넣기만,<br>등록은 오토매티가.</h1>
+                    <p class="lead">카톡·밴드로 받은 티타임을 붙여넣으면 6개 골프 플랫폼에 자동으로 등록하고, 가격이나 시간이 바뀐 타임만 골라 다시 수정합니다.</p>
+                    <div class="cta-row">
+                        <a href="Automatee_Setup.exe" download="Automatee_Setup.exe" class="btn-main">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Windows용 다운로드 <small>.exe</small>
+                        </a>
+                        <a href="GolfTee82_배포용_암호화.zip" download="GolfTee82_배포용_암호화.zip" class="link-sub">모바일(Lemur)용 받기</a>
+                    </div>
+                    <div class="meta">Ver 2.1.8 · Windows 10/11 · Chrome, Edge 지원</div>
                 </div>
-                <span style="font-size: 10px; background: rgba(99, 102, 241, 0.25); color: #c7d2fe; padding: 2px 7px; border-radius: 6px; font-weight: 700;">실시간 원격</span>
-            </div>
-            
-            <p style="font-size: 11.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;">
-                설치가 어려우신가요? 애니데스크를 다운받아 <b>실행하고, 애니데스크 회원가입 후 로그인 뒤</b>, 나타나는 <b>9자리 번호</b>를 보내주시면 원격 접속하여 직접 도와드립니다.
-            </p>
-
-            <!-- 1) 애니데스크 다운로드 버튼 -->
-            <a href="https://download.anydesk.com/AnyDesk.exe" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 9px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: all 0.2s;">
-                <span>⬇️ 애니데스크 다운로드 (다운 후 바로 실행)</span>
-            </a>
-
-            <!-- 2) 내 PC 번호 입력 및 전송 -->
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <div style="display: flex; gap: 6px;">
-                    <input type="text" id="anydeskName" placeholder="성함" style="flex: 1; padding: 9px 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(71, 85, 105, 0.8); border-radius: 8px; color: #fff; font-size: 12px; outline: none;">
-                    <input type="text" id="anydeskNumber" placeholder="AnyDesk 9자리 번호" style="flex: 1.35; padding: 9px 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(71, 85, 105, 0.8); border-radius: 8px; color: #38bdf8; font-weight: 700; font-size: 12.5px; outline: none; letter-spacing: 0.5px;">
+                <div class="shot">
+                    <img src="app_screenshot.png" alt="오토매티 프로그램 화면" width="420" height="640">
                 </div>
-                <button type="button" id="btnSendAnydesk" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);">
-                    <span>🚀 내 PC 번호 전송하고 원격 요청하기</span>
-                </button>
             </div>
+        </section>
 
-            <!-- 전송 완료 안내 메시지 영역 -->
-            <div id="anydeskSuccessMsg" style="display: none; margin-top: 8px; padding: 8px 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 6px; font-size: 11px; color: #34d399; line-height: 1.4;">
-                ✅ <b>원격 번호가 전송되었습니다!</b><br>
-                카카오톡 창이 열리면 붙여넣기(Ctrl+V) 하시면 담당자가 즉시 접속하여 도와드립니다.
+        <section class="block alt">
+            <div class="wrap">
+                <h2 class="sec-title">설치는 3분이면 끝납니다</h2>
+                <p class="sec-desc">설치 파일이 브라우저에 확장 프로그램을 자동으로 연결해 줍니다.</p>
+                <div class="steps">
+                    <div class="step">
+                        <div class="num">01</div>
+                        <h3>설치 파일 받기</h3>
+                        <p>위의 Windows용 다운로드 버튼으로 Automatee_Setup.exe를 받습니다.</p>
+                    </div>
+                    <div class="step">
+                        <div class="num">02</div>
+                        <h3>실행하고 브라우저 선택</h3>
+                        <p>받은 파일을 실행한 뒤 사용하는 브라우저(크롬, 엣지)를 고릅니다.</p>
+                    </div>
+                    <div class="step">
+                        <div class="num">03</div>
+                        <h3>툴바에서 바로 시작</h3>
+                        <p>[원클릭 브라우저 연동 및 시작]을 누르면 툴바에 오토매티가 나타납니다.</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 4-3. 카카오톡 1:1 상담 문의 -->
-        <a href="http://pf.kakao.com/_RxbSNX/chat" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: #FEE500; color: #191919; font-size: 13.5px; font-weight: 800; text-decoration: none; border-radius: 12px; margin-bottom: 22px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(254, 229, 0, 0.25);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#191919"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.25 4.54 6.62-.2.74-.72 2.68-.83 3.09-.13.5.18.5.38.36.16-.11 2.53-1.72 3.56-2.42.76.11 1.54.17 2.35.17 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
-            오토매티 카카오톡 1:1 실시간 문의
-        </a>
+        <section class="block">
+            <div class="wrap">
+                <h2 class="sec-title">한 번 붙여넣고, 여섯 곳에 등록</h2>
+                <p class="sec-desc">사이트마다 다른 구장 이름도 매핑사전으로 자동으로 맞춰 줍니다.</p>
+                <div class="platforms">
+                    <div>골프몬<span>등록 · 수정 · 리셋</span></div>
+                    <div>골팡<span>자동등록</span></div>
+                    <div>골프탑<span>홍보 등록</span></div>
+                    <div>골마켓<span>조인 등록</span></div>
+                    <div>골프랜드<span>조인 등록</span></div>
+                    <div>골프락<span>조인 등록</span></div>
+                </div>
+            </div>
+        </section>
 
-        <!-- 5. 3단계 간편 설치 안내 -->
-        <div class="guide-box">
-            <div class="guide-title">📌 초간단 설치 안내</div>
-            <div class="guide-step">1. 위 버튼을 눌러 <b>Automatee_Setup.exe</b>를 다운로드합니다.</div>
-            <div class="guide-step">2. 다운로드된 파일을 실행하고 사용할 브라우저(크롬, 엣지 등)를 선택합니다.</div>
-            <div class="guide-step">3. <b>[원클릭 브라우저 연동 및 시작]</b>을 누르면 브라우저 툴바에 자동 등록됩니다.</div>
-        </div>
+        <section class="block alt" id="support">
+            <div class="wrap">
+                <h2 class="sec-title">설치가 어렵다면 도와드릴게요</h2>
+                <p class="sec-desc">원격으로 직접 설치해 드리거나, 카카오톡으로 바로 답변드립니다.</p>
+                <div class="support">
+                    <div class="panel remote-support-box">
+                        <h3>원격 설치 지원 (AnyDesk)</h3>
+                        <p>아래 순서대로 진행하시면 담당자가 접속해서 설치를 마무리해 드립니다.</p>
+                        <ol>
+                            <li><a href="https://download.anydesk.com/AnyDesk.exe" target="_blank">애니데스크 다운로드</a> 후 실행</li>
+                            <li>애니데스크 회원가입 후 로그인</li>
+                            <li>화면에 나온 9자리 번호를 아래에 입력해 보내기</li>
+                        </ol>
+                        <div class="form-row">
+                            <input type="text" id="anydeskName" class="input" placeholder="성함">
+                            <input type="text" id="anydeskNumber" class="input" placeholder="AnyDesk 9자리 번호" inputmode="numeric">
+                        </div>
+                        <button type="button" id="btnSendAnydesk" class="btn-dark">원격 지원 요청하기</button>
+                        <div id="anydeskSuccessMsg"></div>
+                    </div>
+                    <div class="panel">
+                        <h3>카카오톡 1:1 문의</h3>
+                        <p>사용 중 궁금한 점이나 오류가 있으면 편하게 물어보세요.</p>
+                        <a href="http://pf.kakao.com/_RxbSNX/chat" target="_blank" class="btn-kakao">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#191919"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.8 5.25 4.54 6.62-.2.74-.72 2.68-.83 3.09-.13.5.18.5.38.36.16-.11 2.53-1.72 3.56-2.42.76.11 1.54.17 2.35.17 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
+                            카카오톡으로 문의하기
+                        </a>
+                        <div class="divider"></div>
+                        <a href="manual.html" class="doc-link"><span>온라인 사용설명서 보기</span><span>→</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <div class="footer">
-            © 2026 AutomaTee. All rights reserved.
+    <footer>
+        <div class="wrap">
+            <img src="automatee_wordmark_light.png" alt="AutomaTee">
+            <nav>
+                <a href="manual.html">사용설명서</a>
+                <a href="http://pf.kakao.com/_RxbSNX/chat" target="_blank">문의하기</a>
+            </nav>
+            <div>© 2026 AutomaTee. All rights reserved.</div>
         </div>
-    </div>
+    </footer>
 
     <script>
         const AUTH_API_URL = 'https://script.google.com/macros/s/AKfycbw9BUEoZFUSIZ8jj1CqyxxZoKVdzel7vfc7DnIaEmtREOon4wN_Pmdc9ukhLsaOz81iFQ/exec';
+
+        // 스크롤 시 상단 메뉴 구분선
+        const navEl = document.getElementById('nav');
+        window.addEventListener('scroll', () => navEl.classList.toggle('scrolled', window.scrollY > 8), { passive: true });
 
         document.getElementById('btnSendAnydesk').addEventListener('click', async () => {
             const nameInput = document.getElementById('anydeskName');
@@ -248,7 +298,7 @@
                 return;
             }
 
-            const formattedNum = rawNum.length === 9 
+            const formattedNum = rawNum.length === 9
                 ? `${rawNum.slice(0,3)} ${rawNum.slice(3,6)} ${rawNum.slice(6,9)}`
                 : rawNum;
 
@@ -262,7 +312,7 @@
                 console.warn('Clipboard write failed:', err);
             }
 
-            // 서버 전송 (CORS 제약 없는 100% 전송 보장: Image ping + fetch 병행)
+            // 서버 전송 (Image ping + fetch 병행)
             const targetReqUrl = `${AUTH_API_URL}?action=remote_support_request&name=${encodeURIComponent(name)}&anydesk=${encodeURIComponent(formattedNum)}&time=${encodeURIComponent(new Date().toISOString())}`;
             try {
                 const ping = new Image();
@@ -273,7 +323,7 @@
             } catch(e) {}
 
             successMsg.style.display = 'block';
-            successMsg.innerHTML = `✅ <b>[${formattedNum}] 원격 번호가 복사되었습니다!</b><br>잠시 후 열리는 카카오톡 채팅창에 <b>붙여넣기(Ctrl+V)</b>하여 보내주시면 담당자가 즉시 접속하여 도와드립니다.`;
+            successMsg.innerHTML = `요청을 보냈습니다. 번호 <b>${formattedNum}</b>가 복사되었으니, 잠시 후 열리는 카카오톡 채팅창에 붙여넣기(Ctrl+V)해서 보내 주세요.`;
 
             setTimeout(() => {
                 window.open('http://pf.kakao.com/_RxbSNX/chat', '_blank');
@@ -281,7 +331,7 @@
         });
 
         // 숫자 자동 포맷팅
-        document.getElementById('anydeskNumber').addEventListener('input', function(e) {
+        document.getElementById('anydeskNumber').addEventListener('input', function() {
             let v = this.value.replace(/[^0-9]/g, '');
             if (v.length > 9) v = v.slice(0, 9);
             if (v.length > 6) {

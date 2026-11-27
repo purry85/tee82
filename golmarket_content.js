@@ -237,46 +237,46 @@ hud.style.cssText=`
         right: 24px !important;
         width: 320px !important;
         max-width: 92vw !important;
-        background: rgba(15, 23, 42, 0.94) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 12px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(19, 57, 46, 0.12) !important;
+        box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.35) !important;
         z-index: 2147483647 !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif !important;
         padding: 15px 16px !important;
         box-sizing: border-box !important;
-        color: #F8FAFC !important;
+        color: #0F172A !important;
         transition: opacity 0.3s ease, transform 0.3s ease !important;
         display: block !important;
     `;
 hud.innerHTML=`
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13.5px; color: #F59E0B;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13.5px; color: #0F172A;">
                 
                 <span id="gm_status_panel_title">\uace8\ub9c8\ucf13 \uc790\ub3d9 \ub4f1\ub85d \uc9c4\ud589 \uc911</span>
             </div>
             
         </div>
-        <div id="gm_status_panel_desc" style="font-size: 12px; color: #CBD5E1; margin-bottom: 9px; line-height: 1.4; word-break: break-all; min-height: 28px;">
+        <div id="gm_status_panel_desc" style="font-size: 12px; color: #475569; margin-bottom: 9px; line-height: 1.4; word-break: break-all; min-height: 28px;">
             \uace8\ub9c8\ucf13 \ud654\uba74\uc744 \uc900\ube44\ud558\uace0 \uc788\uc2b5\ub2c8\ub2e4...
         </div>
-        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 9px; overflow: hidden; margin-bottom: 9px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-            <div id="gm_status_panel_bar" style="background: linear-gradient(90deg, #10B981, #059669); height: 100%; width: 0%; transition: width 0.35s ease; border-radius: 10px;"></div>
+        <div style="background: #F1F5F9; border-radius: 10px; height: 9px; overflow: hidden; margin-bottom: 9px; box-shadow: none;">
+            <div id="gm_status_panel_bar" style="background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); height: 100%; width: 0%; transition: width 0.35s ease; border-radius: 10px;"></div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div id="gm_status_panel_count" style="font-size: 11.5px; font-weight: 800; color: #10B981;">
+            <div id="gm_status_panel_count" style="font-size: 11.5px; font-weight: 800; color: #2F7CF6;">
                 0 / 0\uac74 \uc644\ub8cc
             </div>
             <button id="gm_status_panel_stop" style="
-                background: #EF4444 !important;
-                color: #ffffff !important;
-                border: none !important;
+                background: #FFFFFF !important;
+                color: #DC2626 !important;
+                border:  1px solid #FECACA !important;
                 padding: 5px 12px !important;
                 border-radius: 6px !important;
                 font-size: 11px !important;
                 font-weight: 700 !important;
                 cursor: pointer !important;
-                box-shadow: 0 2px 5px rgba(239, 68, 68, 0.35) !important;
+                box-shadow: none !important;
                 transition: background 0.15s !important;
             ">\uc911\ub2e8</button>
         </div>

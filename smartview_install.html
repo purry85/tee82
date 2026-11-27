@@ -286,14 +286,50 @@
       margin-top: 36px;
       line-height: 1.6;
     }
-  </style>
+  
+    /* ===== 흰 배경 심플 테마 (오토매티 사이트와 통일, 2026-11-27) ===== */
+    body { background: #F8FAFC !important; color: #0F172A !important; font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif !important; word-break: keep-all; }
+    .sv-logo { display: block; height: 44px; width: auto; margin: 0 auto 18px; }
+    .badge { background: transparent !important; border: 1px solid #E2E8F0 !important; color: #475569 !important; box-shadow: none !important; }
+    .title { color: #0F172A !important; letter-spacing: -0.8px; background: none !important; -webkit-text-fill-color: #0F172A !important; }
+    .subtitle { color: #64748B !important; }
+    .step-card, .step-card.active { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important; border-radius: 14px !important; }
+    .step-badge, .step-badge.blue, .step-badge.purple, .step-badge.amber {
+        background: transparent !important; color: #10B981 !important; border: none !important; box-shadow: none !important;
+        padding: 0 !important; font-size: 12px !important; letter-spacing: 1px; font-weight: 800 !important;
+    }
+    .step-top { flex-direction: column; align-items: flex-start !important; gap: 2px !important; }
+    .step-main-title { color: #0F172A !important; }
+    .step-text { color: #475569 !important; }
+    .step-text b { color: #0F172A !important; }
+    .step-text mark { background: #FEF3C7 !important; color: #92400E !important; }
+    .phone-mockup { background: #F8FAFC !important; border: 1px solid #E2E8F0 !important; box-shadow: none !important; }
+    .phone-mockup-header { color: #94A3B8 !important; border-color: #E2E8F0 !important; background: transparent !important; }
+    .phone-mockup * { color: #334155; }
+    .ui-row { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; }
+    .ui-switch-on { background: #2F7CF6 !important; color: #FFFFFF !important; }
+    .ui-btn-action { background: #FFFFFF !important; border: 1px solid #BFDBFE !important; color: #1D4ED8 !important; box-shadow: none !important; }
+    .ui-btn-action * { color: #1D4ED8 !important; }
+    .btn-touch { border-radius: 10px !important; box-shadow: none !important; font-weight: 700 !important; }
+    .btn-green { background: #0F172A !important; color: #FFFFFF !important; }
+    .btn-blue { background: #2F7CF6 !important; color: #FFFFFF !important; }
+    .btn-touch span { color: inherit !important; }
+    .tip-card { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; box-shadow: none !important; }
+    .tip-header { color: #0F172A !important; }
+    .tip-list li { color: #475569 !important; }
+    .tip-list li b { color: #0F172A !important; }
+    .tip-list li::before { background: none !important; color: #10B981 !important; }
+    .footer { color: #94A3B8 !important; border-color: #E2E8F0 !important; }
+</style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 </head>
 <body>
   <div class="container">
     
     <!-- 1. 헤더 -->
     <div class="header">
-      <div class="badge">📱 안드로이드 · 갤럭시 폴드 전용</div>
+      <img src="logo_smartview_light.png" alt="GOLFTOP SMART VIEW" class="sv-logo">
+      <div class="badge">안드로이드 · 갤럭시 폴드 전용</div>
       <h1 class="title">골프탑 스마트뷰<br>모바일 4단계 초간편 설치</h1>
       <p class="subtitle">작아서 안 보이던 화면은 이제 그만!<br>순서대로 터치하시면 10초 만에 설치가 완료됩니다.</p>
     </div>
@@ -310,7 +346,7 @@
         </div>
         <p class="step-text">
           모바일에서 확장프로그램을 완벽 지원하는 전용 브라우저입니다.<br>
-          아래 <b>초록색 버튼</b>을 눌러 구글 플레이스토어에서 무료 설치하세요.
+          아래 버튼을 눌러 구글 플레이스토어에서 무료 설치하세요.
         </p>
 
         <!-- 스마트폰 모의 화면 -->
@@ -323,7 +359,7 @@
             <div class="ui-label">
               <span style="font-size: 22px;">🦥</span>
               <div>
-                <div style="font-size: 15px; font-weight: 800; color: #fff;">Lemur Browser</div>
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Lemur Browser</div>
                 <div style="font-size: 12px; color: #94a3b8;">확장프로그램 지원 모바일 브라우저</div>
               </div>
             </div>
@@ -332,7 +368,7 @@
         </div>
 
         <a href="https://play.google.com/store/apps/details?id=com.lemurbrowser.exts" target="_blank" class="btn-touch btn-green">
-          <span>▶ Google Play스토어에서 Lemur 설치하기</span>
+          <span>Google Play에서 Lemur 설치하기</span>
         </a>
       </div>
 
@@ -359,7 +395,7 @@
             <div class="ui-label">
               <span style="font-size: 22px;">📦</span>
               <div>
-                <div style="font-size: 15px; font-weight: 800; color: #fff;">Golftop_SmartView_설치용.zip</div>
+                <div style="font-size: 15px; font-weight: 800; color: #0F172A;">Golftop_SmartView_설치용.zip</div>
                 <div style="font-size: 12px; color: #34d399;">다운로드 완료 ➔ 내 파일 폴더에 저장됨</div>
               </div>
             </div>
@@ -368,7 +404,7 @@
         </div>
 
         <a href="Golftop_SmartView_설치용.zip" download="Golftop_SmartView_설치용.zip" class="btn-touch btn-blue" id="btnDownloadZip">
-          <span>📥 골프탑 스마트뷰 ZIP 다운로드 터치</span>
+          <span>스마트뷰 ZIP 다운로드</span>
         </a>
       </div>
 
@@ -411,7 +447,7 @@
       <div class="step-card">
         <div class="step-top">
           <div class="step-badge amber">STEP 4</div>
-          <div class="step-main-title">ZIP 파일 선택 및 설치 완료!</div>
+          <div class="step-main-title">ZIP 파일 선택하면 설치 완료</div>
         </div>
         <p class="step-text">
           1. 상단에 나타난 <b>[(zip/.crx/.user.js)에서 로드]</b> 버튼을 누릅니다.<br>
@@ -440,7 +476,7 @@
         </div>
 
         <a href="https://intra.golftop.kr/Manage/Main?pc=1" target="_blank" class="btn-touch btn-green">
-          <span>⛳ 골프탑 인트라넷 바로 접속하기</span>
+          <span>골프탑 인트라넷 열기</span>
         </a>
       </div>
 
@@ -449,11 +485,11 @@
     <!-- 핵심 편의 기능 안내 -->
     <div class="tip-card">
       <div class="tip-header">
-        <span>✨</span> 골프탑 스마트뷰 3대 혁신 기능 완벽 활용법
+        스마트뷰 활용 팁
       </div>
       <ul class="tip-list">
         <li>
-          <b>카톡/문자 분할화면 완벽 대응:</b><br>
+          <b>카톡·문자와 분할화면으로 쓰기:</b><br>
           화면을 절반으로 줄여 문자창을 옆에 띄워도 상단의 <b>[날짜선택]</b>, <b>[잔여타임 필터]</b>, <b>[할인그린피/골프장 특이사항]</b>이 아래로 사라지지 않고 나란히 완벽하게 유지됩니다.
         </li>
         <li>
