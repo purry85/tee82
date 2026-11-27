@@ -5862,7 +5862,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.2</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.7.3</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -6335,7 +6335,7 @@
         <div class="update-modal-card">
             <div class="update-modal-header">
                 <div class="update-modal-title">
-                    <span>AutomaTee 최신 업데이트 및 환경 설정</span>
+                    <span>최신 업데이트 및 환경설정</span>
                 </div>
                 <button type="button" id="btnUnlockAdminUpdateCard" style="display: none; background: #EEF2FF; border: 1px solid #C7D2FE; color: #4338CA; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; cursor: pointer; margin-left: auto; margin-right: 8px;" title="클릭하여 관리자 비밀번호를 입력하고 공지 발행기를 엽니다">관리자 인증</button>
                 <button class="unmapped-modal-close" id="btnCloseUpdateModalX" title="닫기">&times;</button>
@@ -6345,7 +6345,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.2 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.7.3 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
@@ -6406,28 +6406,6 @@
                     </div>
                 </div>
 
-                <!-- 모바일(Lemur Browser) 최신 ZIP 다운로드 및 설치 안내 (상시 노출) -->
-                <div class="update-action-card" id="cardMobileUpdate" style="border-left-color: #8B5CF6; background: #FAF5FF;">
-                    <div class="update-action-header">
-                        <span class="action-num" style="background: #8B5CF6;"></span>
-                        <div class="action-info">
-                            <div class="action-title" style="color: #6D28D9; font-weight: 800;">모바일(Lemur Browser) 최신 ZIP 업데이트</div>
-                            <div class="action-desc">스마트폰 Lemur Browser에서는 배치 파일이 지원되지 않으므로, 아래 버튼으로 최신 ZIP을 받아 확장 프로그램 메뉴에서 덮어씌워주시면 즉시 업데이트됩니다.</div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-update-primary" id="btnDownloadMobileZip" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);">
-                        <span></span>
-                        <span>모바일 최신 배포 ZIP 다운로드</span>
-                    </button>
-                    <div style="background: #FFFFFF; border: 1px solid #DDD6FE; padding: 8px 10px; border-radius: 6px; font-size: 10px; color: #5B21B6; line-height: 1.5; margin-top: 6px;">
-                        <strong>Lemur 업데이트 방법 (30초 완료)</strong><br>
-                        1. 위 <strong>[모바일 최신 배포 ZIP 다운로드]</strong>를 클릭하여 파일을 받습니다.<br>
-                        2. Lemur Browser 우측 하단 메뉴(점 3개) → <strong>[확장 프로그램]</strong> 클릭<br>
-                        3. 상단 <strong>[+(from .zip/.crx/.user.js)]</strong> 클릭 후 방금 받은 ZIP 파일 선택!<br>
-                        4. 기존 버전 위에 최신 버전이 즉시 덮어씌워져 업데이트가 완료됩니다.
-                    </div>
-                </div>
-
                 <!-- 2. 최초 1회 원클릭 환경 등록 (연동 설정) -->
                 <div class="update-action-card setup">
                     <div class="update-action-header">
@@ -6455,23 +6433,28 @@
                     </div>
                 </div>
 
-                <!-- 3. 매핑사전 & 설정 실시간 동기화 -->
-                <div class="update-action-card secondary">
+                <!-- 모바일(Lemur Browser) 최신 ZIP 다운로드 및 설치 안내 (상시 노출) -->
+                <div class="update-action-card" id="cardMobileUpdate" style="border-left-color: #8B5CF6; background: #FAF5FF;">
                     <div class="update-action-header">
-                        <span class="action-num green">3</span>
+                        <span class="action-num" style="background: #8B5CF6;"></span>
                         <div class="action-info">
-                            <div class="action-title">구장 매핑사전 실시간 동기화</div>
-                            <div class="action-desc">프로그램 재시작 없이 GitHub의 최신 구장 매핑사전을 즉시 가져옵니다.</div>
+                            <div class="action-title" style="color: #6D28D9; font-weight: 800;">모바일(Lemur Browser) 최신 ZIP 업데이트</div>
+                            <div class="action-desc">스마트폰 Lemur Browser에서는 배치 파일이 지원되지 않으므로, 아래 버튼으로 최신 ZIP을 받아 확장 프로그램 메뉴에서 덮어씌워주시면 즉시 업데이트됩니다.</div>
                         </div>
                     </div>
-                    <button type="button" class="btn-update-secondary" id="btnSyncDictFromGitHub">
+                    <button type="button" class="btn-update-primary" id="btnDownloadMobileZip" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);">
                         <span></span>
-                        <span>최신 매핑사전 즉시 동기화</span>
+                        <span>모바일 최신 배포 ZIP 다운로드</span>
                     </button>
-                    <div class="action-hint green" id="syncDictStatusHint">
-                        ※ 브라우저 안에서 1초 만에 최신 구장명 사전을 가져와 병합합니다.
+                    <div style="background: #FFFFFF; border: 1px solid #DDD6FE; padding: 8px 10px; border-radius: 6px; font-size: 10px; color: #5B21B6; line-height: 1.5; margin-top: 6px;">
+                        <strong>Lemur 업데이트 방법 (30초 완료)</strong><br>
+                        1. 위 <strong>[모바일 최신 배포 ZIP 다운로드]</strong>를 클릭하여 파일을 받습니다.<br>
+                        2. Lemur Browser 우측 하단 메뉴(점 3개) → <strong>[확장 프로그램]</strong> 클릭<br>
+                        3. 상단 <strong>[+(from .zip/.crx/.user.js)]</strong> 클릭 후 방금 받은 ZIP 파일 선택!<br>
+                        4. 기존 버전 위에 최신 버전이 즉시 덮어씌워져 업데이트가 완료됩니다.
                     </div>
                 </div>
+
             </div>
             <div class="update-modal-footer">
                 <button type="button" class="btn-update-close" id="btnCloseUpdateModal">닫기</button>
