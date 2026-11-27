@@ -33,13 +33,89 @@ chrome.runtime.onStartup.addListener(()=>{
 _0x1000();
 });
 _0x1000();
+const LAUNCH_MODE_KEY='\x76\x32\x5f\x6c\x61\x75\x6e\x63\x68\x5f\x6d\x6f\x64\x65';
+let currentLaunchMode='\x70\x6f\x70\x75\x70';
+function _0x1001(){
+try{
+if(navigator.userAgentData&&navigator.userAgentData.mobile)return true;
+return/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent||'');
+}catch(e){return false;}
+}
+function _0x1002(mode){
+if(_0x1001())mode='\x73\x69\x64\x65\x70\x61\x6e\x65\x6c';
+if(mode!=='\x73\x69\x64\x65\x70\x61\x6e\x65\x6c'&&mode!=='\x77\x69\x6e\x64\x6f\x77')mode='\x70\x6f\x70\x75\x70';
+if(mode==='\x73\x69\x64\x65\x70\x61\x6e\x65\x6c'&&_0x1001()&&!(chrome.sidePanel&&typeof chrome.sidePanel.setPanelBehavior==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'))mode='\x6d\x6f\x62\x69\x6c\x65\x74\x61\x62';
+if(mode==='\x6d\x6f\x62\x69\x6c\x65\x74\x61\x62'){
+currentLaunchMode=mode;
+if(chrome.action&&typeof chrome.action.setPopup==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')chrome.action.setPopup({popup:''});
+return;
+}
+if(mode==='\x73\x69\x64\x65\x70\x61\x6e\x65\x6c'&&!(chrome.sidePanel&&typeof chrome.sidePanel.setPanelBehavior==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'))mode='\x70\x6f\x70\x75\x70';
+currentLaunchMode=mode;
 if(chrome.sidePanel&&typeof chrome.sidePanel.setPanelBehavior==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
-chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:false}).catch((err)=>{
+chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:mode==='\x73\x69\x64\x65\x70\x61\x6e\x65\x6c'}).catch((err)=>{
 console.warn('[\x41\x75\x74\x6f\x6d\x61\x54\x65\x65] \x73\x65\x74\x50\x61\x6e\x65\x6c\x42\x65\x68\x61\x76\x69\x6f\x72 \uc124\uc815\x3a',err);
 });
 }
 if(chrome.action&&typeof chrome.action.setPopup==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'){
+chrome.action.setPopup({popup:mode==='\x70\x6f\x70\x75\x70'?'\x70\x6f\x70\x75\x70\x2e\x68\x74\x6d\x6c':''});
+}
+}
+function _0x1003(){
+return new Promise((resolve)=>{
+try{chrome.storage.local.get([LAUNCH_MODE_KEY],(res)=>resolve((res&&res[LAUNCH_MODE_KEY])||'\x70\x6f\x70\x75\x70'));}
+catch(e){resolve('\x70\x6f\x70\x75\x70');}
+});
+}
+try{
+chrome.storage.local.get([LAUNCH_MODE_KEY],(res)=>{
+_0x1002(res&&res[LAUNCH_MODE_KEY]);
+});
+chrome.storage.onChanged.addListener((changes,area)=>{
+if(area==='\x6c\x6f\x63\x61\x6c'&&changes[LAUNCH_MODE_KEY])_0x1002(changes[LAUNCH_MODE_KEY].newValue);
+});
+}catch(e){}
+async function _0x1004(){
+const target=chrome.runtime.getURL('\x70\x6f\x70\x75\x70\x2e\x68\x74\x6d\x6c?\x6d\x6f\x64\x65=\x77\x69\x6e\x64\x6f\x77');
+try{
+const wins=await chrome.windows.getAll({populate:true,windowTypes:['\x70\x6f\x70\x75\x70']});
+const found=wins.find(w=>(w.tabs||[]).some(t=>(t.url||'').startsWith(target)));
+if(found){
+await chrome.windows.update(found.id,{focused:true,state:'\x6e\x6f\x72\x6d\x61\x6c'});
+return;
+}
+}catch(e){}
+let w=530,h=900,left,top=40;
+try{
+const cur=await chrome.windows.getLastFocused();
+if(cur&&cur.width&&cur.height){
+h=Math.min(1050,Math.max(600,cur.height-20));
+left=Math.max(0,(cur.left||0)+cur.width-w-20);
+top=Math.max(0,(cur.top||0)+10);
+}
+}catch(e){}
+const opts={url:target,type:'\x70\x6f\x70\x75\x70',width:w,height:h,top};
+if(typeof left==='\x6e\x75\x6d\x62\x65\x72')opts.left=left;
+chrome.windows.create(opts);
+}
+if(chrome.action&&chrome.action.onClicked){
+chrome.action.onClicked.addListener(async()=>{
+const saved=await _0x1003();
+if(saved!==currentLaunchMode)_0x1002(saved);
+if(currentLaunchMode==='\x6d\x6f\x62\x69\x6c\x65\x74\x61\x62'){
+const url=chrome.runtime.getURL('\x73\x69\x64\x65\x70\x61\x6e\x65\x6c\x2e\x68\x74\x6d\x6c?\x6d\x6f\x64\x65=\x74\x61\x62');
+chrome.tabs.query({},(tabs)=>{
+const t=(tabs||[]).find(x=>(x.url||'').startsWith(chrome.runtime.getURL('\x73\x69\x64\x65\x70\x61\x6e\x65\x6c\x2e\x68\x74\x6d\x6c')));
+if(t)chrome.tabs.update(t.id,{active:true});
+else chrome.tabs.create({url});
+});
+}else if(currentLaunchMode==='\x77\x69\x6e\x64\x6f\x77'){
+_0x1004();
+}else if(currentLaunchMode==='\x70\x6f\x70\x75\x70'){
 chrome.action.setPopup({popup:'\x70\x6f\x70\x75\x70\x2e\x68\x74\x6d\x6c'});
+if(typeof chrome.action.openPopup==='\x66\x75\x6e\x63\x74\x69\x6f\x6e')chrome.action.openPopup().catch(()=>{});
+}
+});
 }
 chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
 if(message.action==='\x4f\x50\x45\x4e\x5f\x53\x49\x44\x45\x5f\x50\x41\x4e\x45\x4c'){

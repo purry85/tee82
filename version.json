@@ -1,9 +1,9 @@
 {
-    "version":  "3.9.0",
+    "version":  "3.9.1",
     "releaseDate":  "2026-11-27",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "- 디자인변경 완료"
+                         "- 독립창,팝업,사이드패널 중 종료시 창종류 기억."
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
