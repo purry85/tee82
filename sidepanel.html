@@ -5051,6 +5051,256 @@
         .user-membership-pill .btn-pill-pw:hover { color: #1D4ED8; text-decoration: underline; }
         .user-membership-pill .btn-pill-logout { color: #94A3B8; text-decoration: none; }
         .user-membership-pill .btn-pill-logout:hover { color: #EF4444; text-decoration: underline; }
+        /* ===== 매핑사전 · 작업 통계 · 업데이트 창 심플 테마 (2026-11-27) ===== */
+        #dictManagerModal, #dailyStatsModal { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px); }
+
+        /* 공통 버튼(다른 창의 취소/저장 버튼도 같은 모양) */
+        .btn-dict-cancel { background: #FFFFFF; color: #334155; border: 1px solid #E2E8F0; border-radius: 7px; }
+        .btn-dict-cancel:hover { background: #F8FAFC; color: #0F172A; }
+        .btn-dict-close {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6);
+            border-radius: 7px;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.5);
+        }
+        .btn-dict-close:hover { background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); filter: brightness(1.06); }
+
+        /* 매핑사전 */
+        #dictManagerModal .dict-modal-content {
+            border-radius: 14px;
+            padding: 16px 18px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35);
+        }
+        #dictManagerModal .dict-modal-title { color: #0F172A; font-size: 14px; letter-spacing: -0.2px; }
+        #dictManagerModal .dict-modal-title span[style] { color: #94A3B8 !important; }
+        .dict-site-tabs { background: #F1F5F9; border: none; border-radius: 9px; padding: 3px; }
+        .dict-site-tab { border-radius: 7px; color: #64748B; }
+        .dict-site-tab:hover { color: #0F172A; }
+        .dict-site-tab.active,
+        .dict-site-tab[data-site].active {
+            background: #FFFFFF;
+            color: #0F172A;
+            border-bottom: none;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.10);
+        }
+        .dict-site-desc { background: #F8FAFC; border-left: 3px solid #2F7CF6; border-radius: 7px; color: #64748B; }
+        .dict-site-desc strong { color: #0F172A; }
+        .dict-search-row input { border: 1px solid #E2E8F0; border-radius: 7px; }
+        .dict-search-row input:focus { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+        .dict-search-row button { background: #2F7CF6; border-radius: 7px; }
+        .dict-search-row button:hover { background: #1D4ED8; }
+        .dict-search-row button.btn-clean-junk { background: #FFFFFF; color: #DC2626; border: 1px solid #FECACA; }
+        .dict-search-row button.btn-clean-junk:hover { background: #FEF2F2; }
+
+        .dict-filter-chip { background: #FFFFFF; color: #334155; border: 1px solid #E2E8F0; border-radius: 7px; }
+        .dict-filter-chip:hover { background: #F8FAFC; }
+        .dict-filter-chip.active { background: #0F172A; color: #FFFFFF; border-color: #0F172A; box-shadow: none; }
+        .dict-filter-chip.chip-diff { background: #FFFFFF; color: #2F7CF6; border-color: #DBEAFE; }
+        .dict-filter-chip.chip-diff:hover { background: #EFF6FF; }
+        .dict-filter-chip.chip-diff.active { background: #2F7CF6; color: #FFFFFF; border-color: #2F7CF6; }
+        .dict-filter-chip.chip-dup { background: #FFFFFF; }
+        .dict-filter-chip.chip-empty { background: #FFFFFF; }
+        .dict-filter-chip.chip-dup.active { background: #D97706; color: #FFFFFF; }
+        .dict-filter-chip.chip-empty.active { background: #DC2626; color: #FFFFFF; }
+
+        .dict-table-wrap { border: 1px solid #E2E8F0; border-radius: 10px; }
+        .dict-table th { background: #F8FAFC; color: #475569; border-bottom: 1px solid #E2E8F0; }
+        .dict-table th:hover { background: #F1F5F9; }
+        .dict-table td { border-bottom: 1px solid #F1F5F9; }
+        .dict-table input { border: 1px solid #E2E8F0; border-radius: 6px; padding: 4px 6px; }
+        .dict-table input:focus { border-color: #10B981; background: #FFFFFF; outline: none; }
+        .dict-table input.dict-input-diff { border-color: #93C5FD !important; background-color: #EFF6FF !important; color: #1D4ED8 !important; }
+        .btn-dict-del { background: #FFFFFF; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; }
+        .btn-dict-del:hover { background: #FEF2F2; opacity: 1; }
+
+        .dict-sync-section { border-top: 1px solid #F1F5F9; }
+        .dict-sync-title { color: #0F172A; }
+        .dict-sync-desc { color: #94A3B8; }
+        .dict-sync-box input { border: 1px solid #E2E8F0; border-radius: 7px; }
+        .dict-sync-box button { border-radius: 7px; }
+        .btn-sync-export, .btn-sync-import { background: #2F7CF6; }
+        #btnExportFile, #btnPasteClipboard, #btnImportFile {
+            background: #FFFFFF !important; color: #334155 !important; border: 1px solid #E2E8F0 !important;
+        }
+        #btnExportFile:hover, #btnPasteClipboard:hover, #btnImportFile:hover { background: #F8FAFC !important; opacity: 1; }
+
+        /* 작업 통계 대시보드 */
+        #dailyStatsModal .unmapped-modal-card {
+            border-radius: 14px; border: 1px solid #E2E8F0; box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35);
+        }
+        #dailyStatsModal .unmapped-modal-header { background: #FFFFFF !important; border-bottom: 1px solid #F1F5F9 !important; padding: 12px 16px; }
+        #dailyStatsModal .unmapped-modal-title { color: #0F172A !important; font-size: 14px; }
+        #dailyStatsModal #statsDateBadge { background: #F1F5F9 !important; color: #475569 !important; }
+        #dailyStatsModal .unmapped-modal-close { color: #94A3B8; border-radius: 6px; }
+        #dailyStatsModal .unmapped-modal-close:hover { background: #F1F5F9; color: #0F172A; }
+        #dailyStatsModal [style*="repeat(3"] > div {
+            background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; border-radius: 10px !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+        #dailyStatsModal [style*="repeat(3"] > div > div:first-child { color: #64748B !important; }
+        #dailyStatsModal #statTotalCount { color: #0F172A !important; }
+        #dailyStatsModal #statRegisterCount { color: #10B981 !important; }
+        #dailyStatsModal #statModifyCount { color: #2F7CF6 !important; }
+        #dailyStatsModal div[style*="#F8FAFC"][style*="border-radius: 8px"] { background: #FFFFFF !important; border-radius: 10px !important; }
+        #dailyStatsModal div[style*="border-radius: 8px; padding: 10px"] { border-radius: 10px !important; }
+        #dailyStatsModal .unmapped-modal-footer { background: #FFFFFF !important; border-top: 1px solid #F1F5F9 !important; }
+        #dailyStatsModal #btnResetDailyStats { border: 1px solid #E2E8F0 !important; border-radius: 7px !important; color: #94A3B8 !important; }
+        #dailyStatsModal #btnResetDailyStats:hover { color: #DC2626 !important; border-color: #FECACA !important; }
+        #dailyStatsModal #btnCopyDailyStatsText {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important; border-radius: 7px !important;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.5) !important;
+        }
+        #dailyStatsModal #btnCloseDailyStatsModal { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; border-radius: 7px !important; }
+
+        /* 최신 업데이트 및 환경 설정 */
+        #updateModal { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px); }
+        #updateModal .update-modal-card { border-radius: 14px; box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.35); }
+        #updateModal .update-modal-header { background: #FFFFFF; border-bottom: 1px solid #F1F5F9; padding: 12px 16px; }
+        #updateModal .update-modal-title { color: #0F172A; font-size: 14px; letter-spacing: -0.2px; }
+        #updateModal .unmapped-modal-close { color: #94A3B8; border-radius: 6px; }
+        #updateModal .unmapped-modal-close:hover { background: #F1F5F9; color: #0F172A; }
+        #updateModal #btnUnlockAdminUpdateCard { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; color: #334155 !important; border-radius: 6px !important; }
+        #updateModal .update-modal-body { background: #F8FAFC; padding: 12px 14px; }
+        #updateModal .update-status-box { background: #FFFFFF; border-radius: 10px; }
+        #updateModal .badge-ver { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; border-radius: 999px; padding: 1px 8px; }
+        #updateModal #linkViewReleaseNotes { color: #2F7CF6 !important; text-decoration: none !important; }
+        #updateModal #linkViewReleaseNotes:hover { text-decoration: underline !important; }
+
+        #updateModal .update-action-card,
+        #updateModal .update-action-card.secondary,
+        #updateModal .update-action-card.setup,
+        #updateModal #cardMobileUpdate,
+        #updateModal #cardAdminReleasePublish {
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+        }
+        #updateModal #cardAdminReleasePublish { border-left: 3px solid #2F7CF6 !important; }
+        #updateModal .update-action-card:hover { border-color: #CBD5E1 !important; }
+        #updateModal .action-num, #updateModal .action-num.green, #updateModal .action-num.amber,
+        #updateModal .action-num[style] { background: #0F172A !important; color: #FFFFFF !important; }
+        #updateModal .action-title, #updateModal .action-title[style] { color: #0F172A !important; }
+        #updateModal .action-desc, #updateModal .action-desc[style] { color: #64748B !important; }
+        #updateModal .action-hint, #updateModal .action-hint.green, #updateModal .action-hint[style] { color: #94A3B8 !important; }
+        #updateModal #cardAdminReleasePublish .action-title span[style*="background"] { background: #0F172A !important; border-radius: 999px !important; }
+        #updateModal #cardAdminReleasePublish label { color: #334155 !important; }
+        #updateModal #cardAdminReleasePublish input, #updateModal #cardAdminReleasePublish textarea {
+            border: 1px solid #E2E8F0 !important; border-radius: 7px !important; color: #0F172A !important;
+        }
+        #updateModal #inputAdminReleaseVer { color: #2F7CF6 !important; }
+        #updateModal #cardAdminReleasePublish input:focus, #updateModal #cardAdminReleasePublish textarea:focus {
+            border-color: #10B981 !important; outline: none; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        #updateModal #cardAdminReleasePublish span[style*="#6366F1"] { color: #94A3B8 !important; }
+        #updateModal #btnAdminRunGithubUploaderDirect { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; color: #334155 !important; border-radius: 6px !important; }
+        #updateModal .update-action-card > div[style*="#FEF3C7"],
+        #updateModal #cardMobileUpdate > div[style*="#DDD6FE"] {
+            background: #F8FAFC !important; border: 1px solid #E2E8F0 !important; color: #475569 !important; border-radius: 8px !important;
+        }
+
+        /* 버튼: 주요 = 그라데이션, 일반 = 파랑, 보조 = 흰 버튼 */
+        #updateModal .btn-update-primary,
+        #updateModal #btnAdminPublishRelease,
+        #updateModal #btnRunFullUpdate {
+            background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 6px 14px -6px rgba(16, 185, 129, 0.5) !important;
+        }
+        #updateModal .btn-update-secondary { background: #2F7CF6; border-radius: 8px; box-shadow: none; }
+        #updateModal #btnDownloadMobileZip, #updateModal #btnDownloadSetupBat, #updateModal .btn-update-amber {
+            background: #FFFFFF !important; color: #0F172A !important; border: 1px solid #E2E8F0 !important;
+            border-radius: 8px !important; box-shadow: none !important;
+        }
+        #updateModal #btnDownloadMobileZip:hover, #updateModal #btnDownloadSetupBat:hover, #updateModal .btn-update-amber:hover { background: #F8FAFC !important; opacity: 1; }
+        #updateModal .update-modal-footer { background: #FFFFFF; border-top: 1px solid #F1F5F9; }
+        #updateModal .btn-update-close { background: #FFFFFF; border: 1px solid #E2E8F0; color: #334155; border-radius: 7px; font-weight: 700; }
+        #updateModal .btn-update-close:hover { background: #F8FAFC; }
+        /* ===== 티타임 카드 목록 심플 테마 (2026-11-27) ===== */
+        .tee-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 9px;
+            padding: 5px 8px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+        }
+        .tee-card:hover { background: #FFFFFF; border-color: #CBD5E1; box-shadow: 0 3px 10px -6px rgba(15, 23, 42, 0.25); }
+        .tee-card.selected { border-color: #93C5FD; background: #F5F9FF; }
+        .tee-card.is-join { border-left: 3px solid #2F7CF6 !important; }
+        .tee-card.is-transfer { border-left: 3px solid #F472B6 !important; }
+
+        .card-golf { color: #0F172A; }
+        .card-room-badge { border-radius: 6px; }
+        .card-room-badge.join { background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
+        .card-room-badge.transfer { background: #FDF2F8; color: #BE185D; border: 1px solid #FBCFE8; }
+        .card-date { background: #F8FAFC; color: #475569; border: 1px solid #E2E8F0; border-radius: 6px; }
+        .card-region { border-radius: 6px; }
+        .card-source-badge { border-radius: 6px; }
+        .card-time { color: #0F172A; font-size: 12.5px; }
+
+        .card-fee { color: #059669; }
+        .card-tag { background: #F1F5F9; color: #64748B; border-radius: 6px; padding: 1px 5px; }
+        .card-tag.room { background: #F1F5F9; color: #334155; font-weight: 700; }
+        .card-tag.meal { border-radius: 6px; }
+        .card-tag.pax { background: #EFF6FF; color: #1D4ED8; font-weight: 700; }
+        .card-seonti-pill { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 6px; color: #64748B; }
+        .card-seonti-pill:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .card-seonti-pill.active { background: #FEF2F2; border-color: #FECACA; color: #DC2626; }
+        .card-del-btn { color: #CBD5E1; border-radius: 6px; }
+        .card-del-btn:hover { color: #DC2626; background: #FEF2F2; }
+
+        /* 작업 중인 카드 강조 */
+        .tee-card.processing-active {
+            border: 2px solid #2F7CF6 !important;
+            background: #EFF6FF !important;
+            box-shadow: 0 0 14px rgba(47, 124, 246, 0.55) !important;
+            animation: card-processing-pulse-blue 1.3s infinite;
+        }
+        .tee-card.processing-active .card-time { color: #1D4ED8 !important; }
+        .tee-card.processing-active .card-golf { color: #0F172A !important; }
+        @keyframes card-processing-pulse-blue {
+            0%, 100% { box-shadow: 0 0 6px rgba(47, 124, 246, 0.40); border-color: #2F7CF6; }
+            50% { box-shadow: 0 0 18px rgba(47, 124, 246, 0.85); border-color: #1D4ED8; }
+        }
+        table#dataTable tr.processing-active { background: #DBEAFE !important; outline: 2px solid #2F7CF6 !important; animation: none; }
+        /* ===== 정렬바 버튼 · 카드 배지 배경 없애기 (2026-11-27) ===== */
+        .btn-seonti-batch, .btn-seonti-batch.active {
+            background: transparent;
+            border: 1px solid #E2E8F0;
+            color: #E11D48;
+            border-radius: 6px;
+        }
+        .btn-seonti-batch:hover { background: transparent; border-color: #FDA4AF; color: #BE123C; }
+        .btn-soldout-open-modal {
+            background: transparent;
+            border: 1px solid #E2E8F0;
+            color: #DC2626;
+            border-radius: 6px;
+        }
+        .btn-soldout-open-modal:hover { background: transparent; border-color: #FCA5A5; color: #B91C1C; box-shadow: none; transform: none; }
+
+        /* 카드 윗줄 배지: 배경 없이 글자색 + 얇은 테두리 */
+        .card-room-badge.join { background: transparent; border: 1px solid #BFDBFE; color: #1D4ED8; }
+        .card-room-badge.transfer { background: transparent; border: 1px solid #FBCFE8; color: #BE185D; }
+        .card-date { background: transparent; border: 1px solid #E2E8F0; }
+        .card-region { background: transparent !important; border: 1px solid #E2E8F0; }
+        .card-source-badge.source-top { background: transparent; border: 1px solid #BFDBFE; color: #1D4ED8; }
+        .card-source-badge.source-top:hover { background: #EFF6FF; transform: none; }
+        .card-source-badge.source-rock { background: transparent; border: 1px solid #FDE68A; color: #B45309; }
+        .card-source-badge.source-rock:hover { background: #FFFBEB; transform: none; }
+        /* ===== 정렬 버튼 · 카톡문의 강조 (2026-11-27) ===== */
+        .btn-sort-toggle { background: transparent; border: 1px solid #E2E8F0; border-radius: 6px; }
+        .btn-sort-toggle.active { background: transparent; border-color: #93C5FD; color: #1D4ED8; }
+        #btnFooterKakao {
+            background: #FEE500 !important;
+            color: #3C1E1E !important;
+            text-decoration: none !important;
+            font-weight: 800 !important;
+            padding: 1px 7px !important;
+            border-radius: 999px !important;
+            display: inline-block;
+            line-height: 1.5;
+        }
+        #btnFooterKakao:hover { background: #F5DC00 !important; text-decoration: none !important; }
     </style>
 </head>
 <body>
@@ -5566,7 +5816,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.5.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
+            <span>© 2026 AutomaTee Golf Booking Automation <span id="footerAppVersion">Ver 3.6.0</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -6049,7 +6299,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.5.0 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.6.0 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>

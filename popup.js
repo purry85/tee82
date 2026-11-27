@@ -19641,9 +19641,9 @@ if(pCount>0)hasPlatformStat=true;
 const badge=document.createElement('\x64\x69\x76');
 badge.style.cssText=`
                     font-size: 11px; padding: 3px 8px; border-radius: 6px;
-                    background: ${pCount>0?'\x23\x45\x45\x46\x32\x46\x46':'\x23\x46\x31\x46\x35\x46\x39'};
-                    color: ${pCount>0?'\x23\x34\x33\x33\x38\x43\x41':'\x23\x39\x34\x41\x33\x42\x38'};
-                    border: 1px solid ${pCount>0?'\x23\x43\x37\x44\x32\x46\x45':'\x23\x45\x32\x45\x38\x46\x30'};
+                    background: ${pCount>0?'\x23\x45\x46\x46\x36\x46\x46':'\x23\x46\x38\x46\x41\x46\x43'};
+                    color: ${pCount>0?'\x23\x31\x44\x34\x45\x44\x38':'\x23\x39\x34\x41\x33\x42\x38'};
+                    border: 1px solid ${pCount>0?'\x23\x42\x46\x44\x42\x46\x45':'\x23\x45\x32\x45\x38\x46\x30'};
                     font-weight: ${pCount>0?'\x37\x30\x30':'\x35\x30\x30'};
                 `;
 badge.innerHTML=`${platformMap[pKey]||pKey}: <b>${pCount}\uac74</b>`;
@@ -19673,7 +19673,7 @@ row.innerHTML=`
                             <span style="font-weight: 700; color: #1E293B;">${cnt}\uac74</span>
                         </div>
                         <div style="width: 100%; height: 6px; background: #F1F5F9; border-radius: 3px; overflow: hidden;">
-                            <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #3B82F6, #6366F1); border-radius: 3px;"></div>
+                            <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #10B981, #0EA5E9 60%, #3B82F6); border-radius: 3px;"></div>
                         </div>
                     `;
 courseContainer.appendChild(row);
