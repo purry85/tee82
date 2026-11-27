@@ -10016,6 +10016,39 @@ allRemaining.splice(0,1);
 }
 return picked.length>0?picked:pickBestTwoWithPriority(list,priority);
 }
+function isAlldayCourseTr(tr){
+if(!tr)return false;
+const names=[tr.cells[2]?.textContent||'',tr.dataset.rawGolf||'',tr.dataset.golf||''];
+return names.some(n=>n.replace(/\s+/g,'').includes('\uc62c\ub370\uc774'));
+}
+function balanceCaddyMixForAllday(list,picked,priority='\x6e\x6f\x6e\x65'){
+try{
+if(!Array.isArray(picked)||picked.length<2||!Array.isArray(list))return picked;
+if(typeof _0x102e!=='\x66\x75\x6e\x63\x74\x69\x6f\x6e'||!_0x102e())return picked;
+if(!picked.every(tr=>isAlldayCourseTr(tr)))return picked;
+const pickedNo=picked.filter(tr=>isNoCaddyTr(tr));
+if(pickedNo.length>0&&pickedNo.length<picked.length)return picked;
+const needNoCaddy=pickedNo.length===0;
+const candidates=list.filter(tr=>!picked.includes(tr)&&(needNoCaddy?isNoCaddyTr(tr):!isNoCaddyTr(tr)));
+if(candidates.length===0)return picked;
+let replaceIdx=-1;
+for(let i=picked.length-1;i>=0;i--){
+if(!isPriorityTagTr(picked[i])){replaceIdx=i;break;}
+}
+if(replaceIdx<0)return picked;
+const target=picked[replaceIdx];
+const part=getTrPart(target);
+const samePart=candidates.filter(tr=>getTrPart(tr)===part);
+const pool=samePart.length>0?samePart:candidates;
+const repl=pickBestOneFromPartWithPriority(pool,samePart.length>0?part:getTrPart(pool[0]),priority)||pool[0];
+if(!repl)return picked;
+const out=picked.slice();
+out[replaceIdx]=repl;
+return out;
+}catch(e){
+return picked;
+}
+}
 function applyAutoSelectTwoToTrs(trsList){
 if(!trsList||trsList.length===0)return 0;
 trsList.forEach(tr=>tr.classList.remove('\x73\x65\x6c\x65\x63\x74\x65\x64'));
@@ -10036,7 +10069,8 @@ const stickyMap=getStickyCourseMap();
 let count=0;
 for(const key in groups){
 const list=groups[key];
-const picked=pickPreferredTimesForGroup(list,autoSelectPriority);
+let picked=pickPreferredTimesForGroup(list,autoSelectPriority);
+picked=balanceCaddyMixForAllday(list,picked,autoSelectPriority);
 picked.forEach(tr=>{
 tr.classList.add('\x73\x65\x6c\x65\x63\x74\x65\x64');
 count++;

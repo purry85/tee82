@@ -4927,6 +4927,7 @@ await _0x1007(500);
 await _0x1031(25);
 await _0x1007(400);
 await _0x1007(350);
+await waitForAutoLeaveEditPage();
 if(isEditPage()||isDetailPage()){
 console.log("[\uac00\uaca9\uc218\uc815] \ud655\uc778 \uc644\ub8cc \ud6c4 \uc544\uc9c1 \uc218\uc815\x2f\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \x31\ud68c \uc2e4\ud589");
 await executeSingleBack();
@@ -4934,6 +4935,17 @@ await _0x1007(500);
 }
 console.log("[\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \uc81c\ucd9c \ubc0f \ud31d\uc5c5 [\ud655\uc778] \ucc98\ub9ac \uc644\ub8cc!");
 return true;
+}
+async function waitForAutoLeaveEditPage(maxMs=1200){
+const startUrl=window.location.href;
+for(let t=0;t<maxMs;t+=150){
+if(window.location.href!==startUrl||_0x1037()){
+await _0x1007(300);
+return true;
+}
+await _0x1007(150);
+}
+return false;
 }
 async function executeSingleBack(){
 console.log("[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30(\u2190) \ub2e8 \x31\ud68c \uc2e4\ud589\x2e\x2e\x2e");
@@ -5013,14 +5025,12 @@ await _0x1007(40);
 try{
 targetEl.dispatchEvent(new PointerEvent('\x70\x6f\x69\x6e\x74\x65\x72\x75\x70',opts));
 targetEl.dispatchEvent(new MouseEvent('\x6d\x6f\x75\x73\x65\x75\x70',opts));
-targetEl.dispatchEvent(new MouseEvent('\x63\x6c\x69\x63\x6b',opts));
 }catch(e){}
 try{targetEl.click();}catch(e){}
-if(backBtn!==targetEl){
-try{backBtn.click();}catch(e){}
+for(let w=0;w<17&&window.location.href===prevUrl;w++){
+await _0x1007(150);
 }
-await _0x1007(450);
-if(window.location.href===prevUrl&&(window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77')||isDetailPage()||isEditPage())){
+if(window.location.href===prevUrl&&!_0x1037()&&(window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77')||isDetailPage()||isEditPage())){
 console.log("[\uac00\uaca9\uc218\uc815] \ub4a4\ub85c\uac00\uae30(\u2190) \ud074\ub9ad \ud6c4 \x55\x52\x4c \uc720\uc9c0 \uac10\uc9c0 -> \x77\x69\x6e\x64\x6f\x77\x2e\x68\x69\x73\x74\x6f\x72\x79\x2e\x62\x61\x63\x6b() \ubcf4\uc870 \ud638\ucd9c");
 window.history.back();
 await _0x1007(450);
@@ -5240,6 +5250,7 @@ await _0x1007(500);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 await _0x1031(25);
 await _0x1007(400);
+await waitForAutoLeaveEditPage();
 if(isEditPage()||isDetailPage()){
 await executeSingleBack();
 await _0x1007(500);
