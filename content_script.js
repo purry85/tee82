@@ -3270,6 +3270,20 @@ if(!targetDateStr)return true;
 const targetMonth=_0x103e(targetDateStr);
 const targetDay=_0x103d(targetDateStr);
 if(!targetDay)return true;
+for(let w=0;w<30&&!_0x1046();w++){
+if(shouldStopRegistration)return false;
+await _0x1007(150);
+}
+if(!_0x1046()){
+console.warn('[\ub0a0\uc9dc\ud655\uc778] \uc544\uc9c1 \ubaa9\ub85d \ud654\uba74\uc774 \uc544\ub2d8 -> \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0 \ud6c4 \ub0a0\uc9dc \uc120\ud0dd');
+try{await navigateBackToList();}catch(e){}
+for(let w=0;w<30&&!_0x1046();w++){
+if(shouldStopRegistration)return false;
+await _0x1007(150);
+}
+if(!_0x1046())return false;
+}
+await _0x1007(200);
 let hasDateTab=Boolean(_0x1048(targetDay));
 const initScreenMonth=_0x1040();
 if(!hasDateTab&&targetMonth&&initScreenMonth&&initScreenMonth!==targetMonth){
@@ -5824,6 +5838,45 @@ if(finalScreenDay){
 isWrongDay=!isFinalScreenMatched;
 }else if(finalUrlDay){
 isWrongDay=!isFinalUrlMatched;
+}
+}
+if(isWrongDay&&targetDayNum){
+const dateTabExists=()=>_0x1046()&&Boolean(_0x1048(targetDayNum));
+const notOnList=!_0x1046();
+if(notOnList||dateTabExists()){
+console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \uc804\ud658 \uc2e4\ud328 \uac10\uc9c0 (\ubaa9\ub85d\ud654\uba74:${!notOnList}, \ub0a0\uc9dc\ud0ed \uc874\uc7ac:${!notOnList&&dateTabExists()}) -> \ubaa9\ub85d \ubcf5\uadc0 \ud6c4 \ub0a0\uc9dc \uc7ac\uc120\ud0dd`);
+try{await navigateBackToList(groupCategory);}catch(e){}
+await _0x1007(350);
+if(group.region&&group.region!=='\uc804\uccb4'){await _0x104f(group.region);await _0x1007(250);}
+await _0x104e(group.date,3);
+await _0x1007(350);
+const uD=_0x104b();
+const sDay=_0x104a(),sMon=_0x1040();
+const okNow=(sDay&&sDay===targetDayNum&&(!targetMonth||!sMon||sMon===targetMonth))||
+(uD&&_0x103d(uD)===targetDayNum&&(!targetMonth||_0x103e(uD)===targetMonth));
+if(okNow){
+console.log(`[${logTag}] \u2705 \uc7ac\uc2dc\ub3c4\ub85c \ubaa9\ud45c \ub0a0\uc9dc(${group.date}) \uc120\ud0dd \uc131\uacf5`);
+isWrongDay=false;
+}else if(!_0x1046()||dateTabExists()){
+console.error(`[${logTag}] \u274c ${group.golf} (${group.date}) \ub0a0\uc9dc \uc804\ud658 \uc2e4\ud328 -> \uc798\ubabb\ub41c \uc2e0\uaddc \ub4f1\ub85d\uc744 \ub9c9\uae30 \uc704\ud574 \uc774 \uad6c\uc7a5/\ub0a0\uc9dc\ub294 \uac74\ub108\ub701\ub2c8\ub2e4.`);
+for(const it of group.items){
+globalIndex++;
+chrome.runtime.sendMessage({
+type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',
+golf:group.golf,
+date:group.date,
+time:it.time||'',
+reason:'\uace8\ud504\ubaac \ubaa9\ub85d\uc5d0\uc11c \ub0a0\uc9dc \uc804\ud658 \uc2e4\ud328 (\ub4f1\ub85d\ud558\uc9c0 \uc54a\uace0 \uac74\ub108\ub700)'
+});
+}
+_0x1009({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${group.golf} (${group.date}) \ub0a0\uc9dc \uc804\ud658 \uc2e4\ud328 -> \uac74\ub108\ub700`,
+current:globalIndex,
+total:items.length
+});
+continue;
+}
 }
 }
 let isTabMissingForDate=false;
