@@ -1,9 +1,9 @@
 {
-    "version":  "4.0.0",
+    "version":  "4.1.0",
     "releaseDate":  "2026-11-28",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "- test - do not update"
+                         "-필수- 양도,조인 수정기능 오류 전체수정"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
