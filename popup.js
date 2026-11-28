@@ -1612,10 +1612,10 @@ targetKey='\ud074\ub7fd\x37\x32(\uc624\uc158)';
 targetKey='\ud074\ub7fd\x37\x32(\ud558\ub298)';
 }
 let foundKey=null;
-if(dictionary&&dictionary[targetKey]){
-foundKey=targetKey;
-}else if(dictionary&&dictionary[cleanOrig]){
+if(dictionary&&dictionary[cleanOrig]&&__t82Family(cleanOrig)===__t82Family(targetKey)){
 foundKey=cleanOrig;
+}else if(dictionary&&dictionary[targetKey]){
+foundKey=targetKey;
 }else if(dictionary&&(targetKey.includes('\ub808\uc774\ud06c')||targetKey.includes('\ud074\ub798\uc2dd'))&&(dictionary['\ud074\ub7fd\x37\x32']||dictionary['\ud074\ub7fd\x37\x32\x63\x63'])){
 foundKey=dictionary['\ud074\ub7fd\x37\x32']?'\ud074\ub7fd\x37\x32':'\ud074\ub7fd\x37\x32\x63\x63';
 }
@@ -1664,6 +1664,47 @@ tjKey='\ub5bc\uc81c\ubca0(\ub3d9\ubd81)';
 tjKey='\ub5bc\uc81c\ubca0(\uc11c\ub0a8)';
 }
 if(tjKey){
+const tjFam=__t82Family(tjKey);
+let tjFound=null;
+if(dictionary&&typeof dictionary==='\x6f\x62\x6a\x65\x63\x74'){
+if(dictionary[tjKey])tjFound=tjKey;
+else if(dictionary[cleanOrig]&&__t82Family(cleanOrig)===tjFam)tjFound=cleanOrig;
+else tjFound=Object.keys(dictionary).find(k=>/떼제베/.test(k)&&__t82Family(k)===tjFam)||null;
+}
+if(tjFound){
+const it=normalizeDictEntry(dictionary[tjFound],tjFound);
+const pick=(v,fb)=>(v&&__t82Family(v)!==''&&__t82Family(v)!==tjFam)?fb:(v||fb);
+let siteName=pick(it.golfmon,tjKey);
+if(site==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')siteName=pick(it.golmarket,tjKey);
+else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteName=pick(it.golfpang,tjKey);
+else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteName=pick(it.golfrock,tjKey);
+else if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteName=pick(it.golfland,tjKey);
+else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteName=pick(it.golftop,tjKey);
+let siteRegion=it.region||'\ucda9\uccad';
+if(site==='\x67\x6f\x6c\x66\x6c\x61\x6e\x64')siteRegion=it.golflandRegion||'\ucda9\uccad';
+else if(site==='\x67\x6f\x6c\x66\x6d\x6f\x6e')siteRegion=it.golfmonRegion||it.region||'\ucda9\uccad';
+else if(site==='\x67\x6f\x6c\x66\x72\x6f\x63\x6b')siteRegion=it.golfrockRegion||'\ucda9\uccad\ub3c4';
+else if(site==='\x67\x6f\x6c\x66\x70\x61\x6e\x67')siteRegion=it.golfpangRegion||it.region||'\ucda9\uccad';
+else if(site==='\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74')siteRegion=it.golmarketRegion||it.region||'\ucda9\uccad';
+else if(site==='\x67\x6f\x6c\x66\x74\x6f\x70')siteRegion=it.golftopRegion||it.region||'\ucda9\uccad';
+return{
+name:siteName,
+region:siteRegion,
+golfmonRegion:it.golfmonRegion||'\ucda9\uccad',
+golflandRegion:it.golflandRegion||'\ucda9\uccad',
+golfpangRegion:it.golfpangRegion||it.region||'\ucda9\uccad',
+golmarketRegion:it.golmarketRegion||it.region||'\ucda9\uccad',
+golfrockRegion:it.golfrockRegion||'\ucda9\uccad\ub3c4',
+golftopRegion:it.golftopRegion||it.region||'\ucda9\uccad',
+golfmon:pick(it.golfmon,tjKey),
+golfpang:pick(it.golfpang,tjKey),
+golmarket:pick(it.golmarket,tjKey),
+golfrock:pick(it.golfrock,tjKey),
+golfland:pick(it.golfland,tjKey),
+golftop:pick(it.golftop,tjKey),
+mapped:true
+};
+}
 return{
 name:tjKey,
 region:'\ucda9\uccad',
@@ -15283,17 +15324,15 @@ remoteData=json;
 }
 }catch(e){}
 }
-if(!remoteData||!remoteData.version){
 try{
 const ghRes=await fetch(`https://raw.githubusercontent.com/purry85/tee82/main/version.json?_t=${Date.now()}`,{cache:'\x6e\x6f-\x73\x74\x6f\x72\x65'});
 if(ghRes.ok){
 const ghJson=await ghRes.json();
-if(ghJson&&ghJson.version){
+if(ghJson&&ghJson.version&&(!remoteData||!remoteData.version||_0x105b(String(ghJson.version).trim(),String(remoteData.version).trim())>0)){
 remoteData=ghJson;
 }
 }
 }catch(e){}
-}
 if(!remoteData||!remoteData.version){
 if(isManual)showToast(`\ud604\uc7ac \ucd5c\uc2e0 \ubc84\uc804(Ver ${currentVer})\uc785\ub2c8\ub2e4.`);
 return;
