@@ -1904,7 +1904,7 @@ if(btnBatchToggleSeonti){
 btnBatchToggleSeonti.classList.toggle('\x61\x63\x74\x69\x76\x65',allSeonti);
 }
 if(textBatchSeonti){
-textBatchSeonti.textContent=(allSeonti&&totalCount>0)?'\uc120\ud2f0 \uc804\uccb4\ud574\uc81c':'\uc120\ud0dd \uc120\ud2f0\uc9c0\uc815';
+textBatchSeonti.textContent=(allSeonti&&totalCount>0)?'\uc120\ud2f0\ud574\uc81c':'\uc120\ud2f0\uc9c0\uc815';
 }
 }
 const btnGolfmarket=document.getElementById('\x62\x74\x6e\x52\x65\x67\x69\x73\x74\x65\x72\x54\x6f\x47\x6f\x6c\x66\x6d\x61\x72\x6b\x65\x74');
@@ -6801,11 +6801,8 @@ const isTransB=(b.roomType==='\uc591\ub3c4');
 if(isTransA!==isTransB){
 return isTransA?1:-1;
 }
-const dA=(a.date||'').split('\x2e'),dB=(b.date||'').split('\x2e');
-const mA=parseInt(dA[0],10)||0,mB=parseInt(dB[0],10)||0;
-if(mA!==mB)return mA-mB;
-const dayA=parseInt(dA[1],10)||0,dayB=parseInt(dB[1],10)||0;
-if(dayA!==dayB)return dayA-dayB;
+const cmpDate=compareDateStrings(a.date||'',b.date||'');
+if(cmpDate!==0)return cmpDate;
 return(a.time||'').localeCompare(b.time||'');
 });
 const unmappedCourses=Array.from(new Set([
@@ -7482,11 +7479,8 @@ tr:tr
 }
 }
 rowDataList.sort((a,b)=>{
-const dA=a.date.split('\x2e'),dB=b.date.split('\x2e');
-const mA=parseInt(dA[0],10)||0,mB=parseInt(dB[0],10)||0;
-if(mA!==mB)return mA-mB;
-const dayA=parseInt(dA[1],10)||0,dayB=parseInt(dB[1],10)||0;
-if(dayA!==dayB)return dayA-dayB;
+const cmpDate=compareDateStrings(a.date,b.date);
+if(cmpDate!==0)return cmpDate;
 return(a.time||'').localeCompare(b.time||'');
 });
 const unmappedCourses=[];
@@ -7499,15 +7493,34 @@ unmappedCourses.push(r.rawGolf);
 });
 return{rowDataList,unmappedCourses};
 }
+function __t82DateSortKey(str){
+const s=String(str||'');
+const full=s.match(/(\d{4})\s*[.\/\-년]\s*(\d{1,2})\s*[.\/\-월]\s*(\d{1,2})/);
+if(full)return parseInt(full[1],10)*10000+parseInt(full[2],10)*100+parseInt(full[3],10);
+const m=s.match(/(\d{1,2})\s*[.\/\-월]\s*(\d{1,2})/);
+if(!m)return Number.MAX_SAFE_INTEGER;
+const mon=parseInt(m[1],10),day=parseInt(m[2],10);
+if(!mon||mon>12||!day||day>31)return Number.MAX_SAFE_INTEGER;
+const now=new Date();
+const floor=new Date(now.getFullYear(),now.getMonth(),now.getDate()-60).getTime();
+let year=now.getFullYear()+1;
+for(const y of[now.getFullYear()-1,now.getFullYear(),now.getFullYear()+1]){
+if(new Date(y,mon-1,day).getTime()>=floor){year=y;break;}
+}
+return year*10000+mon*100+day;
+}
 function compareDateStrings(dAStr,dBStr){
 if(!dAStr&&!dBStr)return 0;
 if(!dAStr)return 1;
 if(!dBStr)return-1;
-const dA=dAStr.split('\x2e'),dB=dBStr.split('\x2e');
-const mA=parseInt(dA[0],10)||0,mB=parseInt(dB[0],10)||0;
-if(mA!==mB)return mA-mB;
-const dayA=parseInt(dA[1],10)||0,dayB=parseInt(dB[1],10)||0;
-return dayA-dayB;
+const kA=__t82DateSortKey(dAStr),kB=__t82DateSortKey(dBStr);
+return kA<kB?-1:(kA>kB?1:0);
+}
+function sortTrsByDateForRegistration(trs){
+return trs
+.map((tr,idx)=>({tr,idx,key:__t82DateSortKey(tr.cells[0]?.textContent.trim()||'')}))
+.sort((a,b)=>(a.key-b.key)||(a.idx-b.idx))
+.map(x=>x.tr);
 }
 let currentSortType='\x74\x69\x6d\x65';
 let currentSortDir='\x61\x73\x63';
@@ -9088,6 +9101,34 @@ openSoldOutTextModal();
 document.getElementById('\x62\x74\x6e\x4f\x70\x65\x6e\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',(e)=>{
 e.preventDefault();
 openSoldOutTextModal();
+});
+document.getElementById('\x62\x74\x6e\x4b\x65\x65\x70\x53\x65\x6c\x65\x63\x74\x65\x64\x4f\x6e\x6c\x79')?.addEventListener('\x63\x6c\x69\x63\x6b',async(e)=>{
+e.preventDefault();
+try{
+const st=await new Promise(res=>chrome.storage.local.get(null,r=>res(r||{})));
+const running=Object.keys(st).some(k=>/isRegistrationRunning$/.test(k)&&st[k]===true);
+if(running||(typeof activeConcurrentPlatforms!=='\x75\x6e\x64\x65\x66\x69\x6e\x65\x64'&&activeConcurrentPlatforms.size>0)){
+showToast('\uc790\ub3d9\ub4f1\ub85d \uc9c4\ud589 \uc911\uc5d0\ub294 \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\x2e \uc911\ub2e8 \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694\x2e');
+return;
+}
+}catch(err){}
+const trs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72'));
+const keep=trs.filter(tr=>tr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64'));
+if(keep.length===0){
+showToast('\uccb4\ud06c\ub41c \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e \ub0a8\uae38 \ud2f0\ub97c \uba3c\uc800 \uccb4\ud06c\ud558\uc138\uc694\x2e');
+return;
+}
+const removeCount=trs.length-keep.length;
+if(removeCount===0){
+showToast('\ubaa8\ub450 \uccb4\ud06c\ub418\uc5b4 \uc788\uc5b4 \uc9c0\uc6b8 \ud2f0\ud0c0\uc784\uc774 \uc5c6\uc2b5\ub2c8\ub2e4\x2e');
+return;
+}
+if(!confirm(`\uccb4\ud06c\ud55c ${keep.length}\uac1c\ub9cc \ub0a8\uae30\uace0 \ub098\uba38\uc9c0 ${removeCount}\uac1c\ub97c \ubaa9\ub85d\uc5d0\uc11c \uc9c0\uc6b8\uae4c\uc694?\n(\uace8\ud504 \uc0ac\uc774\ud2b8\uc5d0 \uc62c\ub77c\uac04 \uae00\uc740 \uc9c0\uc6cc\uc9c0\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4)`))return;
+trs.forEach(tr=>{if(!tr.classList.contains('\x73\x65\x6c\x65\x63\x74\x65\x64'))tr.remove();});
+saveCurrentTableState();
+renderCardList(true);
+updateSelectedBadge();
+showToast(`${removeCount}\uac1c\ub97c \uc9c0\uc6b0\uace0 \uccb4\ud06c\ud55c ${keep.length}\uac1c\ub9cc \ub0a8\uacbc\uc2b5\ub2c8\ub2e4.`);
 });
 document.getElementById('\x62\x74\x6e\x43\x6c\x6f\x73\x65\x53\x6f\x6c\x64\x4f\x75\x74\x54\x65\x78\x74\x4d\x6f\x64\x61\x6c\x58')?.addEventListener('\x63\x6c\x69\x63\x6b',closeSoldOutTextModal);
 document.getElementById('\x62\x74\x6e\x43\x61\x6e\x63\x65\x6c\x53\x6f\x6c\x64\x4f\x75\x74\x4d\x6f\x64\x61\x6c')?.addEventListener('\x63\x6c\x69\x63\x6b',closeSoldOutTextModal);
@@ -11384,7 +11425,7 @@ showToast('\uc989\uc2dc\uc911\ub2e8 \ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 }
 function startGolfmonRegistration(isFromMulti=false){
 if(!_0x1028('\ubaac'))return;
-const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const selectedTrs=sortTrsByDateForRegistration(Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64')));
 if(selectedTrs.length===0){
 alert("\uace8\ud504\ubaac\uc5d0 \ub4f1\ub85d\ud560 \ud56d\ubaa9\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\ubaa9\ub85d\uc5d0\uc11c \uce74\ub4dc\ub97c \ud074\ub9ad\ud558\uac70\ub098 [\uc6d0\ud074\ub9ad]\uc744 \uba3c\uc800 \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e");
 return;
@@ -11477,7 +11518,7 @@ chrome.tabs.create({url:"\x68\x74\x74\x70\x73\x3a\x2f\x2f\x67\x6f\x6c\x66\x6d\x6
 }
 function startGolfmarketRegistration(isFromMulti=false){
 if(!_0x1028('\ub9c8\ucf13'))return;
-const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const selectedTrs=sortTrsByDateForRegistration(Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64')));
 if(selectedTrs.length===0){
 alert("\uace8\ub9c8\ucf13\uc5d0 \ub4f1\ub85d\ud560 \ud56d\ubaa9\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\ubaa9\ub85d\uc5d0\uc11c \uce74\ub4dc\ub97c \ud074\ub9ad\ud558\uac70\ub098 [\uc6d0\ud074\ub9ad]\uc744 \uba3c\uc800 \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e");
 return;
@@ -11620,7 +11661,7 @@ _0x1019(items.length,'\x67\x6f\x6c\x6d\x61\x72\x6b\x65\x74');
 }
 function startGolfrockRegistration(isFromMulti=false){
 if(!_0x1028('\ub77d'))return;
-const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const selectedTrs=sortTrsByDateForRegistration(Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64')));
 if(selectedTrs.length===0){
 alert("\uace8\ud504\ub77d\uc5d0 \ub4f1\ub85d\ud560 \ud56d\ubaa9\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\ubaa9\ub85d\uc5d0\uc11c \uce74\ub4dc\ub97c \ud074\ub9ad\ud558\uac70\ub098 [\uc6d0\ud074\ub9ad]\uc744 \uba3c\uc800 \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e");
 return;
@@ -11739,7 +11780,7 @@ chrome.tabs.create({url:targetUrl});
 }
 function _0x1016(isFromMulti=false){
 if(!_0x1028('\ub79c\ub4dc'))return;
-const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const selectedTrs=sortTrsByDateForRegistration(Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64')));
 if(selectedTrs.length===0){
 alert("\uace8\ud504\ub79c\ub4dc\uc5d0 \ub4f1\ub85d\ud560 \ud56d\ubaa9\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\ubaa9\ub85d\uc5d0\uc11c \uce74\ub4dc\ub97c \ud074\ub9ad\ud558\uac70\ub098 [\uc6d0\ud074\ub9ad]\uc744 \uba3c\uc800 \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e");
 return;
@@ -11872,7 +11913,7 @@ chrome.tabs.create({url:targetUrl});
 }
 function _0x1018(isFromMulti=false){
 if(!_0x1028('\ud0d1'))return;
-const selectedTrs=Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64'));
+const selectedTrs=sortTrsByDateForRegistration(Array.from(document.querySelectorAll('\x23\x64\x61\x74\x61\x54\x61\x62\x6c\x65 \x74\x62\x6f\x64\x79 \x74\x72\x2e\x73\x65\x6c\x65\x63\x74\x65\x64')));
 if(selectedTrs.length===0){
 alert("\uace8\ud504\ud0d1\uc5d0 \ub4f1\ub85d\ud560 \ud56d\ubaa9\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4\x2e\n\ubaa9\ub85d\uc5d0\uc11c \uce74\ub4dc\ub97c \ud074\ub9ad\ud558\uac70\ub098 [\uc6d0\ud074\ub9ad]\uc744 \uba3c\uc800 \uc2e4\ud589\ud574\uc8fc\uc138\uc694\x2e");
 return;

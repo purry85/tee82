@@ -5717,10 +5717,13 @@
                     <span class="sort-btn-text">시간순</span>
                     <span class="sort-btn-arrow" id="arrowSortTime">▲ 이른순</span>
                 </button>
+                <button type="button" class="btn-sort-toggle" id="btnKeepSelectedOnly" style="white-space:nowrap" title="체크한 티타임만 목록에 남기고 나머지는 목록에서 지웁니다 (사이트 글은 건드리지 않음)">
+                    <span class="sort-btn-text">선택만 남기기</span>
+                </button>
                 <div class="sort-bar-divider"></div>
                 <label class="btn-seonti-batch" id="btnBatchToggleSeonti" title="클릭 시 전체 선티 지정 / 전체 선티 해제 (선택 항목 우선)">
                     <input type="checkbox" id="chkBatchSeontiAll">
-                    <span id="textBatchSeonti">선택 선티지정</span>
+                    <span id="textBatchSeonti">선티지정</span>
                 </label>
                 <button type="button" class="btn-soldout-open-modal" id="btnOpenSoldOutTextModal" title="예약/조인 문자 내용을 붙여넣어 해당 사이트 글을 즉시 마감/삭제합니다">
                     <span>글마감/삭제</span>
@@ -5967,7 +5970,7 @@
 
         <!-- 6. 푸터 카피라이트 -->
         <footer class="footer-copyright">
-            <span><span id="footerAppVersion">Ver 3.9.6</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a> · <a href="https://automatees.netlify.app/manual" target="_blank" rel="noopener" id="btnFooterManual" title="온라인 사용설명서 열기">사용설명서</a></span>
+            <span><span id="footerAppVersion">Ver 3.9.7</span> · <a href="#" id="btnFooterUpdate" style="color: #059669; text-decoration: underline; font-weight: 700; cursor: pointer;">최신 업데이트</a> · <a href="#" id="btnFooterKakao" style="color: #F59E0B; text-decoration: underline; font-weight: 700; cursor: pointer;" title="카카오톡 1:1 상담 문의">카톡문의</a> · <a href="https://automatees.netlify.app/manual" target="_blank" rel="noopener" id="btnFooterManual" title="온라인 사용설명서 열기">사용설명서</a></span>
             <div class="user-membership-pill" id="userMembershipPill" style="display: none;" title="회원 정보">
                 <span class="user-name" id="pillUserName">회원</span>
                 <span class="expire-badge" id="pillExpireDays">D-0</span>
@@ -6451,7 +6454,7 @@
                     <div class="update-status-row">
                         <span class="update-label">현재 프로그램 버전</span>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.9.6 (최신)</span>
+                            <span class="badge-ver" id="badgeCurrentVer">Ver 3.9.7 (최신)</span>
                             <a href="#" id="linkViewReleaseNotes" style="font-size: 10.5px; color: #4F46E5; font-weight: 700; text-decoration: underline; cursor: pointer;" title="현재 버전의 상세 업데이트 내용을 확인합니다">[업데이트 내용 보기]</a>
                         </div>
                     </div>
