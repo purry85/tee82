@@ -1,10 +1,9 @@
 {
-    "version":  "3.9.7",
+    "version":  "3.9.8",
     "releaseDate":  "2026-11-28",
     "title":  "3.0.9",
     "releaseNotes":  [
-                         "- 선택한 티만 목록에 남기는 기능 추가",
-                         "- 월별 등록순서 문제 개선"
+                         "- test - do not update"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
