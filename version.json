@@ -1,7 +1,7 @@
 {
     "version":  "4.2.0",
     "releaseDate":  "2026-11-28",
-    "title":  "3.0.9",
+    "title":  "3.1.0",
     "releaseNotes":  [
                          "-필수- 양도,조인 수정기능 오류 전체수정"
                      ],
