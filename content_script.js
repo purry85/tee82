@@ -163,6 +163,7 @@ console.debug=wrappedDebug;
 var wrappedWarn=function(){
 if(_teeInWarn)return;
 _teeInWarn=true;
+try{if(typeof arguments[0]==='\x73\x74\x72\x69\x6e\x67')window.__t82LastWarn=arguments[0];}catch(e){}
 try{
 if(window.__golftee82_isDebugAdmin||isDebugAdmin){
 _rawWarn.apply(console,arguments);
@@ -177,6 +178,7 @@ console.warn=wrappedWarn;
 var wrappedError=function(){
 if(_teeInError)return;
 _teeInError=true;
+try{if(typeof arguments[0]==='\x73\x74\x72\x69\x6e\x67')window.__t82LastWarn=arguments[0];}catch(e){}
 try{
 if(window.__golftee82_isDebugAdmin||isDebugAdmin){
 _rawError.apply(console,arguments);
@@ -2688,7 +2690,7 @@ await _0x1008(300);
 }
 for(let backStep=0;backStep<3&&(isEditPage()||isDetailPage()||window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77'));backStep++){
 console.log(`[\ubcf5\uadc0] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/3)`);
-await executeSingleBack();
+await _0x1062();
 await _0x1008(350);
 if(_0x103b()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
@@ -3359,7 +3361,7 @@ await _0x1008(150);
 }
 if(!_0x1047()){
 console.warn('[\ub0a0\uc9dc\ud655\uc778] \uc544\uc9c1 \ubaa9\ub85d \ud654\uba74\uc774 \uc544\ub2d8 -> \ubaa9\ub85d\uc73c\ub85c \ubcf5\uadc0 \ud6c4 \ub0a0\uc9dc \uc120\ud0dd');
-try{await navigateBackToList();}catch(e){}
+try{await _0x1063();}catch(e){}
 for(let w=0;w<30&&!_0x1047();w++){
 if(shouldStopRegistration)return false;
 await _0x1008(150);
@@ -3913,7 +3915,7 @@ const postType=_0x1056(el,rawTxt);
 if(targetRoomType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(targetRoomType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
 const courseName=_0x105a(el);
-const teeTime=typeof extractTeeTimeFromResetCard==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?extractTeeTimeFromResetCard(rawTxt):'';
+const teeTime=typeof _0x106a==='\x66\x75\x6e\x63\x74\x69\x6f\x6e'?_0x106a(rawTxt):'';
 const timeMatch=rawTxt.match(/(\d{1,2}:\d{2})/);
 const timeStr=teeTime||(timeMatch?timeMatch[1]:'');
 const feeMatch=rawTxt.match(/([0-9.,]+)\s*(?:만|만원|원)/);
@@ -5019,7 +5021,210 @@ function resetEditSubmitLock(){
 isEditSubmittingLock=false;
 _submitLocked=false;
 }
-async function clickSubmitButtonReliably(submitBtn,item=null){
+const __t82Report={
+data:null,
+pending:null,
+items:[],
+_norm(s){return String(s||'').replace(/[^\d]/g,'');},
+_findItem(golf,date,time){
+const t=this._norm(time);
+return this.items.find(it=>it.golf===golf&&String(it.date)===String(date)&&this._norm(it.time)===t)||null;
+},
+async start(title,items){
+const resume=Boolean(window.__t82ResumeFlag);
+window.__t82ResumeFlag=false;
+this.items=(items||[]).slice();
+this.pending=null;
+if(resume&&!this.data){
+try{
+const res=await new Promise(r=>chrome.storage.local.get(['\x67\x6f\x6c\x66\x6d\x6f\x6e\x5f\x6c\x61\x73\x74\x5f\x72\x65\x70\x6f\x72\x74'],r));
+const st=res&&res.golfmon_last_report;
+if(st&&st.status==='\x72\x75\x6e\x6e\x69\x6e\x67'&&Date.now()-(st.updatedAt||0)<15*60*1000)this.data=st;
+}catch(e){}
+}
+if(resume&&this.data&&this.data.status==='\x72\x75\x6e\x6e\x69\x6e\x67'){
+this.data.resumedCount=(this.data.resumedCount||0)+1;
+}else{
+this.data={
+title,status:'\x72\x75\x6e\x6e\x69\x6e\x67',startedAt:Date.now(),finishedAt:0,updatedAt:Date.now(),
+total:this.items.length,seen:false,resumedCount:0,
+counts:{'\uc218\uc815':0,'\uc2e0\uaddc\ub4f1\ub85d':0,'\ub3d9\uc77c\uc720\uc9c0':0,'\uac74\ub108\ub700':0,'\uc2e4\ud328':0},
+entries:[]
+};
+}
+this.save();
+},
+begin(golf,date,time){
+if(!this.data)return;
+this.finalizePending();
+this.pending={golf,date,time};
+window.__t82LastWarn='';
+},
+record(kind,golf,date,time,reason,regIdHint,roomTypeHint){
+if(!this.data)return;
+const it=this._findItem(golf,date,time);
+const entry={
+kind,golf:golf||'',date:date||'',time:time||'',reason:reason||'',
+regId:regIdHint||(it&&it.regId)||'',rawGolf:(it&&it.rawGolf)||'',
+roomType:roomTypeHint||(it&&it.roomType)||''
+};
+this.data.entries.push(entry);
+this.data.counts[kind]=(this.data.counts[kind]||0)+1;
+if(this.pending&&this.pending.golf===golf&&this._norm(this.pending.time)===this._norm(time))this.pending=null;
+this.save();
+},
+finalizePending(){
+if(!this.pending||!this.data)return;
+const p=this.pending;
+this.pending=null;
+const why=String(window.__t82LastWarn||'').replace(/^\[[^\]]*\]\s*/,'').slice(0,120)||'\ucc98\ub9ac \uacb0\uacfc \uc5c6\uc774 \ub118\uc5b4\uac10';
+this.record('\uc2e4\ud328',p.golf,p.date,p.time,why);
+},
+finish(status){
+if(!this.data)return;
+this.finalizePending();
+this.data.status=status;
+this.data.finishedAt=Date.now();
+this.save();
+try{this.showPanel();}catch(e){}
+},
+save(){
+if(!this.data)return;
+this.data.updatedAt=Date.now();
+try{chrome.storage.local.set({golfmon_last_report:this.data});}catch(e){}
+},
+onMessage(msg){
+if(!msg||!msg.type)return;
+const t=msg.type;
+if(t==='\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x50\x52\x4f\x47\x52\x45\x53\x53'||t==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x50\x52\x4f\x47\x52\x45\x53\x53'){
+this.begin(msg.golf,msg.date,msg.time);
+}else if(t==='\x49\x54\x45\x4d\x5f\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x55\x43\x43\x45\x53\x53'||t==='\x49\x54\x45\x4d\x5f\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x53\x55\x43\x43\x45\x53\x53'){
+const it=msg.item||{};
+const kind=msg.isSkipped?'\ub3d9\uc77c\uc720\uc9c0':(msg.kind==='\x72\x65\x67\x69\x73\x74\x65\x72'?'\uc2e0\uaddc\ub4f1\ub85d':'\uc218\uc815');
+this.record(kind,it.golf,it.date,msg.newTime||it.time,msg.note||'',msg.regId||it.regId,it.roomType);
+}else if(t==='\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44'){
+this.record(msg.failed?'\uc2e4\ud328':'\uac74\ub108\ub700',msg.golf,msg.date,msg.time,msg.reason||'');
+}else if(t==='\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44'||t==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x43\x4f\x4d\x50\x4c\x45\x54\x45\x44'){
+this.finish('\x64\x6f\x6e\x65');
+}else if(t==='\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x54\x4f\x50\x50\x45\x44'||t==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x53\x54\x4f\x50\x50\x45\x44'){
+this.finish('\x73\x74\x6f\x70\x70\x65\x64');
+}
+},
+showPanel(){
+const d=this.data;
+if(!d)return;
+const old=document.getElementById('\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x70\x61\x6e\x65\x6c');
+if(old)old.remove();
+const c=d.counts||{};
+const esc=(s)=>String(s||'').replace(/[&<>"]/g,ch=>({'&':'&\x61\x6d\x70;','<':'&\x6c\x74;','>':'&\x67\x74;','"':'&\x71\x75\x6f\x74;'}[ch]));
+const problems=(d.entries||[]).filter(e=>e.kind==='\uc2e4\ud328'||e.kind==='\uac74\ub108\ub700');
+const notes=(d.entries||[]).filter(e=>(e.kind==='\uc218\uc815'||e.kind==='\uc2e0\uaddc\ub4f1\ub85d')&&e.reason);
+const noteRows=notes.slice(0,20).map(e=>`<div style="padding:6px 0;border-top:1px solid #eef2f7;font-size:12px;line-height:1.4;">
+                <b style="color:#7c3aed">\ucc38\uace0</b> <span style="color:#0f172a;font-weight:600;">${esc(e.golf)}</span> ${esc(e.date)} ${esc(e.time)} ${e.roomType?'<\x73\x70\x61\x6e \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a\x23\x36\x34\x37\x34\x38\x62">['+esc(e.roomType)+']<\x2f\x73\x70\x61\x6e>':''}
+                <div style="color:#475569;">${esc(e.reason)}</div></div>`).join('');
+const chip=(label,n,bg,fg)=>`<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 9px;border-radius:999px;background:${bg};color:${fg};font-weight:700;font-size:12px;">${label} ${n||0}</span>`;
+const rows=problems.slice(0,40).map(e=>`<div style="padding:6px 0;border-top:1px solid #eef2f7;font-size:12px;line-height:1.4;">
+                <b style="color:${e.kind==='\uc2e4\ud328'?'\x23\x64\x63\x32\x36\x32\x36':'\x23\x62\x34\x35\x33\x30\x39'}">${e.kind}</b>
+                <span style="color:#0f172a;font-weight:600;">${esc(e.golf)}</span> ${esc(e.date)} ${esc(e.time)} ${e.roomType?'<\x73\x70\x61\x6e \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a\x23\x36\x34\x37\x34\x38\x62">['+esc(e.roomType)+']<\x2f\x73\x70\x61\x6e>':''}
+                <div style="color:#475569;">${esc(e.reason)}</div></div>`).join('');
+const panel=document.createElement('\x64\x69\x76');
+panel.id='\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x70\x61\x6e\x65\x6c';
+panel.setAttribute('\x73\x74\x79\x6c\x65','\x70\x6f\x73\x69\x74\x69\x6f\x6e\x3a\x66\x69\x78\x65\x64;\x72\x69\x67\x68\x74\x3a\x31\x36\x70\x78;\x62\x6f\x74\x74\x6f\x6d\x3a\x39\x30\x70\x78;\x7a-\x69\x6e\x64\x65\x78\x3a\x32\x31\x34\x37\x34\x38\x33\x36\x34\x36;\x77\x69\x64\x74\x68\x3a\x33\x34\x30\x70\x78;\x6d\x61\x78-\x68\x65\x69\x67\x68\x74\x3a\x37\x30\x76\x68;\x6f\x76\x65\x72\x66\x6c\x6f\x77\x3a\x61\x75\x74\x6f;\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x66\x66\x66;\x62\x6f\x72\x64\x65\x72\x3a\x31\x70\x78 \x73\x6f\x6c\x69\x64 \x23\x65\x32\x65\x38\x66\x30;\x62\x6f\x72\x64\x65\x72-\x72\x61\x64\x69\x75\x73\x3a\x31\x34\x70\x78;\x62\x6f\x78-\x73\x68\x61\x64\x6f\x77\x3a\x30 \x31\x32\x70\x78 \x33\x32\x70\x78 \x72\x67\x62\x61(\x31\x35,\x32\x33,\x34\x32,\x2e\x31\x38);\x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x34\x70\x78 \x31\x34\x70\x78 \x31\x30\x70\x78;\x66\x6f\x6e\x74-\x66\x61\x6d\x69\x6c\x79\x3a-\x61\x70\x70\x6c\x65-\x73\x79\x73\x74\x65\x6d,"\x4d\x61\x6c\x67\x75\x6e \x47\x6f\x74\x68\x69\x63",\x73\x61\x6e\x73-\x73\x65\x72\x69\x66;\x63\x6f\x6c\x6f\x72\x3a\x23\x30\x66\x31\x37\x32\x61;');
+const statusLabel=d.status==='\x73\x74\x6f\x70\x70\x65\x64'?'\uc911\ub2e8\ub428':'\uc644\ub8cc';
+panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <b style="font-size:14px;">${esc(d.title||'\uace8\ud504\ubaac \uc791\uc5c5')} \uacb0\uacfc \u00b7 ${statusLabel}</b>
+                <button id="t82_result_close" style="border:0;background:#f1f5f9;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:12px;">\ub2eb\uae30</button></div>
+            <div>${chip('\uc218\uc815',c['\uc218\uc815'],'\x23\x64\x63\x66\x63\x65\x37','\x23\x31\x36\x36\x35\x33\x34')}${chip('\uc2e0\uaddc\ub4f1\ub85d',c['\uc2e0\uaddc\ub4f1\ub85d'],'\x23\x64\x62\x65\x61\x66\x65','\x23\x31\x65\x34\x30\x61\x66')}${chip('\ub3d9\uc77c\uc720\uc9c0',c['\ub3d9\uc77c\uc720\uc9c0'],'\x23\x66\x31\x66\x35\x66\x39','\x23\x33\x33\x34\x31\x35\x35')}${chip('\uac74\ub108\ub700',c['\uac74\ub108\ub700'],'\x23\x66\x65\x66\x33\x63\x37','\x23\x39\x32\x34\x30\x30\x65')}${chip('\uc2e4\ud328',c['\uc2e4\ud328'],'\x23\x66\x65\x65\x32\x65\x32','\x23\x39\x39\x31\x62\x31\x62')}</div>
+            ${problems.length?`<div style="margin-top:8px;font-size:12px;color:#64748b;">\uc2e4\ud328\u00b7\uac74\ub108\ub700 ${problems.length}\uac74 (\uc624\ud1a0\ub9e4\ud2f0 \ucc3d\uc758 [\uc2e4\ud328\u00b7\uac74\ub108\ub700\ub9cc \ub2e4\uc2dc \uc120\ud0dd]\uc73c\ub85c \ub2e4\uc2dc \ub3cc\ub9b4 \uc218 \uc788\uc74c)</div>${rows}`:'<\x64\x69\x76 \x73\x74\x79\x6c\x65="\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70\x3a\x38\x70\x78;\x66\x6f\x6e\x74-\x73\x69\x7a\x65\x3a\x31\x32\x70\x78;\x63\x6f\x6c\x6f\x72\x3a\x23\x31\x36\x36\x35\x33\x34;">\uc2e4\ud328\u00b7\uac74\ub108\ub700 \uc5c6\uc774 \ubaa8\ub450 \ucc98\ub9ac\ub410\uc2b5\ub2c8\ub2e4\x2e<\x2f\x64\x69\x76>'}
+            ${notes.length?`<div style="margin-top:10px;font-size:12px;color:#64748b;">\uc2e0\uccad\uc790\uac00 \uc788\ub294 \uae00 ${notes.length}\uac74 (\uc218\uc815\uc740 \ub410\uc9c0\ub9cc \ubaa9\ub85d \uc704\ub85c \uc548 \uc62c\ub77c\uac10)</div>${noteRows}`:''}`;
+document.body.appendChild(panel);
+const btn=document.getElementById('\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x63\x6c\x6f\x73\x65');
+if(btn)btn.onclick=()=>panel.remove();
+}
+};
+try{
+if(chrome&&chrome.runtime&&chrome.runtime.sendMessage&&!chrome.runtime.__t82ReportWrapped){
+const __t82OrigSend=chrome.runtime.sendMessage.bind(chrome.runtime);
+chrome.runtime.sendMessage=function(msg){
+try{__t82Report.onMessage(msg);}catch(e){}
+return __t82OrigSend.apply(null,arguments);
+};
+chrome.runtime.__t82ReportWrapped=true;
+}
+}catch(e){}
+window.__t82LastSubmitFail='';
+function _0x105e(){
+const t0=performance.now();
+const texts=[];
+const pushText=(el)=>{
+try{
+const txt=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+if(txt&&txt.length<=200&&!texts.includes(txt))texts.push(txt);
+}catch(e){}
+};
+const sel='\x2e\x71-\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e, \x2e\x71-\x6e\x6f\x74\x69\x66\x69\x63\x61\x74\x69\x6f\x6e\x73\x5f\x5f\x6c\x69\x73\x74, \x2e\x71-\x64\x69\x61\x6c\x6f\x67, [\x72\x6f\x6c\x65="\x61\x6c\x65\x72\x74"], [\x72\x6f\x6c\x65="\x64\x69\x61\x6c\x6f\x67"], \x2e\x71-\x62\x61\x6e\x6e\x65\x72, \x2e\x74\x6f\x61\x73\x74, \x2e\x73\x6e\x61\x63\x6b\x62\x61\x72';
+const okRe=/수정\s*되었|수정\s*완료|등록\s*되었|등록\s*완료|저장\s*되었/;
+const failRe=/불가|할\s*수\s*없|실패|초과|최대\s*\d|오류|에러|권한|거부|제한|신청자|신청\s*중|마감된|삭제된|존재하지/;
+let obs=null;
+try{
+obs=new MutationObserver(muts=>{
+for(const m of muts){
+for(const n of m.addedNodes){
+if(!(n instanceof Element))continue;
+if(n.id==='\x67\x6d\x5f\x68\x75\x64\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c'||(n.closest&&n.closest('\x23\x67\x6d\x5f\x68\x75\x64\x5f\x73\x74\x61\x74\x75\x73\x5f\x70\x61\x6e\x65\x6c, \x23\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x70\x61\x6e\x65\x6c')))continue;
+if(n.matches&&n.matches(sel))pushText(n);
+else if(n.closest&&n.closest(sel))pushText(n.closest(sel));
+else if(n.querySelectorAll)n.querySelectorAll(sel).forEach(pushText);
+const tx=(n.innerText||n.textContent||'').trim();
+if(tx&&tx.length<=150&&(okRe.test(tx)||failRe.test(tx))){
+let p=n,floating=false;
+for(let up=0;up<5&&p&&p!==document.body;up++,p=p.parentElement){
+const pos=getComputedStyle(p).position;
+if(pos==='\x66\x69\x78\x65\x64'||pos==='\x61\x62\x73\x6f\x6c\x75\x74\x65'||pos==='\x73\x74\x69\x63\x6b\x79'){floating=true;break;}
+}
+if(floating)pushText(n);
+}
+}
+}
+});
+obs.observe(document.body,{childList:true,subtree:true});
+}catch(e){}
+const startHref=location.href;
+return{
+async finish(maxWaitMs=3500){
+const getStatuses=()=>{
+try{
+return performance.getEntriesByType('\x72\x65\x73\x6f\x75\x72\x63\x65')
+.filter(e=>e.startTime>=t0&&/\/api\/booking\/(?:post_|put_|update|modify|edit|write)|post_transfer_join/i.test(e.name))
+.map(e=>e.responseStatus||0);
+}catch(e){return[];}
+};
+const start=Date.now();
+while(Date.now()-start<maxWaitMs){
+document.querySelectorAll(sel).forEach(el=>{if(el.offsetHeight>0)pushText(el);});
+const st=getStatuses();
+if(st.some(s=>s>=400)||texts.some(t=>okRe.test(t)||failRe.test(t))||st.some(s=>s>=200&&s<300)){
+await _0x1008(300);
+document.querySelectorAll(sel).forEach(el=>{if(el.offsetHeight>0)pushText(el);});
+break;
+}
+await _0x1008(150);
+}
+try{if(obs)obs.disconnect();}catch(e){}
+const statuses=getStatuses();
+const failText=texts.find(t=>failRe.test(t)&&!okRe.test(t))||'';
+const okText=texts.find(t=>okRe.test(t))||'';
+const badStatus=statuses.find(s=>s>=400);
+let failed=false,reason='';
+if(badStatus){failed=true;reason=failText||`\uace8\ud504\ubaac \uc11c\ubc84\uac00 \uac70\uc808\ud568 (HTTP ${badStatus})`;}
+else if(failText&&!okText){failed=true;reason=failText;}
+const verified=Boolean(okText||statuses.some(s=>s>=200&&s<300));
+console.log(`[\uacb0\uacfc\ud655\uc778] \uc11c\ubc84\uc751\ub2f5=[${statuses.join(',')||'\uc5c6\uc74c'}] \uc548\ub0b4=[${texts.join(' \x2f ').slice(0,200)||'\uc5c6\uc74c'}] -> ${failed?'\uc2e4\ud328\x3a '+reason:(verified?'\uc131\uacf5 \ud655\uc778':'\ud655\uc778 \ubd88\uac00(\uc131\uacf5\uc73c\ub85c \ucc98\ub9ac)')}`);
+return{failed,reason,verified,texts,statuses,navigated:location.href!==startHref};
+}
+};
+}
+async function _0x105f(submitBtn,item=null){
 if(!submitBtn)return false;
 const currentUrlKey=window.location.href;
 const itemKey=item?`${item.golf}_${item.date}_${item.time}_${item.fee}`:'';
@@ -5065,7 +5270,7 @@ el.style.setProperty('\x63\x75\x72\x73\x6f\x72','\x6e\x6f\x74-\x61\x6c\x6c\x6f\x
 console.log("[\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ub2e8 \x31\ud68c \ud074\ub9ad \uc644\ub8cc (\ucd94\uac00 \uc911\ubcf5 \ud074\ub9ad \x31\x30\x30% \uc6d0\ucc9c \ucc28\ub2e8)");
 return true;
 }
-async function editFeeAndPeopleAndSubmit(item,maxAttempts=15){
+async function _0x1060(item,maxAttempts=15){
 console.log(`[\uac00\uaca9\uc218\uc815] \uc218\uc815 \ud3fc \ucc98\ub9ac \uc2dc\uc791: \ubaa9\ud45c \uadf8\ub9b0\ud53c [${item.fee}\ub9cc], \ubaa9\ud45c \uc778\uc6d0 [${item.sizenum||'\ubbf8\uc9c0\uc815'}]...`);
 resetEditSubmitLock();
 let feeInput=null;
@@ -5149,21 +5354,21 @@ console.error("[\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc84\ud2b
 return false;
 }
 console.log(`[\uac00\uaca9\uc218\uc815] live '\uc218\uc815\ud558\uae30' \ubc84\ud2bc \ubc1c\uacac (${liveSubmitBtn.tagName}, ${liveSubmitBtn.textContent.trim()}) -> \ub2e8 1\ud68c \ud074\ub9ad \uc2e4\ud589`);
-await clickSubmitButtonReliably(liveSubmitBtn,item);
+await _0x105f(liveSubmitBtn,item);
 await _0x1008(500);
 await _0x1034(25);
 await _0x1008(400);
 await _0x1008(350);
-await waitForAutoLeaveEditPage();
+await _0x1061();
 if(isEditPage()||isDetailPage()){
 console.log("[\uac00\uaca9\uc218\uc815] \ud655\uc778 \uc644\ub8cc \ud6c4 \uc544\uc9c1 \uc218\uc815\x2f\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \x31\ud68c \uc2e4\ud589");
-await executeSingleBack();
+await _0x1062();
 await _0x1008(500);
 }
 console.log("[\uac00\uaca9\uc218\uc815] '\uc218\uc815\ud558\uae30' \uc81c\ucd9c \ubc0f \ud31d\uc5c5 [\ud655\uc778] \ucc98\ub9ac \uc644\ub8cc!");
 return true;
 }
-async function waitForAutoLeaveEditPage(maxMs=1200){
+async function _0x1061(maxMs=1200){
 const startUrl=window.location.href;
 for(let t=0;t<maxMs;t+=150){
 if(window.location.href!==startUrl||_0x103b()){
@@ -5174,7 +5379,7 @@ await _0x1008(150);
 }
 return false;
 }
-async function executeSingleBack(){
+async function _0x1062(){
 console.log("[\uac00\uaca9\uc218\uc815] \uc0c1\ub2e8 \ub4a4\ub85c\uac00\uae30(\u2190) \ub2e8 \x31\ud68c \uc2e4\ud589\x2e\x2e\x2e");
 resetEditSubmitLock();
 const prevUrl=window.location.href;
@@ -5269,7 +5474,7 @@ await _0x1008(550);
 }
 return true;
 }
-async function navigateBackToList(filterType=''){
+async function _0x1063(filterType=''){
 console.log("[\uac00\uaca9\uc218\uc815] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed' \ubaa9\ub85d \ud654\uba74\uc73c\ub85c \uc548\uc804 \ubcf5\uadc0 \ud655\uc778\x2e\x2e\x2e");
 resetEditSubmitLock();
 if(_0x103b()){
@@ -5301,7 +5506,7 @@ return true;
 }
 for(let backStep=0;backStep<3&&(isEditPage()||isDetailPage()||window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77'));backStep++){
 console.log(`[\uac00\uaca9\uc218\uc815] \uc218\uc815/\uc0c1\uc138 \ud654\uba74 \uac10\uc9c0 -> \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589 (${backStep+1}/3)`);
-await executeSingleBack();
+await _0x1062();
 await _0x1008(350);
 if(_0x103b()){
 if(filterType&&(filterType==='\uc591\ub3c4'||filterType==='\uc870\uc778'||filterType==='\uc804\uccb4')){
@@ -5312,12 +5517,12 @@ return true;
 }
 return await _0x103d(filterType);
 }
-async function executeBatchPriceUpdate(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',filterType='',confirmMismatch=true,customMemo=''){
+async function _0x1064(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',filterType='',confirmMismatch=true,customMemo=''){
 if(!items||items.length===0)return;
-return await executeBatchPostReplacement(items,delayPreset,stepPreset,filterType,customMemo,confirmMismatch,true);
+return await _0x1069(items,delayPreset,stepPreset,filterType,customMemo,confirmMismatch,true);
 }
 var isPostReplacementRunning=false;
-async function updateTimeInEditForm(targetTime){
+async function _0x1065(targetTime){
 if(!targetTime)return false;
 const digits=targetTime.replace(/[^\d]/g,'');
 const cleanTime=(digits.length===4)?digits:targetTime.trim();
@@ -5370,19 +5575,19 @@ return true;
 console.warn("[\uad50\uccb4\uc218\uc815] \uc2dc\uac04 \uc785\ub825\uce78\uc744 \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-async function editTimeAndFeeAndPeopleAndSubmit(item,maxAttempts=15){
+async function _0x1066(item,maxAttempts=15){
 console.log(`[\uad50\uccb4\uc218\uc815] \uc218\uc815 \ud3fc \ucc98\ub9ac \uc2dc\uc791: \uc0c8 \uc2dc\uac04 [${item.time}], \uc0c8 \uadf8\ub9b0\ud53c [${item.fee}\ub9cc], \uc0c8 \uc778\uc6d0 [${item.sizenum||'\ubbf8\uc9c0\uc815'}]...`);
 const currentUrlKey=window.location.href;
 const hasUniquePostIdInUrl=/\/(?:detail|edit|view|item)\/\d+|[?&]id=\d+/.test(currentUrlKey);
 if(hasUniquePostIdInUrl&&_submittedUrls&&_submittedUrls.has(currentUrlKey)){
 console.warn(`[\uad50\uccb4\uc218\uc815] \ud604\uc7ac \ud398\uc774\uc9c0(${currentUrlKey})\ub294 \uc774\ubbf8 \uc81c\ucd9c \uc644\ub8cc\ub41c \uae00\uc785\ub2c8\ub2e4. (\ub3d9\uc77c \uae00 \uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0) -> \ubcf5\uadc0`);
-await executeSingleBack();
+await _0x1062();
 await _0x1008(400);
 return false;
 }
 resetEditSubmitLock();
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
-await updateTimeInEditForm(item.time);
+await _0x1065(item.time);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 await _0x1008(200);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
@@ -5472,20 +5677,62 @@ console.error("[\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc84\ud2b
 return false;
 }
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
-await clickSubmitButtonReliably(liveSubmitBtn,item);
+window.__t82LastSubmitFail='';
+const submitWatch=_0x105e();
+await _0x105f(liveSubmitBtn,item);
 await _0x1008(500);
 if(shouldStopRegistration||window.shouldStopRegistration)return false;
 await _0x1034(25);
 await _0x1008(400);
-await waitForAutoLeaveEditPage();
+const submitResult=await submitWatch.finish();
+const stillOnEditForm=isEditPage()&&Boolean(findEditSubmitButton());
+if(!submitResult.failed){
+const stampRe=/(\d{4})\/(\d{1,2})\/(\d{1,2})\s*\([^)]*\)\s*(\d{1,2}):(\d{2})\s*수정/;
+let stampTime=0;
+for(let w=0;w<25&&!stampTime;w++){
+if(window.location.href.includes('\x2f\x62\x6f\x6f\x6b\x69\x6e\x67\x2f\x76\x69\x65\x77')){
+const m=(document.body.innerText||'').match(stampRe);
+if(m)stampTime=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]).getTime();
+}
+if(!stampTime)await _0x1008(160);
+}
+if(stampTime){
+const ageMin=(Date.now()-stampTime)/60000;
+if(ageMin>3){
+submitResult.failed=true;
+const st=new Date(stampTime);
+submitResult.reason=`\uace8\ud504\ubaac\uc774 \uc800\uc7a5\ud558\uc9c0 \uc54a\uc74c (\ub9c8\uc9c0\ub9c9 \uc218\uc815 ${st.getMonth()+1}/${st.getDate()} ${String(st.getHours()).padStart(2,'\x30')}:${String(st.getMinutes()).padStart(2,'\x30')} \uadf8\ub300\ub85c \u00b7 \uc2e0\uccad\uc790\uac00 \uc788\ub294 \uae00\uc77c \uc218 \uc788\uc74c)`;
+console.warn(`[\uad50\uccb4\uc218\uc815] \u274c \uc0c1\uc138 \ud654\uba74\uc758 \ub9c8\uc9c0\ub9c9 \uc218\uc815 \uc2dc\uac01\uc774 \ubc14\ub00c\uc9c0 \uc54a\uc74c -> ${submitResult.reason}`);
+}else{
+submitResult.verified=true;
+console.log(`[\uacb0\uacfc\ud655\uc778] \uc0c1\uc138 \ud654\uba74 \ub9c8\uc9c0\ub9c9 \uc218\uc815 \uc2dc\uac01\uc774 \ubc29\uae08(${Math.round(ageMin*60)}\ucd08 \uc804)\uc73c\ub85c \ubc14\ub01c -> \uc800\uc7a5 \ud655\uc778`);
+}
+}else{
+console.log('[\uacb0\uacfc\ud655\uc778] \uc0c1\uc138 \ud654\uba74 \uc218\uc815 \uc2dc\uac01\uc744 \ucc3e\uc9c0 \ubabb\ud568 (\ub2e4\ub978 \ud654\uba74\uc73c\ub85c \uc774\ub3d9) -> \uc774 \ud655\uc778\uc740 \uc0dd\ub7b5');
+}
+}
+if(submitResult.failed){
+try{await _0x1034(4);}catch(e){}
+}
+await _0x1061();
 if(isEditPage()||isDetailPage()){
-await executeSingleBack();
+await _0x1062();
 await _0x1008(500);
+}
+if(submitResult.failed){
+window.__t82LastSubmitFail=submitResult.reason;
+console.warn(`[\uad50\uccb4\uc218\uc815] \u274c \uace8\ud504\ubaac\uc774 \uc218\uc815\uc744 \uac70\uc808\ud568: ${submitResult.reason}`);
+return false;
+}
+if(!submitResult.verified&&stillOnEditForm){
+window.__t82LastSubmitFail='\uc218\uc815 \ud654\uba74\uc774 \ub2eb\ud788\uc9c0 \uc54a\uc74c (\uc800\uc7a5 \uc548 \ub410\uc744 \uac00\ub2a5\uc131)';
+console.warn(`[\uad50\uccb4\uc218\uc815] \u274c \uc218\uc815 \ud654\uba74\uc774 \uadf8\ub300\ub85c \ub0a8\uc544 \uc788\uc5b4 \uc800\uc7a5 \uc2e4\ud328\ub85c \ud310\ub2e8`);
+return false;
 }
 console.log("[\uad50\uccb4\uc218\uc815] '\uc218\uc815\ud558\uae30' \ubc0f \ud31d\uc5c5 [\ud655\uc778] \uc644\ub8cc!");
 return true;
 }
-function findExistingCardsForCourse(golfName,rawGolfName,targetRoomType='',targetDate=''){
+function _0x1067(golfName,rawGolfName,targetRoomType='',targetDate=''){
 const normG1=_0x1054(golfName);
 const normG2=_0x1054(rawGolfName);
 const cardCandidates=_0x1058();
@@ -5682,7 +5929,7 @@ byScreenOrder.forEach((c,idx)=>{c.domOrderIdx=idx;});
 uniqueCards.sort((a,b)=>(a.timeMinutes-b.timeMinutes)||compareScreenAsc(a,b));
 return uniqueCards;
 }
-async function registerSingleNewPost(item,customMemo='',stepPreset='\x68\x75\x6d\x61\x6e',modeOverride=''){
+async function _0x1068(item,customMemo='',stepPreset='\x68\x75\x6d\x61\x6e',modeOverride=''){
 const isTransfer=(modeOverride==='\x74\x72\x61\x6e\x73\x66\x65\x72'||modeOverride==='\uc591\ub3c4'||item.roomType==='\uc591\ub3c4');
 const modeLabel=isTransfer?'\uc591\ub3c4':'\uc870\uc778';
 console.log(`[\uc2e0\uaddc\ub4f1\ub85d] ${item.golf} (${item.date} ${item.time}) [${modeLabel}] '\ub4f1\ub85d \uc0c1\ud488 \ub0b4\uc5ed'\uc5d0\uc11c \ubc14\ub85c \uc2e0\uaddc \ub4f1\ub85d \uc2dc\uc791...`);
@@ -5770,31 +6017,35 @@ await _0x1008(_0x100c('\x74\x79\x70\x69\x6e\x67',stepPreset));
 if(shouldStopRegistration)return false;
 await _0x1008(_0x100c('\x62\x65\x66\x6f\x72\x65\x5f\x73\x75\x62\x6d\x69\x74',stepPreset));
 if(shouldStopRegistration)return false;
+window.__t82LastSubmitFail='';
+const regWatch=_0x105e();
 await _0x1031();
 if(shouldStopRegistration)return false;
 await _0x1008(_0x100c('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration)return false;
 await _0x1034(15);
 await _0x1008(500);
+const regResult=await regWatch.finish();
 const regBtnStillExists=Array.from(document.querySelectorAll('\x62\x75\x74\x74\x6f\x6e, \x2e\x71-\x62\x74\x6e, \x64\x69\x76, \x73\x70\x61\x6e'))
 .some(el=>el.textContent.trim()==='\ub4f1\ub85d\ud558\uae30'&&el.offsetHeight>0);
-if(regBtnStillExists){
-console.warn(`[\uc2e0\uaddc\ub4f1\ub85d] \ub4f1\ub85d \ud3fc\uc774 \ub2eb\ud788\uc9c0 \uc54a\uace0 \uc720\uc9c0\ub428 -> \uc11c\ubc84 \ub4f1\ub85d \uac70\ubd80(\ub3d9\uc77c \uad6c\uc7a5 1\uc77c 2\uac74 \uc81c\ud55c \ub4f1) \uac00\ub2a5\uc131 \uac10\uc9c0`);
+if(regBtnStillExists||regResult.failed){
+window.__t82LastSubmitFail=regResult.reason||'\ub4f1\ub85d \ud654\uba74\uc774 \ub2eb\ud788\uc9c0 \uc54a\uc74c (\uace8\ud504\ubaac\uc774 \uac70\uc808\ud588\uc744 \uac00\ub2a5\uc131)';
+console.warn(`[\uc2e0\uaddc\ub4f1\ub85d] \u274c \ub4f1\ub85d \uc2e4\ud328: ${window.__t82LastSubmitFail}`);
 await _0x1034(5);
 await _0x1008(300);
-await executeSingleBack();
+await _0x1062();
 await _0x1008(500);
 return false;
 }
 if(!_0x103b()&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
 console.log("[\uc2e0\uaddc\ub4f1\ub85d] \ub4f1\ub85d \uc644\ub8cc \ud6c4 \uc0c1\uc138\x2f\uc791\uc131 \ud654\uba74 \uac10\uc9c0 -> \ubaa9\ub85d \ubcf5\uadc0\ub97c \uc704\ud574 \ub4a4\ub85c\uac00\uae30 \uc2e4\ud589");
-await executeSingleBack();
+await _0x1062();
 await _0x1008(450);
 }
 console.log(`\u2705 [\uc2e0\uaddc\ub4f1\ub85d \uc644\ub8cc] ${item.golf} (${item.date} ${item.time}) \ub4f1\ub85d \uc131\uacf5!`);
 return true;
 }
-async function executeBatchPostReplacement(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',filterType='',customMemo='',confirmMismatch=true,isPriceUpdateMode=false,forceAllEdit=false){
+async function _0x1069(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',filterType='',customMemo='',confirmMismatch=true,isPriceUpdateMode=false,forceAllEdit=false){
 if(!items||items.length===0)return;
 if(isRegistrationRunning&&!isPriceUpdateMode)return;
 isRegistrationRunning=true;
@@ -5827,6 +6078,8 @@ const updatedNewTimesByCourse=new Map();
 const processedOldTimesByCourse=new Map();
 const modifiedRecordsByCourse=new Map();
 console.log(`\ud83d\ude80 [${modeTitle} \uc2dc\uc791] \ucd1d ${items.length}\uac74 (\ub2e8\uacc4\ubcc4 \uc18d\ub3c4: ${stepPreset}, \ud0c0\uc784 \uac04 \ub300\uae30: ${delayPreset})`);
+try{const oldPanel=document.getElementById('\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x70\x61\x6e\x65\x6c');if(oldPanel)oldPanel.remove();}catch(e){}
+await __t82Report.start(modeTitle,items);
 chrome.runtime.sendMessage({
 type:isPriceUpdateMode?'\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45\x5f\x53\x54\x41\x52\x54\x45\x44':'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x54\x41\x52\x54\x45\x44',
 title:modeTitle,
@@ -5881,7 +6134,7 @@ const groupUpdatedNewTimes=updatedNewTimesByCourse.get(courseTrackKey);
 const groupProcessedOldTimes=processedOldTimesByCourse.get(courseTrackKey);
 const groupModifiedRecords=modifiedRecordsByCourse.get(courseTrackKey);
 if(isEditPage()||isDetailPage()){
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 await _0x1008(350);
 }
 await _0x103d(groupCategory);
@@ -5963,7 +6216,7 @@ const dateTabExists=()=>_0x1047()&&Boolean(_0x104a(targetDayNum,targetMonth));
 const notOnList=!_0x1047();
 if(notOnList||dateTabExists()){
 console.warn(`[${logTag}] \u26a0\ufe0f \ub0a0\uc9dc \uc804\ud658 \uc2e4\ud328 \uac10\uc9c0 (\ubaa9\ub85d\ud654\uba74:${!notOnList}, \ub0a0\uc9dc\ud0ed \uc874\uc7ac:${!notOnList&&dateTabExists()}) -> \ubaa9\ub85d \ubcf5\uadc0 \ud6c4 \ub0a0\uc9dc \uc7ac\uc120\ud0dd`);
-try{await navigateBackToList(groupCategory);}catch(e){}
+try{await _0x1063(groupCategory);}catch(e){}
 await _0x1008(350);
 if(group.region&&group.region!=='\uc804\uccb4'){await _0x1051(group.region);await _0x1008(250);}
 await _0x1050(group.date,3);
@@ -6057,7 +6310,7 @@ initialCards.push(c);
 }
 };
 if(isTabMissingForDate){
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
+registerDiscoveredCards(_0x1067(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length>0){
 console.log(`[${logTag}] \u2705 \uc0c1\ub2e8 \ud0ed \ud65c\uc131 \ubbf8\uac10\uc9c0 \uc0c1\ud0dc\uc600\uc73c\ub098 \ud654\uba74 \ubcf8\ubb38\uc5d0\uc11c [${group.golf} ${group.date}] \uc77c\uce58 \uce74\ub4dc ${initialCards.length}\uac74\uc744 \uc9c1\uc811 \ubc1c\uacac\ud558\uc5ec \uae30\uc874 \uae00 \uc218\uc815 \ubaa8\ub4dc\ub85c \uc804\ud658\ud569\ub2c8\ub2e4!`);
 isTabMissingForDate=false;
@@ -6068,7 +6321,7 @@ console.log(`[${logTag}] \u2139\ufe0f ${group.golf} (${group.date}): \uc0c1\ub2e
 }else{
 for(let r=0;r<12;r++){
 if(shouldStopRegistration)break;
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
+registerDiscoveredCards(_0x1067(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length>=2)break;
 await _0x1008(200);
 }
@@ -6082,7 +6335,7 @@ document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f
 if(el.scrollHeight>el.clientHeight)el.scrollTop+=450;
 });
 await _0x1008(220);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
+registerDiscoveredCards(_0x1067(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length>=2){
 console.log(`[${logTag}] ${group.golf}: \ud558\ub2e8 \uc2a4\ud06c\ub864 \uc911 \uae30\uc874 \uae00 2\uac74 \ubaa8\ub450 \ubc1c\uacac \uc644\ub8cc!`);
 break;
@@ -6095,12 +6348,12 @@ el.scrollTop=0;
 await _0x1008(200);
 }
 if(initialCards.length<2&&!shouldStopRegistration){
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
+registerDiscoveredCards(_0x1067(group.golf,group.rawGolf,groupCategory,group.date));
 if(initialCards.length===0){
 console.log(`[${logTag}] ${group.golf} (${group.date}): '${groupCategory}' \ud544\ud130\uc5d0\uc11c \uae30\uc874 \uae00 0\uac74 -> '\uc804\uccb4' \ud544\ud130\ub85c \uc804\ud658\ud558\uc5ec \uc7ac\ud655\uc778...`);
 await _0x1053('\uc804\uccb4');
 await _0x1008(350);
-registerDiscoveredCards(findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date));
+registerDiscoveredCards(_0x1067(group.golf,group.rawGolf,groupCategory,group.date));
 }
 }
 }
@@ -6133,7 +6386,7 @@ golfmonName:confirmedName
 }
 group.golf=confirmedName;
 group.items.forEach(it=>{it.golf=confirmedName;});
-initialCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
+initialCards=_0x1067(group.golf,group.rawGolf,groupCategory,group.date);
 }else if(verifyResult.action==='\x72\x65\x67\x69\x73\x74\x65\x72\x5f\x6e\x65\x77'){
 console.log(`[${logTag}] \uc0ac\uc6a9\uc790\uac00 [\uae30\uc874 \uae00 \uc5c6\uc74c, \uc2e0\uaddc \ub4f1\ub85d] \uc120\ud0dd\ud568`);
 initialCards=[];
@@ -6298,7 +6551,7 @@ const itemTargetDate=item.date||group.date;
 const itemTargetCategory=(item.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':((item.roomType==='\uc870\uc778')?'\uc870\uc778':groupCategory);
 const itemTargetRegion=item.region||group.region;
 if(isEditPage()||isDetailPage()||!_0x103b()||_0x103a()||_0x1039()){
-await navigateBackToList(itemTargetCategory);
+await _0x1063(itemTargetCategory);
 await _0x1008(250);
 }
 if(shouldStopRegistration)break;
@@ -6315,7 +6568,7 @@ await _0x1051('\uc804\uccb4');
 }
 if(shouldStopRegistration)break;
 console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf} (${item.time}): [${itemTargetCategory}] \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud589...`);
-const regSuccess=await registerSingleNewPost(item,item.memo||customMemo,stepPreset,itemTargetCategory);
+const regSuccess=await _0x1068(item,item.memo||customMemo,stepPreset,itemTargetCategory);
 if(regSuccess){
 successCount++;
 const newDigits=normalizeTimeDigits(item.time);
@@ -6334,14 +6587,16 @@ chrome.runtime.sendMessage({
 type:itemSuccessMsgType,
 regId:item.regId,
 item:item,
+kind:'\x72\x65\x67\x69\x73\x74\x65\x72',
 newTime:item.time,
 newFee:item.fee
 });
 }else{
-console.warn(`[${logTag}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud328 \ub610\ub294 \ucc28\ub2e8\ub428`);
+const regFailReason=window.__t82LastSubmitFail||'\ucd94\uac00 \ub4f1\ub85d \ubbf8\uc644\ub8cc \ub610\ub294 \uc81c\ud55c';
+console.warn(`[${logTag}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \uc2e4\ud328: ${regFailReason}`);
 _0x100a({
 title:modeTitle,
-desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ucd94\uac00 \ub4f1\ub85d \ubbf8\uc644\ub8cc \ud1b5\uacfc`,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \ub4f1\ub85d \uc2e4\ud328: ${regFailReason.slice(0,40)}`,
 current:globalIndex,
 total:items.length
 });
@@ -6350,7 +6605,8 @@ type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x
 golf:item.golf,
 date:item.date,
 time:item.time,
-reason:'\ucd94\uac00 \ub4f1\ub85d \ubbf8\uc644\ub8cc \ub610\ub294 \uc81c\ud55c\uc73c\ub85c \uac74\ub108\ub700'
+failed:true,
+reason:`\ub4f1\ub85d \uc2e4\ud328: ${regFailReason}`
 });
 }
 if(globalIndex<items.length){
@@ -6370,7 +6626,7 @@ const itemTargetCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc87
 const itemTargetRegion=item.region||group.region;
 console.log(`[${logTag}] [${pIdx+1}/${plan.length}] ${item.golf}: \uae30\uc874 \uae00(${targetCard?.timeStr||''}) \u2794 \uc0c8 \ud0c0\uc784(${item.time}, ${item.fee}\ub9cc, ${item.sizenum||''}) \uc218\uc815 \uc900\ube44 (\ubaa9\ud45c \ub0a0\uc9dc: ${itemTargetDate}, \uce74\ud14c\uace0\ub9ac: [${itemTargetCategory}])...`);
 if(isEditPage()||isDetailPage()||!_0x103b()||_0x103a()||_0x1039()){
-await navigateBackToList(itemTargetCategory);
+await _0x1063(itemTargetCategory);
 await _0x1008(250);
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
@@ -6399,7 +6655,7 @@ if(Math.abs(b.topY-a.topY)>25)return b.topY-a.topY;
 return(b.leftX||0)-(a.leftX||0);
 };
 for(let retry=0;retry<12;retry++){
-let liveCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
+let liveCards=_0x1067(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
 const eligibleCards=liveCards.filter(c=>{
 if(c.postId&&processedPostIds.has(c.postId))return false;
 if(c.el&&_replacedCardsSet.has(c.el))return false;
@@ -6491,7 +6747,7 @@ document.querySelectorAll('\x2e\x71-\x73\x63\x72\x6f\x6c\x6c\x61\x72\x65\x61\x5f
 el.scrollTop=0;
 });
 await _0x1008(250);
-const lastTryCards=findExistingCardsForCourse(group.golf,group.rawGolf,groupCategory,group.date);
+const lastTryCards=_0x1067(group.golf,group.rawGolf,groupCategory,group.date);
 const unhandled=lastTryCards.filter(c=>(!c.postId||!processedPostIds.has(c.postId))&&(!c.el||!_replacedCardsSet.has(c.el)));
 if(unhandled.length>0){
 liveCardObj=unhandled[0];
@@ -6530,7 +6786,7 @@ let inDetail=await clickPostCardReliably(targetCardEl);
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(!inDetail){
 console.warn(`[${logTag}] ${item.golf} (${originalPostTime}) \uce74\ub4dc \ud074\ub9ad \ud6c4 \uc0c1\uc138 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 const detailBodyTxt=(document.body.innerText||'').toLowerCase();
@@ -6540,7 +6796,7 @@ const normTarget2=_0x1054(group.rawGolf);
 if(_0x1057(normDetail,normTarget1,normTarget2)===0){
 console.error(`[${logTag}] \u274c \uc0c1\uc138 \ud398\uc774\uc9c0 \uad6c\uc7a5 \ubd88\uc77c\uce58 \uac10\uc9c0! \ubaa9\ud45c \uad6c\uc7a5(${group.golf})\uc774 \uc544\ub2cc \ud0c0 \uad6c\uc7a5 \uc0c1\uc138 \ud398\uc774\uc9c0\uc774\ubbc0\ub85c \uc218\uc815\uc744 \uc989\uc2dc \ucde8\uc18c\ud558\uace0 \ubcf5\uadc0\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
-await navigateBackToList(itemTargetCategory);
+await _0x1063(itemTargetCategory);
 await _0x1053(itemTargetCategory);
 if(itemTargetDate)await _0x1050(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1051(itemTargetRegion);
@@ -6554,7 +6810,7 @@ if((detectedPostId&&processedPostIds.has(detectedPostId))||
 ((/\/(?:detail|item)\/\d+|[?&]id=\d+/.test(curUrl))&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uacb0\uacfc \uc774\ubbf8 \uc218\uc815 \uc644\ub8cc\ud55c \uae00(ID: ${detectedPostId||curUrl})\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4! \ubc14\uafbc \uae00\uc744 \ub610 \ubc14\uafb8\uc9c0 \uc54a\ub3c4\ub85d \uc989\uc2dc \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00 \uc544\ub798\ucabd \ubbf8\uc218\uc815 \uae00\uc744 \uc120\ud0dd\ud569\ub2c8\ub2e4.`);
 _replacedCardsSet.add(targetCardEl);
-await navigateBackToList(itemTargetCategory);
+await _0x1063(itemTargetCategory);
 await _0x1053(itemTargetCategory);
 if(itemTargetDate)await _0x1050(itemTargetDate);
 if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4'){
@@ -6563,7 +6819,7 @@ await _0x1051(itemTargetRegion);
 await _0x1051('\uc804\uccb4');
 }
 await _0x1008(350);
-const retryCards=findExistingCardsForCourse(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
+const retryCards=_0x1067(group.golf,group.rawGolf,itemTargetCategory,itemTargetDate);
 const sortedBottomCards=[...retryCards]
 .filter(c=>c.el!==targetCardEl&&!_replacedCardsSet.has(c.el)&&(!c.postId||!processedPostIds.has(c.postId)))
 .sort(compareReverseScreenOrder);
@@ -6577,7 +6833,7 @@ originalPostTime=liveCardObj.timeStr;
 console.log(`[${logTag}] \ud83d\udd04 \ud654\uba74 \ud558\ub2e8\uc758 \ubbf8\uc218\uc815 \uce74\ub4dc(${originalPostTime})\ub85c \uc7ac\uc120\ud0dd\ud558\uc5ec \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785...`);
 inDetail=await clickPostCardReliably(targetCardEl);
 if(!inDetail){
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 curUrl=window.location.href;
@@ -6586,7 +6842,7 @@ detectedPostId=curUrlMatch?curUrlMatch[1]:(liveCardObj.postId||'');
 if((detectedPostId&&processedPostIds.has(detectedPostId))||
 ((/\/(?:detail|item)\/\d+|[?&]id=\d+/.test(curUrl))&&processedDetailUrls.has(curUrl))){
 console.warn(`[${logTag}] \u26a0\ufe0f \uc7ac\uc120\ud0dd\ud55c \uce74\ub4dc \uc5ed\uc2dc \uc774\ubbf8 \uc218\uc815\ub41c \uae00(ID: ${detectedPostId})\uc774\ubbc0\ub85c \uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0\ub97c \uc704\ud574 \uac74\ub108\ub701\ub2c8\ub2e4.`);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 }
@@ -6595,12 +6851,12 @@ const openedEdit=await openMenuAndClickEdit();
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(!openedEdit){
 console.warn(`[${logTag}] \uc218\uc815 \uba54\ub274 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 await _0x1008(_0x100c('\x6e\x6f\x72\x6d\x61\x6c',stepPreset));
 if(shouldStopRegistration||window.shouldStopRegistration)break;
-const editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
+const editSuccess=await _0x1066(item);
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(editSuccess){
 successCount++;
@@ -6637,18 +6893,29 @@ desc:`[${globalIndex}/${items.length}] ${item.golf} (${originalPostTime||item.ti
 current:globalIndex,
 total:items.length
 });
+let applicantNote='';
+try{
+const cardTxt=String((liveCardObj&&liveCardObj.rawTxt)||(targetCardEl&&(targetCardEl.innerText||targetCardEl.textContent))||'');
+const apM=cardTxt.match(/(?:조인|양도)\s*(\d+)\s*건/);
+const apN=apM?parseInt(apM[1],10):0;
+if(apN>0)applicantNote=`\uc2e0\uccad ${apN}\uac74 \uc788\ub294 \uae00 \u00b7 \uc800\uc7a5\uc740 \ub410\uc9c0\ub9cc \ubaa9\ub85d \uc704\ub85c \ub04c\uc5b4\uc62c\ub824\uc9c0\uc9c0 \uc54a\uc74c`;
+}catch(e){}
+if(applicantNote)console.log(`[${logTag}] \u2139\ufe0f ${item.golf} (${item.time}): ${applicantNote}`);
 chrome.runtime.sendMessage({
 type:itemSuccessMsgType,
 regId:item.regId,
 item:item,
+note:applicantNote,
 newTime:item.time,
 newFee:item.fee
 });
 }else{
-console.warn(`[${logTag}] \uc218\uc815 \ud3fc \uc81c\ucd9c \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
+const failReason=window.__t82LastSubmitFail||'\uc218\uc815 \ud3fc \uc81c\ucd9c \uc2e4\ud328';
+console.warn(`[${logTag}] \uc218\uc815 \uc2e4\ud328 (${failReason}) -> \ubaa9\ub85d \ubcf5\uadc0`);
+if(detectedPostId)processedPostIds.add(detectedPostId);
 _0x100a({
 title:modeTitle,
-desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \uc218\uc815 \uc2e4\ud328\ub85c \uac74\ub108\ub700`,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${item.time}) \uc218\uc815 \uc2e4\ud328: ${failReason.slice(0,40)}`,
 current:globalIndex,
 total:items.length
 });
@@ -6657,11 +6924,12 @@ type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x
 golf:item.golf,
 date:item.date,
 time:item.time,
-reason:'\uc218\uc815 \ud3fc \uc81c\ucd9c \uc2e4\ud328'
+failed:true,
+reason:`\uc218\uc815 \uc2e4\ud328: ${failReason}`
 });
 }
 if(!_0x103b()||_0x103a()||_0x1039()){
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 await _0x1008(350);
 }
 }
@@ -6685,7 +6953,7 @@ chrome.runtime.sendMessage({type:completedMsgType,total:items.length,successCoun
 }
 var isDateResetRunning=false;
 var isSelectedResetRunning=false;
-function extractTeeTimeFromResetCard(rawTxt){
+function _0x106a(rawTxt){
 if(!rawTxt)return'';
 const cleanTxt=rawTxt.replace(/(?:등록|수정|작성)[.,\s]*\s*\d{1,2}[./\-]\d{1,2}(?:\([월화수목금토일]\))?(?:\s*\d{1,2}:\d{2})?/gi,'');
 const dateAttachedTime=cleanTxt.match(/(?:\d{1,2}[./\-]\d{1,2}|\([월화수목금토일]\))\s*(\d{1,2}:\d{2})/);
@@ -6708,7 +6976,7 @@ return`${last[1].padStart(2,'\x30')}:${last[2]}`;
 }
 return'';
 }
-function collectResetCandidateCards(filterType='\uc804\uccb4'){
+function _0x106b(filterType='\uc804\uccb4'){
 const leafCandidates=_0x1058();
 const list=[];
 for(const el of leafCandidates){
@@ -6719,7 +6987,7 @@ if(filterType==='\uc591\ub3c4'&&postType==='\uc870\uc778')continue;
 if(filterType==='\uc870\uc778'&&postType==='\uc591\ub3c4')continue;
 const courseName=_0x105a(el)||'\uad6c\uc7a5';
 const normCourse=_0x1054(courseName)||courseName;
-const teeTime=extractTeeTimeFromResetCard(rawTxt);
+const teeTime=_0x106a(rawTxt);
 const feeMatch=rawTxt.match(/([0-9.,]+)\s*(?:만|만원|원)/);
 const feeStr=feeMatch?feeMatch[0].replace(/\s+/g,''):'';
 let cardPostId='';
@@ -6743,12 +7011,12 @@ sig:sig
 }
 return list;
 }
-async function submitEditWithoutChanges(stepPreset='\x68\x75\x6d\x61\x6e',cardInfo=null){
+async function _0x106c(stepPreset='\x68\x75\x6d\x61\x6e',cardInfo=null){
 console.log(`[\uc804\uccb4\ub9ac\uc14b] \uc218\uc815 \ud3fc \uc9c4\uc785 \uc644\ub8cc -> \ub0b4\uc6a9 \ubcc0\uacbd \uc5c6\uc774 \uae30\uc874 \ub370\uc774\ud130 \ub85c\ub4dc \ud655\uc778 \ud6c4 '\uc218\uc815\ud558\uae30' \uc81c\ucd9c \uc9c4\ud589...`);
 const currentUrlKey=window.location.href;
 if(_submittedUrls&&_submittedUrls.has(currentUrlKey)){
 console.warn(`[\uc804\uccb4\ub9ac\uc14b] \ud604\uc7ac \ud398\uc774\uc9c0(${currentUrlKey})\ub294 \uc774\ubbf8 \uc81c\ucd9c \uc644\ub8cc\ub41c \uae00\uc785\ub2c8\ub2e4. (\uc911\ubcf5 \uc218\uc815 \ubc29\uc9c0) -> \ubcf5\uadc0`);
-await executeSingleBack();
+await _0x1062();
 await _0x1008(400);
 return false;
 }
@@ -6767,7 +7035,7 @@ if(!liveSubmitBtn){
 console.error("[\uc804\uccb4\ub9ac\uc14b] \ud558\ub2e8 '\uc218\uc815\ud558\uae30' \ubc84\ud2bc\uc744 \ucc3e\uc9c0 \ubabb\ud568");
 return false;
 }
-await clickSubmitButtonReliably(liveSubmitBtn,{
+await _0x105f(liveSubmitBtn,{
 golf:cardInfo?.courseName||'',
 date:cardInfo?.date||'',
 time:cardInfo?.teeTime||'',
@@ -6777,13 +7045,13 @@ await _0x1008(500);
 await _0x1034(25);
 await _0x1008(400);
 if(isEditPage()||isDetailPage()){
-await executeSingleBack();
+await _0x1062();
 await _0x1008(500);
 }
 console.log(`[\uc804\uccb4\ub9ac\uc14b] '${cardInfo?.courseName||''} (${cardInfo?.teeTime||''})' \ub0b4\uc6a9 \ubcc0\uacbd \uc5c6\uc774 \uc218\uc815(\ub9ac\uc14b) \uc644\ub8cc!`);
 return true;
 }
-async function executeBatchDateReset(targetDateInput,filterType='\uc804\uccb4',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',targetDatesArray=null){
+async function _0x106d(targetDateInput,filterType='\uc804\uccb4',delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e',targetDatesArray=null){
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
 isDateResetRunning=true;
@@ -6816,7 +7084,7 @@ const allCardsOrdered=[];
 const seenEls=new Set();
 for(let scroll=0;scroll<20;scroll++){
 if(shouldStopRegistration)break;
-const visibleCards=collectResetCandidateCards(effectiveFilter);
+const visibleCards=_0x106b(effectiveFilter);
 visibleCards.sort((a,b)=>{
 const rA=a.el.getBoundingClientRect();
 const rB=b.el.getBoundingClientRect();
@@ -6867,7 +7135,7 @@ const targetMonth=_0x103f(targetDate);
 const targetDay=_0x103e(targetDate);
 console.log(`\n\ud83d\udcc5 [\uc804\uccb4\ub9ac\uc14b \ub0a0\uc9dc ${dIdx+1}/${datesList.length}] [${targetDate}] (${targetMonth?targetMonth+'\uc6d4 ':''}${targetDay}\uc77c) \ub9ac\uc14b \uc2dc\uc791...`);
 if(!_0x103b()||_0x103a()||_0x1039()||isEditPage()||isDetailPage()){
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 await _0x1008(350);
 }
 if(shouldStopRegistration)break;
@@ -6897,7 +7165,7 @@ let dateDiscovered=0;
 for(let stepIdx=0;stepIdx<200;stepIdx++){
 if(shouldStopRegistration)break;
 if(!_0x103b()||_0x103a()||_0x1039()||isEditPage()||isDetailPage()){
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 await _0x1008(350);
 }
 if(shouldStopRegistration)break;
@@ -6953,14 +7221,14 @@ time:nextCard.teeTime
 const inDetail=await clickPostCardReliably(nextCard.el);
 if(!inDetail){
 console.warn(`[\uc804\uccb4\ub9ac\uc14b] ${nextCard.courseName} (${nextCard.teeTime}) \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0 \ud6c4 \uc7ac\uc2dc\ub3c4`);
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 continue;
 }
 const curUrlMatch=window.location.href.match(/\/(?:join|transfer)\/(?:detail|edit)\/(\d+)/);
 const detectedPostId=curUrlMatch?curUrlMatch[1]:nextCard.postId;
 if(detectedPostId&&(detectedPostId===firstResetPostId||processedPostIds.has(detectedPostId))){
 console.log(`\ud83c\udf89 [\uc804\uccb4\ub9ac\uc14b] [${targetDate}] \uc774\ubbf8 \ub9ac\uc14b \uc644\ub8cc\ub41c \uae00(ID: ${detectedPostId})\uc758 \ucc28\ub840\uac00 \ub3cc\uc544\uc654\uc2b5\ub2c8\ub2e4 -> [${targetDate}] \ub9ac\uc14b \uc644\ub8cc \ucc98\ub9ac \ud6c4 \ubcf5\uadc0!`);
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 break;
 }
 if(!firstResetPostId&&detectedPostId){
@@ -6973,11 +7241,11 @@ const openedEdit=await openMenuAndClickEdit();
 if(!openedEdit){
 console.warn(`[\uc804\uccb4\ub9ac\uc14b] ${nextCard.courseName} (${nextCard.teeTime}) \uc218\uc815 \ud3fc \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 if(detectedPostId)processedPostIds.add(detectedPostId);
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 continue;
 }
 if(shouldStopRegistration)break;
-const editSuccess=await submitEditWithoutChanges(stepPreset,{
+const editSuccess=await _0x106c(stepPreset,{
 courseName:nextCard.courseName,
 date:targetDate,
 teeTime:nextCard.teeTime,
@@ -6997,7 +7265,7 @@ console.log(`\u2705 [\uc804\uccb4\ub9ac\uc14b \uc644\ub8cc -> \ub9e8 \uc704\ub85
 console.warn(`[\uc804\uccb4\ub9ac\uc14b] ${nextCard.courseName} (${nextCard.teeTime}) \uc81c\ucd9c \ubbf8\ud655\uc778 -> \ubaa9\ub85d \ubcf5\uadc0`);
 }
 if(!_0x103b()||_0x103a()||_0x1039()){
-await navigateBackToList(effectiveFilter);
+await _0x1063(effectiveFilter);
 await _0x1008(350);
 }
 if(shouldStopRegistration)break;
@@ -7033,7 +7301,7 @@ reason:totalSuccessCount===0?`\uc9c0\uc815\ud55c \uae30\uac04(${rangeLabel})\uc5
 });
 }
 }
-async function _0x105e(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
+async function _0x106e(items,delayPreset='\x73\x61\x66\x65',stepPreset='\x68\x75\x6d\x61\x6e'){
 if(!items||items.length===0)return;
 if(isRegistrationRunning)return;
 isRegistrationRunning=true;
@@ -7089,7 +7357,7 @@ const allCardsOrdered=[];
 const seenEls=new Set();
 for(let scroll=0;scroll<20;scroll++){
 if(shouldStopRegistration)break;
-const visibleCards=collectResetCandidateCards(catFilter);
+const visibleCards=_0x106b(catFilter);
 visibleCards.sort((a,b)=>{
 const rA=a.el.getBoundingClientRect();
 const rB=b.el.getBoundingClientRect();
@@ -7125,7 +7393,7 @@ const group=courseGroups[groupKey];
 const groupCategory=(group.roomType==='\uc591\ub3c4')?'\uc591\ub3c4':'\uc870\uc778';
 console.log(`\n================== [\uc120\ud0dd\ub9ac\uc14b] ${group.golf} (${group.date}) [${groupCategory}] \ub300\uc0c1 ${group.items.length}\uac74 \ucc98\ub9ac \uc2dc\uc791 ==================`);
 if(isEditPage()||isDetailPage()){
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 await _0x1008(350);
 }
 await _0x103d(groupCategory);
@@ -7231,14 +7499,14 @@ time:item.time
 const inDetail=await clickPostCardReliably(card.el);
 if(!inDetail){
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${card.courseName} \uc0c1\uc138 \ud398\uc774\uc9c0 \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 const curUrlMatch=window.location.href.match(/\/(?:join|transfer)\/(?:detail|edit)\/(\d+)/);
 const detectedPostId=curUrlMatch?curUrlMatch[1]:card.postId;
 if(detectedPostId&&processedPostIds.has(detectedPostId)){
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] \uc774\ubbf8 \ub9ac\uc14b \ucc98\ub9ac\ub41c \uae00(ID: ${detectedPostId}) -> \uac74\ub108\ub700`);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 if(shouldStopRegistration)break;
@@ -7247,13 +7515,13 @@ const openedEdit=await openMenuAndClickEdit();
 if(!openedEdit){
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${card.courseName} \uc218\uc815 \ud3fc \uc9c4\uc785 \uc2e4\ud328 -> \ubaa9\ub85d \ubcf5\uadc0`);
 if(detectedPostId)processedPostIds.add(detectedPostId);
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 continue;
 }
 if(shouldStopRegistration)break;
 let editSuccess=false;
 if(action==='\x6b\x65\x65\x70'){
-editSuccess=await submitEditWithoutChanges(stepPreset,{
+editSuccess=await _0x106c(stepPreset,{
 courseName:card.courseName,
 date:item.date,
 teeTime:card.teeTime,
@@ -7261,10 +7529,10 @@ feeStr:card.feeStr
 });
 }else if(action==='\x63\x68\x61\x6e\x67\x65\x5f\x66\x65\x65'){
 console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.time}): \ubc14\ub010 \uac00\uaca9(${card.feeStr} \u2794 ${item.fee}\ub9cc)\uc73c\ub85c \uc218\uc815\ud558\uc5ec \ub9ac\uc14b \uc9c4\ud589!`);
-editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
+editSuccess=await _0x1066(item);
 }else{
 console.log(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf}: \uae30\uc874 \uae00(${card.teeTime})\uc744 \uc0c8 \ud0c0\uc784(${item.time} / ${item.fee}\ub9cc)\uc73c\ub85c \ubcc0\uacbd \uc218\uc815 \uc9c4\ud589!`);
-editSuccess=await editTimeAndFeeAndPeopleAndSubmit(item);
+editSuccess=await _0x1066(item);
 }
 if(detectedPostId){
 processedPostIds.add(detectedPostId);
@@ -7285,7 +7553,7 @@ regId:item.regId
 console.warn(`[\uc120\ud0dd\ub9ac\uc14b] ${item.golf} (${item.date} ${item.time}) \uc81c\ucd9c \ubbf8\ud655\uc778 -> \ubaa9\ub85d \ubcf5\uadc0`);
 }
 if(!_0x103b()||_0x103a()||_0x1039()){
-await navigateBackToList(groupCategory);
+await _0x1063(groupCategory);
 await _0x1008(350);
 }
 if(shouldStopRegistration)break;
@@ -7317,7 +7585,7 @@ reason:successCount===0?'\uc120\ud0dd\ud55c \ud2f0\ud0c0\uc784\uc758 \uae00\uc74
 });
 }
 }
-async function _0x105f(targetPost){
+async function _0x106f(targetPost){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -7350,22 +7618,22 @@ console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] \ub0a0\uc9dc(${target
 await _0x104f(targetDate);
 await _0x1008(500);
 }
-let cards=findExistingCardsForCourse(golfName,rawGolfName,targetRoomType,targetDate);
+let cards=_0x1067(golfName,rawGolfName,targetRoomType,targetDate);
 if(!cards||cards.length===0){
 console.log("[\uc6d0\ud074\ub9ad\ub9c8\uac10\x2f\uc0ad\uc81c] \x31\ucc28 \uce74\ub4dc \ubbf8\ubc1c\uacac -> \uc2a4\ud06c\ub864 \ud6c4 \uc7ac\ud0d0\uc0c9\x2e\x2e\x2e");
 window.scrollBy(0,300);
 await _0x1008(400);
-cards=findExistingCardsForCourse(golfName,rawGolfName,targetRoomType,targetDate);
+cards=_0x1067(golfName,rawGolfName,targetRoomType,targetDate);
 }
 if((!cards||cards.length===0)&&targetRoomType&&targetRoomType!=='\uc804\uccb4'){
 console.log(`[\uc6d0\ud074\ub9ad\ub9c8\uac10/\uc0ad\uc81c] '${targetRoomType}' \ud544\ud130\uc5d0\uc11c \uce74\ub4dc\ub97c \ucc3e\uc9c0 \ubabb\ud568 -> '\uc804\uccb4' \ud544\ud130\ub85c \uc804\ud658\ud558\uc5ec \uc7ac\ud0d0\uc0c9...`);
 await _0x1053('\uc804\uccb4');
 await _0x1008(500);
-cards=findExistingCardsForCourse(golfName,rawGolfName,'\uc804\uccb4',targetDate);
+cards=_0x1067(golfName,rawGolfName,'\uc804\uccb4',targetDate);
 if(!cards||cards.length===0){
 window.scrollBy(0,300);
 await _0x1008(400);
-cards=findExistingCardsForCourse(golfName,rawGolfName,'\uc804\uccb4',targetDate);
+cards=_0x1067(golfName,rawGolfName,'\uc804\uccb4',targetDate);
 }
 }
 if(!cards||cards.length===0){
@@ -7558,16 +7826,17 @@ console.log(`\ud83d\udd04 [\uc790\ub3d9\ubcf5\uad6c] \ud398\uc774\uc9c0 \ub9ac\u
 setTimeout(async()=>{
 try{
 if(rs.needsHistoryBack&&(isDetailPage()||isEditPage()||/\/(?:join|transfer)?write/i.test(window.location.href))){
-await executeSingleBack();
+await _0x1062();
 await _0x1008(500);
 }
 }catch(e){}
+window.__t82ResumeFlag=(rs.macroType!=='\x52\x45\x47\x49\x53\x54\x45\x52');
 if(rs.macroType==='\x50\x52\x49\x43\x45\x5f\x55\x50\x44\x41\x54\x45'){
-executeBatchPriceUpdate(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.confirmMismatch!==false,rs.customMemo||'');
+_0x1064(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.confirmMismatch!==false,rs.customMemo||'');
 }else if(rs.macroType==='\x52\x45\x47\x49\x53\x54\x45\x52'){
 _0x1036(rs.remainingItems,rs.customMemo||'',rs.mode||'\x6a\x6f\x69\x6e',rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e');
 }else{
-executeBatchPostReplacement(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.customMemo||'',rs.confirmMismatch!==false,false,Boolean(rs.forceAllEdit));
+_0x1069(rs.remainingItems,rs.delayPreset||'\x73\x61\x66\x65',rs.stepPreset||'\x68\x75\x6d\x61\x6e',rs.filterType||'',rs.customMemo||'',rs.confirmMismatch!==false,false,Boolean(rs.forceAllEdit));
 }
 },250);
 sendResponse({status:'\x72\x65\x73\x75\x6d\x65\x64'});
@@ -7582,7 +7851,7 @@ isPostReplacementRunning=false;
 }
 _priceUpdateRunning=true;
 setTimeout(()=>{
-executeBatchPriceUpdate(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.filterType||'',request.confirmMismatch!==false,request.memo||'');
+_0x1064(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.filterType||'',request.confirmMismatch!==false,request.memo||'');
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x4d\x45\x4e\x54'){
@@ -7602,7 +7871,7 @@ current:0,
 total:request.items?request.items.length:0
 });
 setTimeout(()=>{
-executeBatchPostReplacement(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.filterType||'',request.memo||'',request.confirmMismatch!==false,false,isFull);
+_0x1069(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.filterType||'',request.memo||'',request.confirmMismatch!==false,false,isFull);
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x44\x41\x54\x45\x5f\x52\x45\x53\x45\x54'){
@@ -7614,7 +7883,7 @@ isDateResetRunning=false;
 isSelectedResetRunning=false;
 }
 setTimeout(()=>{
-executeBatchDateReset(request.targetDate,request.filterType||'\uc804\uccb4',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.targetDates||null);
+_0x106d(request.targetDate,request.filterType||'\uc804\uccb4',request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e',request.targetDates||null);
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x53\x45\x4c\x45\x43\x54\x45\x44\x5f\x52\x45\x53\x45\x54'){
@@ -7626,11 +7895,11 @@ isDateResetRunning=false;
 isSelectedResetRunning=false;
 }
 setTimeout(()=>{
-_0x105e(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
+_0x106e(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset||'\x68\x75\x6d\x61\x6e');
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-_0x105f(request.targetPost).then(result=>{
+_0x106f(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uc0ad\uc81c \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});
