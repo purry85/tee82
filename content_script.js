@@ -5086,7 +5086,6 @@ this.finalizePending();
 this.data.status=status;
 this.data.finishedAt=Date.now();
 this.save();
-try{this.showPanel();}catch(e){}
 },
 save(){
 if(!this.data)return;
@@ -5136,7 +5135,7 @@ panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:spa
                 <button id="t82_result_close" style="border:0;background:#f1f5f9;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:12px;">\ub2eb\uae30</button></div>
             <div>${chip('\uc218\uc815',c['\uc218\uc815'],'\x23\x64\x63\x66\x63\x65\x37','\x23\x31\x36\x36\x35\x33\x34')}${chip('\uc2e0\uaddc\ub4f1\ub85d',c['\uc2e0\uaddc\ub4f1\ub85d'],'\x23\x64\x62\x65\x61\x66\x65','\x23\x31\x65\x34\x30\x61\x66')}${chip('\ub3d9\uc77c\uc720\uc9c0',c['\ub3d9\uc77c\uc720\uc9c0'],'\x23\x66\x31\x66\x35\x66\x39','\x23\x33\x33\x34\x31\x35\x35')}${chip('\uac74\ub108\ub700',c['\uac74\ub108\ub700'],'\x23\x66\x65\x66\x33\x63\x37','\x23\x39\x32\x34\x30\x30\x65')}${chip('\uc2e4\ud328',c['\uc2e4\ud328'],'\x23\x66\x65\x65\x32\x65\x32','\x23\x39\x39\x31\x62\x31\x62')}</div>
             ${problems.length?`<div style="margin-top:8px;font-size:12px;color:#64748b;">\uc2e4\ud328\u00b7\uac74\ub108\ub700 ${problems.length}\uac74 (\uc624\ud1a0\ub9e4\ud2f0 \ucc3d\uc758 [\uc2e4\ud328\u00b7\uac74\ub108\ub700\ub9cc \ub2e4\uc2dc \uc120\ud0dd]\uc73c\ub85c \ub2e4\uc2dc \ub3cc\ub9b4 \uc218 \uc788\uc74c)</div>${rows}`:'<\x64\x69\x76 \x73\x74\x79\x6c\x65="\x6d\x61\x72\x67\x69\x6e-\x74\x6f\x70\x3a\x38\x70\x78;\x66\x6f\x6e\x74-\x73\x69\x7a\x65\x3a\x31\x32\x70\x78;\x63\x6f\x6c\x6f\x72\x3a\x23\x31\x36\x36\x35\x33\x34;">\uc2e4\ud328\u00b7\uac74\ub108\ub700 \uc5c6\uc774 \ubaa8\ub450 \ucc98\ub9ac\ub410\uc2b5\ub2c8\ub2e4\x2e<\x2f\x64\x69\x76>'}
-            ${notes.length?`<div style="margin-top:10px;font-size:12px;color:#64748b;">\uc2e0\uccad\uc790\uac00 \uc788\ub294 \uae00 ${notes.length}\uac74 (\uc218\uc815\uc740 \ub410\uc9c0\ub9cc \ubaa9\ub85d \uc704\ub85c \uc548 \uc62c\ub77c\uac10)</div>${noteRows}`:''}`;
+            ${notes.length?`<div style="margin-top:10px;font-size:12px;color:#64748b;">\uc2e0\uccad\uc790\uac00 \uc788\ub358 \uae00 ${notes.length}\uac74 (\ucc38\uace0)</div>${noteRows}`:''}`;
 document.body.appendChild(panel);
 const btn=document.getElementById('\x74\x38\x32\x5f\x72\x65\x73\x75\x6c\x74\x5f\x63\x6c\x6f\x73\x65');
 if(btn)btn.onclick=()=>panel.remove();
@@ -6847,6 +6846,68 @@ continue;
 }
 }
 if(shouldStopRegistration||window.shouldStopRegistration)break;
+let applicantCount=0;
+try{
+const cardTxt=String((liveCardObj&&liveCardObj.rawTxt)||(targetCardEl&&(targetCardEl.innerText||targetCardEl.textContent))||'');
+const apM=cardTxt.match(/(?:조인|양도)\s*(\d+)\s*건/);
+applicantCount=apM?parseInt(apM[1],10):0;
+}catch(e){}
+if(forceAllEdit&&applicantCount>0){
+console.log(`[${logTag}] \ud83d\udd01 ${item.golf} (${originalPostTime}): \uc2e0\uccad ${applicantCount}\uac74 \uc788\ub294 \uae00 -> \uc218\uc815 \ub300\uc2e0 \uc0ad\uc81c \ud6c4 \uc0c8\ub85c \ub4f1\ub85d`);
+_0x100a({
+title:modeTitle,
+desc:`[${globalIndex}/${items.length}] ${item.golf} (${originalPostTime}) \uc2e0\uccad ${applicantCount}\uac74 \uae00 \uc0ad\uc81c \ud6c4 \uc7ac\ub4f1\ub85d \uc911...`,
+current:globalIndex,
+total:items.length
+});
+window.__t82LastSubmitFail='';
+const delOk=await _0x106f(logTag);
+if(shouldStopRegistration||window.shouldStopRegistration)break;
+if(!delOk){
+const why=window.__t82LastSubmitFail||'\uc0ad\uc81c \uc2e4\ud328';
+console.warn(`[${logTag}] \u274c \uae30\uc874 \uae00 \uc0ad\uc81c \uc2e4\ud328 (${why}) -> \uc0c8 \ub4f1\ub85d\ud558\uc9c0 \uc54a\uace0 \uac74\ub108\ub700`);
+if(detectedPostId)processedPostIds.add(detectedPostId);
+chrome.runtime.sendMessage({type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',golf:item.golf,date:item.date,time:item.time,failed:true,
+reason:`\uc2e0\uccad ${applicantCount}\uac74 \uc788\ub294 \uae00 \uc0ad\uc81c \uc2e4\ud328: ${why} (\uc0c8\ub85c \ub4f1\ub85d\ud558\uc9c0 \uc54a\uc74c)`});
+await _0x1063(itemTargetCategory);
+await _0x1008(350);
+continue;
+}
+if(detectedPostId)processedPostIds.add(detectedPostId);
+_replacedCardsSet.add(targetCardEl);
+if(originalPostTime){
+groupProcessedOldTimes.add(normalizeTimeDigits(originalPostTime));
+groupProcessedOldTimes.add(formatColonTime(originalPostTime));
+groupProcessedOldTimes.add(originalPostTime);
+}
+await _0x1063(itemTargetCategory);
+await _0x1053(itemTargetCategory);
+if(itemTargetDate)await _0x1050(itemTargetDate);
+if(itemTargetRegion&&itemTargetRegion!=='\uc804\uccb4')await _0x1051(itemTargetRegion);
+if(shouldStopRegistration||window.shouldStopRegistration)break;
+window.__t82LastSubmitFail='';
+const regOk=await _0x1068(item,item.memo||customMemo,stepPreset,itemTargetCategory);
+if(regOk){
+successCount++;
+groupUpdatedNewTimes.add(normalizeTimeDigits(item.time));
+groupUpdatedNewTimes.add(formatColonTime(item.time));
+groupUpdatedNewTimes.add(item.time);
+_0x100a({title:modeTitle,desc:`[${globalIndex}/${items.length}] ${item.golf} (${originalPostTime} -> ${item.time}) \uc0ad\uc81c \ud6c4 \uc7ac\ub4f1\ub85d \uc644\ub8cc`,current:globalIndex,total:items.length});
+chrome.runtime.sendMessage({type:itemSuccessMsgType,regId:item.regId,item:item,kind:'\x72\x65\x67\x69\x73\x74\x65\x72',
+note:`\uc2e0\uccad ${applicantCount}\uac74 \uc788\ub358 \uae00(${originalPostTime||'\uae30\uc874'})\uc744 \uc0ad\uc81c\ud558\uace0 \uc0c8\ub85c \ub4f1\ub85d\ud568 (\uc2e0\uccad \ub0b4\uc5ed\uc740 \uc5c6\uc5b4\uc9d0)`,
+newTime:item.time,newFee:item.fee});
+}else{
+const why=window.__t82LastSubmitFail||'\uc0c8 \ub4f1\ub85d \uc2e4\ud328';
+console.warn(`[${logTag}] \u274c \uae30\uc874 \uae00\uc740 \uc0ad\uc81c\ub410\uc9c0\ub9cc \uc0c8 \ub4f1\ub85d \uc2e4\ud328: ${why}`);
+chrome.runtime.sendMessage({type:'\x50\x4f\x53\x54\x5f\x52\x45\x50\x4c\x41\x43\x45\x5f\x53\x4b\x49\x50\x50\x45\x44',golf:item.golf,date:item.date,time:item.time,failed:true,
+reason:`\uae30\uc874 \uae00(${originalPostTime||''}, \uc2e0\uccad ${applicantCount}\uac74)\uc740 \uc0ad\uc81c\ub410\uc9c0\ub9cc \uc0c8 \ub4f1\ub85d \uc2e4\ud328: ${why} \u2014 \uc9c1\uc811 \ub4f1\ub85d \ud544\uc694`});
+}
+if(globalIndex<items.length){
+await _0x103d(itemTargetCategory);
+await _0x1008(300);
+}
+continue;
+}
 const openedEdit=await openMenuAndClickEdit();
 if(shouldStopRegistration||window.shouldStopRegistration)break;
 if(!openedEdit){
@@ -7585,7 +7646,45 @@ reason:successCount===0?'\uc120\ud0dd\ud55c \ud2f0\ud0c0\uc784\uc758 \uae00\uc74
 });
 }
 }
-async function _0x106f(targetPost){
+async function _0x106f(logTag='\uc804\uccb4\uc218\uc815'){
+try{
+const menuBtn=findDetailMoreButton();
+if(!menuBtn){window.__t82LastSubmitFail='\uc0c1\uc138 \ud654\uba74\uc5d0\uc11c \ub354\ubcf4\uae30(\u22ee) \uba54\ub274\ub97c \ucc3e\uc9c0 \ubabb\ud568';return false;}
+menuBtn.scrollIntoView({block:'\x63\x65\x6e\x74\x65\x72',behavior:'\x69\x6e\x73\x74\x61\x6e\x74'});
+const r=menuBtn.getBoundingClientRect();
+await _0x1055(menuBtn,r.left+r.width/2,r.top+r.height/2);
+try{menuBtn.click();}catch(e){}
+let item=null;
+for(let m=0;m<20&&!item;m++){await _0x1008(100);item=findMenuDeleteItem();}
+if(!item){window.__t82LastSubmitFail="\ub354\ubcf4\uae30 \uba54\ub274\uc5d0\uc11c '\uc0ad\uc81c'\ub97c \ucc3e\uc9c0 \ubabb\ud568";return false;}
+await _0x1055(item);
+try{item.click();}catch(e){}
+let confirmed=false;
+for(let d=0;d<25;d++){
+await _0x1008(120);
+const btn=findConfirmDialogButton();
+if(btn){await _0x1033(btn);confirmed=true;break;}
+}
+if(!confirmed){window.__t82LastSubmitFail='\uc0ad\uc81c \ud655\uc778 \ucc3d\uc774 \ub728\uc9c0 \uc54a\uc74c';return false;}
+await _0x1008(400);
+const detailUrl=window.location.href;
+for(let w=0;w<25;w++){
+await _0x1008(150);
+if(!isDetailPage()||window.location.href!==detailUrl)break;
+}
+if(isDetailPage()&&window.location.href===detailUrl){
+try{await _0x1034(4);}catch(e){}
+window.__t82LastSubmitFail='\uc0ad\uc81c \ud6c4\uc5d0\ub3c4 \uae00 \uc0c1\uc138 \ud654\uba74\uc774 \uadf8\ub300\ub85c\uc784 (\uace8\ud504\ubaac\uc774 \uc0ad\uc81c\ub97c \ub9c9\uc558\uc744 \uc218 \uc788\uc74c)';
+return false;
+}
+console.log(`[${logTag}] \ud83d\uddd1\ufe0f \uae30\uc874 \uae00 \uc0ad\uc81c \uc644\ub8cc`);
+return true;
+}catch(e){
+window.__t82LastSubmitFail='\uc0ad\uc81c \uc911 \uc624\ub958\x3a '+(e&&e.message||e);
+return false;
+}
+}
+async function _0x1070(targetPost){
 if(!targetPost){
 return{success:false,message:'\uc0ad\uc81c\ud560 \ud2f0\ud0c0\uc784 \uc815\ubcf4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4\x2e'};
 }
@@ -7899,7 +7998,7 @@ _0x106e(request.items,request.delayPreset||'\x73\x61\x66\x65',request.stepPreset
 },100);
 sendResponse({status:'\x73\x74\x61\x72\x74\x65\x64'});
 }else if(request.action==='\x53\x54\x41\x52\x54\x5f\x47\x4f\x4c\x46\x4d\x4f\x4e\x5f\x50\x4f\x53\x54\x5f\x44\x45\x4c\x45\x54\x45'){
-_0x106f(request.targetPost).then(result=>{
+_0x1070(request.targetPost).then(result=>{
 sendResponse(result);
 }).catch(err=>{
 sendResponse({success:false,message:err.message||'\uc0ad\uc81c \ucc98\ub9ac \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4\x2e'});

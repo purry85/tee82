@@ -1,9 +1,11 @@
 {
-    "version":  "4.2.2",
+    "version":  "4.2.3",
     "releaseDate":  "2026-11-28",
     "title":  "3.1.0",
     "releaseNotes":  [
-                         "- 결과보고서 추가"
+                         "- 매핑사전 개편",
+                         "- 결과보고서 추가",
+                         "- 신청건이 있던 게시물은 삭제후 재등록"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"

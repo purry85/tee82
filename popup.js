@@ -16943,7 +16943,7 @@ const esc=(s)=>String(s||'').replace(/[&<>"]/g,ch=>({'&':'&\x61\x6d\x70;','<':'&
 const c=d.counts||{};
 const problems=(d.entries||[]).filter(x=>x.kind==='\uc2e4\ud328'||x.kind==='\uac74\ub108\ub700');
 const notes=(d.entries||[]).filter(x=>(x.kind==='\uc218\uc815'||x.kind==='\uc2e0\uaddc\ub4f1\ub85d')&&x.reason);
-const notesHtml=notes.length?`<div style="padding:10px 0 2px;font-size:12px;color:#64748b;">\uc2e0\uccad\uc790\uac00 \uc788\ub294 \uae00 ${notes.length}\uac74 (\uc218\uc815\uc740 \ub410\uc9c0\ub9cc \ubaa9\ub85d \uc704\ub85c \uc548 \uc62c\ub77c\uac10)</div>`+notes.map(x=>`<div style="padding:7px 0;border-top:1px solid #eef2f7;font-size:12px;line-height:1.45;">
+const notesHtml=notes.length?`<div style="padding:10px 0 2px;font-size:12px;color:#64748b;">\uc2e0\uccad\uc790\uac00 \uc788\ub358 \uae00 ${notes.length}\uac74 (\ucc38\uace0)</div>`+notes.map(x=>`<div style="padding:7px 0;border-top:1px solid #eef2f7;font-size:12px;line-height:1.45;">
                     <b style="color:#7c3aed">\ucc38\uace0</b> <span style="font-weight:600;">${esc(x.golf)}</span> ${esc(x.date)} ${esc(x.time)} ${x.roomType?'<\x73\x70\x61\x6e \x73\x74\x79\x6c\x65="\x63\x6f\x6c\x6f\x72\x3a\x23\x36\x34\x37\x34\x38\x62">['+esc(x.roomType)+']<\x2f\x73\x70\x61\x6e>':''}
                     <div style="color:#475569;">${esc(x.reason)}</div></div>`).join(''):'';
 const chip=(label,n,bg,fg)=>`<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 9px;border-radius:999px;background:${bg};color:${fg};font-weight:700;font-size:12px;">${label} ${n||0}</span>`;
