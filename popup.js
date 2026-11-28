@@ -13000,6 +13000,31 @@ chrome.storage.local.set({v2_confirmCourseMismatch:this.checked});
 showToast(this.checked?'\ud83d\udee1\ufe0f \uc218\uc815 \uc2dc \uad6c\uc7a5 \ubd88\uc77c\uce58 \uc548\uc804\ud655\uc778 \ucc3d\uc774 \ud65c\uc131\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e':'\uad6c\uc7a5 \ubd88\uc77c\uce58 \uc548\uc804\ud655\uc778\uc774 \ube44\ud65c\uc131\ud654\ub418\uc5c8\uc2b5\ub2c8\ub2e4\x2e');
 });
 }
+const chkSmartviewEl=document.getElementById('\x63\x68\x6b\x53\x6d\x61\x72\x74\x76\x69\x65\x77\x45\x6e\x61\x62\x6c\x65\x64');
+const btnSmartviewEl=document.getElementById('\x62\x74\x6e\x54\x6f\x67\x67\x6c\x65\x53\x6d\x61\x72\x74\x76\x69\x65\x77');
+const applySmartviewUi=(on)=>{
+if(chkSmartviewEl)chkSmartviewEl.checked=on;
+if(btnSmartviewEl){
+btnSmartviewEl.style.color=on?'\x23\x31\x30\x42\x39\x38\x31':'';
+btnSmartviewEl.title=on?'\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0 \ucf1c\uc9d0 (\ud074\ub9ad\ud558\uba74 \ub044\uae30)':'\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0 \uaebc\uc9d0 (\ud074\ub9ad\ud558\uba74 \ucf1c\uae30)';
+btnSmartviewEl.setAttribute('\x61\x72\x69\x61-\x70\x72\x65\x73\x73\x65\x64',on?'\x74\x72\x75\x65':'\x66\x61\x6c\x73\x65');
+}
+};
+const setSmartview=(on)=>{
+applySmartviewUi(on);
+try{chrome.storage.local.set({v2_smartviewEnabled:on});}catch(e){}
+showToast(on
+?'\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0\ub97c \ucf30\uc2b5\ub2c8\ub2e4\x2e \uc5f4\ub824 \uc788\ub294 \uace8\ud504\ud0d1 \ud0ed\uc5d0 \ubc14\ub85c \uc801\uc6a9\ub429\ub2c8\ub2e4\x2e (\uc790\ub3d9\ub4f1\ub85d \uc911\uc5d0\ub294 \ub05d\ub09c \ub4a4 \uc801\uc6a9)'
+:'\uace8\ud504\ud0d1 \uc2a4\ub9c8\ud2b8\ubdf0\ub97c \uaed0\uc2b5\ub2c8\ub2e4\x2e');
+};
+try{chrome.storage.local.get(['\x76\x32\x5f\x73\x6d\x61\x72\x74\x76\x69\x65\x77\x45\x6e\x61\x62\x6c\x65\x64'],(res)=>applySmartviewUi(!!(res&&res.v2_smartviewEnabled===true)));}catch(e){}
+if(chkSmartviewEl)chkSmartviewEl.addEventListener('\x63\x68\x61\x6e\x67\x65',function(){setSmartview(this.checked);});
+if(btnSmartviewEl)btnSmartviewEl.addEventListener('\x63\x6c\x69\x63\x6b',()=>setSmartview(btnSmartviewEl.getAttribute('\x61\x72\x69\x61-\x70\x72\x65\x73\x73\x65\x64')!=='\x74\x72\x75\x65'));
+try{
+chrome.storage.onChanged.addListener((ch,area)=>{
+if(area==='\x6c\x6f\x63\x61\x6c'&&ch.v2_smartviewEnabled)applySmartviewUi(ch.v2_smartviewEnabled.newValue===true);
+});
+}catch(e){}
 const chkSmartPrependEl=document.getElementById('\x63\x68\x6b\x53\x6d\x61\x72\x74\x50\x72\x65\x70\x65\x6e\x64\x4f\x6e\x50\x61\x73\x74\x65');
 if(chkSmartPrependEl){
 chkSmartPrependEl.checked=isSmartPrependActive();

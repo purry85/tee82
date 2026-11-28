@@ -1,11 +1,12 @@
 {
-    "version":  "4.2.4",
+    "version":  "4.2.5",
     "releaseDate":  "2026-11-28",
-    "title":  "3.1.0",
+    "title":  "4.2.5",
     "releaseNotes":  [
-                         "- 매핑사전 개편",
-                         "- 결과보고서 추가",
-                         "- 신청건이 있던 게시물은 삭제후 재등록"
+                         "- 골프탑 스마트뷰 내장화",
+                         "- 매핑사전 개편 & 특정구장 가격변경 동기화 생성",
+                         "- 신청건이 있던게시물 삭제&재등록",
+                         "- 결과보고서 추가"
                      ],
     "downloadUrl":  "https://github.com/purry85/tee82/archive/refs/heads/main.zip",
     "setupUrl":  "https://github.com/purry85/tee82/raw/main/Automatee_Setup.exe"
